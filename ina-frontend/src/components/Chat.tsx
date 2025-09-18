@@ -20,23 +20,23 @@ const Chat: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  // ✅ FUNCIÓN DONDE VA EL CÓDIGO QUE ME MOSTRASTE
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
-    // Agregar mensaje del usuario al chat
+    // 1. Crear mensaje de usuario
     const userMessage: Message = { 
       text: inputMessage, 
       isUser: true, 
       timestamp: new Date() 
     };
-    setMessages(prev => [...prev, userMessage]);
+
+    // 2. Limpiar input y actualizar estado INMEDIATAMENTE
     setInputMessage('');
+    setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
-    
 
     try {
-      // ✅ AQUÍ ESTÁ EL CÓDIGO EXACTO PARA LLAMAR AL BACKEND
+      // 3. Llamar al backend
       const response = await fetch('http://localhost:8000/chat', {
         method: 'POST',
         headers: { 
@@ -53,32 +53,26 @@ const Chat: React.FC = () => {
 
       const data = await response.json();
 
-      // Agregar respuesta de la IA al chat
+      // 4. Agregar respuesta de IA
       const aiMessage: Message = { 
         text: data.response, 
         isUser: false, 
         timestamp: new Date() 
       };
       setMessages(prev => [...prev, aiMessage]);
-      console.log("Respuesta de la IA:", data.response);
-      
 
     } catch (error) {
-      // Manejar errores
+      // 5. Manejar error
       const errorMessage: Message = { 
-        text: 'Error al conectar con el servidor. Verifica que el backend esté ejecutándose.', 
+        text: 'Error al conectar con el servidor', 
         isUser: false, 
         timestamp: new Date() 
       };
-      
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
-    
   };
-
-  
 
   return (
     <div className="chat-container">
@@ -93,7 +87,7 @@ const Chat: React.FC = () => {
         ))}
         {isLoading && (
           <div className="message ai-message">
-            <div className="loading">InA está pensando...</div>
+            <div className="message-text">InA está pensando...</div>
           </div>
         )}
         <div ref={messagesEndRef} />
