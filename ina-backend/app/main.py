@@ -8,7 +8,7 @@ from sqlmodel import Session
 import asyncio
 import logging
 import ollama  # Importar ollama para health check
-
+from app.analytics import get_query_analytics
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -153,3 +153,11 @@ async def root():
             "unanswered_tracking": True
         }
     }
+@app.get("/analytics")
+async def get_analytics():
+    """Endpoint para obtener métricas de uso"""
+    try:
+        return get_query_analytics()
+    except Exception as e:
+        logger.error(f"Error en analytics: {e}")
+        return {"error": "Error obteniendo analytics"}
