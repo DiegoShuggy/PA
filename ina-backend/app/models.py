@@ -30,4 +30,4 @@ class UnansweredQuestion(SQLModel, table=True):
 # ✅ AÑADE ESTA FUNCIÓN QUE FALTA
 def init_db():
     """Inicializar la base de datos y crear tablas"""
-    SQLModel.metadata.create_all(engine)
+    SQLModel.metadata.create_all(engine)    

@@ -8,7 +8,9 @@ from sqlmodel import Session
 import asyncio
 import logging
 import ollama  # Importar ollama para health check
-from app.analytics import get_query_analytics
+from app.analytics import get_query_analytics, get_category_analytics
+from app.classifier import classifier
+
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -36,17 +38,17 @@ class Message(BaseModel):
 
 @app.post("/chat")
 async def chat(message: Message):
-    """Endpoint mejorado para enviar mensajes a la IA con timeout"""
     try:
-        logger.info(f"Received message: {message.text}")
+        # 1. CLASIFICAR LA PREGUNTA (NUEVO)
+        category = await classifier.classify_question(message.text)
+        logger.info(f"Categoría detectada: {category}")
         
-        # 1. REGISTRAR PREGUNTA DEL USUARIO (Nueva funcionalidad)
+        # 2. REGISTRAR PREGUNTA DEL USUARIO CON CATEGORÍA
         with Session(engine) as session:
-            user_query = UserQuery(question=message.text)
+            user_query = UserQuery(question=message.text, category=category)  # ✅ Agregar categoría
             session.add(user_query)
             session.commit()
-            query_id = user_query.id  # Guardar ID para posible actualización
-        
+            query_id = user_query.id
         # 2. BUSCAR EN BASE DE CONOCIMIENTOS (Nueva funcionalidad)
         context_results = rag_engine.query(message.text)
         has_context = bool(context_results)
@@ -161,3 +163,12 @@ async def get_analytics():
     except Exception as e:
         logger.error(f"Error en analytics: {e}")
         return {"error": "Error obteniendo analytics"}
+
+@app.get("/analytics/category/{category_name}")
+async def get_category_stats(category_name: str):
+    """Endpoint para obtener stats de una categoría específica"""
+    try:
+        return get_category_analytics(category_name)
+    except Exception as e:
+        logger.error(f"Error en category analytics: {e}")
+        return {"error": f"Error obteniendo stats para categoría {category_name}"}
