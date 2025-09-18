@@ -6,8 +6,9 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>InA - Asistente Virtual Duoc UC</h1>
         <p>Powered by Mistral 7B</p>
+        <h1>InA - Asistente Virtual Duoc UC</h1>
+        
       </header>
       <main>
         <Chat />

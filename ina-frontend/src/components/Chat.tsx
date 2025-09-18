@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-
+import './Chat.css';
 interface Message {
   text: string;
   isUser: boolean;
