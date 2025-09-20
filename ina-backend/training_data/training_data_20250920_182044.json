@@ -1,0 +1,29 @@
+[
+  {
+    "input": "¿Cómo valido mi TNE?",
+    "output": "RESPUESTA_IDEAL_PARA: ¿Cómo valido mi TNE?",
+    "category": "tné",
+    "metadata": {
+      "source": "unanswered_question",
+      "timestamp": "2025-09-20T18:16:55.311910"
+    }
+  },
+  {
+    "input": "¿Dónde renuevo mi certificado de alumno regular?",
+    "output": "RESPUESTA_IDEAL_PARA: ¿Dónde renuevo mi certificado de alumno regular?",
+    "category": "certificados",
+    "metadata": {
+      "source": "unanswered_question",
+      "timestamp": "2025-09-20T18:16:55.312365"
+    }
+  },
+  {
+    "input": "¿Qué horario tiene la biblioteca?",
+    "output": "RESPUESTA_IDEAL_PARA: ¿Qué horario tiene la biblioteca?",
+    "category": "horarios",
+    "metadata": {
+      "source": "unanswered_question",
+      "timestamp": "2025-09-20T18:16:55.312859"
+    }
+  }
+]

@@ -1,5 +1,5 @@
 from sqlmodel import Session, select, func
-from app.models import UserQuery, UnansweredQuestion, engine
+from app.models import UserQuery, UnansweredQuestion, engine  # ✅
 from datetime import datetime, timedelta
 
 def get_query_analytics():
@@ -11,7 +11,7 @@ def get_query_analytics():
         # Preguntas no respondidas
         unanswered = session.exec(select(UnansweredQuestion)).all()
         
-        # 📊 NUEVO: Estadísticas por categoría
+        # 📊 Estadísticas por categoría
         category_stats = session.exec(
             select(UserQuery.category, func.count(UserQuery.category))
             .group_by(UserQuery.category)
@@ -20,10 +20,10 @@ def get_query_analytics():
         return {
             "total_queries": len(total_queries),
             "unanswered_questions": len(unanswered),
-            "categories": dict(category_stats),  # ✅ NUEVO: Stats por categoría
+            "categories": dict(category_stats),
             "recent_questions": [
                 {"question": q.question, "category": q.category} 
-                for q in total_queries[-10:]
+                for q in total_queries[-10:]  # Últimas 10 preguntas
             ]
         }
 

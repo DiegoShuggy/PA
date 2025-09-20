@@ -20,12 +20,20 @@ class UserQuery(SQLModel, table=True):
     response_status: str = Field(default="pending")  # pending, answered, failed
 
 class UnansweredQuestion(SQLModel, table=True):
-    """Preguntas que la IA no pudo responder bien"""
     id: Optional[int] = Field(default=None, primary_key=True)
     original_question: str
+    category: str  # ✅ ESTA LÍNEA DEBE EXISTIR
     ai_response: str
     timestamp: datetime = Field(default_factory=datetime.now)
-    needs_human_review: bool = Field(default=True)
+    needs_human_review: bool = Field(default=False)
+
+class Feedback(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    chatlog_id: int  # ID del mensaje evaluado
+    is_helpful: bool  # ¿Fue útil la respuesta?
+    rating: Optional[int] = Field(default=None, ge=1, le=5)  # Opcional: rating 1-5
+    comments: Optional[str] = None  # Comentarios opcionales
+    timestamp: datetime = Field(default_factory=datetime.now)
 
 # ✅ AÑADE ESTA FUNCIÓN QUE FALTA
 def init_db():

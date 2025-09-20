@@ -1,14 +1,17 @@
 import ollama
 from typing import Dict, List
 import logging
+from sqlmodel import Session
+from app.models import engine
 
 logger = logging.getLogger(__name__)
 
 class QuestionClassifier:
     def __init__(self):
+        # Categorías específicas para Duoc UC
         self.categories = [
             "horarios",
-            "tné",
+            "tné", 
             "certificados",
             "trámites",
             "ubicación",
@@ -19,43 +22,50 @@ class QuestionClassifier:
             "otros"
         ]
     
-    async def classify_question(self, question: str) -> str:
+    def classify_question(self, question: str) -> str:
         """
-        Clasifica una pregunta en una categoría usando Ollama Mistral
+        Clasifica una pregunta en una categoría usando Ollama Mistral.
+        Versión síncrona corregida.
+        
+        Args:
+            question (str): Pregunta del usuario a clasificar
+            
+        Returns:
+            str: Nombre de la categoría (ej: 'horarios', 'tné', 'otros')
         """
         try:
-            prompt = f"""
-            Clasifica la siguiente pregunta del usuario en UNA sola categoría de esta lista:
-            {', '.join(self.categories)}
+            # Prompt optimizado para Mistral
+            prompt = f"""Eres un clasificador de preguntas. Responde SOLO con una palabra de esta lista: {', '.join(self.categories)}
 
-            Reglas:
-            - Responde SOLO con el nombre de la categoría
-            - Si no está claro, usa 'otros'
-            - No agregues explicaciones
+Pregunta: "{question}"
 
-            Pregunta: "{question}"
-
-            Categoría:
-            """
+Categoría:"""
             
+            # Llamada SÍNCRONA a Ollama
             response = ollama.chat(
                 model='mistral:7b',
                 messages=[{'role': 'user', 'content': prompt}],
-                options={'temperature': 0.1, 'num_predict': 10}  # Baja temperatura para más precisión
+                options={
+                    'temperature': 0.1,    # Baja temperatura = más determinístico
+                    'num_predict': 15,     # Más tokens para asegurar respuesta
+                    'stop': ["\n", ".", ","]  # Detener en nuevos líneas
+                }
             )
             
+            # Limpiar y validar la respuesta
             category = response['message']['content'].strip().lower()
+            category = category.replace('"', '').replace("'", "")
             
             # Validar que la categoría esté en la lista
             if category not in self.categories:
-                logger.warning(f"Categoría '{category}' no reconocida, usando 'otros'")
+                logger.warning(f"Categoría '{category}' no reconocida para pregunta: '{question}'. Usando 'otros'")
                 return "otros"
             
             logger.info(f"Pregunta clasificada: '{question}' -> '{category}'")
             return category
             
         except Exception as e:
-            logger.error(f"Error en clasificación: {e}")
+            logger.error(f"Error en clasificación para pregunta '{question}': {e}")
             return "otros"
 
 # Instancia global del clasificador
