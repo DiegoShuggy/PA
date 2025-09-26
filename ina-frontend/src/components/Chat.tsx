@@ -13,9 +13,12 @@ const Chat: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const finalTranscriptRef = useRef('');
+  const menuRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -24,6 +27,20 @@ const Chat: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Cerrar menú al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Inicializar el reconocimiento de voz
   useEffect(() => {
@@ -64,7 +81,6 @@ const Chat: React.FC = () => {
       
       recognition.onend = () => {
         if (isListening) {
-          // Solo reiniciar si aún debería estar escuchando
           try {
             recognition.start();
           } catch (e) {
@@ -94,7 +110,6 @@ const Chat: React.FC = () => {
     }
     
     if (isListening) {
-      // Detener la escucha
       try {
         recognitionRef.current.stop();
         setIsListening(false);
@@ -103,9 +118,8 @@ const Chat: React.FC = () => {
         setIsListening(false);
       }
     } else {
-      // Comenzar a escuchar
       try {
-        finalTranscriptRef.current = inputMessage; // Mantener el texto existente
+        finalTranscriptRef.current = inputMessage;
         recognitionRef.current.start();
         setIsListening(true);
       } catch (e) {
@@ -115,10 +129,56 @@ const Chat: React.FC = () => {
     }
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleMenuAction = (action: string) => {
+    setIsMenuOpen(false);
+    
+    switch (action) {
+      case 'clear':
+        setMessages([]);
+        break;
+      case 'help':
+        alert('Mostrar ayuda del chat');
+        break;
+      // Nuevas opciones que insertan texto
+      case 'greeting':
+        insertText('¡Hola InA! ¿Podrías ayudarme con');
+        break;
+      case 'thanks':
+        insertText('¡Muchas gracias por tu ayuda InA, WAH!');
+        break;
+      case 'Laboral':
+        insertText('¿Podrías explicarme como es el proceso de Practicas Laborales en DuocUC?');
+        break;
+      case 'Consultas':
+        insertText('¿Podrías darme más información sobre DuocUC?');
+        break;
+      case 'TNE':
+        insertText('¿Podrías explicarme como es el proceso de Obtencion/validación de TNE en DuocUC?');
+        break;
+      default:
+        break;
+    }
+  };
+
+  const insertText = (text: string) => {
+    // Si ya hay texto, agregar un espacio antes del nuevo texto
+    const newText = inputMessage ? `${inputMessage} ${text}` : text;
+    setInputMessage(newText);
+    
+    // Enfocar el input para que el usuario pueda escribir inmediatamente
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+  };
+
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
-    // Detener la grabación si está activa
     if (isListening && recognitionRef.current) {
       try {
         recognitionRef.current.stop();
@@ -176,58 +236,155 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <div className="chat-container">
-      
-      <div className="chat-messages">
-        {messages.map((msg, index) => (
-          <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
-            <div className="message-text">{msg.text}</div>
-            <div className="message-time">
-              {msg.timestamp.toLocaleTimeString()}
+    <div className="chat-wrapper">
+      {/* Botón del menú flotante en la esquina derecha */}
+      <div className="floating-menu-container" ref={menuRef}>
+        <button 
+          className="floating-menu-button"
+          onClick={toggleMenu}
+          title="Opciones del chat"
+        >
+          <span className="menu-icon">☰</span>
+        </button>
+        
+        {isMenuOpen && (
+          <div className="floating-dropdown-menu">
+            {/* Sección de preguntas rápidas */}
+            <div className="menu-section">
+              <div className="menu-section-title">Preguntas rápidas</div>
+              <button 
+                className="menu-item"
+                onClick={() => handleMenuAction('greeting')}
+              >
+                <span className="menu-icon">👋</span>
+                Saluda a InA
+              </button>
+              <button 
+                className="menu-item"
+                onClick={() => handleMenuAction('Laboral')}
+              >
+                <span className="menu-icon">📋</span>
+                Practicas laborales
+              </button>
+              <button 
+                className="menu-item"
+                onClick={() => handleMenuAction('Consultas')}
+              >
+                <span className="menu-icon">❓</span>
+                Consultas frecuentes
+              </button>
+              <button 
+                className="menu-item"
+                onClick={() => handleMenuAction('TNE')}
+              >
+                <span className="menu-icon">📋</span>
+                Consultas TNE
+              </button>
+              <button 
+                className="menu-item"
+                onClick={() => handleMenuAction('thanks')}
+              >
+                <span className="menu-icon">🙏</span>
+                Agradecer a InA
+              </button>
             </div>
-          </div>
-        ))}
-        {isLoading && (
-          <div className="message ai-message">
-            <div className="typing-indicator">
-              <span></span>
-              <span></span>
-              <span></span>
+
+            <div className="menu-divider"></div>
+
+            {/* Sección de herramientas */}
+            <div className="menu-section">
+              <div className="menu-section-title">Herramientas</div>
+              <button 
+                className="menu-item"
+                onClick={() => handleMenuAction('clear')}
+                disabled={messages.length === 0}
+              >
+                <span className="menu-icon">🗑️</span>
+                Limpiar chat
+              </button>
             </div>
+
+            <div className="menu-divider"></div>
+
+            {/* Sección de información */}
+            <button 
+              className="menu-item"
+              onClick={() => handleMenuAction('settings')}
+            >
+              <span className="menu-icon">⚙️</span>
+              Configuración
+            </button>
+            <button 
+              className="menu-item"
+              onClick={() => handleMenuAction('help')}
+            >
+              <span className="menu-icon">❓</span>
+              Ayuda
+            </button>
           </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
 
-      <div className="chat-input">
-        <input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          placeholder={isListening ? "Escuchando... Habla ahora" : "Escribe tu pregunta o consulta..."}
-          disabled={isLoading}
-        />
-        <button 
-          className={`mic-button ${isListening ? 'listening' : ''}`}
-          onClick={toggleListening}
-          type="button"
-          disabled={isLoading || !isSpeechSupported}
-          title={isListening ? "Detener micrófono" : "Activar micrófono"}
-        >
-          <span className="mic-icon"></span>
-        </button>
-        <button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
-          {isLoading ? '...' : 'Enviar'}
-        </button>
-      </div>
-      
-      {isListening && (
-        <div className="voice-status">
-          <div className="pulse-ring"></div>
-          
+      {/* Contenedor del chat */}
+      <div className="chat-container">
+        <div className="chat-header">
+          <h2>Chat Asistente</h2>
+          <div className="quick-tips">
+            Usa el menú ☰ para preguntas rápidas
+          </div>
         </div>
-      )}
+
+        <div className="chat-messages">
+          {messages.map((msg, index) => (
+            <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
+              <div className="message-text">{msg.text}</div>
+              <div className="message-time">
+                {msg.timestamp.toLocaleTimeString()}
+              </div>
+            </div>
+          ))}
+          {isLoading && (
+            <div className="message ai-message">
+              <div className="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        <div className="chat-input">
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            placeholder={isListening ? "Escuchando... Habla ahora" : "Escribe tu pregunta o consulta..."}
+            disabled={isLoading}
+          />
+          <button 
+            className={`mic-button ${isListening ? 'listening' : ''}`}
+            onClick={toggleListening}
+            type="button"
+            disabled={isLoading || !isSpeechSupported}
+            title={isListening ? "Detener micrófono" : "Activar micrófono"}
+          >
+            <span className="mic-icon"></span>
+          </button>
+          <button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
+            {isLoading ? '...' : 'Enviar'}
+          </button>
+        </div>
+        
+        {isListening && (
+          <div className="voice-status">
+            <div className="pulse-ring"></div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
