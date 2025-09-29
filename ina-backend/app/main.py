@@ -16,6 +16,7 @@ from typing import Optional
 from app.quality_monitor import quality_monitor
 from app.advanced_analytics import advanced_analytics
 from app.auto_trainer import auto_trainer
+from sqlalchemy import text
 
 # Modelo Pydantic para feedback
 class FeedbackRequest(BaseModelOriginal):
@@ -72,7 +73,7 @@ async def chat(message: Message):
         try:
             response_text = await asyncio.wait_for(
                 get_ai_response(message.text, context_results),  # Modificado para aceptar contexto
-                timeout=30.0
+                timeout=45.0
             )
         except asyncio.TimeoutError:
             logger.warning("Timeout en la generación de respuesta")
@@ -124,9 +125,9 @@ async def health_check():
             options={'num_predict': 10}
         )
         
-        # Test de base de datos
+        # Test de base de datos - CORREGIDO
         with Session(engine) as session:
-            session.exec("SELECT 1")
+            session.exec(text("SELECT 1"))  # 👈 Agregar text()
         
         # Test de ChromaDB
         rag_status = "connected" if rag_engine.client.heartbeat() else "disconnected"

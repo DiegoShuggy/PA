@@ -77,7 +77,7 @@ async def get_ai_response(user_message: str, context: list = None) -> str:
             ],
             options={
                 'temperature': 0.3,
-                'num_predict': 150,
+                'num_predict': 1024,  # 👈 CAMBIADO de 150 a 1024
                 'top_p': 0.9
             }
         )
