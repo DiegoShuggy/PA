@@ -328,6 +328,7 @@ body {
   transition: all 0.3s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   position: relative;
+  
 }
 
 .mic-button:hover:not(:disabled) {
@@ -346,12 +347,15 @@ body {
 }
 
 .mic-icon {
-  width: 24px;
-  height: 24px;
-  background-color: white;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z'/%3E%3Cpath d='M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z'/%3E%3C/svg%3E") no-repeat center;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z'/%3E%3Cpath d='M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z'/%3E%3C/svg%3E") no-repeat center;
+  background-image: url('./Micro.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 20px;
+  height: 20px;
+  border: none;
 }
+
 
 @keyframes pulse {
   0% {
@@ -372,13 +376,6 @@ body {
   transform: translateX(-50%);
 }
 
-.pulse-ring {
-  width: 60px;
-  height: 60px;
-  border: 3px solid #ff4b4b;
-  border-radius: 50%;
-  animation: pulse-ring 1.5s infinite;
-}
 
 @keyframes pulse-ring {
   0% {
@@ -446,3 +443,4 @@ body {
     height: 20px;
   }
 }
+/* Fin de Chat.css */
