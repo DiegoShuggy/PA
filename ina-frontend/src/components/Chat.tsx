@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Chat.css';
-
+import microIcon from './Micro.png';
+// No: import Micro from '.components;
 interface Message {
   text: string;
   isUser: boolean;
@@ -356,28 +357,33 @@ const Chat: React.FC = () => {
         </div>
 
         <div className="chat-input">
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-            placeholder={isListening ? "Escuchando... Habla ahora" : "Escribe tu pregunta o consulta..."}
-            disabled={isLoading}
-          />
-          <button 
-            className={`mic-button ${isListening ? 'listening' : ''}`}
-            onClick={toggleListening}
-            type="button"
-            disabled={isLoading || !isSpeechSupported}
-            title={isListening ? "Detener micrófono" : "Activar micrófono"}
-          >
-            <span className="mic-icon"></span>
-          </button>
-          <button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
-            {isLoading ? '...' : 'Enviar'}
-          </button>
-        </div>
+  <input
+    ref={inputRef}
+    type="text"
+    value={inputMessage}
+    onChange={(e) => setInputMessage(e.target.value)}
+    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+    placeholder={isListening ? "Escuchando... Habla ahora" : "Escribe tu pregunta o consulta..."}
+    disabled={isLoading}
+  />
+  <button 
+    className={`mic-button ${isListening ? 'listening' : ''}`}
+    onClick={toggleListening}
+    type="button"
+    disabled={isLoading || !isSpeechSupported}
+    title={isListening ? "Detener micrófono" : "Activar micrófono"}
+  >
+    {/* Reemplaza el span por la imagen */}
+    <img 
+      src={microIcon} 
+      alt="Micrófono" 
+      className="mic-icon"
+    />
+  </button>
+  <button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
+    {isLoading ? '...' : 'Enviar'}
+  </button>
+</div>
         
         {isListening && (
           <div className="voice-status">
