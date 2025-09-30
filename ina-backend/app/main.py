@@ -17,6 +17,7 @@ from app.quality_monitor import quality_monitor
 from app.advanced_analytics import advanced_analytics
 from app.auto_trainer import auto_trainer
 from sqlalchemy import text
+from app.training_data_loader import training_loader
 
 # Modelo Pydantic para feedback
 class FeedbackRequest(BaseModelOriginal):
@@ -45,7 +46,10 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     init_db()
-    logger.info("Base de datos inicializada")
+    # Cargar conocimiento desde training data + base conocimiento
+    training_loader.load_all_training_data()
+    training_loader.generate_knowledge_from_patterns()
+    logger.info("✅ Base de datos y conocimiento histórico cargados")
 
 class Message(BaseModel):
     text: str
@@ -304,3 +308,63 @@ async def retrain_model():
             "4. Deploy improved model"
         ]
     }
+
+@app.get("/knowledge/stats")
+async def knowledge_stats():
+    """Estadísticas del conocimiento cargado en RAG"""
+    try:
+        collection_data = rag_engine.collection.get()
+        categories = {}
+        for metadata in collection_data.get('metadatas', []):
+            cat = metadata.get('category', 'unknown')
+            categories[cat] = categories.get(cat, 0) + 1
+        
+        return {
+            "total_documents": len(collection_data['documents']),
+            "categories": categories,
+            "documents_sample": collection_data['documents'][:3] if collection_data['documents'] else []
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/knowledge/add")
+async def add_knowledge(document: str, category: str = "general"):
+    """Agregar nuevo conocimiento manualmente"""
+    try:
+        success = rag_engine.add_document(
+            document=document,
+            metadata={
+                "type": "manual", 
+                "category": category, 
+                "source": "admin"
+            }
+        )
+        return {"status": "success" if success else "error"}
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
+
+@app.get("/training/stats")
+async def training_stats():
+    """Estadísticas de los datos de entrenamiento cargados"""
+    try:
+        # Contar archivos training_data
+        import glob, os
+        pattern = os.path.join("./training_data", "training_data_*.json")
+        json_files = glob.glob(pattern)
+        
+        # Contar documentos por categoría en RAG
+        collection_data = rag_engine.collection.get()
+        categories = {}
+        for metadata in collection_data.get('metadatas', []):
+            cat = metadata.get('category', 'unknown')
+            categories[cat] = categories.get(cat, 0) + 1
+        
+        return {
+            "training_files": len(json_files),
+            "files_list": [os.path.basename(f) for f in json_files],
+            "rag_documents_by_category": categories,
+            "total_rag_documents": len(collection_data['documents']),
+            "knowledge_loaded": True
+        }
+    except Exception as e:
+        return {"error": str(e)}
