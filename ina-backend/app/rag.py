@@ -1,7 +1,9 @@
+# app/rag.py
 import chromadb
 import ollama
 from typing import List, Dict, Optional
 import logging
+from app.qr_generator import qr_generator  # 👈 NUEVO IMPORT
 
 logger = logging.getLogger(__name__)
 
@@ -44,24 +46,98 @@ class RAGEngine:
             logger.error(f"Error en query RAG: {e}")
             return []
 
+# ✅ Función auxiliar para optimizar respuestas
+def _optimize_response(respuesta: str, pregunta: str) -> str:
+    """Optimizar respuesta para punto medio óptimo - claro pero conciso"""
+    
+    # Eliminar solo saludos muy redundantes
+    if respuesta.startswith(("¡Hola! Soy InA", "Hola, soy el asistente")):
+        respuesta = respuesta.replace("¡Hola! Soy InA, ", "").replace("Hola, soy el asistente, ", "")
+    
+    # Optimizaciones balanceadas - mantener información útil
+    optimizations = {
+        "soy el asistente virtual del Punto Estudiantil": "Punto Estudiantil:",
+        "estoy aquí para ayudarte con": "Puedo informarte sobre",
+        "por favor, no dudes en contactarnos": "puedes acercarte",
+        "te recomiendo que te dirijas": "recomiendo dirigirte",
+        "debes saber que el proceso": "el proceso",
+        "es importante mencionar que": "",
+        "en relación a tu consulta sobre": "Sobre",
+        "respecto a tu pregunta acerca de": "Acerca de",
+        "quiero informarte que": "",
+        "me complace decirte que": ""
+    }
+    
+    for largo, corto in optimizations.items():
+        respuesta = respuesta.replace(largo, corto)
+    
+    # Asegurar que tenga información esencial para consultas comunes
+    pregunta_lower = pregunta.lower()
+    
+    if "certificado" in pregunta_lower and "alumno" in pregunta_lower:
+        if "digital" not in respuesta.lower() and "portal" not in respuesta.lower():
+            respuesta += " También disponible en formato digital desde el Portal del Estudiante."
+    
+    if "tne" in pregunta_lower and "cédula" not in respuesta.lower():
+        if "documento" not in respuesta.lower() and "llevar" not in respuesta.lower():
+            respuesta = respuesta.replace("validar tu TNE", "validar tu TNE con tu TNE física y cédula")
+    
+    # Limpiar espacios múltiples
+    while "  " in respuesta:
+        respuesta = respuesta.replace("  ", " ")
+    
+    # Limitar longitud máxima pero permitir respuestas completas
+    if len(respuesta) > 450:
+        # Encontrar el último punto antes del límite
+        last_period = respuesta[:450].rfind('.')
+        if last_period > 250:  # Al menos 250 caracteres útiles
+            respuesta = respuesta[:last_period + 1]
+        elif respuesta[:450].rfind(',') > 300:
+            last_comma = respuesta[:450].rfind(',')
+            respuesta = respuesta[:last_comma] + "."
+    
+    return respuesta.strip()
+
 # ✅ Instancia global del motor RAG
 rag_engine = RAGEngine()
 
-# ✅ Función para obtener respuestas de Ollama
-async def get_ai_response(user_message: str, context: list = None) -> str:
+# ✅ Función para obtener respuestas de Ollama ACTUALIZADA
+async def get_ai_response(user_message: str, context: list = None) -> Dict:  # 👈 Cambiado a Dict
     """
     Función para conectar con Ollama usando Mistral 7B
+    Retorna dict con texto y códigos QR
     """
     try:
-        # Preparar el mensaje con contexto si está disponible
+        # PROMPT OPTIMIZADO - PUNTO MEDIO PERFECTO
         system_message = (
-            "Eres InA, un asistente virtual útil del Punto Estudiantil de Duoc UC. "
-            "Responde de manera clara, concisa y en español. "
-            "Si no sabes la respuesta, di que no puedes ayudar y sugiere contactar al personal."
+            "Eres InA, asistente especializado del Punto Estudiantil Duoc UC. "
+            "Responde de forma CLARA, COMPLETA pero CONCISA (4-5 líneas máximo).\n"
+            "Incluye información esencial: DÓNDE, QUÉ necesitan, COSTO, TIEMPO y OPCIONES.\n"
+            "Sé directo y útil. Evita saludos largos y repeticiones.\n\n"
+            "ÁMBITO DEL PUNTO ESTUDIANTIL:\n"
+            "- Certificados estudiantiles (alumno regular, notas)\n"
+            "- Validación TNE\n" 
+            "- Horarios de atención\n"
+            "- Trámites documentales\n"
+            "- Información general de sedes\n\n"
+            "DERIVAR A OTROS DEPARTAMENTOS si es sobre:\n"
+            "- Problemas técnicos con plataformas → Centro de Ayuda: https://centroayuda.duoc.cl\n"
+            "- Consultas académicas específicas → Jefatura de carrera\n"
+            "- Becas detalladas → Departamento de Beneficios\n"
+            "- Problemas de conectividad → Mesa de ayuda TI\n\n"
+            "IMPORTANTE: Cuando menciones sitios web, incluye la URL completa para generar códigos QR.\n"
         )
         
+        # Agregar contexto si está disponible
         if context:
-            system_message += f"\n\nContexto relevante: {' '.join(context)}"
+            # Filtrar contexto para solo información relevante y útil
+            relevant_context = []
+            for ctx in context:
+                if not ctx.startswith("DERIVACIÓN:") and len(ctx) > 10:
+                    relevant_context.append(ctx)
+            
+            if relevant_context:
+                system_message += f"INFORMACIÓN RELEVANTE:\n{chr(10).join(relevant_context[:2])}\n\n"
         
         response = ollama.chat(
             model='mistral:7b',
@@ -76,20 +152,28 @@ async def get_ai_response(user_message: str, context: list = None) -> str:
                 }
             ],
             options={
-                'temperature': 0.3,
-                'num_predict': 1024,  # 👈 CAMBIADO de 150 a 1024
-                'top_p': 0.9
+                'temperature': 0.25,   # Balance perfecto entre precisión y naturalidad
+                'num_predict': 600,    # Suficiente para respuestas completas pero no largas
+                'top_p': 0.82,
+                'top_k': 40
             }
         )
         
         respuesta = response['message']['content'].strip()
-        logger.info(f"Respuesta generada: {respuesta[:100]}...")
         
-        if not respuesta:
-            return "No pude generar una respuesta. Por favor, intenta reformular tu pregunta."
-            
-        return respuesta
+        # Aplicar optimizaciones inteligentes
+        respuesta = _optimize_response(respuesta, user_message)
+        
+        # ✅ GENERAR CÓDIGOS QR PARA URLs ENCONTRADAS
+        processed_response = qr_generator.process_response(respuesta)
+        
+        logger.info(f"✅ Respuesta procesada - Texto: {len(respuesta)} chars, QRs: {len(processed_response['qr_codes'])}")
+        return processed_response
         
     except Exception as e:
-        logger.error(f"Error con Ollama: {str(e)}")
-        return "Lo siento, estoy teniendo dificultades técnicas en este momento. Por favor, intenta nuevamente en unos minutos."
+        logger.error(f"❌ Error con Ollama: {str(e)}")
+        return {
+            "text": "Estamos experimentando dificultades técnicas. Por favor, intenta nuevamente en unos momentos.",
+            "qr_codes": {},
+            "has_qr": False
+        }

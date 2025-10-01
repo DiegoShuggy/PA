@@ -460,5 +460,76 @@ body {
     height: 50px;
   }
 }
+/* Agregar al final de Chat.css */
 
-/* Fin de Chat.css */
+/* Estilos para códigos QR */
+.qr-codes-section {
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border-left: 4px solid #0038A8;
+}
+
+.qr-section-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #0038A8;
+  font-size: 14px;
+}
+
+.qr-codes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.qr-code-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.qr-code-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.qr-url {
+  color: #666;
+  word-break: break-all;
+  text-align: center;
+}
+
+.qr-code-image {
+  width: 150px;
+  height: 150px;
+  border: 2px solid #0038A8;
+  border-radius: 8px;
+}
+
+.qr-instruction {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #888;
+  font-style: italic;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .qr-code-image {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .qr-codes-container {
+    gap: 10px;
+  }
+}

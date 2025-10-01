@@ -54,36 +54,44 @@ def on_startup():
 class Message(BaseModel):
     text: str
 
+# En app/main.py - ACTUALIZAR SOLO EL ENDPOINT /chat
+
 @app.post("/chat")
 async def chat(message: Message):
     try:
-        # 1. CLASIFICAR LA PREGUNTA (NUEVO)
+        # 1. CLASIFICAR LA PREGUNTA
         category = classifier.classify_question(message.text)
         logger.info(f"Categoría detectada: {category}")
         
         # 2. REGISTRAR PREGUNTA DEL USUARIO CON CATEGORÍA
         with Session(engine) as session:
-            user_query = UserQuery(question=message.text, category=category)  # ✅ Agregar categoría
+            user_query = UserQuery(question=message.text, category=category)
             session.add(user_query)
             session.commit()
             query_id = user_query.id
-        # 2. BUSCAR EN BASE DE CONOCIMIENTOS (Nueva funcionalidad)
+        
+        # 3. BUSCAR EN BASE DE CONOCIMIENTOS
         context_results = rag_engine.query(message.text)
         has_context = bool(context_results)
         
-        logger.info(f"Contexto encontrado: {len(context_results)} resultados")
+        logger.info(f"Contexto encontrado: {len(context_results)} resultados para categoría '{category}'")
         
-        # Timeout de 30 segundos para evitar que se cuelgue
+        # 4. OBTENER RESPUESTA (AHORA CON QR)
         try:
-            response_text = await asyncio.wait_for(
-                get_ai_response(message.text, context_results),  # Modificado para aceptar contexto
+            response_data = await asyncio.wait_for(  # 👈 Cambiado a response_data
+                get_ai_response(message.text, context_results),
                 timeout=45.0
             )
         except asyncio.TimeoutError:
             logger.warning("Timeout en la generación de respuesta")
-            response_text = "El servicio está tardando demasiado. Por favor, intenta nuevamente."
+            response_data = {
+                "text": "El servicio está tardando demasiado. Por favor, intenta nuevamente.",
+                "qr_codes": {},
+                "has_qr": False
+            }
         
-        # 3. REGISTRAR PREGUNTAS NO RESPONDIDAS (Nueva funcionalidad)
+        # 5. REGISTRAR PREGUNTAS NO RESPONDIDAS
+        response_text = response_data["text"]  # 👈 Extraer texto para lógica existente
         if ("no puedo ayudar" in response_text.lower() or 
             "no sé" in response_text.lower() or
             "dificultades técnicas" in response_text.lower()):
@@ -96,7 +104,7 @@ async def chat(message: Message):
                 session.add(unanswered)
                 session.commit()
         
-        # 4. GUARDAR EN LOG DE CONVERSACIONES (Existente)
+        # 6. GUARDAR EN LOG DE CONVERSACIONES
         try:
             with Session(engine) as session:
                 chat_log = ChatLog(
@@ -107,17 +115,21 @@ async def chat(message: Message):
                 session.commit()
         except Exception as db_error:
             logger.error(f"Error en base de datos: {db_error}")
-            # No fallar solo por error de DB, continuar con la respuesta
+            # No fallar solo por error de DB
         
+        # 7. RETORNAR RESPUESTA CON QR CODES
         return {
-            "response": response_text,
-            "has_context": has_context  # Nueva info para frontend
+            "response": response_data["text"],
+            "has_context": has_context,
+            "qr_codes": response_data["qr_codes"],  # 👈 NUEVO
+            "has_qr": response_data["has_qr"]       # 👈 NUEVO
         }
         
     except Exception as e:
         logger.error(f"Error general en /chat: {e}")
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
+        
 @app.get("/health")
 async def health_check():
     """Endpoint de salud que verifica Ollama también"""
