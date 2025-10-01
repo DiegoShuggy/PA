@@ -19,3 +19,11 @@
   max-width: 80%;
   word-wrap: break-word;
 }
+
+body {
+  font-family: "Myriad Pro", sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}

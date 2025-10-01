@@ -21,6 +21,8 @@ const Chat: React.FC = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -43,21 +45,23 @@ const Chat: React.FC = () => {
     };
   }, []);
 
+
   // Inicializar el reconocimiento de voz
+
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    
+
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       recognition.continuous = false;
       recognition.lang = 'es-ES';
       recognition.interimResults = true;
       recognition.maxAlternatives = 1;
-      
+
       recognition.onresult = (event: any) => {
         let interimTranscript = '';
         let finalTranscript = finalTranscriptRef.current;
-        
+
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
@@ -66,11 +70,11 @@ const Chat: React.FC = () => {
             interimTranscript += transcript;
           }
         }
-        
+
         finalTranscriptRef.current = finalTranscript;
         setInputMessage(finalTranscript + interimTranscript);
       };
-      
+
       recognition.onerror = (event: any) => {
         console.error('Error en reconocimiento de voz:', event.error);
         if (event.error === 'not-allowed') {
@@ -79,7 +83,7 @@ const Chat: React.FC = () => {
         }
         setIsListening(false);
       };
-      
+
       recognition.onend = () => {
         if (isListening) {
           try {
@@ -90,13 +94,13 @@ const Chat: React.FC = () => {
           }
         }
       };
-      
+
       recognitionRef.current = recognition;
     } else {
       console.warn('El reconocimiento de voz no es compatible con este navegador');
       setIsSpeechSupported(false);
     }
-    
+
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
@@ -109,7 +113,7 @@ const Chat: React.FC = () => {
       alert('Tu navegador no soporta reconocimiento de voz. Prueba con Chrome o Edge.');
       return;
     }
-    
+
     if (isListening) {
       try {
         recognitionRef.current.stop();
@@ -136,7 +140,7 @@ const Chat: React.FC = () => {
 
   const handleMenuAction = (action: string) => {
     setIsMenuOpen(false);
-    
+
     switch (action) {
       case 'clear':
         setMessages([]);
@@ -169,7 +173,7 @@ const Chat: React.FC = () => {
     // Si ya hay texto, agregar un espacio antes del nuevo texto
     const newText = inputMessage ? `${inputMessage} ${text}` : text;
     setInputMessage(newText);
-    
+
     // Enfocar el input para que el usuario pueda escribir inmediatamente
     setTimeout(() => {
       inputRef.current?.focus();
@@ -189,10 +193,10 @@ const Chat: React.FC = () => {
       }
     }
 
-    const userMessage: Message = { 
-      text: inputMessage, 
-      isUser: true, 
-      timestamp: new Date() 
+    const userMessage: Message = {
+      text: inputMessage,
+      isUser: true,
+      timestamp: new Date()
     };
 
     setInputMessage('');
@@ -203,11 +207,11 @@ const Chat: React.FC = () => {
     try {
       const response = await fetch('http://localhost:8000/chat', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json' 
+        headers: {
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 
-          text: inputMessage 
+        body: JSON.stringify({
+          text: inputMessage
         })
       });
 
@@ -217,18 +221,18 @@ const Chat: React.FC = () => {
 
       const data = await response.json();
 
-      const aiMessage: Message = { 
-        text: data.response, 
-        isUser: false, 
-        timestamp: new Date() 
+      const aiMessage: Message = {
+        text: data.response,
+        isUser: false,
+        timestamp: new Date()
       };
       setMessages(prev => [...prev, aiMessage]);
 
     } catch (error) {
-      const errorMessage: Message = { 
-        text: 'Error al conectar con el servidor', 
-        isUser: false, 
-        timestamp: new Date() 
+      const errorMessage: Message = {
+        text: 'Error al conectar con el servidor',
+        isUser: false,
+        timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -240,48 +244,48 @@ const Chat: React.FC = () => {
     <div className="chat-wrapper">
       {/* Botón del menú flotante en la esquina derecha */}
       <div className="floating-menu-container" ref={menuRef}>
-        <button 
+        <button
           className="floating-menu-button"
           onClick={toggleMenu}
           title="Opciones del chat"
         >
           <span className="menu-icon">☰</span>
         </button>
-        
+
         {isMenuOpen && (
           <div className="floating-dropdown-menu">
             {/* Sección de preguntas rápidas */}
             <div className="menu-section">
               <div className="menu-section-title">Preguntas rápidas</div>
-              <button 
+              <button
                 className="menu-item"
                 onClick={() => handleMenuAction('greeting')}
               >
                 <span className="menu-icon">👋</span>
                 Saluda a InA
               </button>
-              <button 
+              <button
                 className="menu-item"
                 onClick={() => handleMenuAction('Laboral')}
               >
                 <span className="menu-icon">📋</span>
                 Practicas laborales
               </button>
-              <button 
+              <button
                 className="menu-item"
                 onClick={() => handleMenuAction('Consultas')}
               >
                 <span className="menu-icon">❓</span>
                 Consultas frecuentes
               </button>
-              <button 
+              <button
                 className="menu-item"
                 onClick={() => handleMenuAction('TNE')}
               >
                 <span className="menu-icon">📋</span>
                 Consultas TNE
               </button>
-              <button 
+              <button
                 className="menu-item"
                 onClick={() => handleMenuAction('thanks')}
               >
@@ -295,7 +299,7 @@ const Chat: React.FC = () => {
             {/* Sección de herramientas */}
             <div className="menu-section">
               <div className="menu-section-title">Herramientas</div>
-              <button 
+              <button
                 className="menu-item"
                 onClick={() => handleMenuAction('clear')}
                 disabled={messages.length === 0}
@@ -308,14 +312,14 @@ const Chat: React.FC = () => {
             <div className="menu-divider"></div>
 
             {/* Sección de información */}
-            <button 
+            <button
               className="menu-item"
               onClick={() => handleMenuAction('settings')}
             >
               <span className="menu-icon">⚙️</span>
               Configuración
             </button>
-            <button 
+            <button
               className="menu-item"
               onClick={() => handleMenuAction('help')}
             >
@@ -327,7 +331,7 @@ const Chat: React.FC = () => {
       </div>
 
       {/* Contenedor del chat */}
-      <div className="chat-container">
+      <div className="chat-container" id="Cuerpo">
         <div className="chat-header">
           <h2>Chat Asistente</h2>
           <div className="quick-tips">
@@ -335,7 +339,7 @@ const Chat: React.FC = () => {
           </div>
         </div>
 
-        <div className="chat-messages">
+        <div className="chat-messages" id="Cuerpo">
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
               <div className="message-text">{msg.text}</div>
@@ -345,7 +349,7 @@ const Chat: React.FC = () => {
             </div>
           ))}
           {isLoading && (
-            <div className="message ai-message">
+            <div className="message ai-message" id="Cuerpo">
               <div className="typing-indicator">
                 <span></span>
                 <span></span>
@@ -356,35 +360,35 @@ const Chat: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="chat-input">
-  <input
-    ref={inputRef}
-    type="text"
-    value={inputMessage}
-    onChange={(e) => setInputMessage(e.target.value)}
-    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-    placeholder={isListening ? "Escuchando... Habla ahora" : "Escribe tu pregunta o consulta..."}
-    disabled={isLoading}
-  />
-  <button 
-    className={`mic-button ${isListening ? 'listening' : ''}`}
-    onClick={toggleListening}
-    type="button"
-    disabled={isLoading || !isSpeechSupported}
-    title={isListening ? "Detener micrófono" : "Activar micrófono"}
-  >
-    {/* Reemplaza el span por la imagen */}
-    <img 
-      src={microIcon} 
-      alt="Micrófono" 
-      className="mic-icon"
-    />
-  </button>
-  <button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
-    {isLoading ? '...' : 'Enviar'}
-  </button>
-</div>
-        
+        <div className="chat-input" id="Cuerpo">
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            placeholder={isListening ? "Escuchando... Habla ahora" : "Escribe tu pregunta o consulta..."}
+            disabled={isLoading}
+          />
+          <button
+            className={`mic-button ${isListening ? 'listening' : ''}`}
+            onClick={toggleListening}
+            type="button"
+            disabled={isLoading || !isSpeechSupported}
+            title={isListening ? "Detener micrófono" : "Activar micrófono"}
+          >
+            {/* Reemplaza el span por la imagen */}
+            <img
+              src={microIcon}
+              alt="Micrófono"
+              className="mic-icon"
+            />
+          </button>
+          <button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
+            {isLoading ? '...' : 'Enviar'}
+          </button>
+        </div>
+
         {isListening && (
           <div className="voice-status">
             <div className="pulse-ring"></div>
