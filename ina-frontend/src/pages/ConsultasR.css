@@ -1,0 +1,92 @@
+/* ConsultasR.css */
+.consultas-r {
+  width: 100%;
+  min-height: 80vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.consultas-r h2 {
+  color: #2a5298;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.consultas-r  {
+  background: white;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #0c33e2;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+.uno {
+  background: white;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #F1B634 ;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+.dos {
+  background: white;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #BF0249 ;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+.tres {
+  background: white;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #37A7C6 ;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+.cuatro {
+  background: white;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #BDC601;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+.cinco {
+  background: white;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #9521B2;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+.consultas-r p:hover {
+  transform: translateX(5px);
+  background: #f0f2f5;
+}
+.Cuerpo {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
