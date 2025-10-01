@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Chat.css';
 import microIcon from './Micro.png';
-// No: import Micro from '.components;
+
 interface Message {
   text: string;
   isUser: boolean;
   timestamp: Date;
+  qr_codes?: { [url: string]: string };
+  has_qr?: boolean;
 }
 
 const Chat: React.FC = () => {
@@ -176,7 +178,6 @@ const Chat: React.FC = () => {
     }, 100);
   };
 
-
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
@@ -220,7 +221,9 @@ const Chat: React.FC = () => {
       const aiMessage: Message = { 
         text: data.response, 
         isUser: false, 
-        timestamp: new Date() 
+        timestamp: new Date(),
+        qr_codes: data.qr_codes || {},
+        has_qr: data.has_qr || false
       };
       setMessages(prev => [...prev, aiMessage]);
 
@@ -234,6 +237,24 @@ const Chat: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Función para renderizar códigos QR
+  const renderQRCodes = (qr_codes: { [url: string]: string }) => {
+    return Object.entries(qr_codes).map(([url, qrData], index) => (
+      <div key={index} className="qr-code-container">
+        <div className="qr-code-header">
+          <span className="qr-icon">📱</span>
+          <span className="qr-url">{url}</span>
+        </div>
+        <img 
+          src={qrData} 
+          alt={`QR code para ${url}`}
+          className="qr-code-image"
+        />
+        <div className="qr-instruction">Escanea con tu celular</div>
+      </div>
+    ));
   };
 
   return (
@@ -339,6 +360,17 @@ const Chat: React.FC = () => {
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
               <div className="message-text">{msg.text}</div>
+              
+              {/* Mostrar códigos QR si existen */}
+              {msg.has_qr && msg.qr_codes && (
+                <div className="qr-codes-section">
+                  <div className="qr-section-title">📱 Escanear con celular:</div>
+                  <div className="qr-codes-container">
+                    {renderQRCodes(msg.qr_codes)}
+                  </div>
+                </div>
+              )}
+              
               <div className="message-time">
                 {msg.timestamp.toLocaleTimeString()}
               </div>
@@ -357,33 +389,32 @@ const Chat: React.FC = () => {
         </div>
 
         <div className="chat-input">
-  <input
-    ref={inputRef}
-    type="text"
-    value={inputMessage}
-    onChange={(e) => setInputMessage(e.target.value)}
-    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-    placeholder={isListening ? "Escuchando... Habla ahora" : "Escribe tu pregunta o consulta..."}
-    disabled={isLoading}
-  />
-  <button 
-    className={`mic-button ${isListening ? 'listening' : ''}`}
-    onClick={toggleListening}
-    type="button"
-    disabled={isLoading || !isSpeechSupported}
-    title={isListening ? "Detener micrófono" : "Activar micrófono"}
-  >
-    {/* Reemplaza el span por la imagen */}
-    <img 
-      src={microIcon} 
-      alt="Micrófono" 
-      className="mic-icon"
-    />
-  </button>
-  <button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
-    {isLoading ? '...' : 'Enviar'}
-  </button>
-</div>
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            placeholder={isListening ? "Escuchando... Habla ahora" : "Escribe tu pregunta o consulta..."}
+            disabled={isLoading}
+          />
+          <button 
+            className={`mic-button ${isListening ? 'listening' : ''}`}
+            onClick={toggleListening}
+            type="button"
+            disabled={isLoading || !isSpeechSupported}
+            title={isListening ? "Detener micrófono" : "Activar micrófono"}
+          >
+            <img 
+              src={microIcon} 
+              alt="Micrófono" 
+              className="mic-icon"
+            />
+          </button>
+          <button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
+            {isLoading ? '...' : 'Enviar'}
+          </button>
+        </div>
         
         {isListening && (
           <div className="voice-status">
