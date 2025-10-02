@@ -3,7 +3,6 @@
   width: 100%;
   min-height: 80vh;
   padding: 2rem;
-  background-color: #f8f9fa;
 }
 
 .consultas-r h2 {
@@ -28,7 +27,7 @@
   margin: 0.5rem 0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid #F1B634 ;
+  border-left: 4px solid rgb(255, 171, 31) ;
   font-size: 1.1rem;
   transition: transform 0.2s ease;
 }
@@ -38,7 +37,7 @@
   margin: 0.5rem 0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid #BF0249 ;
+  border-left: 4px solid rgb(245, 25, 64);
   font-size: 1.1rem;
   transition: transform 0.2s ease;
 }
@@ -48,7 +47,7 @@
   margin: 0.5rem 0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid #37A7C6 ;
+  border-left: 4px solid rgb(38, 128, 255);
   font-size: 1.1rem;
   transition: transform 0.2s ease;
 }
@@ -58,7 +57,7 @@
   margin: 0.5rem 0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid #BDC601;
+  border-left: 4px solid rgb(64, 255, 0);
   font-size: 1.1rem;
   transition: transform 0.2s ease;
 }

@@ -4,8 +4,8 @@ function ConsultasR() {
   console.log('ConsultasR component is rendering'); // ← Agrega esto
   
   return (
-    <div className="consultas-r" id="Cuerpo">
-      <h2>Consultas Recientes</h2>
+    <div className="consultas-r" >
+      <h2>Áreas de consultas</h2>
       <p className='uno'>Asuntos Estudiantil</p>
       <p className='dos'>Desarrollo Profesional y Titulados</p>
       <p className='tres'>Bienestar Estudiantil</p>

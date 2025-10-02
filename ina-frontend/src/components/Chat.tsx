@@ -22,7 +22,7 @@ const Chat: React.FC = () => {
   const finalTranscriptRef = useRef('');
   const menuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
+  
 
 
   const scrollToBottom = () => {
@@ -262,7 +262,7 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <div className="chat-wrapper">
+    <div className="chat-wrapper" >
       {/* Botón del menú flotante en la esquina derecha */}
       <div className="floating-menu-container" ref={menuRef}>
         <button
@@ -360,7 +360,7 @@ const Chat: React.FC = () => {
           </div>
         </div>
 
-        <div className="chat-messages" id="Cuerpo">
+        <div className="chat-messages">
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
               <div className="message-text">{msg.text}</div>
@@ -381,7 +381,7 @@ const Chat: React.FC = () => {
             </div>
           ))}
           {isLoading && (
-            <div className="message ai-message" id="Cuerpo">
+            <div className="message ai-message">
               <div className="typing-indicator">
                 <span></span>
                 <span></span>

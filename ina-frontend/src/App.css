@@ -2,7 +2,6 @@
   background: linear-gradient(135deg, #0038A8 0%, #002856 100%);
   color: white;
   margin-left: auto;
-  text-align: right;
 }
 
 .ai-message {
@@ -22,7 +21,7 @@
 
 body {
   font-family: "Myriad Pro", sans-serif;
-  background-color: #f5f5f5;
+  background: #939393;
   color: #333;
   margin: 0;
   padding: 0;

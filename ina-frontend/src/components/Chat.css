@@ -2,10 +2,8 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  background: linear-gradient(135deg, #9521B2 0%, #BF0249 100%);
+  font-family: "Myriad Pro", sans-serif;
+  
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -20,6 +18,7 @@ body {
   align-items: center;
   min-height: 100vh;
   position: relative;
+  
 }
 
 .chat-container {
@@ -171,6 +170,7 @@ body {
   position: relative;
   animation: fadeIn 0.3s ease;
   word-wrap: break-word;
+  
 }
 
 .user-message {
@@ -178,6 +178,7 @@ body {
   color: white;
   align-self: flex-end;
   border-bottom-right-radius: 4px;
+  text-align: left;
 }
 
 .ai-message {
@@ -304,7 +305,7 @@ body {
   font-size: 0.7rem;
   margin-top: 5px;
   opacity: 0.7;
-  text-align: right;
+  text-align: left;
 }
 
 .chat-messages::-webkit-scrollbar {
@@ -324,6 +325,7 @@ body {
 .chat-messages::-webkit-scrollbar-thumb:hover {
   background: rgba(102, 126, 234, 0.5);
 }
+
 
 /* Estilos para el botón de micrófono */
 .mic-button {
@@ -469,6 +471,7 @@ body {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   border-left: 4px solid #0038A8;
+  
 }
 
 .qr-section-title {
@@ -482,6 +485,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  
 }
 
 .qr-code-container {
@@ -532,4 +536,9 @@ body {
   .qr-codes-container {
     gap: 10px;
   }
+.message-text{ 
+  text-align: left; 
+  display: flex;
+
+}
 }
