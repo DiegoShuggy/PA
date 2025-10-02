@@ -1,13 +1,14 @@
+# app/main.py
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.models import init_db, ChatLog, UserQuery, UnansweredQuestion, engine
 from app.rag import get_ai_response
-from app.rag import rag_engine  # Nuevo motor RAG
+from app.rag import rag_engine
 from sqlmodel import Session
 import asyncio
 import logging
-import ollama  # Importar ollama para health check
+import ollama
 from app.analytics import get_query_analytics, get_category_analytics
 from app.classifier import classifier
 from app.feedback import feedback_system
@@ -18,6 +19,7 @@ from app.advanced_analytics import advanced_analytics
 from app.auto_trainer import auto_trainer
 from sqlalchemy import text
 from app.training_data_loader import training_loader
+from app.qr_generator import qr_generator, duoc_url_manager  # 👈 IMPORTAR LOS NUEVOS
 
 # Modelo Pydantic para feedback
 class FeedbackRequest(BaseModelOriginal):
@@ -25,7 +27,6 @@ class FeedbackRequest(BaseModelOriginal):
     is_helpful: bool
     rating: Optional[int] = None
     comments: Optional[str] = None
-
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -54,44 +55,21 @@ def on_startup():
 class Message(BaseModel):
     text: str
 
-# En app/main.py - ACTUALIZAR SOLO EL ENDPOINT /chat
-
+# En main.py - MODIFICAR el endpoint /chat
 @app.post("/chat")
 async def chat(message: Message):
     try:
-        # 1. CLASIFICAR LA PREGUNTA
-        category = classifier.classify_question(message.text)
-        logger.info(f"Categoría detectada: {category}")
+        # ... (código existente hasta obtener la respuesta) ...
         
-        # 2. REGISTRAR PREGUNTA DEL USUARIO CON CATEGORÍA
-        with Session(engine) as session:
-            user_query = UserQuery(question=message.text, category=category)
-            session.add(user_query)
-            session.commit()
-            query_id = user_query.id
+        # 5. CREAR SESIÓN DE FEEDBACK PARA ESTA RESPUESTA
+        feedback_session_id = response_feedback_system.create_feedback_session(
+            user_message=message.text,
+            ai_response=response_data["text"],
+            category=category
+        )
         
-        # 3. BUSCAR EN BASE DE CONOCIMIENTOS
-        context_results = rag_engine.query(message.text)
-        has_context = bool(context_results)
-        
-        logger.info(f"Contexto encontrado: {len(context_results)} resultados para categoría '{category}'")
-        
-        # 4. OBTENER RESPUESTA (AHORA CON QR)
-        try:
-            response_data = await asyncio.wait_for(  # 👈 Cambiado a response_data
-                get_ai_response(message.text, context_results),
-                timeout=45.0
-            )
-        except asyncio.TimeoutError:
-            logger.warning("Timeout en la generación de respuesta")
-            response_data = {
-                "text": "El servicio está tardando demasiado. Por favor, intenta nuevamente.",
-                "qr_codes": {},
-                "has_qr": False
-            }
-        
-        # 5. REGISTRAR PREGUNTAS NO RESPONDIDAS
-        response_text = response_data["text"]  # 👈 Extraer texto para lógica existente
+        # 6. REGISTRAR PREGUNTAS NO RESPONDIDAS - CORREGIDO
+        response_text = response_data["text"]
         if ("no puedo ayudar" in response_text.lower() or 
             "no sé" in response_text.lower() or
             "dificultades técnicas" in response_text.lower()):
@@ -99,12 +77,13 @@ async def chat(message: Message):
             with Session(engine) as session:
                 unanswered = UnansweredQuestion(
                     original_question=message.text,
+                    category=category,
                     ai_response=response_text
                 )
                 session.add(unanswered)
                 session.commit()
         
-        # 6. GUARDAR EN LOG DE CONVERSACIONES
+        # 7. GUARDAR EN LOG DE CONVERSACIONES
         try:
             with Session(engine) as session:
                 chat_log = ChatLog(
@@ -113,23 +92,25 @@ async def chat(message: Message):
                 )
                 session.add(chat_log)
                 session.commit()
+                chatlog_id = chat_log.id  # 👈 OBTENER EL ID PARA EL FEEDBACK
         except Exception as db_error:
             logger.error(f"Error en base de datos: {db_error}")
-            # No fallar solo por error de DB
+            chatlog_id = None
         
-        # 7. RETORNAR RESPUESTA CON QR CODES
+        # 8. RETORNAR RESPUESTA CON QR CODES Y FEEDBACK SESSION
         return {
             "response": response_data["text"],
             "has_context": has_context,
-            "qr_codes": response_data["qr_codes"],  # 👈 NUEVO
-            "has_qr": response_data["has_qr"]       # 👈 NUEVO
+            "qr_codes": response_data["qr_codes"],
+            "has_qr": response_data["has_qr"],
+            "feedback_session_id": feedback_session_id,  # 👈 NUEVO
+            "chatlog_id": chatlog_id  # 👈 PARA COMPATIBILIDAD
         }
         
     except Exception as e:
         logger.error(f"Error general en /chat: {e}")
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
-        
 @app.get("/health")
 async def health_check():
     """Endpoint de salud que verifica Ollama también"""
@@ -141,9 +122,9 @@ async def health_check():
             options={'num_predict': 10}
         )
         
-        # Test de base de datos - CORREGIDO
+        # Test de base de datos
         with Session(engine) as session:
-            session.exec(text("SELECT 1"))  # 👈 Agregar text()
+            session.exec(text("SELECT 1"))
         
         # Test de ChromaDB
         rag_status = "connected" if rag_engine.client.heartbeat() else "disconnected"
@@ -165,7 +146,7 @@ async def health_check():
 
 @app.get("/analytics")
 async def get_analytics():
-    """Nuevo endpoint para obtener métricas"""
+    """Endpoint para obtener métricas de uso"""
     try:
         from app.analytics import get_query_analytics
         return get_query_analytics()
@@ -182,18 +163,10 @@ async def root():
         "features": {
             "rag": True,
             "analytics": True,
-            "unanswered_tracking": True
+            "unanswered_tracking": True,
+            "qr_codes": True  # 👈 NUEVA FUNCIONALIDAD
         }
     }
-@app.get("/analytics")
-async def get_analytics():
-    """Endpoint para obtener métricas de uso"""
-    try:
-        from app.analytics import get_query_analytics  # ✅ Importar aquí
-        return get_query_analytics()
-    except Exception as e:
-        logger.error(f"Error en analytics: {e}")
-        return {"error": "Error obteniendo analytics"}
 
 @app.get("/analytics/category/{category_name}")
 async def get_category_stats(category_name: str):
@@ -256,26 +229,14 @@ async def get_advanced_analytics(days: int = 30):
         logger.error(f"Error en analytics avanzados: {e}")
         return {"error": "Error obteniendo analytics avanzados"}
 
-@app.get("/analytics/category/{category_name}")
-async def get_category_insights(category_name: str):
-    """
-    Insights detallados para una categoría específica
-    """
-    try:
-        return advanced_analytics.get_category_insights(category_name)
-    except Exception as e:
-        logger.error(f"Error obteniendo insights de categoría: {e}")
-        return {"error": f"Error obteniendo insights para {category_name}"}
-
 @app.get("/analytics/export")
 async def export_analytics(format: str = "json"):
     """
     Exportar datos para análisis externo
     """
     try:
-        data = advanced_analytics.get_comprehensive_analytics(365)  # 1 año
+        data = advanced_analytics.get_comprehensive_analytics(365)
         if format == "csv":
-            # Aquí implementarías conversión a CSV
             return {"message": "Export CSV coming soon", "data": data}
         else:
             return data
@@ -308,7 +269,7 @@ async def preview_training_data():
 @app.post("/training/retrain")
 async def retrain_model():
     """
-    Endpoint para iniciar fine-tuning del modelo (FUTURA IMPLEMENTACIÓN)
+    Endpoint para iniciar fine-tuning del modelo
     """
     return {
         "status": "pending_implementation",
@@ -359,12 +320,10 @@ async def add_knowledge(document: str, category: str = "general"):
 async def training_stats():
     """Estadísticas de los datos de entrenamiento cargados"""
     try:
-        # Contar archivos training_data
         import glob, os
         pattern = os.path.join("./training_data", "training_data_*.json")
         json_files = glob.glob(pattern)
         
-        # Contar documentos por categoría en RAG
         collection_data = rag_engine.collection.get()
         categories = {}
         for metadata in collection_data.get('metadatas', []):
@@ -380,3 +339,124 @@ async def training_stats():
         }
     except Exception as e:
         return {"error": str(e)}
+
+# 👇 NUEVOS ENDPOINTS PARA QR
+@app.get("/qr/duoc-urls")
+async def get_all_duoc_qrs():
+    """Endpoint para obtener todos los QR de Duoc pre-generados"""
+    try:
+        all_urls = duoc_url_manager.get_all_urls()
+        qr_data = {}
+        
+        for key, url in all_urls.items():
+            qr_code = qr_generator.generate_duoc_qr(key)
+            if qr_code:
+                qr_data[key] = {
+                    "url": url,
+                    "qr_code": qr_code,
+                    "name": key.replace('_', ' ').title()
+                }
+        
+        return {
+            "status": "success",
+            "total_qrs": len(qr_data),
+            "qr_codes": qr_data
+        }
+    except Exception as e:
+        logger.error(f"Error generando QRs Duoc: {e}")
+        return {"status": "error", "error": str(e)}
+
+@app.get("/qr/generate")
+async def generate_specific_qr(url: str):
+    """Endpoint para generar QR para URL específica"""
+    try:
+        qr_code = qr_generator.generate_qr_code(url)
+        if qr_code:
+            return {
+                "status": "success",
+                "url": url,
+                "qr_code": qr_code
+            }
+        else:
+            raise HTTPException(status_code=400, detail="No se pudo generar QR")
+    except Exception as e:
+        logger.error(f"Error generando QR: {e}")
+        raise HTTPException(status_code=500, detail="Error interno")
+
+# En main.py - AÑADIR ESTOS NUEVOS ENDPOINTS
+
+class ResponseFeedbackRequest(BaseModel):
+    session_id: str
+    is_satisfied: bool
+    rating: Optional[int] = None
+    comments: Optional[str] = None
+
+@app.post("/feedback/response")
+async def submit_response_feedback(feedback: ResponseFeedbackRequest):
+    """
+    Endpoint para que los usuarios evalúen respuestas específicas de Ina
+    """
+    try:
+        success = response_feedback_system.save_response_feedback(
+            session_id=feedback.session_id,
+            is_satisfied=feedback.is_satisfied,
+            rating=feedback.rating,
+            comments=feedback.comments
+        )
+        
+        if success:
+            return {
+                "status": "success", 
+                "message": "¡Gracias por tu feedback! Ayudas a mejorar a Ina."
+            }
+        else:
+            raise HTTPException(status_code=400, detail="Sesión de feedback no válida")
+            
+    except Exception as e:
+        logger.error(f"Error en endpoint /feedback/response: {e}")
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
+
+@app.get("/feedback/response/stats")
+async def get_response_feedback_stats():
+    """
+    Endpoint para obtener estadísticas detalladas del feedback de respuestas
+    """
+    try:
+        stats = response_feedback_system.get_response_feedback_stats()
+        return stats
+    except Exception as e:
+        logger.error(f"Error obteniendo stats de feedback de respuestas: {e}")
+        return {"error": "Error obteniendo estadísticas"}
+
+@app.get("/feedback/response/export")
+async def export_response_feedback(format: str = "json"):
+    """
+    Exportar todos los datos de feedback para análisis
+    """
+    try:
+        with Session(engine) as session:
+            all_feedback = session.exec(select(ResponseFeedback)).all()
+            
+            if format == "csv":
+                # Implementar exportación CSV si es necesario
+                return {"message": "Export CSV coming soon", "total": len(all_feedback)}
+            else:
+                return {
+                    "total_feedback": len(all_feedback),
+                    "data": [
+                        {
+                            "session_id": fb.session_id,
+                            "user_message": fb.user_message[:100] + "..." if len(fb.user_message) > 100 else fb.user_message,
+                            "ai_response": fb.ai_response[:100] + "..." if len(fb.ai_response) > 100 else fb.ai_response,
+                            "is_satisfied": fb.is_satisfied,
+                            "rating": fb.rating,
+                            "comments": fb.comments,
+                            "category": fb.response_category,
+                            "timestamp": fb.timestamp.isoformat()
+                        }
+                        for fb in all_feedback
+                    ]
+                }
+    except Exception as e:
+        logger.error(f"Error exportando feedback: {e}")
+        return {"error": "Error exportando datos"}
