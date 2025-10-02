@@ -18,6 +18,9 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   border-left: 4px solid #0c33e2;
+  border-top: 4px solid #0c33e2;
+  border-right: 4px solid #0c33e2;
+  border-bottom: 4px solid #0c33e2;
   font-size: 1.1rem;
   transition: transform 0.2s ease;
 }
@@ -75,17 +78,12 @@
   transform: translateX(5px);
   background: #f0f2f5;
 }
-.Cuerpo {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  background: #ffffff;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  box-sizing: border-box;
+.area {
+  margin-bottom: 1rem;
+
+}
+.area a {
+  margin-bottom: 1rem;
+  color: black;
+  
 }
