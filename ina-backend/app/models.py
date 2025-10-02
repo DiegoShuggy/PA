@@ -1,3 +1,4 @@
+# app/models.py
 from sqlmodel import SQLModel, Field, create_engine
 from typing import Optional
 from datetime import datetime
@@ -10,6 +11,7 @@ class ChatLog(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_message: str
     ai_response: str
+    timestamp: datetime = Field(default_factory=datetime.now)  # 👈 ESTA LÍNEA DEBE ESTAR
 
 class UserQuery(SQLModel, table=True):
     """Registrar todas las preguntas de los usuarios"""
@@ -22,7 +24,7 @@ class UserQuery(SQLModel, table=True):
 class UnansweredQuestion(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     original_question: str
-    category: str  # ✅ ESTA LÍNEA DEBE EXISTIR
+    category: Optional[str] = Field(default=None, nullable=True)  # 👈 Hacer opcional
     ai_response: str
     timestamp: datetime = Field(default_factory=datetime.now)
     needs_human_review: bool = Field(default=False)
@@ -35,7 +37,18 @@ class Feedback(SQLModel, table=True):
     comments: Optional[str] = None  # Comentarios opcionales
     timestamp: datetime = Field(default_factory=datetime.now)
 
-# ✅ AÑADE ESTA FUNCIÓN QUE FALTA
+class ResponseFeedback(SQLModel, table=True):
+    """Feedback específico para cada respuesta de Ina"""
+    id: Optional[int] = Field(default=None, primary_key=True)
+    session_id: str  # ID único de la sesión de chat
+    user_message: str
+    ai_response: str
+    is_satisfied: bool  # True = Sí, False = No
+    rating: Optional[int] = Field(default=None, ge=1, le=5)
+    comments: Optional[str] = None
+    response_category: Optional[str] = None
+    timestamp: datetime = Field(default_factory=datetime.now)
+
 def init_db():
     """Inicializar la base de datos y crear tablas"""
-    SQLModel.metadata.create_all(engine)    
+    SQLModel.metadata.create_all(engine)

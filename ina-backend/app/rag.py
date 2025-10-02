@@ -1,26 +1,23 @@
-# app/rag.py
+# app/rag.py - VERSIÓN COMPLETAMENTE CORREGIDA
+
 import chromadb
 import ollama
 from typing import List, Dict, Optional
 import logging
-from app.qr_generator import qr_generator  # 👈 NUEVO IMPORT
+from app.qr_generator import qr_generator
+import traceback  # 👈 AGREGAR ESTO
 
 logger = logging.getLogger(__name__)
 
 class RAGEngine:
     def __init__(self):
-        # ✅ NUEVA SINTAXIS de ChromaDB
         self.client = chromadb.PersistentClient(path="./chroma_db")
-        
-        # Crear colección para el conocimiento de Duoc UC
         self.collection = self.client.get_or_create_collection(
             name="duoc_knowledge"
         )
-        
         logger.info("RAG Engine inicializado - Esperando datos")
 
     def add_document(self, document: str, metadata: Dict = None) -> bool:
-        """Añadir un documento a la base de conocimientos"""
         try:
             doc_id = f"doc_{len(self.collection.get()['documents'])}"
             self.collection.add(
@@ -35,7 +32,6 @@ class RAGEngine:
             return False
 
     def query(self, query_text: str, n_results: int = 3) -> List[str]:
-        """Buscar información relevante en la base de conocimientos"""
         try:
             results = self.collection.query(
                 query_texts=[query_text],
@@ -46,7 +42,6 @@ class RAGEngine:
             logger.error(f"Error en query RAG: {e}")
             return []
 
-# ✅ Función auxiliar para optimizar respuestas
 def _optimize_response(respuesta: str, pregunta: str) -> str:
     """Optimizar respuesta para punto medio óptimo - claro pero conciso"""
     
@@ -71,66 +66,46 @@ def _optimize_response(respuesta: str, pregunta: str) -> str:
     for largo, corto in optimizations.items():
         respuesta = respuesta.replace(largo, corto)
     
-    # Asegurar que tenga información esencial para consultas comunes
-    pregunta_lower = pregunta.lower()
-    
-    if "certificado" in pregunta_lower and "alumno" in pregunta_lower:
-        if "digital" not in respuesta.lower() and "portal" not in respuesta.lower():
-            respuesta += " También disponible en formato digital desde el Portal del Estudiante."
-    
-    if "tne" in pregunta_lower and "cédula" not in respuesta.lower():
-        if "documento" not in respuesta.lower() and "llevar" not in respuesta.lower():
-            respuesta = respuesta.replace("validar tu TNE", "validar tu TNE con tu TNE física y cédula")
-    
     # Limpiar espacios múltiples
     while "  " in respuesta:
         respuesta = respuesta.replace("  ", " ")
-    
-    # Limitar longitud máxima pero permitir respuestas completas
-    if len(respuesta) > 450:
-        # Encontrar el último punto antes del límite
-        last_period = respuesta[:450].rfind('.')
-        if last_period > 250:  # Al menos 250 caracteres útiles
-            respuesta = respuesta[:last_period + 1]
-        elif respuesta[:450].rfind(',') > 300:
-            last_comma = respuesta[:450].rfind(',')
-            respuesta = respuesta[:last_comma] + "."
     
     return respuesta.strip()
 
 # ✅ Instancia global del motor RAG
 rag_engine = RAGEngine()
 
-# ✅ Función para obtener respuestas de Ollama ACTUALIZADA
-async def get_ai_response(user_message: str, context: list = None) -> Dict:  # 👈 Cambiado a Dict
+# ✅ Función para obtener respuestas de Ollama - COMPLETAMENTE CORREGIDA
+async def get_ai_response(user_message: str, context: list = None) -> Dict:
     """
     Función para conectar con Ollama usando Mistral 7B
     Retorna dict con texto y códigos QR
     """
     try:
-        # PROMPT OPTIMIZADO - PUNTO MEDIO PERFECTO
+        # PROMPT OPTIMIZADO
         system_message = (
             "Eres InA, asistente especializado del Punto Estudiantil Duoc UC. "
             "Responde de forma CLARA, COMPLETA pero CONCISA (4-5 líneas máximo).\n"
             "Incluye información esencial: DÓNDE, QUÉ necesitan, COSTO, TIEMPO y OPCIONES.\n"
             "Sé directo y útil. Evita saludos largos y repeticiones.\n\n"
-            "ÁMBITO DEL PUNTO ESTUDIANTIL:\n"
-            "- Certificados estudiantiles (alumno regular, notas)\n"
-            "- Validación TNE\n" 
-            "- Horarios de atención\n"
-            "- Trámites documentales\n"
-            "- Información general de sedes\n\n"
-            "DERIVAR A OTROS DEPARTAMENTOS si es sobre:\n"
-            "- Problemas técnicos con plataformas → Centro de Ayuda: https://centroayuda.duoc.cl\n"
-            "- Consultas académicas específicas → Jefatura de carrera\n"
-            "- Becas detalladas → Departamento de Beneficios\n"
-            "- Problemas de conectividad → Mesa de ayuda TI\n\n"
-            "IMPORTANTE: Cuando menciones sitios web, incluye la URL completa para generar códigos QR.\n"
+            
+            "ENLACES OFICIALES DUOC UC - Úsalos cuando sean relevantes:\n"
+            "• Portal Estudiantil: https://www.duoc.cl/alumnos/\n"
+            "• Certificados: https://certificados.duoc.cl/\n" 
+            "• Prácticas: https://practicas.duoc.cl/\n"
+            "• Biblioteca: https://biblioteca.duoc.cl/\n"
+            "• Beneficios: https://beneficios.duoc.cl/\n"
+            "• Ayuda: https://ayuda.duoc.cl/\n"
+            "• Inscripciones: https://inscripciones.duoc.cl/IA/\n"
+            "• Sede Plaza Norte: https://www.duoc.cl/sede/plaza-norte/\n"
+            "• Contacto: https://www.duoc.cl/admision/contacto/\n\n"
+            
+            "IMPORTANTE: Cuando menciones trámites online, INCLUYE la URL completa.\n"
+            "Ejemplo: 'Puedes solicitar tu certificado en: https://certificados.duoc.cl/'\n\n"
         )
         
         # Agregar contexto si está disponible
         if context:
-            # Filtrar contexto para solo información relevante y útil
             relevant_context = []
             for ctx in context:
                 if not ctx.startswith("DERIVACIÓN:") and len(ctx) > 10:
@@ -138,6 +113,9 @@ async def get_ai_response(user_message: str, context: list = None) -> Dict:  # �
             
             if relevant_context:
                 system_message += f"INFORMACIÓN RELEVANTE:\n{chr(10).join(relevant_context[:2])}\n\n"
+        
+        # 👇 AGREGAR LOG PARA DEBUG
+        logger.info(f"Enviando mensaje a Ollama: {user_message[:100]}...")
         
         response = ollama.chat(
             model='mistral:7b',
@@ -152,8 +130,8 @@ async def get_ai_response(user_message: str, context: list = None) -> Dict:  # �
                 }
             ],
             options={
-                'temperature': 0.25,   # Balance perfecto entre precisión y naturalidad
-                'num_predict': 600,    # Suficiente para respuestas completas pero no largas
+                'temperature': 0.25,
+                'num_predict': 400,  # Reducido para respuestas más rápidas
                 'top_p': 0.82,
                 'top_k': 40
             }
@@ -161,17 +139,23 @@ async def get_ai_response(user_message: str, context: list = None) -> Dict:  # �
         
         respuesta = response['message']['content'].strip()
         
+        # 👇 LOG PARA VER LA RESPUESTA DE OLLAMA
+        logger.info(f"Respuesta de Ollama: {respuesta[:200]}...")
+        
         # Aplicar optimizaciones inteligentes
         respuesta = _optimize_response(respuesta, user_message)
         
         # ✅ GENERAR CÓDIGOS QR PARA URLs ENCONTRADAS
-        processed_response = qr_generator.process_response(respuesta)
+        processed_response = qr_generator.process_response(respuesta, user_message)
         
         logger.info(f"✅ Respuesta procesada - Texto: {len(respuesta)} chars, QRs: {len(processed_response['qr_codes'])}")
         return processed_response
         
     except Exception as e:
+        # 👇 MEJORAR EL LOG DEL ERROR
         logger.error(f"❌ Error con Ollama: {str(e)}")
+        logger.error(f"❌ Traceback: {traceback.format_exc()}")  # 👈 AGREGAR TRACEBACK
+        
         return {
             "text": "Estamos experimentando dificultades técnicas. Por favor, intenta nuevamente en unos momentos.",
             "qr_codes": {},
