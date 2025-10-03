@@ -37,6 +37,7 @@ class Feedback(SQLModel, table=True):
     comments: Optional[str] = None  # Comentarios opcionales
     timestamp: datetime = Field(default_factory=datetime.now)
 
+# En app/models.py - AGREGAR AL FINAL
 class ResponseFeedback(SQLModel, table=True):
     """Feedback específico para cada respuesta de Ina"""
     id: Optional[int] = Field(default=None, primary_key=True)

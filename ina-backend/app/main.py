@@ -2,16 +2,15 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from app.models import init_db, ChatLog, UserQuery, UnansweredQuestion, engine
+from app.models import init_db, ChatLog, UserQuery, UnansweredQuestion, engine, ResponseFeedback
 from app.rag import get_ai_response
 from app.rag import rag_engine
-from sqlmodel import Session
+from sqlmodel import Session, select
 import asyncio
 import logging
 import ollama
 from app.analytics import get_query_analytics, get_category_analytics
 from app.classifier import classifier
-from app.feedback import feedback_system
 from pydantic import BaseModel as BaseModelOriginal
 from typing import Optional
 from app.quality_monitor import quality_monitor
@@ -19,12 +18,27 @@ from app.advanced_analytics import advanced_analytics
 from app.auto_trainer import auto_trainer
 from sqlalchemy import text
 from app.training_data_loader import training_loader
-from app.qr_generator import qr_generator, duoc_url_manager  # 👈 IMPORTAR LOS NUEVOS
+from app.qr_generator import qr_generator, duoc_url_manager
 
-# Modelo Pydantic para feedback
+# 👇 NUEVAS IMPORTACIONES PARA EL SISTEMA DE FEEDBACK
+from app.response_feedback import response_feedback_system
+from app.sentiment_analyzer import sentiment_analyzer
+from app.feedback_rewards import feedback_rewards
+from datetime import datetime, timedelta
+import glob
+import os
+
+# Modelo Pydantic para feedback (compatibilidad)
 class FeedbackRequest(BaseModelOriginal):
     chatlog_id: int
     is_helpful: bool
+    rating: Optional[int] = None
+    comments: Optional[str] = None
+
+# 👇 NUEVO Modelo Pydantic para feedback de respuestas
+class ResponseFeedbackRequest(BaseModelOriginal):
+    session_id: str
+    is_satisfied: bool
     rating: Optional[int] = None
     comments: Optional[str] = None
 
@@ -55,11 +69,39 @@ def on_startup():
 class Message(BaseModel):
     text: str
 
-# En main.py - MODIFICAR el endpoint /chat
 @app.post("/chat")
 async def chat(message: Message):
     try:
-        # ... (código existente hasta obtener la respuesta) ...
+        # 1. CLASIFICAR LA PREGUNTA
+        category = classifier.classify_question(message.text)
+        logger.info(f"Categoría detectada: {category}")
+        
+        # 2. REGISTRAR PREGUNTA DEL USUARIO CON CATEGORÍA
+        with Session(engine) as session:
+            user_query = UserQuery(question=message.text, category=category)
+            session.add(user_query)
+            session.commit()
+            query_id = user_query.id
+        
+        # 3. BUSCAR EN BASE DE CONOCIMIENTOS
+        context_results = rag_engine.query(message.text)
+        has_context = bool(context_results)
+        
+        logger.info(f"Contexto encontrado: {len(context_results)} resultados para categoría '{category}'")
+        
+        # 4. OBTENER RESPUESTA (AHORA CON QR)
+        try:
+            response_data = await asyncio.wait_for(
+                get_ai_response(message.text, context_results),
+                timeout=45.0
+            )
+        except asyncio.TimeoutError:
+            logger.warning("Timeout en la generación de respuesta")
+            response_data = {
+                "text": "El servicio está tardando demasiado. Por favor, intenta nuevamente.",
+                "qr_codes": {},
+                "has_qr": False
+            }
         
         # 5. CREAR SESIÓN DE FEEDBACK PARA ESTA RESPUESTA
         feedback_session_id = response_feedback_system.create_feedback_session(
@@ -164,7 +206,8 @@ async def root():
             "rag": True,
             "analytics": True,
             "unanswered_tracking": True,
-            "qr_codes": True  # 👈 NUEVA FUNCIONALIDAD
+            "qr_codes": True,
+            "feedback_system": True  # 👈 NUEVA FUNCIONALIDAD
         }
     }
 
@@ -180,12 +223,15 @@ async def get_category_stats(category_name: str):
 @app.post("/feedback")
 async def submit_feedback(feedback: FeedbackRequest):
     """
-    Endpoint para que los usuarios evalúen las respuestas de InA
+    Endpoint para que los usuarios evalúen las respuestas de InA (compatibilidad)
     """
     try:
-        success = feedback_system.save_feedback(
-            chatlog_id=feedback.chatlog_id,
-            is_helpful=feedback.is_helpful,
+        # Usar el nuevo sistema para mantener compatibilidad
+        success = response_feedback_system.save_response_feedback(
+            session_id=f"legacy_{feedback.chatlog_id}",
+            user_message="Legacy feedback",  # Placeholder
+            ai_response="Legacy response",   # Placeholder  
+            is_satisfied=feedback.is_helpful,
             rating=feedback.rating,
             comments=feedback.comments
         )
@@ -202,11 +248,17 @@ async def submit_feedback(feedback: FeedbackRequest):
 @app.get("/feedback/stats")
 async def get_feedback_stats():
     """
-    Endpoint para obtener estadísticas de calidad de respuestas
+    Endpoint para obtener estadísticas de calidad de respuestas (compatibilidad)
     """
     try:
-        stats = feedback_system.get_feedback_stats()
-        return stats
+        # Usar el nuevo sistema para stats
+        stats = response_feedback_system.get_response_feedback_stats(30)
+        return {
+            "total_feedback": stats.get("total_responses_evaluated", 0),
+            "helpful_responses": stats.get("total_positive", 0),
+            "helpfulness_rate": stats.get("satisfaction_rate", 0),
+            "average_rating": stats.get("average_rating", 0)
+        }
     except Exception as e:
         logger.error(f"Error obteniendo stats de feedback: {e}")
         return {"error": "Error obteniendo estadísticas"}
@@ -320,7 +372,6 @@ async def add_knowledge(document: str, category: str = "general"):
 async def training_stats():
     """Estadísticas de los datos de entrenamiento cargados"""
     try:
-        import glob, os
         pattern = os.path.join("./training_data", "training_data_*.json")
         json_files = glob.glob(pattern)
         
@@ -383,13 +434,7 @@ async def generate_specific_qr(url: str):
         logger.error(f"Error generando QR: {e}")
         raise HTTPException(status_code=500, detail="Error interno")
 
-# En main.py - AÑADIR ESTOS NUEVOS ENDPOINTS
-
-class ResponseFeedbackRequest(BaseModel):
-    session_id: str
-    is_satisfied: bool
-    rating: Optional[int] = None
-    comments: Optional[str] = None
+# 👇 NUEVOS ENDPOINTS PARA EL SISTEMA DE FEEDBACK MEJORADO
 
 @app.post("/feedback/response")
 async def submit_response_feedback(feedback: ResponseFeedbackRequest):
@@ -405,46 +450,91 @@ async def submit_response_feedback(feedback: ResponseFeedbackRequest):
         )
         
         if success:
+            # Opcional: analizar sentimiento si hay comentarios
+            if feedback.comments:
+                sentiment = sentiment_analyzer.analyze_feedback_sentiment(feedback.comments)
+                logger.info(f"Sentimiento del feedback: {sentiment}")
+            
             return {
                 "status": "success", 
                 "message": "¡Gracias por tu feedback! Ayudas a mejorar a Ina."
             }
         else:
-            raise HTTPException(status_code=400, detail="Sesión de feedback no válida")
+            raise HTTPException(status_code=400, detail="Sesión de feedback no válida o expirada")
             
     except Exception as e:
         logger.error(f"Error en endpoint /feedback/response: {e}")
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @app.get("/feedback/response/stats")
-async def get_response_feedback_stats():
+async def get_response_feedback_stats(days: int = 30):
     """
     Endpoint para obtener estadísticas detalladas del feedback de respuestas
     """
     try:
-        stats = response_feedback_system.get_response_feedback_stats()
+        stats = response_feedback_system.get_response_feedback_stats(days)
         return stats
     except Exception as e:
         logger.error(f"Error obteniendo stats de feedback de respuestas: {e}")
         return {"error": "Error obteniendo estadísticas"}
 
+@app.get("/feedback/response/recent")
+async def get_recent_feedback(limit: int = 10):
+    """
+    Endpoint para obtener feedback reciente
+    """
+    try:
+        recent = response_feedback_system.get_recent_feedback(limit)
+        return {
+            "total": len(recent),
+            "feedback": recent
+        }
+    except Exception as e:
+        logger.error(f"Error obteniendo feedback reciente: {e}")
+        return {"error": str(e)}
+
 @app.get("/feedback/response/export")
-async def export_response_feedback(format: str = "json"):
+async def export_response_feedback(format: str = "json", days: int = 30):
     """
     Exportar todos los datos de feedback para análisis
     """
     try:
+        start_date = datetime.now() - timedelta(days=days)
         with Session(engine) as session:
-            all_feedback = session.exec(select(ResponseFeedback)).all()
+            all_feedback = session.exec(
+                select(ResponseFeedback)
+                .where(ResponseFeedback.timestamp >= start_date)
+            ).all()
             
             if format == "csv":
-                # Implementar exportación CSV si es necesario
-                return {"message": "Export CSV coming soon", "total": len(all_feedback)}
+                # Implementación básica de CSV
+                import csv
+                import io
+                
+                output = io.StringIO()
+                writer = csv.writer(output)
+                writer.writerow(["ID", "Session ID", "Satisfecho", "Rating", "Comentarios", "Categoría", "Timestamp"])
+                
+                for fb in all_feedback:
+                    writer.writerow([
+                        fb.id, fb.session_id, fb.is_satisfied, 
+                        fb.rating or "", fb.comments or "", 
+                        fb.response_category or "", fb.timestamp.isoformat()
+                    ])
+                
+                return {
+                    "format": "csv",
+                    "data": output.getvalue(),
+                    "total_records": len(all_feedback)
+                }
             else:
                 return {
+                    "format": "json",
                     "total_feedback": len(all_feedback),
+                    "period_days": days,
                     "data": [
                         {
+                            "id": fb.id,
                             "session_id": fb.session_id,
                             "user_message": fb.user_message[:100] + "..." if len(fb.user_message) > 100 else fb.user_message,
                             "ai_response": fb.ai_response[:100] + "..." if len(fb.ai_response) > 100 else fb.ai_response,
@@ -460,3 +550,86 @@ async def export_response_feedback(format: str = "json"):
     except Exception as e:
         logger.error(f"Error exportando feedback: {e}")
         return {"error": "Error exportando datos"}
+
+# 👇 ENDPOINTS PARA CARACTERÍSTICAS AVANZADAS
+
+@app.get("/feedback/sentiment/{session_id}")
+async def analyze_feedback_sentiment(session_id: str):
+    """
+    Analizar sentimiento de comentarios de feedback específico
+    """
+    try:
+        with Session(engine) as session:
+            feedback = session.exec(
+                select(ResponseFeedback)
+                .where(ResponseFeedback.session_id == session_id)
+            ).first()
+            
+            if not feedback or not feedback.comments:
+                return {"error": "No hay comentarios para analizar"}
+            
+            sentiment = sentiment_analyzer.analyze_feedback_sentiment(feedback.comments)
+            return {
+                "session_id": session_id,
+                "comments": feedback.comments,
+                "sentiment_analysis": sentiment
+            }
+    except Exception as e:
+        logger.error(f"Error analizando sentimiento: {e}")
+        return {"error": str(e)}
+
+@app.get("/feedback/rewards/user/{user_id}")
+async def get_user_rewards(user_id: str, days: int = 30):
+    """
+    Obtener recompensas y contribución del usuario
+    """
+    try:
+        contribution = feedback_rewards.calculate_user_contribution(user_id, days)
+        return contribution
+    except Exception as e:
+        logger.error(f"Error calculando recompensas: {e}")
+        return {"error": str(e)}
+
+@app.get("/feedback/leaderboard")
+async def get_feedback_leaderboard(limit: int = 10, days: int = 30):
+    """
+    Tabla de líderes de contribuidores
+    """
+    try:
+        leaderboard = feedback_rewards.get_leaderboard(limit, days)
+        return {
+            "period_days": days,
+            "leaderboard": leaderboard
+        }
+    except Exception as e:
+        logger.error(f"Error obteniendo leaderboard: {e}")
+        return {"error": str(e)}
+
+@app.get("/feedback/health")
+async def feedback_health():
+    """
+    Health check específico para el sistema de feedback
+    """
+    try:
+        # Verificar que el sistema de feedback esté funcionando
+        with Session(engine) as session:
+            total_feedback = session.exec(select(ResponseFeedback)).all()
+            active_sessions = len(response_feedback_system.feedback_sessions)
+        
+        return {
+            "status": "healthy",
+            "total_feedback_stored": len(total_feedback),
+            "active_feedback_sessions": active_sessions,
+            "sentiment_analyzer_available": sentiment_analyzer.analyzer is not None,
+            "rewards_system_available": True
+        }
+    except Exception as e:
+        logger.error(f"Error en health check de feedback: {e}")
+        return {
+            "status": "unhealthy",
+            "error": str(e)
+        }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
