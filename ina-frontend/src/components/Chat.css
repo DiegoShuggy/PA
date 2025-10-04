@@ -541,4 +541,189 @@ body {
   display: flex;
 
 }
+/* 👇 NUEVOS ESTILOS PARA EL SISTEMA DE FEEDBACK */
+
+.feedback-widget {
+  margin: 15px 0;
+  padding: 15px;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 75%;
+  align-self: flex-start;
+  animation: fadeIn 0.3s ease;
+}
+
+.feedback-prompt p {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #334155;
+  text-align: left;
+}
+
+.feedback-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.feedback-btn {
+  padding: 10px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
+  min-width: 120px;
+}
+
+.feedback-btn.positive:hover {
+  background-color: #dcfce7;
+  border-color: #22c55e;
+  color: #166534;
+}
+
+.feedback-btn.negative:hover {
+  background-color: #fecaca;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+.feedback-followup {
+  margin-top: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border-left: none;
+}
+
+.feedback-followup h4 {
+  margin: 0 0 8px 0;
+  color: #334155;
+  font-size: 16px;
+  text-align: left;
+}
+
+.feedback-followup p {
+  margin: 0 0 15px 0;
+  color: #64748b;
+  font-size: 14px;
+  text-align: left;
+}
+
+.rating-section {
+  margin: 10px 0;
+}
+
+.rating-section p {
+  margin: 0 0 8px 0;
+  color: #334155;
+  font-size: 14px;
+  text-align: left;
+}
+
+.star-rating {
+  display: flex;
+  gap: 5px;
+  margin: 8px 0;
+}
+
+.star {
+  font-size: 24px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.star.filled {
+  color: #fbbf24;
+}
+
+.star:hover {
+  color: #f59e0b;
+}
+
+.feedback-followup textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+.feedback-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.submit-btn {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-btn {
+  padding: 8px 16px;
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.feedback-thankyou {
+  text-align: center;
+  padding: 10px;
+  color: #059669;
+  font-weight: 500;
+}
+
+.feedback-thankyou p {
+  margin: 0;
+  text-align: center;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .feedback-widget {
+    max-width: 85%;
+    padding: 12px;
+  }
+
+  .feedback-buttons {
+    flex-direction: column;
+  }
+
+  .feedback-btn {
+    min-width: auto;
+  }
+
+  .feedback-actions {
+    flex-direction: column;
+  }
+
+  .star-rating {
+    justify-content: center;
+  }
+}
+
+/* Asegurar que el texto en los mensajes esté alineado a la izquierda */
+.message-text { 
+  text-align: left; 
+  display: flex;
+}
 }

@@ -8,6 +8,16 @@ interface Message {
   timestamp: Date;
   qr_codes?: { [url: string]: string };
   has_qr?: boolean;
+  feedback_session_id?: string; // 👈 NUEVO: ID para el feedback
+  chatlog_id?: number; // 👈 Para compatibilidad
+}
+
+// 👇 NUEVO: Interface para el feedback
+interface FeedbackData {
+  session_id: string;
+  is_satisfied: boolean;
+  rating?: number;
+  comments?: string;
 }
 
 const Chat: React.FC = () => {
@@ -17,13 +27,21 @@ const Chat: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // 👇 NUEVOS ESTADOS PARA FEEDBACK
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [currentFeedbackSession, setCurrentFeedbackSession] = useState<string | null>(null);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [showFollowup, setShowFollowup] = useState(false);
+  const [currentRating, setCurrentRating] = useState<number>(0);
+  const [userComments, setUserComments] = useState('');
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const finalTranscriptRef = useRef('');
   const menuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  
-
+  const feedbackRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -47,9 +65,26 @@ const Chat: React.FC = () => {
     };
   }, []);
 
+  // 👇 NUEVO: Cerrar feedback al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutsideFeedback = (event: MouseEvent) => {
+      if (feedbackRef.current && !feedbackRef.current.contains(event.target as Node)) {
+        setShowFeedback(false);
+        setShowFollowup(false);
+        resetFeedback();
+      }
+    };
+
+    if (showFeedback) {
+      document.addEventListener('mousedown', handleClickOutsideFeedback);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideFeedback);
+    };
+  }, [showFeedback]);
 
   // Inicializar el reconocimiento de voz
-
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
@@ -110,6 +145,79 @@ const Chat: React.FC = () => {
     };
   }, [isListening]);
 
+  // 👇 NUEVO: Función para resetear el feedback
+  const resetFeedback = () => {
+    setCurrentFeedbackSession(null);
+    setFeedbackSubmitted(false);
+    setShowFollowup(false);
+    setCurrentRating(0);
+    setUserComments('');
+  };
+
+  // 👇 NUEVO: Función para enviar feedback básico (Sí/No)
+  const submitFeedback = async (isSatisfied: boolean) => {
+    if (!currentFeedbackSession) return;
+
+    try {
+      const response = await fetch('http://localhost:8000/feedback/response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: currentFeedbackSession,
+          is_satisfied: isSatisfied,
+          rating: null,
+          comments: null
+        })
+      });
+
+      if (response.ok) {
+        if (isSatisfied) {
+          setFeedbackSubmitted(true);
+          setTimeout(() => {
+            setShowFeedback(false);
+            resetFeedback();
+          }, 2000);
+        } else {
+          setShowFollowup(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error enviando feedback:', error);
+    }
+  };
+
+  // 👇 NUEVO: Función para enviar feedback detallado
+  const submitDetailedFeedback = async () => {
+    if (!currentFeedbackSession) return;
+
+    try {
+      const response = await fetch('http://localhost:8000/feedback/response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: currentFeedbackSession,
+          is_satisfied: false,
+          rating: currentRating || null,
+          comments: userComments || null
+        })
+      });
+
+      if (response.ok) {
+        setFeedbackSubmitted(true);
+        setTimeout(() => {
+          setShowFeedback(false);
+          resetFeedback();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error enviando feedback detallado:', error);
+    }
+  };
+
   const toggleListening = () => {
     if (!recognitionRef.current || !isSpeechSupported) {
       alert('Tu navegador no soporta reconocimiento de voz. Prueba con Chrome o Edge.');
@@ -150,7 +258,6 @@ const Chat: React.FC = () => {
       case 'help':
         alert('Mostrar ayuda del chat');
         break;
-      // Nuevas opciones que insertan texto
       case 'greeting':
         insertText('¡Hola InA! ¿Podrías ayudarme con');
         break;
@@ -172,11 +279,9 @@ const Chat: React.FC = () => {
   };
 
   const insertText = (text: string) => {
-    // Si ya hay texto, agregar un espacio antes del nuevo texto
     const newText = inputMessage ? `${inputMessage} ${text}` : text;
     setInputMessage(newText);
 
-    // Enfocar el input para que el usuario pueda escribir inmediatamente
     setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
@@ -227,9 +332,20 @@ const Chat: React.FC = () => {
         isUser: false, 
         timestamp: new Date(),
         qr_codes: data.qr_codes || {},
-        has_qr: data.has_qr || false
+        has_qr: data.has_qr || false,
+        feedback_session_id: data.feedback_session_id, // 👈 NUEVO
+        chatlog_id: data.chatlog_id
       };
+      
       setMessages(prev => [...prev, aiMessage]);
+      
+      // 👇 NUEVO: Mostrar feedback después de la respuesta de Ina
+      if (data.feedback_session_id) {
+        setCurrentFeedbackSession(data.feedback_session_id);
+        setShowFeedback(true);
+        setFeedbackSubmitted(false);
+        setShowFollowup(false);
+      }
 
     } catch (error) {
       const errorMessage: Message = {
@@ -261,8 +377,81 @@ const Chat: React.FC = () => {
     ));
   };
 
+  // 👇 NUEVO: Componente de Feedback
+  const renderFeedbackWidget = () => {
+    if (!showFeedback) return null;
+
+    return (
+      <div className="feedback-widget" ref={feedbackRef}>
+        {!feedbackSubmitted ? (
+          <>
+            {!showFollowup ? (
+              <div className="feedback-prompt">
+                <p>¿Te resultó útil esta respuesta de Ina?</p>
+                <div className="feedback-buttons">
+                  <button 
+                    className="feedback-btn positive" 
+                    onClick={() => submitFeedback(true)}
+                  >
+                    👍 Sí, cumplió con lo que necesitaba
+                  </button>
+                  <button 
+                    className="feedback-btn negative" 
+                    onClick={() => submitFeedback(false)}
+                  >
+                    👎 No, podría mejorar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="feedback-followup">
+                <h4>¡Gracias por ayudarnos a mejorar!</h4>
+                <p>¿Podrías contarnos más sobre cómo podemos mejorar?</p>
+                
+                <div className="rating-section">
+                  <p>Califica esta respuesta (opcional):</p>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span 
+                        key={star}
+                        className={`star ${currentRating >= star ? 'filled' : ''}`}
+                        onClick={() => setCurrentRating(star)}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                
+                <textarea 
+                  value={userComments}
+                  onChange={(e) => setUserComments(e.target.value)}
+                  placeholder="Ej: La respuesta fue muy técnica, necesitaba más detalles prácticos..."
+                  rows={3}
+                ></textarea>
+                
+                <div className="feedback-actions">
+                  <button onClick={submitDetailedFeedback} className="submit-btn">
+                    Enviar comentarios
+                  </button>
+                  <button onClick={() => setShowFeedback(false)} className="cancel-btn">
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="feedback-thankyou">
+            <p>✅ ¡Gracias por tu feedback! Tu opinión ayuda a mejorar a Ina.</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="chat-wrapper" >
+    <div className="chat-wrapper">
       {/* Botón del menú flotante en la esquina derecha */}
       <div className="floating-menu-container" ref={menuRef}>
         <button
@@ -380,6 +569,10 @@ const Chat: React.FC = () => {
               </div>
             </div>
           ))}
+          
+          {/* 👇 NUEVO: Mostrar widget de feedback después del último mensaje de Ina */}
+          {renderFeedbackWidget()}
+          
           {isLoading && (
             <div className="message ai-message">
               <div className="typing-indicator">
