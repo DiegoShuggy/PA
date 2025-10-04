@@ -436,6 +436,7 @@ async def generate_specific_qr(url: str):
 
 # 👇 NUEVOS ENDPOINTS PARA EL SISTEMA DE FEEDBACK MEJORADO
 
+# En main.py - MODIFICAR el endpoint /feedback/response
 @app.post("/feedback/response")
 async def submit_response_feedback(feedback: ResponseFeedbackRequest):
     """
@@ -450,6 +451,10 @@ async def submit_response_feedback(feedback: ResponseFeedbackRequest):
         )
         
         if success:
+            # 👇 NUEVO: Si se enviaron comentarios, marcar sesión como completada
+            if feedback.comments is not None:
+                response_feedback_system.mark_session_completed(feedback.session_id)
+            
             # Opcional: analizar sentimiento si hay comentarios
             if feedback.comments:
                 sentiment = sentiment_analyzer.analyze_feedback_sentiment(feedback.comments)

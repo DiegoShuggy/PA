@@ -8,16 +8,8 @@ interface Message {
   timestamp: Date;
   qr_codes?: { [url: string]: string };
   has_qr?: boolean;
-  feedback_session_id?: string; // 👈 NUEVO: ID para el feedback
-  chatlog_id?: number; // 👈 Para compatibilidad
-}
-
-// 👇 NUEVO: Interface para el feedback
-interface FeedbackData {
-  session_id: string;
-  is_satisfied: boolean;
-  rating?: number;
-  comments?: string;
+  feedback_session_id?: string;
+  chatlog_id?: number;
 }
 
 const Chat: React.FC = () => {
@@ -28,12 +20,11 @@ const Chat: React.FC = () => {
   const [isSpeechSupported, setIsSpeechSupported] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // 👇 NUEVOS ESTADOS PARA FEEDBACK
+  // Estados para feedback
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentFeedbackSession, setCurrentFeedbackSession] = useState<string | null>(null);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [showFollowup, setShowFollowup] = useState(false);
-  const [currentRating, setCurrentRating] = useState<number>(0);
   const [userComments, setUserComments] = useState('');
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -65,13 +56,26 @@ const Chat: React.FC = () => {
     };
   }, []);
 
-  // 👇 NUEVO: Cerrar feedback al hacer clic fuera
+  // 👇 CORREGIDO: Función para cerrar feedback
+  const closeFeedback = () => {
+    setShowFeedback(false);
+    setShowFollowup(false);
+    resetFeedback();
+  };
+
+  // 👇 CORREGIDO: Función para resetear feedback
+  const resetFeedback = () => {
+    setCurrentFeedbackSession(null);
+    setFeedbackSubmitted(false);
+    setShowFollowup(false);
+    setUserComments('');
+  };
+
+  // 👇 CORREGIDO: Cerrar feedback al hacer clic fuera
   useEffect(() => {
     const handleClickOutsideFeedback = (event: MouseEvent) => {
       if (feedbackRef.current && !feedbackRef.current.contains(event.target as Node)) {
-        setShowFeedback(false);
-        setShowFollowup(false);
-        resetFeedback();
+        closeFeedback();
       }
     };
 
@@ -145,18 +149,14 @@ const Chat: React.FC = () => {
     };
   }, [isListening]);
 
-  // 👇 NUEVO: Función para resetear el feedback
-  const resetFeedback = () => {
-    setCurrentFeedbackSession(null);
-    setFeedbackSubmitted(false);
-    setShowFollowup(false);
-    setCurrentRating(0);
-    setUserComments('');
-  };
-
-  // 👇 NUEVO: Función para enviar feedback básico (Sí/No)
+  // 👇 CORREGIDO COMPLETAMENTE: Función para enviar feedback básico (Sí/No)
   const submitFeedback = async (isSatisfied: boolean) => {
-    if (!currentFeedbackSession) return;
+    console.log('submitFeedback llamado:', { isSatisfied, currentFeedbackSession });
+
+    if (!currentFeedbackSession) {
+      console.error('No hay sesión de feedback activa');
+      return;
+    }
 
     try {
       const response = await fetch('http://localhost:8000/feedback/response', {
@@ -172,25 +172,40 @@ const Chat: React.FC = () => {
         })
       });
 
+      console.log('Respuesta del servidor (básico):', response.status, response.ok);
+
       if (response.ok) {
         if (isSatisfied) {
+          console.log('Feedback positivo enviado, cerrando...');
           setFeedbackSubmitted(true);
           setTimeout(() => {
-            setShowFeedback(false);
-            resetFeedback();
-          }, 2000);
+            closeFeedback();
+          }, 1500);
         } else {
+          console.log('Feedback negativo enviado, mostrando formulario de comentarios...');
           setShowFollowup(true);
         }
+      } else {
+        console.error('Error en respuesta del servidor:', response.status);
+        const errorData = await response.json();
+        console.error('Detalles del error:', errorData);
       }
     } catch (error) {
       console.error('Error enviando feedback:', error);
     }
   };
 
-  // 👇 NUEVO: Función para enviar feedback detallado
+  // 👇 CORREGIDO COMPLETAMENTE: Función para enviar feedback detallado
   const submitDetailedFeedback = async () => {
-    if (!currentFeedbackSession) return;
+    console.log('submitDetailedFeedback llamado');
+    console.log('currentFeedbackSession:', currentFeedbackSession);
+    console.log('userComments:', userComments);
+
+    if (!currentFeedbackSession) {
+      console.error('No hay sesión de feedback activa');
+      alert('Error: No hay sesión de feedback activa');
+      return;
+    }
 
     try {
       const response = await fetch('http://localhost:8000/feedback/response', {
@@ -200,21 +215,34 @@ const Chat: React.FC = () => {
         },
         body: JSON.stringify({
           session_id: currentFeedbackSession,
-          is_satisfied: false,
-          rating: currentRating || null,
-          comments: userComments || null
+          is_satisfied: false, // 👈 IMPORTANTE: mantener como false para feedback negativo
+          rating: null,
+          comments: userComments || "" // 👈 Enviar string vacío si no hay comentarios
         })
       });
 
+      console.log('Respuesta del servidor (detallado):', response.status, response.ok);
+
       if (response.ok) {
+        console.log('✅ Feedback detallado enviado exitosamente');
         setFeedbackSubmitted(true);
+        
+        // 👇 Cerrar automáticamente después de enviar
         setTimeout(() => {
-          setShowFeedback(false);
-          resetFeedback();
-        }, 2000);
+          console.log('Cerrando feedback...');
+          closeFeedback();
+        }, 1500);
+      } else {
+        console.error('❌ Error en respuesta del servidor:', response.status);
+        const errorData = await response.json();
+        console.error('Detalles del error:', errorData);
+        
+        // Mostrar error al usuario
+        alert('Error al enviar feedback. Intenta nuevamente.');
       }
     } catch (error) {
-      console.error('Error enviando feedback detallado:', error);
+      console.error('❌ Error enviando feedback detallado:', error);
+      alert('Error de conexión. Verifica que el servidor esté funcionando.');
     }
   };
 
@@ -333,18 +361,20 @@ const Chat: React.FC = () => {
         timestamp: new Date(),
         qr_codes: data.qr_codes || {},
         has_qr: data.has_qr || false,
-        feedback_session_id: data.feedback_session_id, // 👈 NUEVO
+        feedback_session_id: data.feedback_session_id,
         chatlog_id: data.chatlog_id
       };
       
       setMessages(prev => [...prev, aiMessage]);
       
-      // 👇 NUEVO: Mostrar feedback después de la respuesta de Ina
+      // Mostrar feedback después de la respuesta de Ina
       if (data.feedback_session_id) {
+        console.log('🔄 Mostrando feedback para sesión:', data.feedback_session_id);
         setCurrentFeedbackSession(data.feedback_session_id);
         setShowFeedback(true);
         setFeedbackSubmitted(false);
         setShowFollowup(false);
+        setUserComments(''); // Resetear comentarios
       }
 
     } catch (error) {
@@ -377,7 +407,7 @@ const Chat: React.FC = () => {
     ));
   };
 
-  // 👇 NUEVO: Componente de Feedback
+  // 👇 CORREGIDO COMPLETAMENTE: Componente de Feedback
   const renderFeedbackWidget = () => {
     if (!showFeedback) return null;
 
@@ -386,6 +416,7 @@ const Chat: React.FC = () => {
         {!feedbackSubmitted ? (
           <>
             {!showFollowup ? (
+              // Pantalla inicial: Sí/No
               <div className="feedback-prompt">
                 <p>¿Te resultó útil esta respuesta de Ina?</p>
                 <div className="feedback-buttons">
@@ -404,24 +435,10 @@ const Chat: React.FC = () => {
                 </div>
               </div>
             ) : (
+              // Pantalla de comentarios (sin estrellas)
               <div className="feedback-followup">
                 <h4>¡Gracias por ayudarnos a mejorar!</h4>
                 <p>¿Podrías contarnos más sobre cómo podemos mejorar?</p>
-                
-                <div className="rating-section">
-                  <p>Califica esta respuesta (opcional):</p>
-                  <div className="star-rating">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span 
-                        key={star}
-                        className={`star ${currentRating >= star ? 'filled' : ''}`}
-                        onClick={() => setCurrentRating(star)}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                </div>
                 
                 <textarea 
                   value={userComments}
@@ -431,10 +448,26 @@ const Chat: React.FC = () => {
                 ></textarea>
                 
                 <div className="feedback-actions">
-                  <button onClick={submitDetailedFeedback} className="submit-btn">
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('🔄 Botón "Enviar comentarios" clickeado');
+                      submitDetailedFeedback();
+                    }}
+                    className="submit-btn"
+                  >
                     Enviar comentarios
                   </button>
-                  <button onClick={() => setShowFeedback(false)} className="cancel-btn">
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('🔄 Botón "Cancelar" clickeado');
+                      closeFeedback();
+                    }} 
+                    className="cancel-btn"
+                  >
                     Cancelar
                   </button>
                 </div>
@@ -442,6 +475,7 @@ const Chat: React.FC = () => {
             )}
           </>
         ) : (
+          // Mensaje de agradecimiento
           <div className="feedback-thankyou">
             <p>✅ ¡Gracias por tu feedback! Tu opinión ayuda a mejorar a Ina.</p>
           </div>
@@ -570,7 +604,7 @@ const Chat: React.FC = () => {
             </div>
           ))}
           
-          {/* 👇 NUEVO: Mostrar widget de feedback después del último mensaje de Ina */}
+          {/* Mostrar widget de feedback después del último mensaje de Ina */}
           {renderFeedbackWidget()}
           
           {isLoading && (

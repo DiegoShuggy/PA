@@ -37,15 +37,14 @@ class Feedback(SQLModel, table=True):
     comments: Optional[str] = None  # Comentarios opcionales
     timestamp: datetime = Field(default_factory=datetime.now)
 
-# En app/models.py - AGREGAR AL FINAL
+# En app/models.py - OPCIONAL: modificar el modelo para hacer rating opcional
 class ResponseFeedback(SQLModel, table=True):
-    """Feedback específico para cada respuesta de Ina"""
     id: Optional[int] = Field(default=None, primary_key=True)
-    session_id: str  # ID único de la sesión de chat
+    session_id: str
     user_message: str
     ai_response: str
-    is_satisfied: bool  # True = Sí, False = No
-    rating: Optional[int] = Field(default=None, ge=1, le=5)
+    is_satisfied: bool
+    rating: Optional[int] = Field(default=None, ge=1, le=5)  # Ya es opcional
     comments: Optional[str] = None
     response_category: Optional[str] = None
     timestamp: datetime = Field(default_factory=datetime.now)

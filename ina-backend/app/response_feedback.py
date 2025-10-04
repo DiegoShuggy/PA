@@ -4,7 +4,7 @@ from app.models import ResponseFeedback, engine
 import logging
 import uuid
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional  # 👈 AGREGAR importaciones de tipos
+from typing import Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,8 @@ class ResponseFeedbackSystem:
             "user_message": user_message,
             "ai_response": ai_response,
             "category": category,
-            "created_at": datetime.now()
+            "created_at": datetime.now(),
+            "used": False  # 👈 NUEVO: track si ya se usó
         }
         
         logger.info(f"Nueva sesión de feedback creada: {session_id}")
@@ -43,7 +44,12 @@ class ResponseFeedbackSystem:
     def get_session_data(self, session_id: str) -> Optional[Dict]:
         """Obtiene datos de una sesión específica"""
         self._clean_expired_sessions()
-        return self.feedback_sessions.get(session_id)
+        session_data = self.feedback_sessions.get(session_id)
+        
+        # 👇 MODIFICADO: Permitir múltiples usos de la misma sesión
+        if session_data and not session_data.get("used", False):
+            return session_data
+        return None
     
     def save_response_feedback(self, session_id: str, is_satisfied: bool, 
                              rating: int = None, comments: str = None) -> bool:
@@ -69,9 +75,15 @@ class ResponseFeedbackSystem:
                 session.add(feedback)
                 session.commit()
             
-            # Limpiar sesión después de guardar
-            if session_id in self.feedback_sessions:
-                del self.feedback_sessions[session_id]
+            # 👇 MODIFICADO: Marcar como usada pero no eliminar inmediatamente
+            # Permitir múltiples feedbacks para la misma sesión (Sí/No + comentarios)
+            if is_satisfied:
+                # Si es feedback positivo, marcamos como usado completamente
+                self.feedback_sessions[session_id]["used"] = True
+            else:
+                # Si es negativo, permitimos que se pueda enviar comentarios después
+                # No marcamos como usado hasta que se envíen comentarios
+                pass
             
             logger.info(f"Feedback guardado para sesión {session_id}: satisfecho={is_satisfied}")
             return True
@@ -79,6 +91,12 @@ class ResponseFeedbackSystem:
         except Exception as e:
             logger.error(f"Error guardando feedback de respuesta: {e}")
             return False
+    
+    def mark_session_completed(self, session_id: str):
+        """Marca una sesión como completada (después de enviar comentarios)"""
+        if session_id in self.feedback_sessions:
+            self.feedback_sessions[session_id]["used"] = True
+            logger.info(f"Sesión marcada como completada: {session_id}")
     
     def get_response_feedback_stats(self, days: int = 30) -> dict:
         """Obtiene estadísticas detalladas del feedback de respuestas"""
