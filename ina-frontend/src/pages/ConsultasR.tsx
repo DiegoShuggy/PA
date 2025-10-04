@@ -24,7 +24,7 @@ function ConsultasR() {
 
     return (
         <div className="consultas-container">
-            <h2>Consultas</h2>
+            <h2>Área de Consultas</h2>
             <div className="areas-grid">
                 <div className="area">
                     <Link to="/InA" className="area-link">
@@ -43,10 +43,10 @@ function ConsultasR() {
                         <div className="consultas-item seis">
                             <img
                                 src={ina6}
-                                alt="Proyectos rigidos"
+                                alt="Consultas Frecuentes"
                                 className="imagen6"
                             />
-                            <span>Proyectos rigidos</span>
+                            <span>Consultas Frecuentes</span>
                         </div>
                     </Link>
                 </div>
@@ -55,10 +55,10 @@ function ConsultasR() {
                         <div className="consultas-item dos">
                             <img
                                 src={ina2}
-                                alt="Desarrollo Profesional y Htulados"
+                                alt="Desarrollo Profesional y Titulados"
                                 className="imagen2"
                             />
-                            <span>Desarrollo Profesional y Htulados</span>
+                            <span>Desarrollo Profesional y Titulados</span>
                         </div>
                     </Link>
                 </div>
@@ -67,10 +67,10 @@ function ConsultasR() {
                         <div className="consultas-item tres">
                             <img
                                 src={ina3}
-                                alt="Eisenstar Estudiantli"
+                                alt="Bienestar Estudiantil"
                                 className="imagen3"
                             />
-                            <span>Eisenstar Estudiantli</span>
+                            <span>Bienestar Estudiantil</span>
                         </div>
                     </Link>
                 </div>
@@ -79,10 +79,10 @@ function ConsultasR() {
                         <div className="consultas-item cuatro">
                             <img
                                 src={ina4}
-                                alt="Properter"
+                                alt="Deportes"
                                 className="imagen4"
                             />
-                            <span>Reporters</span>
+                            <span>Deportes</span>
                         </div>
                     </Link>
                 </div>
@@ -91,7 +91,7 @@ function ConsultasR() {
                         <div className="consultas-item cinco">
                             <img
                                 src={ina5}
-                                alt="Eisenstar"
+                                alt="Pastoral "
                                 className="imagen5"
                             />
                             <span>Pastoral</span>
