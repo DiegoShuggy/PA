@@ -1,5 +1,5 @@
 import React from 'react';
-import Chat from './components/Chat';
+import Chat from './pages/Chat';
 import ConsultasR from './pages/ConsultasR';
 import { Routes, Route } from 'react-router-dom';
 import './App.css'; // Solo estilos globales
