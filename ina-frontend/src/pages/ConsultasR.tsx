@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './ConsultasR.css';
+import '../css/ConsultasR.css';
 
 function ConsultasR() {
   console.log('ConsultasR component is rendering'); // ← Agrega esto

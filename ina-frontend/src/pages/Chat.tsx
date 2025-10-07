@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './Chat.css';
-import microIcon from './Micro.png';
+import '../css/Chat.css';
+import microIcon from '../css/Micro.png';
 
 interface Message {
   text: string;
@@ -8,6 +8,15 @@ interface Message {
   timestamp: Date;
   qr_codes?: { [url: string]: string };
   has_qr?: boolean;
+  feedback_session_id?: string;
+  chatlog_id?: number;
+}
+
+interface FeedbackData {
+  session_id: string;
+  is_satisfied: boolean;
+  rating?: number;
+  comments?: string;
 }
 
 const Chat: React.FC = () => {
@@ -17,13 +26,21 @@ const Chat: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Estados para feedback
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [currentFeedbackSession, setCurrentFeedbackSession] = useState<string | null>(null);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [showFollowup, setShowFollowup] = useState(false);
+  const [currentRating, setCurrentRating] = useState<number>(0);
+  const [userComments, setUserComments] = useState('');
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const finalTranscriptRef = useRef('');
   const menuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  
-
+  const feedbackRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -47,9 +64,26 @@ const Chat: React.FC = () => {
     };
   }, []);
 
+  // Cerrar feedback al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutsideFeedback = (event: MouseEvent) => {
+      if (feedbackRef.current && !feedbackRef.current.contains(event.target as Node)) {
+        setShowFeedback(false);
+        setShowFollowup(false);
+        resetFeedback();
+      }
+    };
+
+    if (showFeedback) {
+      document.addEventListener('mousedown', handleClickOutsideFeedback);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideFeedback);
+    };
+  }, [showFeedback]);
 
   // Inicializar el reconocimiento de voz
-
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
@@ -110,6 +144,79 @@ const Chat: React.FC = () => {
     };
   }, [isListening]);
 
+  // Función para resetear el feedback
+  const resetFeedback = () => {
+    setCurrentFeedbackSession(null);
+    setFeedbackSubmitted(false);
+    setShowFollowup(false);
+    setCurrentRating(0);
+    setUserComments('');
+  };
+
+  // Función para enviar feedback básico (Sí/No)
+  const submitFeedback = async (isSatisfied: boolean) => {
+    if (!currentFeedbackSession) return;
+
+    try {
+      const response = await fetch('http://localhost:8000/feedback/response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: currentFeedbackSession,
+          is_satisfied: isSatisfied,
+          rating: null,
+          comments: null
+        })
+      });
+
+      if (response.ok) {
+        if (isSatisfied) {
+          setFeedbackSubmitted(true);
+          setTimeout(() => {
+            setShowFeedback(false);
+            resetFeedback();
+          }, 2000);
+        } else {
+          setShowFollowup(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error enviando feedback:', error);
+    }
+  };
+
+  // Función para enviar feedback detallado - CORREGIDA
+  const submitDetailedFeedback = async () => {
+    if (!currentFeedbackSession) return;
+
+    try {
+      const response = await fetch('http://localhost:8000/feedback/response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: currentFeedbackSession,
+          is_satisfied: false,
+          rating: currentRating || null,
+          comments: userComments || null
+        })
+      });
+
+      if (response.ok) {
+        setFeedbackSubmitted(true);
+        setTimeout(() => {
+          setShowFeedback(false);
+          resetFeedback();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error enviando feedback detallado:', error);
+    }
+  };
+
   const toggleListening = () => {
     if (!recognitionRef.current || !isSpeechSupported) {
       alert('Tu navegador no soporta reconocimiento de voz. Prueba con Chrome o Edge.');
@@ -150,7 +257,6 @@ const Chat: React.FC = () => {
       case 'help':
         alert('Mostrar ayuda del chat');
         break;
-      // Nuevas opciones que insertan texto
       case 'greeting':
         insertText('¡Hola InA! ¿Podrías ayudarme con');
         break;
@@ -172,19 +278,24 @@ const Chat: React.FC = () => {
   };
 
   const insertText = (text: string) => {
-    // Si ya hay texto, agregar un espacio antes del nuevo texto
     const newText = inputMessage ? `${inputMessage} ${text}` : text;
     setInputMessage(newText);
 
-    // Enfocar el input para que el usuario pueda escribir inmediatamente
     setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
   };
 
-  const handleSendMessage = async () => {
+  // FUNCIÓN PRINCIPAL CORREGIDA - handleSendMessage
+  const handleSendMessage = async (e?: React.FormEvent) => {
+    // Prevenir comportamiento por defecto si es un evento de formulario
+    if (e) {
+      e.preventDefault();
+    }
+
     if (!inputMessage.trim() || isLoading) return;
 
+    // Detener reconocimiento de voz si está activo
     if (isListening && recognitionRef.current) {
       try {
         recognitionRef.current.stop();
@@ -200,8 +311,11 @@ const Chat: React.FC = () => {
       timestamp: new Date()
     };
 
+    // Limpiar input inmediatamente
+    const messageToSend = inputMessage;
     setInputMessage('');
     finalTranscriptRef.current = '';
+    
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
 
@@ -212,7 +326,7 @@ const Chat: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          text: inputMessage
+          text: messageToSend
         })
       });
 
@@ -222,24 +336,44 @@ const Chat: React.FC = () => {
 
       const data = await response.json();
 
-      const aiMessage: Message = { 
-        text: data.response, 
-        isUser: false, 
+      const aiMessage: Message = {
+        text: data.response,
+        isUser: false,
         timestamp: new Date(),
         qr_codes: data.qr_codes || {},
-        has_qr: data.has_qr || false
+        has_qr: data.has_qr || false,
+        feedback_session_id: data.feedback_session_id,
+        chatlog_id: data.chatlog_id
       };
+      
       setMessages(prev => [...prev, aiMessage]);
+      
+      // Mostrar feedback después de la respuesta de Ina
+      if (data.feedback_session_id) {
+        setCurrentFeedbackSession(data.feedback_session_id);
+        setShowFeedback(true);
+        setFeedbackSubmitted(false);
+        setShowFollowup(false);
+      }
 
     } catch (error) {
+      console.error('Error:', error);
       const errorMessage: Message = {
-        text: 'Error al conectar con el servidor',
+        text: 'Error al conectar con el servidor. Por favor intenta nuevamente.',
         isUser: false,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Función para manejar el envío con Enter
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
@@ -251,8 +385,8 @@ const Chat: React.FC = () => {
           <span className="qr-icon">📱</span>
           <span className="qr-url">{url}</span>
         </div>
-        <img 
-          src={qrData} 
+        <img
+          src={qrData}
           alt={`QR code para ${url}`}
           className="qr-code-image"
         />
@@ -261,26 +395,111 @@ const Chat: React.FC = () => {
     ));
   };
 
+  // Componente de Feedback CORREGIDO
+  const renderFeedbackWidget = () => {
+    if (!showFeedback) return null;
+
+    return (
+      <div className="feedback-widget" ref={feedbackRef}>
+        {!feedbackSubmitted ? (
+          <>
+            {!showFollowup ? (
+              <div className="feedback-prompt">
+                <p>¿Te resultó útil esta respuesta de Ina?</p>
+                <div className="feedback-buttons">
+                  <button 
+                    className="feedback-btn positive" 
+                    onClick={() => submitFeedback(true)}
+                    type="button" // 👈 AÑADIDO
+                  >
+                    👍 Sí, cumplió con lo que necesitaba
+                  </button>
+                  <button 
+                    className="feedback-btn negative" 
+                    onClick={() => submitFeedback(false)}
+                    type="button" // 👈 AÑADIDO
+                  >
+                    👎 No, podría mejorar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="feedback-followup">
+                <h4>¡Gracias por ayudarnos a mejorar!</h4>
+                <p>¿Podrías contarnos más sobre cómo podemos mejorar?</p>
+                
+                <div className="rating-section">
+                  <p>Califica esta respuesta (opcional):</p>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span 
+                        key={star}
+                        className={`star ${currentRating >= star ? 'filled' : ''}`}
+                        onClick={() => setCurrentRating(star)}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                
+                <textarea 
+                  value={userComments}
+                  onChange={(e) => setUserComments(e.target.value)}
+                  placeholder="Ej: La respuesta fue muy técnica, necesitaba más detalles prácticos..."
+                  rows={3}
+                ></textarea>
+                
+                <div className="feedback-actions">
+                  <button 
+                    onClick={submitDetailedFeedback} 
+                    className="submit-btn"
+                    type="button" // 👈 AÑADIDO
+                    disabled={!userComments.trim() && currentRating === 0} // 👈 MEJORA: Validación
+                  >
+                    Enviar comentarios
+                  </button>
+                  <button 
+                    onClick={() => setShowFeedback(false)} 
+                    className="cancel-btn"
+                    type="button" // 👈 AÑADIDO
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="feedback-thankyou">
+            <p>✅ ¡Gracias por tu feedback! Tu opinión ayuda a mejorar a Ina.</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="chat-wrapper" >
-      {/* Botón del menú flotante en la esquina derecha */}
+    <div className="chat-wrapper">
+      {/* Botón del menú flotante */}
       <div className="floating-menu-container" ref={menuRef}>
         <button
           className="floating-menu-button"
           onClick={toggleMenu}
           title="Opciones del chat"
+          type="button" // 👈 AÑADIDO
         >
           <span className="menu-icon">☰</span>
         </button>
 
         {isMenuOpen && (
           <div className="floating-dropdown-menu">
-            {/* Sección de preguntas rápidas */}
             <div className="menu-section">
               <div className="menu-section-title">Preguntas rápidas</div>
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('greeting')}
+                type="button" // 👈 AÑADIDO
               >
                 <span className="menu-icon">👋</span>
                 Saluda a InA
@@ -288,6 +507,7 @@ const Chat: React.FC = () => {
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('Laboral')}
+                type="button" // 👈 AÑADIDO
               >
                 <span className="menu-icon">📋</span>
                 Practicas laborales
@@ -295,6 +515,7 @@ const Chat: React.FC = () => {
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('Consultas')}
+                type="button" // 👈 AÑADIDO
               >
                 <span className="menu-icon">❓</span>
                 Consultas frecuentes
@@ -302,6 +523,7 @@ const Chat: React.FC = () => {
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('TNE')}
+                type="button" // 👈 AÑADIDO
               >
                 <span className="menu-icon">📋</span>
                 Consultas TNE
@@ -309,6 +531,7 @@ const Chat: React.FC = () => {
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('thanks')}
+                type="button" // 👈 AÑADIDO
               >
                 <span className="menu-icon">🙏</span>
                 Agradecer a InA
@@ -317,13 +540,13 @@ const Chat: React.FC = () => {
 
             <div className="menu-divider"></div>
 
-            {/* Sección de herramientas */}
             <div className="menu-section">
               <div className="menu-section-title">Herramientas</div>
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('clear')}
                 disabled={messages.length === 0}
+                type="button" // 👈 AÑADIDO
               >
                 <span className="menu-icon">🗑️</span>
                 Limpiar chat
@@ -332,10 +555,10 @@ const Chat: React.FC = () => {
 
             <div className="menu-divider"></div>
 
-            {/* Sección de información */}
             <button
               className="menu-item"
               onClick={() => handleMenuAction('settings')}
+              type="button" // 👈 AÑADIDO
             >
               <span className="menu-icon">⚙️</span>
               Configuración
@@ -343,6 +566,7 @@ const Chat: React.FC = () => {
             <button
               className="menu-item"
               onClick={() => handleMenuAction('help')}
+              type="button" // 👈 AÑADIDO
             >
               <span className="menu-icon">❓</span>
               Ayuda
@@ -351,7 +575,7 @@ const Chat: React.FC = () => {
         )}
       </div>
 
-      {/* Contenedor del chat */}
+      {/* Contenedor del chat - ACTUALIZADO con formulario */}
       <div className="chat-container" id="Cuerpo">
         <div className="chat-header">
           <h2>Chat Asistente</h2>
@@ -364,8 +588,7 @@ const Chat: React.FC = () => {
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
               <div className="message-text">{msg.text}</div>
-              
-              {/* Mostrar códigos QR si existen */}
+
               {msg.has_qr && msg.qr_codes && (
                 <div className="qr-codes-section">
                   <div className="qr-section-title">📱 Escanear con celular:</div>
@@ -374,12 +597,15 @@ const Chat: React.FC = () => {
                   </div>
                 </div>
               )}
-              
+
               <div className="message-time">
                 {msg.timestamp.toLocaleTimeString()}
               </div>
             </div>
           ))}
+          
+          {renderFeedbackWidget()}
+          
           {isLoading && (
             <div className="message ai-message">
               <div className="typing-indicator">
@@ -392,34 +618,41 @@ const Chat: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="chat-input">
+        {/* FORMULARIO ACTUALIZADO */}
+        <form 
+          className="chat-input"
+          onSubmit={handleSendMessage}
+        >
           <input
             ref={inputRef}
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            onKeyPress={handleKeyPress}
             placeholder={isListening ? "Escuchando... Habla ahora" : "Escribe tu pregunta o consulta..."}
             disabled={isLoading}
           />
-          <button 
+          <button
             className={`mic-button ${isListening ? 'listening' : ''}`}
             onClick={toggleListening}
-            type="button"
+            type="button" // 👈 IMPORTANTE: Evita que envíe el formulario
             disabled={isLoading || !isSpeechSupported}
             title={isListening ? "Detener micrófono" : "Activar micrófono"}
           >
-            <img 
-              src={microIcon} 
-              alt="Micrófono" 
+            <img
+              src={microIcon}
+              alt="Micrófono"
               className="mic-icon"
             />
           </button>
-          <button onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
+          <button 
+            type="submit" // 👈 CAMBIADO a submit
+            disabled={isLoading || !inputMessage.trim()}
+          >
             {isLoading ? '...' : 'Enviar'}
           </button>
-        </div>
-        
+        </form>
+
         {isListening && (
           <div className="voice-status">
             <div className="pulse-ring"></div>
