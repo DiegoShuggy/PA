@@ -1,5 +1,8 @@
 [
   {
+    "_comment": "Nombre del archivo: training_data_20250920_182044.json"
+  },
+  {
     "input": "¿Cómo valido mi TNE?",
     "output": "RESPUESTA_IDEAL_PARA: ¿Cómo valido mi TNE?",
     "category": "tné",

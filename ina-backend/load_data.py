@@ -1,3 +1,4 @@
+# load_data.py
 from app.rag import rag_engine
 
 def load_sample_data():

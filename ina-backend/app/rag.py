@@ -6,6 +6,9 @@ from typing import List, Dict, Optional
 import logging
 from app.qr_generator import qr_generator
 import traceback  # 👈 AGREGAR ESTO
+import hashlib
+from datetime import datetime, timedelta
+from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -16,20 +19,62 @@ class RAGEngine:
             name="duoc_knowledge"
         )
         logger.info("RAG Engine inicializado - Esperando datos")
+        self.metrics = {
+            'total_queries': 0,
+            'successful_responses': 0,
+            'cache_hits': 0,
+            'documents_added': 0,
+            'errors': 0,
+            'categories_used': defaultdict(int)
+        }
 
     def add_document(self, document: str, metadata: Dict = None) -> bool:
         try:
-            doc_id = f"doc_{len(self.collection.get()['documents'])}"
+            # Verificar duplicados primero
+            if self.document_exists(document):
+                logger.warning(f"⚠️ Documento duplicado omitido: {document[:50]}...")
+                return False
+                
+            doc_id = f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{hash(document) % 10000}"
             self.collection.add(
                 documents=[document],
                 metadatas=[metadata] if metadata else [{}],
                 ids=[doc_id]
             )
-            logger.info(f"Documento añadido: {document[:50]}...")
+            logger.info(f"✅ Documento añadido: {document[:50]}...")
+            
+            # Métricas
+            self._update_metrics('documents_added')
             return True
         except Exception as e:
-            logger.error(f"Error añadiendo documento: {e}")
+            logger.error(f"❌ Error añadiendo documento: {e}")
+            self._update_metrics('errors')
             return False
+
+    def document_exists(self, document: str) -> bool:
+        """Verificar si documento ya existe"""
+        try:
+            results = self.collection.query(
+                query_texts=[document],
+                n_results=1
+            )
+            if results['documents']:
+                # Si hay similitud muy alta, considerar duplicado
+                existing_doc = results['documents'][0][0]
+                similarity = self._calculate_similarity(document, existing_doc)
+                return similarity > 0.95
+            return False
+        except Exception as e:
+            logger.error(f"Error checking document existence: {e}")
+            return False
+
+    def _calculate_similarity(self, doc1: str, doc2: str) -> float:
+        """Calcular similitud entre documentos"""
+        # Implementación simple basada en tokens comunes
+        words1 = set(doc1.lower().split())
+        words2 = set(doc2.lower().split())
+        common = words1.intersection(words2)
+        return len(common) / max(len(words1), len(words2))
 
     def query(self, query_text: str, n_results: int = 3) -> List[str]:
         try:
@@ -82,26 +127,17 @@ async def get_ai_response(user_message: str, context: list = None) -> Dict:
     Retorna dict con texto y códigos QR
     """
     try:
-        # PROMPT OPTIMIZADO
+        # PROMPT OPTIMIZADO (simplificado)
         system_message = (
-            "Eres InA, asistente especializado del Punto Estudiantil Duoc UC. "
-            "Responde de forma CLARA, COMPLETA pero CONCISA (4-5 líneas máximo).\n"
-            "Incluye información esencial: DÓNDE, QUÉ necesitan, COSTO, TIEMPO y OPCIONES.\n"
-            "Sé directo y útil. Evita saludos largos y repeticiones.\n\n"
-            
-            "ENLACES OFICIALES DUOC UC - Úsalos cuando sean relevantes:\n"
-            "• Portal Estudiantil: https://www.duoc.cl/alumnos/\n"
-            "• Certificados: https://certificados.duoc.cl/\n" 
+            "Eres InA, asistente del Punto Estudiantil Duoc UC. "
+            "Responde de forma CLARA y CONCISA (3-4 líneas).\n"
+            "Incluye: DÓNDE, QUÉ necesitan, COSTO, TIEMPO.\n"
+            "Usa URLs oficiales cuando sean relevantes.\n\n"
+            "URLS OFICIALES:\n"
+            "• Portal: https://www.duoc.cl/alumnos/\n"
+            "• Certificados: https://certificados.duoc.cl/\n"
             "• Prácticas: https://practicas.duoc.cl/\n"
-            "• Biblioteca: https://biblioteca.duoc.cl/\n"
-            "• Beneficios: https://beneficios.duoc.cl/\n"
             "• Ayuda: https://ayuda.duoc.cl/\n"
-            "• Inscripciones: https://inscripciones.duoc.cl/IA/\n"
-            "• Sede Plaza Norte: https://www.duoc.cl/sede/plaza-norte/\n"
-            "• Contacto: https://www.duoc.cl/admision/contacto/\n\n"
-            
-            "IMPORTANTE: Cuando menciones trámites online, INCLUYE la URL completa.\n"
-            "Ejemplo: 'Puedes solicitar tu certificado en: https://certificados.duoc.cl/'\n\n"
         )
         
         # Agregar contexto si está disponible
@@ -161,3 +197,26 @@ async def get_ai_response(user_message: str, context: list = None) -> Dict:
             "qr_codes": {},
             "has_qr": False
         }
+
+class ResponseCache:
+    def __init__(self):
+        self.cache = {}
+        self.ttl = timedelta(hours=1)  # Cache por 1 hora
+    
+    def get_key(self, query: str) -> str:
+        return hashlib.md5(query.encode()).hexdigest()
+    
+    def get(self, query: str):
+        key = self.get_key(query)
+        if key in self.cache:
+            timestamp, response = self.cache[key]
+            if datetime.now() - timestamp < self.ttl:
+                return response
+        return None
+    
+    def set(self, query: str, response: dict):
+        key = self.get_key(query)
+        self.cache[key] = (datetime.now(), response)
+
+# Usar en rag.py
+response_cache = ResponseCache()
