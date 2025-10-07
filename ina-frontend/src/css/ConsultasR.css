@@ -1,89 +1,163 @@
 /* ConsultasR.css */
-.consultas-r {
+.consultas-container {
   width: 100%;
   min-height: 80vh;
   padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f8f9fa;
 }
 
-.consultas-r h2 {
+
+
+.consultas-container h2 {
   color: #2a5298;
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+  width: 100%;
+  font-weight: 700;
+  animation: slideDown 0.8s ease-out 0.2s both;
 }
 
-.consultas-r  {
-  background: white;
-  padding: 1rem 1.5rem;
-  margin: 0.5rem 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid #0c33e2;
-  border-top: 4px solid #0c33e2;
-  border-right: 4px solid #0c33e2;
-  border-bottom: 4px solid #0c33e2;
-  font-size: 1.1rem;
-  transition: transform 0.2s ease;
+.areas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
 }
-.uno {
-  background: white;
-  padding: 1rem 1.5rem;
-  margin: 0.5rem 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid rgb(255, 171, 31) ;
-  font-size: 1.1rem;
-  transition: transform 0.2s ease;
-}
-.dos {
-  background: white;
-  padding: 1rem 1.5rem;
-  margin: 0.5rem 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid rgb(245, 25, 64);
-  font-size: 1.1rem;
-  transition: transform 0.2s ease;
-}
-.tres {
-  background: white;
-  padding: 1rem 1.5rem;
-  margin: 0.5rem 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid rgb(38, 128, 255);
-  font-size: 1.1rem;
-  transition: transform 0.2s ease;
-}
-.cuatro {
-  background: white;
-  padding: 1rem 1.5rem;
-  margin: 0.5rem 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid rgb(64, 255, 0);
-  font-size: 1.1rem;
-  transition: transform 0.2s ease;
-}
-.cinco {
-  background: white;
-  padding: 1rem 1.5rem;
-  margin: 0.5rem 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-left: 4px solid #9521B2;
-  font-size: 1.1rem;
-  transition: transform 0.2s ease;
-}
-.consultas-r p:hover {
-  transform: translateX(5px);
-  background: #f0f2f5;
-}
+
 .area {
-  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  animation: slideDown 0.8s ease-out both;
+}
+
+/* Animación escalonada para cada item */
+.area:nth-child(1) {
+  animation-delay: 0.5s;
+}
+
+.area:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+.area:nth-child(3) {
+  animation-delay: 0.7s;
+}
+
+.area:nth-child(4) {
+  animation-delay: 0.8s;
+}
+
+.area:nth-child(5) {
+  animation-delay: 0.9s;
+}
+
+.area:nth-child(6) {
+  animation-delay: 1.0s;
+}
+
+.area-link {
+  display: block;
+  text-decoration: none;
+  color: #9521B2;
+  width: 100%;
+}
+
+.consultas-item {
+  background: white;
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-left: 6px solid #0c33e2;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.5rem;
+  width: 75%;
 
 }
-.area a {
-  margin-bottom: 1rem;
-  color: black;
-  
+
+.consultas-item:hover {
+  transform: translateX(-5px);
+  background: #f0f2f5;
+  color: #F1B634;
+}
+
+.uno {
+  border-left: 6px solid rgb(255, 171, 31);
+}
+
+.dos {
+  border-left: 6px solid rgb(245, 25, 64);
+}
+
+.tres {
+  border-left: 6px solid rgb(38, 128, 255);
+}
+
+.cuatro {
+  border-left: 6px solid rgb(64, 255, 0);
+}
+
+.cinco {
+  border-left: 6px solid #9521B2;
+}
+
+.seis {
+  border-left: 6px solid rgb(242, 77, 25);
+}
+
+.imagen1,
+.imagen2,
+.imagen3,
+.imagen4,
+.imagen5,
+.imagen6 {
+  width: 250px;
+  height: 130px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.consultas-item:hover .imagen1,
+.consultas-item:hover .imagen2,
+.consultas-item:hover .imagen3,
+.consultas-item:hover .imagen4,
+.consultas-item:hover .imagen5,
+.consultas-item:hover .imagen6 {
+  transform: scale(1.1);
+}
+
+
+/* Responsive solo en caso de*/
+@media (max-width: 1024px) {
+  .areas-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .areas-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .consultas-container {
+    padding: 1rem;
+  }
+
+  .consultas-container h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
 }
