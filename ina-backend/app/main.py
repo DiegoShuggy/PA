@@ -35,12 +35,16 @@ class FeedbackRequest(BaseModelOriginal):
     rating: Optional[int] = None
     comments: Optional[str] = None
 
-# 👇 NUEVO Modelo Pydantic para feedback de respuestas
+# 👇 CORREGIDO: Modelo Pydantic para feedback de respuestas (debe coincidir con el frontend)
 class ResponseFeedbackRequest(BaseModelOriginal):
-    session_id: str
-    is_satisfied: bool
+    currentFeedbackSession: str
+    isSatisfied: bool
+
+# 👇 CORREGIDO: Modelo Pydantic para feedback detallado (debe coincidir con el frontend)
+class DetailedFeedbackRequest(BaseModelOriginal):
+    currentFeedbackSession: str
+    userComments: str
     rating: Optional[int] = None
-    comments: Optional[str] = None
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -227,10 +231,8 @@ async def submit_feedback(feedback: FeedbackRequest):
     """
     try:
         # Usar el nuevo sistema para mantener compatibilidad
-        success = response_feedback_system.save_response_feedback(
+        success = response_feedback_system.save_complete_feedback(
             session_id=f"legacy_{feedback.chatlog_id}",
-            user_message="Legacy feedback",  # Placeholder
-            ai_response="Legacy response",   # Placeholder  
             is_satisfied=feedback.is_helpful,
             rating=feedback.rating,
             comments=feedback.comments
@@ -436,34 +438,91 @@ async def generate_specific_qr(url: str):
 
 # 👇 NUEVOS ENDPOINTS PARA EL SISTEMA DE FEEDBACK MEJORADO
 
+# REEMPLAZA SOLO EL ENDPOINT /feedback/response en tu app/main.py con esto:
+
 @app.post("/feedback/response")
-async def submit_response_feedback(feedback: ResponseFeedbackRequest):
+async def submit_response_feedback(request: dict):  # 👈 Acepta cualquier dict
     """
-    Endpoint para que los usuarios evalúen respuestas específicas de Ina
+    Endpoint DEBUG para ver qué está enviando exactamente el frontend
+    """
+    
+    try:
+        # DEBUG: Imprimir exactamente lo que llega
+        import json
+        logger.info(f"🎯 DEBUG - RAW DATA RECEIVED:")
+        logger.info(f"🎯 DEBUG - Tipo: {type(request)}")
+        logger.info(f"🎯 DEBUG - Contenido: {json.dumps(request, indent=2)}")
+        
+        # Verificar estructura esperada
+        if 'currentFeedbackSession' in request and 'isSatisfied' in request:
+            session_id = request['currentFeedbackSession']
+            is_satisfied = request['isSatisfied']
+            
+            logger.info(f"🎯 DEBUG - Campos encontrados: session_id={session_id}, is_satisfied={is_satisfied}")
+            
+            success = response_feedback_system.save_basic_feedback(
+                session_id=session_id,
+                is_satisfied=bool(is_satisfied)
+            )
+            
+            if success:
+                logger.info(f"✅ Feedback básico guardado exitosamente")
+                return {
+                    "status": "success", 
+                    "message": "¡Gracias por tu feedback! Ayudas a mejorar a Ina."
+                }
+            else:
+                logger.error(f"❌ Error guardando feedback básico")
+                return {"status": "error", "message": "Sesión de feedback no válida o expirada"}
+        else:
+            # Si no tiene la estructura esperada, mostrar qué campos sí tiene
+            logger.error(f"❌ DEBUG - Estructura incorrecta. Campos recibidos: {list(request.keys())}")
+            return {
+                "status": "error", 
+                "message": f"Estructura incorrecta. Campos recibidos: {list(request.keys())}",
+                "received_data": request
+            }
+
+            
+    except Exception as e:
+        logger.error(f"💥 Error en endpoint /feedback/response: {e}")
+        return {"status": "error", "message": "Error interno del servidor"}
+
+@app.post("/feedback/response/detailed")
+async def submit_detailed_feedback(feedback: DetailedFeedbackRequest):
+    """
+    Endpoint para que los usuarios envíen feedback detallado (COMENTARIOS)
     """
     try:
-        success = response_feedback_system.save_response_feedback(
-            session_id=feedback.session_id,
-            is_satisfied=feedback.is_satisfied,
-            rating=feedback.rating,
-            comments=feedback.comments
+        logger.info(f"📥 Recibiendo feedback detallado: session={feedback.currentFeedbackSession}, comments={len(feedback.userComments)} chars")
+        
+        success = response_feedback_system.save_detailed_feedback(
+            session_id=feedback.currentFeedbackSession,
+            comments=feedback.userComments,
+            rating=feedback.rating
         )
         
         if success:
+            logger.info(f"✅ Feedback detallado guardado exitosamente para sesión: {feedback.currentFeedbackSession}")
+            
             # Opcional: analizar sentimiento si hay comentarios
-            if feedback.comments:
-                sentiment = sentiment_analyzer.analyze_feedback_sentiment(feedback.comments)
-                logger.info(f"Sentimiento del feedback: {sentiment}")
+            if feedback.userComments:
+                try:
+                    sentiment = sentiment_analyzer.analyze_feedback_sentiment(feedback.userComments)
+                    logger.info(f"🎭 Sentimiento del feedback: {sentiment}")
+                except Exception as sentiment_error:
+                    logger.warning(f"⚠️ No se pudo analizar sentimiento: {sentiment_error}")
             
             return {
                 "status": "success", 
-                "message": "¡Gracias por tu feedback! Ayudas a mejorar a Ina."
+                "message": "¡Gracias por tus comentarios! Son muy valiosos para mejorar."
             }
         else:
+            logger.error(f"❌ Error guardando feedback detallado para sesión: {feedback.currentFeedbackSession}")
             raise HTTPException(status_code=400, detail="Sesión de feedback no válida o expirada")
             
     except Exception as e:
-        logger.error(f"Error en endpoint /feedback/response: {e}")
+        logger.error(f"💥 Error en endpoint /feedback/response/detailed: {e}")
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @app.get("/feedback/response/stats")

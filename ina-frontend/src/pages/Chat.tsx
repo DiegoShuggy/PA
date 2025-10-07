@@ -12,13 +12,6 @@ interface Message {
   chatlog_id?: number;
 }
 
-interface FeedbackData {
-  session_id: string;
-  is_satisfied: boolean;
-  rating?: number;
-  comments?: string;
-}
-
 const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -153,9 +146,18 @@ const Chat: React.FC = () => {
     setUserComments('');
   };
 
-  // Función para enviar feedback básico (Sí/No)
+  // Función para enviar feedback básico (Sí/No) - CORREGIDA
   const submitFeedback = async (isSatisfied: boolean) => {
-    if (!currentFeedbackSession) return;
+    if (!currentFeedbackSession) {
+      console.error('No hay sesión de feedback activa');
+      return;
+    }
+
+    // DEBUG: Mostrar qué se está enviando
+    console.log('🎯 FRONTEND - Enviando feedback básico:', {
+      currentFeedbackSession: currentFeedbackSession,
+      isSatisfied: isSatisfied
+    });
 
     try {
       const response = await fetch('http://localhost:8000/feedback/response', {
@@ -164,12 +166,25 @@ const Chat: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          session_id: currentFeedbackSession,
-          is_satisfied: isSatisfied,
-          rating: null,
-          comments: null
+          currentFeedbackSession: currentFeedbackSession, // 👈 CORREGIDO
+          isSatisfied: isSatisfied // 👈 CORREGIDO
         })
       });
+
+      console.log('🎯 FRONTEND - Respuesta recibida:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('🎯 FRONTEND - Error response:', errorText);
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log('🎯 FRONTEND - Resultado:', result);
 
       if (response.ok) {
         if (isSatisfied) {
@@ -189,21 +204,45 @@ const Chat: React.FC = () => {
 
   // Función para enviar feedback detallado - CORREGIDA
   const submitDetailedFeedback = async () => {
-    if (!currentFeedbackSession) return;
+    if (!currentFeedbackSession) {
+      console.error('No hay sesión de feedback activa');
+      return;
+    }
+
+    // DEBUG: Mostrar qué se está enviando
+    console.log('🎯 FRONTEND - Enviando feedback detallado:', {
+      currentFeedbackSession: currentFeedbackSession,
+      userComments: userComments,
+      rating: currentRating || null
+    });
 
     try {
-      const response = await fetch('http://localhost:8000/feedback/response', {
+      const response = await fetch('http://localhost:8000/feedback/response/detailed', { // 👈 CORREGIDO: endpoint diferente
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          session_id: currentFeedbackSession,
-          is_satisfied: false,
-          rating: currentRating || null,
-          comments: userComments || null
+          currentFeedbackSession: currentFeedbackSession, // 👈 CORREGIDO
+          userComments: userComments, // 👈 CORREGIDO
+          rating: currentRating || null // 👈 CORREGIDO
         })
       });
+
+      console.log('🎯 FRONTEND - Respuesta recibida:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('🎯 FRONTEND - Error response:', errorText);
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log('🎯 FRONTEND - Resultado:', result);
 
       if (response.ok) {
         setFeedbackSubmitted(true);
@@ -410,14 +449,14 @@ const Chat: React.FC = () => {
                   <button 
                     className="feedback-btn positive" 
                     onClick={() => submitFeedback(true)}
-                    type="button" // 👈 AÑADIDO
+                    type="button"
                   >
                     👍 Sí, cumplió con lo que necesitaba
                   </button>
                   <button 
                     className="feedback-btn negative" 
                     onClick={() => submitFeedback(false)}
-                    type="button" // 👈 AÑADIDO
+                    type="button"
                   >
                     👎 No, podría mejorar
                   </button>
@@ -454,15 +493,18 @@ const Chat: React.FC = () => {
                   <button 
                     onClick={submitDetailedFeedback} 
                     className="submit-btn"
-                    type="button" // 👈 AÑADIDO
-                    disabled={!userComments.trim() && currentRating === 0} // 👈 MEJORA: Validación
+                    type="button"
+                    disabled={!userComments.trim() && currentRating === 0}
                   >
                     Enviar comentarios
                   </button>
                   <button 
-                    onClick={() => setShowFeedback(false)} 
+                    onClick={() => {
+                      setShowFeedback(false);
+                      resetFeedback();
+                    }} 
                     className="cancel-btn"
-                    type="button" // 👈 AÑADIDO
+                    type="button"
                   >
                     Cancelar
                   </button>
@@ -487,7 +529,7 @@ const Chat: React.FC = () => {
           className="floating-menu-button"
           onClick={toggleMenu}
           title="Opciones del chat"
-          type="button" // 👈 AÑADIDO
+          type="button"
         >
           <span className="menu-icon">☰</span>
         </button>
@@ -499,7 +541,7 @@ const Chat: React.FC = () => {
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('greeting')}
-                type="button" // 👈 AÑADIDO
+                type="button"
               >
                 <span className="menu-icon">👋</span>
                 Saluda a InA
@@ -507,7 +549,7 @@ const Chat: React.FC = () => {
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('Laboral')}
-                type="button" // 👈 AÑADIDO
+                type="button"
               >
                 <span className="menu-icon">📋</span>
                 Practicas laborales
@@ -515,7 +557,7 @@ const Chat: React.FC = () => {
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('Consultas')}
-                type="button" // 👈 AÑADIDO
+                type="button"
               >
                 <span className="menu-icon">❓</span>
                 Consultas frecuentes
@@ -523,7 +565,7 @@ const Chat: React.FC = () => {
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('TNE')}
-                type="button" // 👈 AÑADIDO
+                type="button"
               >
                 <span className="menu-icon">📋</span>
                 Consultas TNE
@@ -531,7 +573,7 @@ const Chat: React.FC = () => {
               <button
                 className="menu-item"
                 onClick={() => handleMenuAction('thanks')}
-                type="button" // 👈 AÑADIDO
+                type="button"
               >
                 <span className="menu-icon">🙏</span>
                 Agradecer a InA
@@ -546,7 +588,7 @@ const Chat: React.FC = () => {
                 className="menu-item"
                 onClick={() => handleMenuAction('clear')}
                 disabled={messages.length === 0}
-                type="button" // 👈 AÑADIDO
+                type="button"
               >
                 <span className="menu-icon">🗑️</span>
                 Limpiar chat
@@ -558,7 +600,7 @@ const Chat: React.FC = () => {
             <button
               className="menu-item"
               onClick={() => handleMenuAction('settings')}
-              type="button" // 👈 AÑADIDO
+              type="button"
             >
               <span className="menu-icon">⚙️</span>
               Configuración
@@ -566,7 +608,7 @@ const Chat: React.FC = () => {
             <button
               className="menu-item"
               onClick={() => handleMenuAction('help')}
-              type="button" // 👈 AÑADIDO
+              type="button"
             >
               <span className="menu-icon">❓</span>
               Ayuda
@@ -575,7 +617,7 @@ const Chat: React.FC = () => {
         )}
       </div>
 
-      {/* Contenedor del chat - ACTUALIZADO con formulario */}
+      {/* Contenedor del chat */}
       <div className="chat-container" id="Cuerpo">
         <div className="chat-header">
           <h2>Chat Asistente</h2>
@@ -618,7 +660,7 @@ const Chat: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* FORMULARIO ACTUALIZADO */}
+        {/* FORMULARIO */}
         <form 
           className="chat-input"
           onSubmit={handleSendMessage}
@@ -635,7 +677,7 @@ const Chat: React.FC = () => {
           <button
             className={`mic-button ${isListening ? 'listening' : ''}`}
             onClick={toggleListening}
-            type="button" // 👈 IMPORTANTE: Evita que envíe el formulario
+            type="button"
             disabled={isLoading || !isSpeechSupported}
             title={isListening ? "Detener micrófono" : "Activar micrófono"}
           >
@@ -646,7 +688,7 @@ const Chat: React.FC = () => {
             />
           </button>
           <button 
-            type="submit" // 👈 CAMBIADO a submit
+            type="submit"
             disabled={isLoading || !inputMessage.trim()}
           >
             {isLoading ? '...' : 'Enviar'}

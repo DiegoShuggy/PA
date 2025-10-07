@@ -4,7 +4,7 @@ from app.models import ResponseFeedback, engine
 import logging
 import uuid
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional  # 👈 AGREGAR importaciones de tipos
+from typing import Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,9 @@ class ResponseFeedbackSystem:
             "user_message": user_message,
             "ai_response": ai_response,
             "category": category,
-            "created_at": datetime.now()
+            "created_at": datetime.now(),
+            "basic_feedback_sent": False,  # 👈 NUEVO: track si ya se envió feedback básico
+            "detailed_feedback_sent": False  # 👈 NUEVO: track si ya se envió feedback detallado
         }
         
         logger.info(f"Nueva sesión de feedback creada: {session_id}")
@@ -45,10 +47,100 @@ class ResponseFeedbackSystem:
         self._clean_expired_sessions()
         return self.feedback_sessions.get(session_id)
     
-    def save_response_feedback(self, session_id: str, is_satisfied: bool, 
+    def save_basic_feedback(self, session_id: str, is_satisfied: bool) -> bool:
+        """
+        Guarda solo el feedback básico (satisfecho/no satisfecho)
+        NO elimina la sesión para permitir feedback detallado después
+        """
+        try:
+            session_data = self.get_session_data(session_id)
+            if not session_data:
+                logger.error(f"Sesión de feedback no encontrada o expirada: {session_id}")
+                return False
+            
+            with Session(engine) as session:
+                feedback = ResponseFeedback(
+                    session_id=session_id,
+                    user_message=session_data["user_message"],
+                    ai_response=session_data["ai_response"],
+                    is_satisfied=is_satisfied,
+                    rating=None,
+                    comments=None,
+                    response_category=session_data["category"]
+                )
+                session.add(feedback)
+                session.commit()
+            
+            # 👈 ACTUALIZADO: Marcar que se envió feedback básico, pero NO eliminar sesión
+            self.feedback_sessions[session_id]["basic_feedback_sent"] = True
+            
+            logger.info(f"Feedback básico guardado para sesión {session_id}: satisfecho={is_satisfied}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error guardando feedback básico: {e}")
+            return False
+    
+    def save_detailed_feedback(self, session_id: str, comments: str, rating: int = None) -> bool:
+        """
+        Guarda feedback detallado (comentarios y rating opcional)
+        Actualiza el registro existente o crea uno nuevo si no existe
+        """
+        try:
+            session_data = self.get_session_data(session_id)
+            if not session_data:
+                logger.error(f"Sesión de feedback no encontrada o expirada: {session_id}")
+                return False
+            
+            with Session(engine) as session:
+                # Buscar feedback existente para esta sesión
+                existing_feedback = session.exec(
+                    select(ResponseFeedback)
+                    .where(ResponseFeedback.session_id == session_id)
+                ).first()
+                
+                if existing_feedback:
+                    # Actualizar feedback existente
+                    existing_feedback.comments = comments
+                    if rating is not None:
+                        existing_feedback.rating = rating
+                    session.add(existing_feedback)
+                else:
+                    # Crear nuevo registro si no existe (para casos donde solo se envía feedback detallado)
+                    feedback = ResponseFeedback(
+                        session_id=session_id,
+                        user_message=session_data["user_message"],
+                        ai_response=session_data["ai_response"],
+                        is_satisfied=False,  # Por defecto negativo si solo se envía detallado
+                        rating=rating,
+                        comments=comments,
+                        response_category=session_data["category"]
+                    )
+                    session.add(feedback)
+                
+                session.commit()
+            
+            # 👈 ACTUALIZADO: Marcar que se envió feedback detallado
+            self.feedback_sessions[session_id]["detailed_feedback_sent"] = True
+            
+            # 👈 NUEVO: Solo eliminar sesión si ya se completó todo el feedback
+            if (self.feedback_sessions[session_id]["basic_feedback_sent"] and 
+                self.feedback_sessions[session_id]["detailed_feedback_sent"]):
+                del self.feedback_sessions[session_id]
+                logger.info(f"Sesión {session_id} completada y eliminada")
+            
+            logger.info(f"Feedback detallado guardado para sesión {session_id}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error guardando feedback detallado: {e}")
+            return False
+    
+    def save_complete_feedback(self, session_id: str, is_satisfied: bool, 
                              rating: int = None, comments: str = None) -> bool:
         """
-        Guarda el feedback del usuario para una respuesta específica
+        Guarda feedback completo en una sola operación
+        Útil para cuando se envía todo de una vez
         """
         try:
             session_data = self.get_session_data(session_id)
@@ -69,15 +161,15 @@ class ResponseFeedbackSystem:
                 session.add(feedback)
                 session.commit()
             
-            # Limpiar sesión después de guardar
+            # Eliminar sesión después de guardar feedback completo
             if session_id in self.feedback_sessions:
                 del self.feedback_sessions[session_id]
             
-            logger.info(f"Feedback guardado para sesión {session_id}: satisfecho={is_satisfied}")
+            logger.info(f"Feedback completo guardado para sesión {session_id}")
             return True
             
         except Exception as e:
-            logger.error(f"Error guardando feedback de respuesta: {e}")
+            logger.error(f"Error guardando feedback completo: {e}")
             return False
     
     def get_response_feedback_stats(self, days: int = 30) -> dict:
