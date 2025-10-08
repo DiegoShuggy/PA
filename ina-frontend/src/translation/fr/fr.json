@@ -1,0 +1,87 @@
+{
+  "app": {
+    "poweredBy": "Propulsé par Mistral 7B",
+    "title": "InA - Assistant Virtuel Duoc UC"
+  },
+  "chat": {
+    "title": "Chat Assistant",
+    "quickTips": "Utilisez le menu ☰ pour des questions rapides",
+    "inputPlaceholder": "Tapez votre question ou requête...",
+    "listeningPlaceholder": "Écoute... Parlez maintenant",
+    "send": "Envoyer",
+    "microphoneAlt": "Microphone",
+    "startMicrophone": "Activer le microphone",
+    "stopMicrophone": "Arrêter le microphone",
+    "serverError": "Erreur de connexion au serveur",
+    "browserNotSupported": "Votre navigateur ne prend pas en charge la reconnaissance vocale. Essayez Chrome ou Edge.",
+    "microphonePermission": "Veuillez autoriser l'accès au microphone dans votre navigateur",
+    "menuTitle": "Options du chat",
+    "qrAlt": "Code QR pour {{url}}",
+    "qrInstruction": "Scannez avec votre téléphone",
+    "qrSectionTitle": "📱 Scannez avec le téléphone:",
+    "languageSelector": "Choisir la langue",
+    "helpMessage": "Afficher l'aide du chat",
+    "menu": {
+      "quickQuestions": "Questions rapides",
+      "tools": "Outils",
+      "greetIna": "Saluer InA",
+      "internships": "Stages professionnels",
+      "faq": "Questions fréquentes",
+      "tne": "Demandes TNE",
+      "thankIna": "Remercier InA",
+      "clearChat": "Effacer le chat",
+      "settings": "Paramètres",
+      "help": "Aide"
+    },
+    "quickActions": {
+      "greeting": "Bonjour InA ! Pourriez-vous m'aider avec",
+      "thanks": "Merci beaucoup pour votre aide InA, WAH !",
+      "internships": "Pourriez-vous m'expliquer le processus de stages professionnels à DuocUC ?",
+      "faq": "Pourriez-vous me donner plus d'informations sur DuocUC ?",
+      "tne": "Pourriez-vous m'expliquer le processus d'obtention/validation de la TNE à DuocUC ?"
+    },
+    "feedback": {
+      "initialQuestion": "Cette réponse d'InA vous a-t-elle été utile ?",
+      "positive": "👍 Oui, elle a répondu à mes besoins",
+      "negative": "👎 Non, elle pourrait être améliorée",
+      "thankYouImprove": "Merci de nous aider à nous améliorer !",
+      "improvementQuestion": "Pourriez-vous nous en dire plus sur la façon dont nous pouvons nous améliorer ?",
+      "commentsPlaceholder": "Ex: La réponse était trop technique, j'avais besoin de plus de détails pratiques...",
+      "submitComments": "Envoyer les commentaires",
+      "cancel": "Annuler",
+      "thankYouFinal": "✅ Merci pour votre feedback ! Votre opinion aide à améliorer InA."
+    },
+    "feedbackError": "Erreur : Aucune session de feedback active",
+    "feedbackServerError": "Erreur lors de l'envoi du feedback. Veuillez réessayer.",
+    "feedbackConnectionError": "Erreur de connexion. Veuillez vérifier si le serveur fonctionne."
+  },
+  "consultas": {
+    "title": "Zone de Consultation",
+    "areas": {
+      "studentAffairs": {
+        "title": "Affaires Estudiantines",
+        "alt": "Affaires Estudiantines"
+      },
+      "frequentQueries": {
+        "title": "Questions Fréquentes",
+        "alt": "Questions Fréquentes"
+      },
+      "professionalDevelopment": {
+        "title": "Développement Professionnel et Diplômés",
+        "alt": "Développement Professionnel et Diplômés"
+      },
+      "studentWelfare": {
+        "title": "Bien-être Estudiantin",
+        "alt": "Bien-être Estudiantin"
+      },
+      "sports": {
+        "title": "Sports",
+        "alt": "Sports"
+      },
+      "pastoral": {
+        "title": "Pastorale",
+        "alt": "Pastorale"
+      }
+    }
+  }
+}

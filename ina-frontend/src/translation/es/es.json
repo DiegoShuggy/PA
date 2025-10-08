@@ -1,0 +1,87 @@
+{
+  "app": {
+    "poweredBy": "Powered by Mistral 7B",
+    "title": "InA - Asistente Virtual Duoc UC"
+  },
+  "chat": {
+    "title": "Chat Asistente",
+    "quickTips": "Usa el menú ☰ para preguntas rápidas",
+    "inputPlaceholder": "Escribe tu pregunta o consulta...",
+    "listeningPlaceholder": "Escuchando... Habla ahora",
+    "send": "Enviar",
+    "microphoneAlt": "Micrófono",
+    "startMicrophone": "Activar micrófono",
+    "stopMicrophone": "Detener micrófono",
+    "serverError": "Error al conectar con el servidor",
+    "browserNotSupported": "Tu navegador no soporta reconocimiento de voz. Prueba con Chrome o Edge.",
+    "microphonePermission": "Por favor permite el acceso al micrófono en tu navegador",
+    "menuTitle": "Opciones del chat",
+    "qrAlt": "QR code para {{url}}",
+    "qrInstruction": "Escanea con tu celular",
+    "qrSectionTitle": "📱 Escanear con celular:",
+    "languageSelector": "Seleccionar idioma",
+    "helpMessage": "Mostrar ayuda del chat",
+    "menu": {
+      "quickQuestions": "Preguntas rápidas",
+      "tools": "Herramientas",
+      "greetIna": "Saluda a InA",
+      "internships": "Prácticas laborales",
+      "faq": "Consultas frecuentes",
+      "tne": "Consultas TNE",
+      "thankIna": "Agradecer a InA",
+      "clearChat": "Limpiar chat",
+      "settings": "Configuración",
+      "help": "Ayuda"
+    },
+    "quickActions": {
+      "greeting": "¡Hola InA! ¿Podrías ayudarme con",
+      "thanks": "¡Muchas gracias por tu ayuda InA, WAH!",
+      "internships": "¿Podrías explicarme como es el proceso de Practicas Laborales en DuocUC?",
+      "faq": "¿Podrías darme más información sobre DuocUC?",
+      "tne": "¿Podrías explicarme como es el proceso de Obtencion/validación de TNE en DuocUC?"
+    },
+    "feedback": {
+      "initialQuestion": "¿Te resultó útil esta respuesta de Ina?",
+      "positive": "👍 Sí, cumplió con lo que necesitaba",
+      "negative": "👎 No, podría mejorar",
+      "thankYouImprove": "¡Gracias por ayudarnos a mejorar!",
+      "improvementQuestion": "¿Podrías contarnos más sobre cómo podemos mejorar?",
+      "commentsPlaceholder": "Ej: La respuesta fue muy técnica, necesitaba más detalles prácticos...",
+      "submitComments": "Enviar comentarios",
+      "cancel": "Cancelar",
+      "thankYouFinal": "✅ ¡Gracias por tu feedback! Tu opinión ayuda a mejorar a Ina."
+    },
+    "feedbackError": "Error: No hay sesión de feedback activa",
+    "feedbackServerError": "Error al enviar feedback. Intenta nuevamente.",
+    "feedbackConnectionError": "Error de conexión. Verifica que el servidor esté funcionando."
+   },
+  "consultas": {
+    "title": "Área de Consultas",
+    "areas": {
+      "studentAffairs": {
+        "title": "Asuntos Estudiantiles",
+        "alt": "Asuntos Estudiantiles"
+      },
+      "frequentQueries": {
+        "title": "Consultas Frecuentes",
+        "alt": "Consultas Frecuentes"
+      },
+      "professionalDevelopment": {
+        "title": "Desarrollo Profesional y Titulados",
+        "alt": "Desarrollo Profesional y Titulados"
+      },
+      "studentWelfare": {
+        "title": "Bienestar Estudiantil",
+        "alt": "Bienestar Estudiantil"
+      },
+      "sports": {
+        "title": "Deportes",
+        "alt": "Deportes"
+      },
+      "pastoral": {
+        "title": "Pastoral",
+        "alt": "Pastoral"
+      }
+    }
+  }
+}

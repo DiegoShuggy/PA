@@ -3,6 +3,7 @@ import Chat from './pages/Chat';
 import ConsultasR from './pages/ConsultasR';
 import { Routes, Route } from 'react-router-dom';
 import './App.css'; // Solo estilos globales
+import './translation/i18n'; // Importa la configuración de i18n
 import NavBar from './components/NavBar';
 function App() {
   return (
