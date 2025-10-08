@@ -375,11 +375,25 @@ const Chat: React.FC = () => {
 
       const data = await response.json();
 
+      // Normalizar qr_codes: aceptar array de objetos o diccionario
+      let qrCodesObj: { [url: string]: string } = {};
+      if (Array.isArray(data.qr_codes)) {
+        // Si es array de objetos tipo { url, qr_data }
+        data.qr_codes.forEach((qr: any) => {
+          if (qr.url && qr.qr_data) {
+            qrCodesObj[qr.url] = qr.qr_data;
+          }
+        });
+      } else if (typeof data.qr_codes === 'object' && data.qr_codes !== null) {
+        // Si ya es objeto tipo { url: qr_data }
+        qrCodesObj = data.qr_codes;
+      }
+
       const aiMessage: Message = {
         text: data.response,
         isUser: false,
         timestamp: new Date(),
-        qr_codes: data.qr_codes || {},
+        qr_codes: qrCodesObj,
         has_qr: data.has_qr || false,
         feedback_session_id: data.feedback_session_id,
         chatlog_id: data.chatlog_id
@@ -631,7 +645,7 @@ const Chat: React.FC = () => {
             <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
               <div className="message-text">{msg.text}</div>
 
-              {msg.has_qr && msg.qr_codes && (
+              {msg.qr_codes && Object.keys(msg.qr_codes).length > 0 && (
                 <div className="qr-codes-section">
                   <div className="qr-section-title">📱 Escanear con celular:</div>
                   <div className="qr-codes-container">

@@ -11,8 +11,13 @@ class TrainingDataLoader:
     def __init__(self):
         self.data_loaded = False
         self.training_data_path = "./training_data"
-    
+        self.base_knowledge_loaded = False  # 👈 NUEVO: control de estado
+
     def load_all_training_data(self):
+        if self.base_knowledge_loaded:
+            logger.info("✅ Conocimiento base ya cargado, omitiendo...")
+            return True
+        
         """Cargar todos los archivos training_data.json existentes"""
         try:
             # Buscar todos los archivos training_data.json
@@ -51,6 +56,7 @@ class TrainingDataLoader:
             self.generate_knowledge_from_patterns()
             
             self.data_loaded = True
+            self.base_knowledge_loaded = True  # 👈 Marcar como cargado
             logger.info(f"✅ Cargadas {loaded_count} preguntas + conocimiento base al RAG")
             return True
             
@@ -241,23 +247,31 @@ class TrainingDataLoader:
             )
     
     def _categorize_document(self, document: str) -> str:
-        """Categorizar documentos automáticamente"""
+        """Categorización mejorada con puntuación"""
         doc_lower = document.lower()
+        category_scores = {
+            "certificados": 0, "horarios": 0, "laboral": 0, 
+            "academico": 0, "derivacion": 0, "biblioteca": 0
+        }
         
-        if any(word in doc_lower for word in ['tne', 'certificado', 'constancia', 'matrícula']):
-            return "certificados"
-        elif any(word in doc_lower for word in ['horario', 'atiende', 'apertura', 'cierre']):
-            return "horarios" 
-        elif any(word in doc_lower for word in ['práctica', 'laboral', 'trabajo', 'cv', 'bolsa']):
-            return "laboral"
-        elif any(word in doc_lower for word in ['beca', 'beneficio', 'intercambio']):
-            return "academico"
-        elif any(word in doc_lower for word in ['derivación', 'centro de ayuda', 'soporte', 'problema técnico']):
-            return "derivacion"
-        elif any(word in doc_lower for word in ['biblioteca', 'libro', 'estudio']):
-            return "biblioteca"
-        else:
-            return "general"
+        # Palabras clave con pesos
+        keywords = {
+            "certificados": ["tne", "certificado", "constancia", "matrícula", "notas", "alumno regular"],
+            "horarios": ["horario", "atiende", "apertura", "cierre", "lunes a viernes", "9:00"],
+            "laboral": ["práctica", "laboral", "trabajo", "cv", "bolsa"],
+            "academico": ["beca", "beneficio", "intercambio"],
+            "derivacion": ["derivación", "centro de ayuda", "soporte", "problema técnico", "portal del estudiante"],
+            "biblioteca": ["biblioteca", "libro", "estudio"]
+        }
+        
+        for category, words in keywords.items():
+            for word in words:
+                if word in doc_lower:
+                    category_scores[category] += 1
+        
+        # Devolver categoría con mayor puntuación, o "general" si ninguna tiene puntaje
+        best_category, score = max(category_scores.items(), key=lambda x: x[1])
+        return best_category if score > 0 else "general"
 
 # Instancia global
 training_loader = TrainingDataLoader()
