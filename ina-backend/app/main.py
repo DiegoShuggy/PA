@@ -14,11 +14,86 @@ from app.classifier import classifier
 from pydantic import BaseModel as BaseModelOriginal
 from typing import Optional
 from app.quality_monitor import quality_monitor
+
+
 from app.advanced_analytics import advanced_analytics
 from app.auto_trainer import auto_trainer
 from sqlalchemy import text
 from app.training_data_loader import training_loader
 from app.qr_generator import qr_generator, duoc_url_manager
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Instanciar la app ANTES de cualquier uso de @app
+app = FastAPI(title="InA API", version="1.0.0")
+
+# Configurar CORS para permitir frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Importar funciones y objetos de cache_manager después de definir app
+from app.cache_manager import get_cache_stats, rag_cache, classification_cache
+
+# ENDPOINTS DE CACHE
+@app.get("/cache/stats")
+async def get_cache_stats_endpoint():
+    """Endpoint para obtener estadísticas del cache"""
+    return {
+        "status": "success",
+        "cache_stats": get_cache_stats(),
+        "timestamp": datetime.now().isoformat()
+    }
+
+@app.post("/cache/clear")
+async def clear_cache_endpoint(cache_type: str = "all"):
+    """Endpoint para limpiar cache"""
+    try:
+        if cache_type == "rag" or cache_type == "all":
+            rag_cache.clear()
+        if cache_type == "classification" or cache_type == "all":
+            classification_cache.clear()
+        
+        return {
+            "status": "success",
+            "message": f"Cache {cache_type} limpiado exitosamente",
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error clearing cache: {e}")
+        return {
+            "status": "error",
+            "message": f"Error clearing cache: {str(e)}"
+        }
+
+@app.post("/cache/cleanup")
+async def cleanup_cache_endpoint():
+    """Limpiar entradas expiradas del cache"""
+    try:
+        rag_expired = rag_cache.cleanup_expired()
+        classification_expired = classification_cache.cleanup_expired()
+        
+        return {
+            "status": "success",
+            "message": "Cache cleanup completed",
+            "expired_entries_removed": {
+                "rag_cache": rag_expired,
+                "classification_cache": classification_expired
+            },
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error in cache cleanup: {e}")
+        return {
+            "status": "error", 
+            "message": f"Error in cache cleanup: {str(e)}"
+        }
 
 # 👇 NUEVAS IMPORTACIONES PARA EL SISTEMA DE FEEDBACK
 from app.response_feedback import response_feedback_system
@@ -90,17 +165,16 @@ async def chat(message: Message):
         # 3. BUSCAR EN BASE DE CONOCIMIENTOS
         context_results = rag_engine.query(message.text)
         has_context = bool(context_results)
-        
+
         logger.info(f"Contexto encontrado: {len(context_results)} resultados para categoría '{category}'")
+        # Los siguientes logs dependen de ai_response, así que deben ir después de obtener la respuesta
         
         # 4. OBTENER RESPUESTA (AHORA CON QR)
         try:
-            response_data = await asyncio.wait_for(
-                get_ai_response(message.text, context_results),
-                timeout=45.0
-            )
-        except asyncio.TimeoutError:
-            logger.warning("Timeout en la generación de respuesta")
+            # get_ai_response es síncrona, NO usar await
+            response_data = get_ai_response(message.text, context_results)
+        except Exception as e:
+            logger.error(f"Error en la generación de respuesta: {e}")
             response_data = {
                 "text": "El servicio está tardando demasiado. Por favor, intenta nuevamente.",
                 "qr_codes": {},
@@ -108,18 +182,20 @@ async def chat(message: Message):
             }
         
         # 5. CREAR SESIÓN DE FEEDBACK PARA ESTA RESPUESTA
+        # Compatibilidad: usar 'response' si 'text' no existe
+        ai_response_text = response_data.get("text") or response_data.get("response")
         feedback_session_id = response_feedback_system.create_feedback_session(
             user_message=message.text,
-            ai_response=response_data["text"],
+            ai_response=ai_response_text,
             category=category
         )
-        
+
         # 6. REGISTRAR PREGUNTAS NO RESPONDIDAS - CORREGIDO
-        response_text = response_data["text"]
+        # Compatibilidad: usar 'response' si 'text' no existe
+        response_text = response_data.get("text") or response_data.get("response")
         if ("no puedo ayudar" in response_text.lower() or 
             "no sé" in response_text.lower() or
             "dificultades técnicas" in response_text.lower()):
-            
             with Session(engine) as session:
                 unanswered = UnansweredQuestion(
                     original_question=message.text,
@@ -145,10 +221,10 @@ async def chat(message: Message):
         
         # 8. RETORNAR RESPUESTA CON QR CODES Y FEEDBACK SESSION
         return {
-            "response": response_data["text"],
+            "response": response_data.get("text") or response_data.get("response"),
             "has_context": has_context,
-            "qr_codes": response_data["qr_codes"],
-            "has_qr": response_data["has_qr"],
+            "qr_codes": response_data.get("qr_codes"),
+            "has_qr": response_data.get("has_qr"),
             "feedback_session_id": feedback_session_id,  # 👈 NUEVO
             "chatlog_id": chatlog_id  # 👈 PARA COMPATIBILIDAD
         }
@@ -393,7 +469,63 @@ async def training_stats():
     except Exception as e:
         return {"error": str(e)}
 
-# 👇 NUEVOS ENDPOINTS PARA QR
+###############################################################
+# ENDPOINTS DE CACHE (después de definir app y middlewares)
+from app.cache_manager import get_cache_stats, rag_cache, classification_cache
+
+@app.get("/cache/stats")
+async def get_cache_stats_endpoint():
+    """Endpoint para obtener estadísticas del cache"""
+    return {
+        "status": "success",
+        "cache_stats": get_cache_stats(),
+        "timestamp": datetime.now().isoformat()
+    }
+
+@app.post("/cache/clear")
+async def clear_cache_endpoint(cache_type: str = "all"):
+    """Endpoint para limpiar cache"""
+    try:
+        if cache_type == "rag" or cache_type == "all":
+            rag_cache.clear()
+        if cache_type == "classification" or cache_type == "all":
+            classification_cache.clear()
+        
+        return {
+            "status": "success",
+            "message": f"Cache {cache_type} limpiado exitosamente",
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error clearing cache: {e}")
+        return {
+            "status": "error",
+            "message": f"Error clearing cache: {str(e)}"
+        }
+
+@app.post("/cache/cleanup")
+async def cleanup_cache_endpoint():
+    """Limpiar entradas expiradas del cache"""
+    try:
+        rag_expired = rag_cache.cleanup_expired()
+        classification_expired = classification_cache.cleanup_expired()
+        
+        return {
+            "status": "success",
+            "message": "Cache cleanup completed",
+            "expired_entries_removed": {
+                "rag_cache": rag_expired,
+                "classification_cache": classification_expired
+            },
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error in cache cleanup: {e}")
+        return {
+            "status": "error", 
+            "message": f"Error in cache cleanup: {str(e)}"
+        }
+###############################################################
 @app.get("/qr/duoc-urls")
 async def get_all_duoc_qrs():
     """Endpoint para obtener todos los QR de Duoc pre-generados"""

@@ -1,3 +1,4 @@
+
 # app/rag.py - VERSIÓN COMPLETAMENTE CORREGIDA
 
 import chromadb
@@ -5,10 +6,13 @@ import ollama
 from typing import List, Dict, Optional
 import logging
 from app.qr_generator import qr_generator
-import traceback  # 👈 AGREGAR ESTO
+import traceback
 import hashlib
 from datetime import datetime, timedelta
 from collections import defaultdict
+
+# En app/rag.py - AGREGAR al inicio
+from app.cache_manager import rag_cache, response_cache
 
 logger = logging.getLogger(__name__)
 
@@ -87,6 +91,29 @@ class RAGEngine:
             logger.error(f"Error en query RAG: {e}")
             return []
 
+    # En rag.py - Mejorar búsqueda semántica
+    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.7):
+        """Búsqueda optimizada con filtro por score"""
+        try:
+            results = self.collection.query(
+                query_texts=[query_text],
+                n_results=n_results * 2,  # Traer más resultados para filtrar
+                include=['distances', 'documents', 'metadatas']
+            )
+            
+            # Filtrar por similitud
+            filtered_docs = []
+            for i, distance in enumerate(results['distances'][0]):
+                similarity = 1 - distance  # Convertir distancia a similitud
+                if similarity >= score_threshold:
+                    filtered_docs.append(results['documents'][0][i])
+            
+            return filtered_docs[:n_results]  # Devolver solo los mejores
+            
+        except Exception as e:
+            logger.error(f"Error en query optimizada: {e}")
+            return []
+
 def _optimize_response(respuesta: str, pregunta: str) -> str:
     """Optimizar respuesta para punto medio óptimo - claro pero conciso"""
     
@@ -120,14 +147,24 @@ def _optimize_response(respuesta: str, pregunta: str) -> str:
 # ✅ Instancia global del motor RAG
 rag_engine = RAGEngine()
 
-# ✅ Función para obtener respuestas de Ollama - COMPLETAMENTE CORREGIDA
-async def get_ai_response(user_message: str, context: list = None) -> Dict:
-    """
-    Función para conectar con Ollama usando Mistral 7B
-    Retorna dict con texto y códigos QR
-    """
+
+# MODIFICAR la función get_ai_response
+def get_ai_response(user_message: str, context: list = None) -> Dict:
+    """Versión con cache avanzado de get_ai_response"""
+    import time
+    # Generar clave única para la consulta
+    cache_key = rag_cache._generate_key({
+        'message': user_message,
+        'context': context[:3] if context else []  # Solo primeros 3 elementos del contexto
+    })
+    # Intentar obtener del cache primero
+    cached_response = rag_cache.get(cache_key)
+    if cached_response:
+        logger.info(f"✅ RAG Cache HIT para: '{user_message}'")
+        return cached_response
+    logger.info(f"🔍 RAG Cache MISS para: '{user_message}'")
+    # Si no está en cache, procesar normalmente
     try:
-        # PROMPT OPTIMIZADO (simplificado)
         system_message = (
             "Eres InA, asistente del Punto Estudiantil Duoc UC. "
             "Responde de forma CLARA y CONCISA (3-4 líneas).\n"
@@ -139,64 +176,83 @@ async def get_ai_response(user_message: str, context: list = None) -> Dict:
             "• Prácticas: https://practicas.duoc.cl/\n"
             "• Ayuda: https://ayuda.duoc.cl/\n"
         )
-        
-        # Agregar contexto si está disponible
         if context:
             relevant_context = []
             for ctx in context:
                 if not ctx.startswith("DERIVACIÓN:") and len(ctx) > 10:
                     relevant_context.append(ctx)
-            
             if relevant_context:
                 system_message += f"INFORMACIÓN RELEVANTE:\n{chr(10).join(relevant_context[:2])}\n\n"
-        
-        # 👇 AGREGAR LOG PARA DEBUG
         logger.info(f"Enviando mensaje a Ollama: {user_message[:100]}...")
-        
         response = ollama.chat(
             model='mistral:7b',
             messages=[
                 {
-                    'role': 'system', 
+                    'role': 'system',
                     'content': system_message
                 },
                 {
-                    'role': 'user', 
+                    'role': 'user',
                     'content': user_message
                 }
             ],
             options={
                 'temperature': 0.25,
-                'num_predict': 400,  # Reducido para respuestas más rápidas
+                'num_predict': 400,
                 'top_p': 0.82,
                 'top_k': 40
             }
         )
-        
         respuesta = response['message']['content'].strip()
-        
-        # 👇 LOG PARA VER LA RESPUESTA DE OLLAMA
         logger.info(f"Respuesta de Ollama: {respuesta[:200]}...")
-        
-        # Aplicar optimizaciones inteligentes
         respuesta = _optimize_response(respuesta, user_message)
-        
-        # ✅ GENERAR CÓDIGOS QR PARA URLs ENCONTRADAS
         processed_response = qr_generator.process_response(respuesta, user_message)
-        
-        logger.info(f"✅ Respuesta procesada - Texto: {len(respuesta)} chars, QRs: {len(processed_response['qr_codes'])}")
-        return processed_response
-        
-    except Exception as e:
-        # 👇 MEJORAR EL LOG DEL ERROR
-        logger.error(f"❌ Error con Ollama: {str(e)}")
-        logger.error(f"❌ Traceback: {traceback.format_exc()}")  # 👈 AGREGAR TRACEBACK
-        
-        return {
-            "text": "Estamos experimentando dificultades técnicas. Por favor, intenta nuevamente en unos momentos.",
-            "qr_codes": {},
-            "has_qr": False
+        logger.info(f"✅ Respuesta procesada - Texto: {len(respuesta)} chars, QRs: {len(processed_response.get('qr_codes', {}))}")
+        # Para compatibilidad con el ejemplo del usuario:
+        response_text = processed_response.get('text', respuesta)
+        sources = processed_response.get('sources', [])
+        category = processed_response.get('category', None)
+        qr_codes = processed_response.get('qr_codes', {})
+        urls = processed_response.get('suggested_urls', [])
+        response_data = {
+            'response': response_text,
+            'sources': sources,
+            'category': category,
+            'timestamp': time.time(),
+            'qr_codes': qr_codes,
+            'urls': urls
         }
+        # Guardar en cache
+        rag_cache.set(cache_key, response_data)
+        return response_data
+    except Exception as e:
+        logger.error(f"❌ Error con Ollama: {str(e)}")
+        logger.error(f"❌ Traceback: {traceback.format_exc()}")
+        return {
+            "response": "Estamos experimentando dificultades técnicas. Por favor, intenta nuevamente en unos momentos.",
+            "sources": [],
+            "category": None,
+            "timestamp": time.time()
+        }
+
+# AGREGAR función para cache de respuestas completas
+def get_cached_response(session_id: str, user_message: str, category: str) -> Optional[Dict]:
+    """Obtener respuesta completa desde cache"""
+    cache_key = response_cache._generate_key({
+        'session_id': session_id,
+        'message': user_message,
+        'category': category
+    })
+    return response_cache.get(cache_key)
+
+def cache_response(session_id: str, user_message: str, category: str, response_data: Dict) -> None:
+    """Guardar respuesta completa en cache"""
+    cache_key = response_cache._generate_key({
+        'session_id': session_id,
+        'message': user_message,
+        'category': category
+    })
+    response_cache.set(cache_key, response_data, ttl=1800)  # 30 minutos
 
 class ResponseCache:
     def __init__(self):
