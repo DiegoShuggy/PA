@@ -824,3 +824,79 @@ async def feedback_health():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+# app/main.py - AGREGAR ESTOS ENDPOINTS
+
+@app.get("/analytics/dashboard")
+async def get_comprehensive_dashboard(days: int = 30):
+    """
+    Dashboard completo para administradores
+    """
+    try:
+        return advanced_analytics.get_comprehensive_dashboard(days)
+    except Exception as e:
+        logger.error(f"Error en dashboard comprehensivo: {e}")
+        return {"error": "Error obteniendo dashboard"}
+
+@app.get("/analytics/category/{category_name}/performance")
+async def get_category_performance(category_name: str, days: int = 30):
+    """
+    Analytics detallados de performance por categoría
+    """
+    try:
+        return advanced_analytics.get_category_performance(category_name, days)
+    except Exception as e:
+        logger.error(f"Error en performance de categoría: {e}")
+        return {"error": f"Error obteniendo performance para {category_name}"}
+
+@app.get("/analytics/real-time")
+async def get_real_time_metrics():
+    """
+    Métricas en tiempo real para monitoreo
+    """
+    try:
+        return advanced_analytics.get_real_time_metrics()
+    except Exception as e:
+        logger.error(f"Error en métricas tiempo real: {e}")
+        return {"error": "Error obteniendo métricas en tiempo real"}
+
+@app.get("/analytics/export/comprehensive")
+async def export_comprehensive_analytics(days: int = 30, format: str = "json"):
+    """
+    Exportar datos completos para análisis externo
+    """
+    try:
+        return advanced_analytics.get_export_data(days, format)
+    except Exception as e:
+        logger.error(f"Error exportando analytics: {e}")
+        return {"error": "Error exportando datos"}
+
+@app.get("/analytics/health")
+async def analytics_health():
+    """
+    Health check específico para el sistema de analytics
+    """
+    try:
+        # Verificar que todos los componentes estén funcionando
+        test_dashboard = advanced_analytics.get_comprehensive_dashboard(7)
+        test_realtime = advanced_analytics.get_real_time_metrics()
+        
+        return {
+            "status": "healthy",
+            "components": {
+                "dashboard_service": "operational",
+                "realtime_metrics": "operational", 
+                "category_analytics": "operational",
+                "export_service": "operational"
+            },
+            "last_test": {
+                "dashboard_queries": test_dashboard.get("summary_metrics", {}).get("total_queries", 0),
+                "realtime_available": "timestamp" in test_realtime
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error en health check de analytics: {e}")
+        return {
+            "status": "unhealthy",
+            "error": str(e)
+        }
