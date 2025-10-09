@@ -83,5 +83,24 @@
         "alt": "Pastoral"
       }
     }
+  },
+  "Lobby": {
+    "title": "Bienvenido, soy InA",
+    "Descripcion": "Tu asistente virtual para consultas sobre Duoc UC. ¿En qué puedo ayudarte hoy?",
+    "Preguntas": {
+      "FAQ1": "¿Qué es Duoc UC y qué servicios ofrece?",
+      "FAQ2": "¿Cómo puedo inscribirme en un programa académico en Duoc UC?",
+      "FAQ3":"¿faq 3?",
+      "FAQ4":"¿faq 4?",
+      "FAQ5":"¿faq 5?",
+      "FAQ6":"¿faq 6?",
+      "FAQ7":"¿faq 7?",
+      "FAQ8":"¿faq 8?",
+      "FAQ9":"¿faq 9?",
+      "FAQ10":"¿faq 10?",
+      "FAQ11":"¿faq 11?",
+      "FAQ12":"¿faq 12?"
+      
+    }
   }
 }

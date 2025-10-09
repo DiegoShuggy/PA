@@ -21,8 +21,9 @@
 
 body {
   font-family: "Myriad Pro", sans-serif;
-  background: #939393;
+  background: color-mix(in srgb, #0038A8 25%, #666666 100%);
   color: #333;
   margin: 0;
   padding: 0;
+  padding-top: 80px;
 }

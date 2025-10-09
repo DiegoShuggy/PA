@@ -1,47 +1,78 @@
 .navbar {
-  background-color: #000000;
-  padding: 1rem 2rem;
+  background: radial-gradient(circle at 0, rgb(0, 24, 59) 10%, rgb(255, 171, 31) 100px);
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.navbar-menu_container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1450px; /* Aumenté el ancho máximo para más espacio */
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  flex: 1; /* Ocupa 1 parte del espacio disponible */
+  justify-content: flex-start; /* Alinea a la izquierda */
+}
+
+.app-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 2; /* Ocupa 2 partes del espacio (más que los otros) */
+  text-align: center;
+  color: rgb(0, 0, 0);
+}
+
+.app-header p {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-bottom: 0.2rem;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: normal;
 }
 
 .navbar-links {
   display: flex;
   gap: 2rem;
+  flex: 1; /* Ocupa 1 parte del espacio disponible */
+  justify-content: flex-end; /* Alinea a la derecha */
 }
 
-.nav-link {
+.navbar-logo {
+  height: 65px;
+  width: auto;
+}
+
+.navbar-links a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
   font-size: 1rem;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 5px;
   transition: background-color 0.2s;
 }
 
-.nav-link:hover {
+.navbar-links a:hover {
   background-color: rgba(255, 255, 255, 0.1);
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    padding: 1rem;
-  }
-
-  .navbar-brand {
-    font-size: 1.2rem;
-  }
-
-  .navbar-links {
-    gap: 1rem;
-  }
-
-  .nav-link {
-    padding: 0.5rem;
-  }
 }

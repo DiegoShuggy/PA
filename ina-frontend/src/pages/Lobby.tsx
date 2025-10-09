@@ -1,13 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../css/ConsultasR.css';
-import ina1 from '../css/asuntos.png';
-import ina2 from '../css/faq.png';
-import ina3 from '../css/desarrollo.png';
-import ina4 from '../css/bienestar.png';
-import ina5 from '../css/deportes.png';
-import ina6 from '../css/pastoral.png';
+import '../css/Lobby.css';
 
 
 function ConsultasR() {
@@ -39,7 +33,7 @@ function ConsultasR() {
     };
 
     return (
-        <div className="consultas-container">
+        <div className="lobby-container">
             {/* Selector de idiomas */}
             <div className="language-selector-container" ref={languageMenuRef}>
                 <button
@@ -84,89 +78,117 @@ function ConsultasR() {
                 )}
             </div>
 
-            <h2>{t('consultas.title', 'Área de Consultas')}</h2>
-            
-            <div className="areas-grid">
+            <h2>{t('Lobby.title')}</h2>
+            <h3>{t('Lobby.Descripcion')}</h3>
+            <div className="lobby-grid">
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
-                <div className="area">
-                    <Link to="/InA" className="area-link">
-                        <div className="consultas-item uno">
-                            <img
-                                src={ina1}
-                                alt={t('consultas.areas.studentAffairs.alt', 'Asuntos Estudiantiles')}
-                                className="imagen1"
-                            />
-                            <span>{t('consultas.areas.studentAffairs.title', 'Asuntos Estudiantiles')}</span>
+                <div className="FAQ">
+                    <Link to="/Punto" className="FAQ-link">
+                        <div className="lobby-item uno">
+                            
+                            <span>{t('Lobby.Preguntas.FAQ1', 'FAQ')}</span>
                         </div>
                     </Link>
                 </div>
 
                 {/* Consultas Frecuentes / Frequent Queries / Questions Fréquentes */}
-                <div className="area">
-                    <Link to="/InA" className="area-link">
-                        <div className="consultas-item dos">
-                            <img
-                                src={ina2}
-                                alt={t('consultas.areas.frequentQueries.alt', 'Consultas Frecuentes')}
-                                className="imagen2"
-                            />
-                            <span>{t('consultas.areas.frequentQueries.title', 'Consultas Frecuentes')}</span>
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item dos">
+
+                            <span>{t('Lobby.Preguntas.FAQ2', 'FAQ')}</span>
                         </div>
                     </Link>
                 </div>
 
                 {/* Desarrollo Profesional y Titulados / Professional Development and Graduates / Développement Professionnel et Diplômés */}
-                <div className="area">
-                    <Link to="/InA" className="area-link">
-                        <div className="consultas-item tres">
-                            <img
-                                src={ina3}
-                                alt={t('consultas.areas.professionalDevelopment.alt', 'Desarrollo Profesional y Titulados')}
-                                className="imagen3"
-                            />
-                            <span>{t('consultas.areas.professionalDevelopment.title', 'Desarrollo Profesional y Titulados')}</span>
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item tres">
+
+                            <span>{t('Lobby.Preguntas.FAQ3', 'FAQ')}</span>
                         </div>
                     </Link>
                 </div>
 
                 {/* Bienestar Estudiantil / Student Selfcare / Bien-être Estudiantin */}
-                <div className="area">
-                    <Link to="/InA" className="area-link">
-                        <div className="consultas-item cuatro">
-                            <img
-                                src={ina4}
-                                alt={t('consultas.areas.studentWelfare.alt', 'Bienestar Estudiantil')}
-                                className="imagen4"
-                            />
-                            <span>{t('consultas.areas.studentWelfare.title', 'Bienestar Estudiantil')}</span>
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item cuatro">
+                            <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
                         </div>
                     </Link>
                 </div>
 
                 {/* Deportes / Sports / Sports */}
-                <div className="area">
-                    <Link to="/InA" className="area-link">
-                        <div className="consultas-item cinco">
-                            <img
-                                src={ina5}
-                                alt={t('consultas.areas.sports.alt', 'Deportes')}
-                                className="imagen5"
-                            />
-                            <span>{t('consultas.areas.sports.title', 'Deportes')}</span>
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item cinco">
+                            <span>{t('Lobby.Preguntas.FAQ5', 'FAQ')}</span>
                         </div>
                     </Link>
                 </div>
 
                 {/* Pastoral / Pastoral / Pastorale */}
-                <div className="area">
-                    <Link to="/InA" className="area-link">
-                        <div className="consultas-item seis">
-                            <img
-                                src={ina6}
-                                alt={t('consultas.areas.pastoral.alt', 'Pastoral')}
-                                className="imagen6"
-                            />
-                            <span>{t('consultas.areas.pastoral.title', 'Pastoral')}</span>
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item seis">
+                            <span>{t('Lobby.Preguntas.FAQ6', 'FAQ')}</span>
+                        </div>
+                    </Link>
+                </div>
+                <div className="FAQ">
+                    <Link to="/Punto" className="FAQ-link">
+                        <div className="lobby-item uno">
+                            
+                            <span>{t('Lobby.Preguntas.FAQ7', 'FAQ')}</span>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Consultas Frecuentes / Frequent Queries / Questions Fréquentes */}
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item dos">
+
+                            <span>{t('Lobby.Preguntas.FAQ8', 'FAQ')}</span>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Desarrollo Profesional y Titulados / Professional Development and Graduates / Développement Professionnel et Diplômés */}
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item tres">
+
+                            <span>{t('Lobby.Preguntas.FAQ9', 'FAQ')}</span>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Bienestar Estudiantil / Student Selfcare / Bien-être Estudiantin */}
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item cuatro">
+                            <span>{t('Lobby.Preguntas.FAQ10', 'FAQ')}</span>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Deportes / Sports / Sports */}
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item cinco">
+                            <span>{t('Lobby.Preguntas.FAQ11', 'FAQ')}</span>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Pastoral / Pastoral / Pastorale */}
+                <div className="FAQ">
+                    <Link to="/InA" className="FAQ-link">
+                        <div className="lobby-item seis">
+                            <span>{t('Lobby.Preguntas.FAQ12', 'FAQ')}</span>
                         </div>
                     </Link>
                 </div>

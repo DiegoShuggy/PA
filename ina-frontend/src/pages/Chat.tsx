@@ -39,13 +39,6 @@ const Chat: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   // Cerrar menús al hacer clic fuera
   useEffect(() => {
