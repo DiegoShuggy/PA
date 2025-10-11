@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import '../css/Lobby.css';
 
 
-function ConsultasR() {
-    console.log('ConsultasR component is rendering');
+function Lobby() {
+    console.log('Lobby component is rendering');
     const { t, i18n } = useTranslation();
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement>(null);
@@ -198,4 +198,4 @@ function ConsultasR() {
     );
 }
 
-export default ConsultasR;
+export default Lobby;

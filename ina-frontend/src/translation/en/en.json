@@ -5,7 +5,7 @@
   },
   "chat": {
     "title": "Assistant Chat",
-    "quickTips": "Use the ☰ menu for quick questions",
+    "quickTips": "← Use the ☰ menu for quick questions",
     "inputPlaceholder": "Type your question or query...",
     "listeningPlaceholder": "Listening... Speak now",
     "send": "Send",
@@ -58,11 +58,11 @@
   "consultas": {
     "title": "Consultation Area",
     "areas": {
-      "studentAffairs": {
+      "bienestar": {
         "title": "Student Affairs",
         "alt": "Student Affairs"
       },
-      "frequentQueries": {
+      "ConsultasFrecuentes": {
         "title": "Frequent Queries",
         "alt": "Frequent Queries"
       },

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../css/Chat.css';
 import microIcon from '../css/Micro.png';
-
+import { useNavigate } from 'react-router-dom';
 interface Message {
   text: string;
   isUser: boolean;
@@ -15,6 +15,7 @@ interface Message {
 
 const Chat: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +41,12 @@ const Chat: React.FC = () => {
   const feedbackRef = useRef<HTMLDivElement>(null);
 
 
+  // Función para volver a la página anterior
+    const handleGoBack = () => {
+        navigate(-1); // -1 significa ir a la página anterior en el historial
+    };
+
+    
   // Cerrar menús al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -530,6 +537,15 @@ const Chat: React.FC = () => {
 
   return (
     <div className="chat-wrapper">
+      {/* Botón para volver atrás */}
+            <button 
+                className="back-button"
+                onClick={handleGoBack}
+                title={t('app.backButton', 'Volver atrás')}
+            >
+                <span className="back-arrow">←</span>
+                {t('app.back')}
+            </button>
       {/* Selector de idioma */}
       <div className="language-selector-container" ref={languageMenuRef}>
         <button

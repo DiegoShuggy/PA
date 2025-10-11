@@ -2,10 +2,13 @@ import React from 'react';
 import Chat from './pages/Chat';
 import ConsultasR from './pages/ConsultasR';
 import Lobby from './pages/Lobby';
+import Asuntos  from './pages/Asuntos';
 import { Routes, Route } from 'react-router-dom';
 import './App.css'; // Solo estilos globales
 import './translation/i18n'; // Importa la configuración de i18n
 import NavBar from './components/NavBar';
+
+
 function App() {
   return (
     <div className="app">
@@ -16,6 +19,7 @@ function App() {
             <Route path="/" element={<Lobby />} />
             <Route path="/InA" element={<Chat />} />
             <Route path="/Punto" element={<ConsultasR />} />
+            <Route path="/Asuntos" element={<Asuntos />} />
           </Routes>
         </main>
       </div>

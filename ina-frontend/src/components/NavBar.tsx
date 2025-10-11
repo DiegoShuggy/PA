@@ -20,6 +20,7 @@ function NavBar() {
                 <Link to="/">Lobby</Link>
                 <Link to="/InA">Chat</Link>
                 <Link to="/Punto">ConsultasR</Link>
+                <Link to="/Asuntos"> Asuntos </Link>
             </div>
         </div>
     </nav>

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../css/ConsultasR.css';
 import ina1 from '../css/asuntos.png';
@@ -13,10 +13,14 @@ import ina6 from '../css/pastoral.png';
 function ConsultasR() {
     console.log('ConsultasR component is rendering');
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-
+// Función para volver a la página anterior
+    const handleGoBack = () => {
+        navigate(-1); // -1 significa ir a la página anterior en el historial
+    };
 
     // Cerrar menú de idiomas al hacer clic fuera
     useEffect(() => {
@@ -40,6 +44,15 @@ function ConsultasR() {
 
     return (
         <div className="consultas-container">
+            {/* Botón para volver atrás */}
+            <button 
+                className="back-button"
+                onClick={handleGoBack}
+                title={t('app.backButton', 'Volver atrás')}
+            >
+                <span className="back-arrow">←</span>
+                {t('Asuntos.back', 'Volver')}
+            </button>
             {/* Selector de idiomas */}
             <div className="language-selector-container" ref={languageMenuRef}>
                 <button
@@ -89,14 +102,14 @@ function ConsultasR() {
             <div className="areas-grid">
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
                 <div className="area">
-                    <Link to="/InA" className="area-link">
+                    <Link to="/Asuntos" className="area-link">
                         <div className="consultas-item uno">
                             <img
                                 src={ina1}
-                                alt={t('consultas.areas.studentAffairs.alt', 'Asuntos Estudiantiles')}
+                                alt={t('consultas.areas.bienestar.alt', 'Asuntos Estudiantiles')}
                                 className="imagen1"
                             />
-                            <span>{t('consultas.areas.studentAffairs.title', 'Asuntos Estudiantiles')}</span>
+                            <span>{t('consultas.areas.bienestar.title', 'Asuntos Estudiantiles')}</span>
                         </div>
                     </Link>
                 </div>
@@ -107,10 +120,10 @@ function ConsultasR() {
                         <div className="consultas-item dos">
                             <img
                                 src={ina2}
-                                alt={t('consultas.areas.frequentQueries.alt', 'Consultas Frecuentes')}
+                                alt={t('consultas.areas.ConsultasFrecuentes.alt', 'Consultas Frecuentes')}
                                 className="imagen2"
                             />
-                            <span>{t('consultas.areas.frequentQueries.title', 'Consultas Frecuentes')}</span>
+                            <span>{t('consultas.areas.ConsultasFrecuentes.title', 'Consultas Frecuentes')}</span>
                         </div>
                     </Link>
                 </div>

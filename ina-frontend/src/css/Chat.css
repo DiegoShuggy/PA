@@ -3,13 +3,13 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Myriad Pro", sans-serif;
-  
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   box-sizing: border-box;
+  
 }
 
 .chat-wrapper {
@@ -18,44 +18,58 @@ body {
   align-items: center;
   min-height: 100vh;
   position: relative;
-  
+  width: 100%;
 }
 
+/* CONTENEDOR DEL CHAT ESTÁTICO */
 .chat-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 900px;
-  height: 90vh;
+  width: 900px; /* Ancho fijo */
+  height:100vh; /* Altura fija */
+  max-width: 900px; /* Máximo ancho */
+  max-height: 100vh; /* Máxima altura */
+  min-width: 900px; /* Mínimo ancho */
+  min-height: 600px; /* Mínima altura */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   border-radius: 16px;
-  position: center;
+  position: fixed; /* Posición fija */
+  top: 50%; /* Centrado vertical */
+  left: 50%; /* Centrado horizontal */
+  transform: translate(-50%, -50%); /* Centrado perfecto */
   overflow: hidden;
   background: white;
   background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);
+  z-index: 100; /* Asegura que esté por encima */
 }
 
 /* Cabecera para el chat */
 .chat-header {
+  margin-top: 10%;
   padding: 20px;
   background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);
   color: rgb(255, 255, 255);
   text-align: center;
   font-weight: 600;
   font-size: 1.2rem;
+  flex-shrink: 0; /* No se reduce */
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .chat-header h2 {
   margin: 0;
 }
 
+
 /* Menú flotante en la esquina derecha */
 .floating-menu-container {
   position: fixed;
-  top: 30px;
-  right: 30px;
+  top: 24%;
+  left: calc(56% - 450px - 80px); /* 450px = mitad del ancho del chat (900px/2) */
+  transform: translateY(-50%);
   z-index: 1000;
-  margin-top: 5%;
 }
 
 .floating-menu-button {
@@ -74,6 +88,7 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+
 .floating-menu-button:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
@@ -82,17 +97,16 @@ body {
 
 .floating-dropdown-menu {
   position: absolute;
-  top: 100%;
-  right: 0;
+  left: -400%; /* Se abre hacia la derecha */
+  top: 0;
+  margin-left: 10px; /* Espacio entre botón y menú */
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   min-width: 220px;
   z-index: 1000;
-  margin-top: 10px;
-  animation: slideDown 0.2s ease;
+  animation: slideRight 0.2s ease; /* Nueva animación */
   overflow: hidden;
-  
 }
 
 @keyframes slideDown {
@@ -159,10 +173,11 @@ body {
 .chat-messages {
   flex: 1;
   padding: 20px;
-  overflow-y: auto;
+  overflow-y: auto; /* Scroll interno */
   background-color: transparent;
   display: flex;
   flex-direction: column;
+  min-height: 0; /* Permite el scroll */
 }
 
 .message {
@@ -173,7 +188,6 @@ body {
   position: relative;
   animation: fadeIn 0.3s ease;
   word-wrap: break-word;
-  
 }
 
 .user-message {
