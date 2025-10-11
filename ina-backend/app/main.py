@@ -15,6 +15,9 @@ from pydantic import BaseModel as BaseModelOriginal
 from typing import Optional
 from app.quality_monitor import quality_monitor
 
+# 👇 NUEVAS IMPORTACIONES PARA FILTROS DE CONTENIDO
+from app.content_filter import ContentFilter
+from app.topic_classifier import TopicClassifier
 
 from app.advanced_analytics import advanced_analytics
 from app.auto_trainer import auto_trainer
@@ -37,6 +40,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 👇 INICIALIZAR SISTEMA DE FILTROS (GLOBAL)
+content_filter = ContentFilter()
+topic_classifier = TopicClassifier()
 
 # Importar funciones y objetos de cache_manager después de definir app
 from app.cache_manager import get_cache_stats, rag_cache, classification_cache
@@ -121,21 +128,6 @@ class DetailedFeedbackRequest(BaseModelOriginal):
     userComments: str
     rating: Optional[int] = None
 
-# Configurar logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-app = FastAPI(title="InA API", version="1.0.0")
-
-# Configurar CORS para permitir frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # Inicializar base de datos al iniciar
 @app.on_event("startup")
 def on_startup():
@@ -144,6 +136,7 @@ def on_startup():
     training_loader.load_all_training_data()
     training_loader.generate_knowledge_from_patterns()
     logger.info("✅ Base de datos y conocimiento histórico cargados")
+    logger.info("✅ Sistema de filtros de contenido inicializado")
 
 class Message(BaseModel):
     text: str
@@ -151,28 +144,83 @@ class Message(BaseModel):
 @app.post("/chat")
 async def chat(message: Message):
     try:
-        # 1. CLASIFICAR LA PREGUNTA
-        category = classifier.classify_question(message.text)
+        question = message.text.strip()
+        
+        # 👇 1. VALIDACIÓN DE CONTENIDO - NUEVO SISTEMA
+        content_validation = content_filter.validate_question(question)
+        if not content_validation["is_allowed"]:
+            logger.warning(f"🚫 Pregunta bloqueada por contenido: {question}")
+            return {
+                "response": content_validation["rejection_message"],
+                "allowed": False,
+                "success": False,
+                "block_reason": content_validation.get("block_reason"),
+                "has_context": False,
+                "has_qr": False,
+                "qr_codes": {},
+                "timestamp": datetime.now().isoformat()
+            }
+        
+        # 👇 2. CLASIFICACIÓN DE TEMA - NUEVO SISTEMA
+        topic_classification = topic_classifier.classify_topic(question)
+        
+        # Si no es tema institucional, redirigir
+        if not topic_classification["is_institutional"]:
+            if topic_classification["category"] != "unknown":
+                # Es un tema institucional pero de otra área
+                redirect_message = topic_classifier.get_redirection_message(
+                    topic_classification["appropriate_department"]
+                )
+                logger.info(f"📍 Redirigiendo pregunta a {topic_classification['appropriate_department']}: {question}")
+                return {
+                    "response": redirect_message,
+                    "allowed": False,
+                    "success": False,
+                    "redirect_to": topic_classification["appropriate_department"],
+                    "category": topic_classification["category"],
+                    "has_context": False,
+                    "has_qr": False,
+                    "qr_codes": {},
+                    "timestamp": datetime.now().isoformat()
+                }
+            else:
+                # Tema desconocido (posiblemente off-topic)
+                logger.info(f"❓ Tema desconocido/off-topic: {question}")
+                return {
+                    "response": "No puedo responder a esa pregunta. Estoy especializado en temas del Punto Estudiantil de Duoc UC. ¿Tienes alguna consulta sobre Asuntos Estudiantiles, Desarrollo Profesional, Bienestar, Deportes o Pastoral?",
+                    "allowed": False,
+                    "success": False,
+                    "category": "unknown",
+                    "has_context": False,
+                    "has_qr": False,
+                    "qr_codes": {},
+                    "timestamp": datetime.now().isoformat()
+                }
+        
+        # 👇 3. SI PASÓ TODOS LOS FILTROS - PROCESAR NORMALMENTE
+        logger.info(f"✅ Pregunta aprobada por filtros: {question} - Categoría: {topic_classification['category']}")
+        
+        # 3.1 CLASIFICAR LA PREGUNTA (sistema original)
+        category = classifier.classify_question(question)
         logger.info(f"Categoría detectada: {category}")
         
-        # 2. REGISTRAR PREGUNTA DEL USUARIO CON CATEGORÍA
+        # 3.2 REGISTRAR PREGUNTA DEL USUARIO CON CATEGORÍA
         with Session(engine) as session:
-            user_query = UserQuery(question=message.text, category=category)
+            user_query = UserQuery(question=question, category=category)
             session.add(user_query)
             session.commit()
             query_id = user_query.id
         
-        # 3. BUSCAR EN BASE DE CONOCIMIENTOS
-        context_results = rag_engine.query(message.text)
+        # 3.3 BUSCAR EN BASE DE CONOCIMIENTOS
+        context_results = rag_engine.query(question)
         has_context = bool(context_results)
 
         logger.info(f"Contexto encontrado: {len(context_results)} resultados para categoría '{category}'")
-        # Los siguientes logs dependen de ai_response, así que deben ir después de obtener la respuesta
         
-        # 4. OBTENER RESPUESTA (AHORA CON QR)
+        # 3.4 OBTENER RESPUESTA (AHORA CON QR)
         try:
             # get_ai_response es síncrona, NO usar await
-            response_data = get_ai_response(message.text, context_results)
+            response_data = get_ai_response(question, context_results)
         except Exception as e:
             logger.error(f"Error en la generación de respuesta: {e}")
             response_data = {
@@ -181,16 +229,16 @@ async def chat(message: Message):
                 "has_qr": False
             }
         
-        # 5. CREAR SESIÓN DE FEEDBACK PARA ESTA RESPUESTA
+        # 3.5 CREAR SESIÓN DE FEEDBACK PARA ESTA RESPUESTA
         # Compatibilidad: usar 'response' si 'text' no existe
         ai_response_text = response_data.get("text") or response_data.get("response")
         feedback_session_id = response_feedback_system.create_feedback_session(
-            user_message=message.text,
+            user_message=question,
             ai_response=ai_response_text,
             category=category
         )
 
-        # 6. REGISTRAR PREGUNTAS NO RESPONDIDAS - CORREGIDO
+        # 3.6 REGISTRAR PREGUNTAS NO RESPONDIDAS - CORREGIDO
         # Compatibilidad: usar 'response' si 'text' no existe
         response_text = response_data.get("text") or response_data.get("response")
         if ("no puedo ayudar" in response_text.lower() or 
@@ -198,18 +246,18 @@ async def chat(message: Message):
             "dificultades técnicas" in response_text.lower()):
             with Session(engine) as session:
                 unanswered = UnansweredQuestion(
-                    original_question=message.text,
+                    original_question=question,
                     category=category,
                     ai_response=response_text
                 )
                 session.add(unanswered)
                 session.commit()
         
-        # 7. GUARDAR EN LOG DE CONVERSACIONES
+        # 3.7 GUARDAR EN LOG DE CONVERSACIONES
         try:
             with Session(engine) as session:
                 chat_log = ChatLog(
-                    user_message=message.text,
+                    user_message=question,
                     ai_response=response_text
                 )
                 session.add(chat_log)
@@ -219,14 +267,18 @@ async def chat(message: Message):
             logger.error(f"Error en base de datos: {db_error}")
             chatlog_id = None
         
-        # 8. RETORNAR RESPUESTA CON QR CODES Y FEEDBACK SESSION
+        # 3.8 RETORNAR RESPUESTA CON QR CODES Y FEEDBACK SESSION
         return {
             "response": response_data.get("text") or response_data.get("response"),
             "has_context": has_context,
             "qr_codes": response_data.get("qr_codes"),
             "has_qr": response_data.get("has_qr"),
             "feedback_session_id": feedback_session_id,  # 👈 NUEVO
-            "chatlog_id": chatlog_id  # 👈 PARA COMPATIBILIDAD
+            "chatlog_id": chatlog_id,  # 👈 PARA COMPATIBILIDAD
+            "allowed": True,
+            "success": True,
+            "category": category,
+            "timestamp": datetime.now().isoformat()
         }
         
     except Exception as e:
@@ -256,7 +308,9 @@ async def health_check():
             "model": "mistral:7b",
             "ollama": "connected",
             "database": "connected",
-            "chromadb": rag_status
+            "chromadb": rag_status,
+            "content_filter": "active",
+            "topic_classifier": "active"
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
@@ -287,7 +341,9 @@ async def root():
             "analytics": True,
             "unanswered_tracking": True,
             "qr_codes": True,
-            "feedback_system": True  # 👈 NUEVA FUNCIONALIDAD
+            "feedback_system": True,
+            "content_filter": True,  # 👈 NUEVA FUNCIONALIDAD
+            "topic_classifier": True  # 👈 NUEVA FUNCIONALIDAD
         }
     }
 
@@ -470,62 +526,6 @@ async def training_stats():
         return {"error": str(e)}
 
 ###############################################################
-# ENDPOINTS DE CACHE (después de definir app y middlewares)
-from app.cache_manager import get_cache_stats, rag_cache, classification_cache
-
-@app.get("/cache/stats")
-async def get_cache_stats_endpoint():
-    """Endpoint para obtener estadísticas del cache"""
-    return {
-        "status": "success",
-        "cache_stats": get_cache_stats(),
-        "timestamp": datetime.now().isoformat()
-    }
-
-@app.post("/cache/clear")
-async def clear_cache_endpoint(cache_type: str = "all"):
-    """Endpoint para limpiar cache"""
-    try:
-        if cache_type == "rag" or cache_type == "all":
-            rag_cache.clear()
-        if cache_type == "classification" or cache_type == "all":
-            classification_cache.clear()
-        
-        return {
-            "status": "success",
-            "message": f"Cache {cache_type} limpiado exitosamente",
-            "timestamp": datetime.now().isoformat()
-        }
-    except Exception as e:
-        logger.error(f"Error clearing cache: {e}")
-        return {
-            "status": "error",
-            "message": f"Error clearing cache: {str(e)}"
-        }
-
-@app.post("/cache/cleanup")
-async def cleanup_cache_endpoint():
-    """Limpiar entradas expiradas del cache"""
-    try:
-        rag_expired = rag_cache.cleanup_expired()
-        classification_expired = classification_cache.cleanup_expired()
-        
-        return {
-            "status": "success",
-            "message": "Cache cleanup completed",
-            "expired_entries_removed": {
-                "rag_cache": rag_expired,
-                "classification_cache": classification_expired
-            },
-            "timestamp": datetime.now().isoformat()
-        }
-    except Exception as e:
-        logger.error(f"Error in cache cleanup: {e}")
-        return {
-            "status": "error", 
-            "message": f"Error in cache cleanup: {str(e)}"
-        }
-###############################################################
 @app.get("/qr/duoc-urls")
 async def get_all_duoc_qrs():
     """Endpoint para obtener todos los QR de Duoc pre-generados"""
@@ -569,8 +569,6 @@ async def generate_specific_qr(url: str):
         raise HTTPException(status_code=500, detail="Error interno")
 
 # 👇 NUEVOS ENDPOINTS PARA EL SISTEMA DE FEEDBACK MEJORADO
-
-# REEMPLAZA SOLO EL ENDPOINT /feedback/response en tu app/main.py con esto:
 
 @app.post("/feedback/response")
 async def submit_response_feedback(request: dict):  # 👈 Acepta cualquier dict
@@ -821,9 +819,60 @@ async def feedback_health():
             "error": str(e)
         }
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# 👇 NUEVOS ENDPOINTS PARA EL SISTEMA DE FILTROS
+
+@app.post("/validate-question")
+async def validate_question(request: dict):
+    """
+    Endpoint solo para validar si una pregunta es permitida
+    Útil para testing y analytics
+    """
+    question = request.get("question", "")
+    
+    # Validar contenido
+    content_result = content_filter.validate_question(question)
+    
+    # Clasificar tema
+    topic_result = topic_classifier.classify_topic(question)
+    
+    response_data = {
+        "question": question,
+        "content_validation": content_result,
+        "topic_classification": topic_result,
+        "final_decision": "allowed" if (content_result["is_allowed"] and topic_result["is_institutional"]) else "blocked",
+        "timestamp": datetime.now().isoformat()
+    }
+    
+    # Si está bloqueado, agregar mensaje apropiado
+    if response_data["final_decision"] == "blocked":
+        if not content_result["is_allowed"]:
+            response_data["message"] = content_result["rejection_message"]
+        elif not topic_result["is_institutional"]:
+            if topic_result["category"] != "unknown":
+                response_data["message"] = topic_classifier.get_redirection_message(
+                    topic_result["appropriate_department"]
+                )
+            else:
+                response_data["message"] = "No puedo responder a esa pregunta. Estoy especializado en temas del Punto Estudiantil."
+    
+    return response_data
+
+@app.get("/allowed-topics")
+async def get_allowed_topics():
+    """Endpoint para ver los temas permitidos"""
+    return {
+        "allowed_categories": topic_classifier.allowed_categories,
+        "redirect_categories": list(topic_classifier.redirect_categories.keys()),
+        "stats": topic_classifier.get_classification_stats()
+    }
+
+@app.get("/filter-stats")
+async def get_filter_stats():
+    """Estadísticas del sistema de filtros"""
+    return {
+        "content_filter": content_filter.get_filter_stats(),
+        "topic_classifier": topic_classifier.get_classification_stats()
+    }
 
 # app/main.py - AGREGAR ESTOS ENDPOINTS
 
@@ -900,3 +949,123 @@ async def analytics_health():
             "status": "unhealthy",
             "error": str(e)
         }
+
+@app.get("/cache/semantic-stats")
+async def get_semantic_cache_stats():
+    """Endpoint para ver estadísticas del cache semántico"""
+    try:
+        from app.cache_manager import normalize_question
+        
+        # Ejemplos de normalización
+        test_questions = [
+            "Hola Ina",
+            "hola ina", 
+            "¿Hola Ina?",
+            "Donde obtengo mi TNE?",
+            "DONDE OBTENGO MI TNE",
+            "dónde obtengo mi tne?"
+        ]
+        
+        normalized_examples = {}
+        for q in test_questions:
+            normalized_examples[q] = normalize_question(q)
+        
+        return {
+            "status": "success",
+            "normalization_examples": normalized_examples,
+            "classifier_semantic_cache": classifier.get_classification_stats(),
+            "rag_metrics": rag_engine.metrics
+        }
+    except Exception as e:
+        logger.error(f"Error obteniendo stats de cache semántico: {e}")
+        return {"status": "error", "error": str(e)}
+# app/main.py - AGREGAR ESTOS ENDPOINTS AL FINAL DEL ARCHIVO
+
+@app.get("/cache/semantic-stats")
+async def get_semantic_cache_stats():
+    """Endpoint para ver estadísticas del cache semántico"""
+    try:
+        from app.rag import get_rag_cache_stats
+        
+        # Ejemplos de normalización mejorada
+        test_questions = [
+            "Hola Ina",
+            "hola ina", 
+            "¿Hola Ina?",
+            "INA HOLA",
+            "Donde obtengo mi TNE?",
+            "DONDE OBTENGO MI TNE",
+            "dónde obtengo mi tne?",
+            "como puedo renovar mi tne",
+            "donde puedo renovar mi tne"
+        ]
+        
+        normalized_examples = {}
+        for q in test_questions:
+            normalized_examples[q] = rag_engine.enhanced_normalize_text(q)
+        
+        # Obtener stats del cache
+        cache_stats = get_rag_cache_stats()
+        
+        return {
+            "status": "success",
+            "normalization_examples": normalized_examples,
+            "cache_stats": cache_stats,
+            "classifier_semantic_cache": classifier.get_classification_stats(),
+            "rag_metrics": rag_engine.metrics
+        }
+    except Exception as e:
+        logger.error(f"Error obteniendo stats de cache semántico: {e}")
+        return {"status": "error", "error": str(e)}
+
+@app.post("/cache/semantic/clear")
+async def clear_semantic_cache():
+    """Limpiar cache semántico"""
+    try:
+        rag_engine.text_cache.clear()
+        rag_engine.semantic_cache.cache.clear()
+        
+        return {
+            "status": "success",
+            "message": "Cache semántico limpiado exitosamente",
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error limpiando cache semántico: {e}")
+        return {"status": "error", "error": str(e)}
+
+@app.get("/cache/semantic/test")
+async def test_semantic_cache():
+    """Probar el cache semántico con ejemplos"""
+    try:
+        test_cases = [
+            ("Hola Ina", "hola ina"),
+            ("INA HOLA", "hola ina"), 
+            ("¿Hola Ina?", "hola ina"),
+            ("donde renovar tne", "donde renovar tne"),
+            ("como puedo renovar mi tne", "como mi puedo renovar tne"),
+            ("donde puedo renovar mi tne", "donde mi puedo renovar tne")
+        ]
+        
+        results = []
+        for original, expected_normalized in test_cases:
+            normalized = rag_engine.enhanced_normalize_text(original)
+            results.append({
+                "original": original,
+                "normalized": normalized,
+                "expected": expected_normalized,
+                "match": normalized == expected_normalized
+            })
+        
+        return {
+            "status": "success",
+            "test_results": results,
+            "cache_stats": get_rag_cache_stats()
+        }
+    except Exception as e:
+        logger.error(f"Error en test de cache semántico: {e}")
+        return {"status": "error", "error": str(e)}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

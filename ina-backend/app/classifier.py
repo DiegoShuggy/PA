@@ -1,82 +1,81 @@
-# classifier.py - VERSIÓN CORREGIDA Y OPTIMIZADA
+# classifier.py - VERSIÓN CON CACHE SEMÁNTICO
 import ollama
 from typing import Dict, List, Tuple
 import logging
 import re
 from sqlmodel import Session
 from app.models import engine
+from app.cache_manager import normalize_question  # 👈 NUEVA IMPORTACIÓN
 
 logger = logging.getLogger(__name__)
 
 class QuestionClassifier:
     def __init__(self):
-        # Categorías específicas para Duoc UC (manteniendo las tuyas)
+        # Categorías alineadas con el nuevo sistema de filtros
         self.categories = [
-            "horarios",
-            "tné", 
-            "certificados",
-            "trámites",
-            "ubicación",
-            "requisitos",
-            "pagos",
-            "académico",
-            "becas",
+            "asuntos_estudiantiles",
+            "desarrollo_profesional", 
+            "bienestar_estudiantil",
+            "deportes",
+            "pastoral",
+            "institucionales",
             "otros"
         ]
         
-        # ✅ CORREGIDO: Patrones de palabras clave MEJORADOS
+        # ✅ ACTUALIZADO: Patrones alineados con el topic_classifier
         self.keyword_patterns = {
-            "horarios": [
-                r'\b(horario|hora|atiende|abre|cierra|apertura|cierre)\b',
-                r'\b(a qué hora|cuándo abre|cuándo cierra|horario de atención)\b',
-                r'\b(lunes|martes|miércoles|jueves|viernes|sábado|domingo)\b'
-            ],
-            "tné": [
-                r'\b(tne|tarjeta nacional estudiantil)\b',
-                r'\b(validar|renovar).*tne\b',
-                r'\b(tne.*validar|tne.*renovar)\b'
-            ],
-            "certificados": [
+            "asuntos_estudiantiles": [
                 r'\b(certificado|constancia|matrícula|notas|alumno regular)\b',
-                r'\b(solicitar|descargar|obtener).*(certificado|constancia)\b',
-                r'\b(certificado.*alumno|constancia.*matrícula)\b'
-            ],
-            "trámites": [
+                r'\b(beca|beneficio|ayuda económica|financiamiento|crédito)\b',
+                r'\b(tne|tarjeta nacional estudiantil|pase escolar)\b',
+                r'\b(validar|renovar).*(tne|tarjeta)\b',
                 r'\b(trámite|proceso|solicitud|formulario|documentación)\b',
-                r'\b(qué trámites|qué puedo hacer|qué procesos)\b'
+                r'\b(arancel|pago|matrícula|valor|costo|cuota)\b',
+                r'\b(requisitos|documentos|qué llevar|qué papeles)\b'
             ],
-            "ubicación": [
-                r'\b(dónde|ubicación|dirección|sede|localización|cómo llegar)\b',
-                r'\b(dónde.*está|dónde.*encuentra|dónde.*ubico)\b'
+            "desarrollo_profesional": [
+                r'\b(práctica|prácticas profesionales|práctica profesional)\b',
+                r'\b(bolsa de trabajo|empleo|trabajo|oferta laboral)\b',
+                r'\b(curriculum|cv|hoja de vida|entrevista laboral)\b',
+                r'\b(titulación|egresados|convenios empresas)\b',
+                r'\b(taller empleabilidad|orientación laboral)\b'
             ],
-            "requisitos": [
-                r'\b(requisitos|documentos|qué llevar|qué papeles|qué necesito)\b',
-                r'\b(necesito.*llevar|documentación.*requerida)\b'
+            "bienestar_estudiantil": [
+                r'\b(apoyo psicológico|psicólogo|salud mental|bienestar)\b',
+                r'\b(consejería|consejero|talleres bienestar)\b',
+                r'\b(salud estudiantil|medicina|enfermería|apoyo emocional)\b',
+                r'\b(actividades recreativas|clubes estudiantiles)\b'
             ],
-            "pagos": [
-                r'\b(pago|arancel|matrícula|valor|costo|precio|cuánto cuesta)\b',
-                r'\b(formas de pago|método de pago|pagar)\b'
+            "deportes": [
+                r'\b(deportes|equipos deportivos|entrenamientos|competencias)\b',
+                r'\b(instalaciones deportivas|gimnasio|campeonatos)\b',
+                r'\b(fútbol|básquetbol|vóleibol|natación|actividades físicas)\b'
             ],
-            "académico": [
-                r'\b(portal del estudiante|acceder.*portal|malla|ramos|asignaturas)\b',
-                r'\b(práctica|prácticas profesionales|carrera|plan de estudio)\b'
+            "pastoral": [
+                r'\b(voluntariado|actividades solidarias|retiros)\b',
+                r'\b(espiritualidad|valores|actividades pastorales)\b',
+                r'\b(ayuda social|solidaridad|comunidad|fe)\b'
             ],
-            "becas": [
-                r'\b(beca|beneficio|ayuda económica|financiamiento)\b',
-                r'\b(postular.*beca|solicitar.*beca|beneficio.*estudiantil)\b'
+            "institucionales": [
+                r'\b(horario|hora|atiende|abre|cierra|horario de atención)\b',
+                r'\b(ubicación|dirección|sede|cómo llegar|dónde está)\b',
+                r'\b(contacto|teléfono|email|información general)\b',
+                r'\b(hola|buenos días|buenas tardes|saludos|ina)\b',
+                r'\b(portal del estudiante|acceder.*portal|plataforma)\b'
             ]
         }
         
-        # ✅ CORREGIDO: Cache simple para consultas repetidas
-        self._cache = {}
+        # ✅ Cache SEMÁNTICO para consultas repetidas (normalizadas)
+        self._semantic_cache = {}
         self._cache_size = 100
         
-        # ✅ CORREGIDO: Estadísticas de uso
+        # ✅ Estadísticas de uso
         self.stats = {
             'total_classifications': 0,
             'ollama_calls': 0,
             'keyword_matches': 0,
             'cache_hits': 0,
+            'semantic_cache_hits': 0,  # 👈 NUEVA MÉTRICA
             'category_counts': {category: 0 for category in self.categories}
         }
     
@@ -86,7 +85,7 @@ class QuestionClassifier:
     
     def _keyword_classification(self, question: str) -> Tuple[str, float]:
         """
-        Clasificación rápida por palabras clave CON SCORING CORREGIDO
+        Clasificación rápida por palabras clave usando el nuevo sistema
         Returns: (categoría, confianza)
         """
         question_lower = self._clean_question(question)
@@ -97,117 +96,100 @@ class QuestionClassifier:
         for category, patterns in self.keyword_patterns.items():
             score = 0
             for pattern in patterns:
-                if re.search(pattern, question_lower, re.IGNORECASE):
-                    # ✅ CORREGIDO: Scoring más realista
-                    if '.*' in pattern:  # Patrón complejo = más puntos
-                        score += 3
-                    else:  # Patrón simple = menos puntos
-                        score += 1
+                matches = re.findall(pattern, question_lower, re.IGNORECASE)
+                if matches:
+                    # Scoring basado en número de matches y complejidad del patrón
+                    if '.*' in pattern:  # Patrón complejo
+                        score += len(matches) * 2
+                    else:  # Patrón simple
+                        score += len(matches)
             
             if score > best_score:
                 best_score = score
                 best_category = category
         
-        # ✅ CORREGIDO: Confianza más realista (0.0 a 1.0)
-        # Con 1 match simple: 0.3, con 1 complejo: 0.7, con 2+: 1.0
-        confidence = min(best_score / 3.0, 1.0) if best_score > 0 else 0.0
+        # Confianza basada en el score (0.0 a 1.0)
+        confidence = min(best_score / 5.0, 1.0) if best_score > 0 else 0.0
         
         return best_category, confidence
     
-    def _manage_cache(self, question: str, category: str):
-        """Gestiona el cache de clasificaciones"""
-        clean_question = self._clean_question(question)
+    def _fallback_classify(self, question: str) -> str:
+        """
+        Clasificación de respaldo usando el nuevo sistema de filtros
+        """
+        try:
+            from app.topic_classifier import TopicClassifier
+            topic_classifier = TopicClassifier()
+            
+            topic_result = topic_classifier.classify_topic(question)
+            
+            if topic_result["is_institutional"]:
+                return topic_result["category"]
+            else:
+                return "otros"
+                
+        except Exception as e:
+            logger.error(f"Error en fallback classification: {e}")
+            return "otros"
+    
+    def _manage_semantic_cache(self, question: str, category: str):
+        """Gestiona cache SEMÁNTICO (normalizado)"""
+        normalized_question = normalize_question(question)
         
         # Limpiar cache si es muy grande
-        if len(self._cache) >= self._cache_size:
-            items_to_remove = list(self._cache.keys())[:self._cache_size // 5]
+        if len(self._semantic_cache) >= self._cache_size:
+            items_to_remove = list(self._semantic_cache.keys())[:self._cache_size // 5]
             for key in items_to_remove:
-                del self._cache[key]
+                del self._semantic_cache[key]
         
-        self._cache[clean_question] = category
+        self._semantic_cache[normalized_question] = category
     
     def classify_question(self, question: str) -> str:
         """
-        Clasifica una pregunta en una categoría - VERSIÓN CORREGIDA
+        Clasifica una pregunta usando CACHE SEMÁNTICO
         """
         self.stats['total_classifications'] += 1
         
-        # 1. ✅ Verificar cache primero
-        clean_question = self._clean_question(question)
-        if clean_question in self._cache:
-            self.stats['cache_hits'] += 1
-            cached_category = self._cache[clean_question]
+        # 1. ✅ Verificar cache SEMÁNTICO (normalizado)
+        normalized_question = normalize_question(question)
+        if normalized_question in self._semantic_cache:
+            self.stats['semantic_cache_hits'] += 1
+            cached_category = self._semantic_cache[normalized_question]
             self.stats['category_counts'][cached_category] += 1
-            logger.info(f"✅ Cache hit - Pregunta: '{question}' -> '{cached_category}'")
+            logger.info(f"🎯 Semantic Cache hit - Pregunta: '{question}' -> '{cached_category}' (normalizada: '{normalized_question}')")
             return cached_category
         
         try:
-            # 2. ✅ Clasificación por palabras clave (CON UMBRAL CORREGIDO)
+            # 2. ✅ Clasificación por palabras clave (umbral bajo para mayor cobertura)
             keyword_category, confidence = self._keyword_classification(question)
             
-            # ✅ CORREGIDO: Umbral más realista (30% de confianza)
-            if confidence >= 0.3:  # ¡CORREGIDO! Antes era 0.8 (imposible)
+            # Umbral bajo para priorizar keywords sobre Ollama
+            if confidence >= 0.2:
                 self.stats['keyword_matches'] += 1
                 self.stats['category_counts'][keyword_category] += 1
-                self._manage_cache(question, keyword_category)
+                self._manage_semantic_cache(question, keyword_category)
                 
                 logger.info(f"🔑 Keyword classification - Pregunta: '{question}' -> '{keyword_category}' (confianza: {confidence:.2f})")
                 return keyword_category
             
-            # 3. ✅ Clasificación con Ollama (solo si keywords fallan)
-            self.stats['ollama_calls'] += 1
+            # 3. ✅ Usar el nuevo sistema de filtros como respaldo PRINCIPAL
+            fallback_category = self._fallback_classify(question)
+            self.stats['category_counts'][fallback_category] += 1
+            self._manage_semantic_cache(question, fallback_category)
             
-            prompt = f"""Eres un clasificador especializado en preguntas del Punto Estudiantil Duoc UC.
-Responde SOLO con una palabra de esta lista: {', '.join(self.categories)}
-
-Ejemplos:
-- "¿A qué hora abre el Punto Estudiantil?" → horarios
-- "¿Dónde valido mi TNE?" → tné  
-- "¿Cómo obtengo un certificado de alumno regular?" → certificados
-- "¿Qué trámites puedo hacer?" → trámites
-- "¿Dónde está ubicado?" → ubicación
-- "¿Qué documentos necesito?" → requisitos
-- "¿Cuánto cuesta un certificado?" → pagos
-- "¿Cómo postulo a una beca?" → becas
-
-Pregunta: "{question}"
-
-Categoría:"""
-            
-            response = ollama.chat(
-                model='mistral:7b',
-                messages=[{'role': 'user', 'content': prompt}],
-                options={
-                    'temperature': 0.1,
-                    'num_predict': 10,
-                    'top_p': 0.9,
-                    'stop': ["\n", ".", ","]
-                }
-            )
-            
-            category = response['message']['content'].strip().lower()
-            category = category.replace('"', '').replace("'", "").split()[0] if category.split() else "otros"
-            
-            if category not in self.categories:
-                logger.warning(f"⚠️ Categoría '{category}' no reconocida para: '{question}'. Usando 'otros'")
-                category = "otros"
-            
-            self.stats['category_counts'][category] += 1
-            self._manage_cache(question, category)
-            
-            logger.info(f"🤖 Ollama classification - Pregunta: '{question}' -> '{category}'")
-            return category
+            logger.info(f"🔄 Fallback to topic classifier - Pregunta: '{question}' -> '{fallback_category}'")
+            return fallback_category
             
         except Exception as e:
             logger.error(f"❌ Error en clasificación para pregunta '{question}': {e}")
             
-            # Fallback a clasificación por keywords
-            keyword_category, _ = self._keyword_classification(question)
-            self.stats['category_counts'][keyword_category] += 1
-            self._manage_cache(question, keyword_category)
+            # Fallback final
+            final_category = self._fallback_classify(question)
+            self.stats['category_counts'][final_category] += 1
+            self._manage_semantic_cache(question, final_category)
             
-            logger.info(f"🔄 Fallback a keywords - Pregunta: '{question}' -> '{keyword_category}'")
-            return keyword_category
+            logger.info(f"🚨 Emergency fallback - Pregunta: '{question}' -> '{final_category}'")
+            return final_category
     
     def get_classification_stats(self) -> Dict:
         """Obtener estadísticas de clasificación"""
@@ -216,16 +198,17 @@ Categoría:"""
         return {
             'total_classifications': total,
             'cache_hit_rate': self.stats['cache_hits'] / max(1, total),
+            'semantic_cache_hit_rate': self.stats['semantic_cache_hits'] / max(1, total),
             'keyword_match_rate': self.stats['keyword_matches'] / max(1, total),
             'ollama_call_rate': self.stats['ollama_calls'] / max(1, total),
             'category_distribution': self.stats['category_counts'],
-            'cache_size': len(self._cache)
+            'semantic_cache_size': len(self._semantic_cache)
         }
     
     def clear_cache(self):
         """Limpiar el cache de clasificaciones"""
-        self._cache.clear()
-        logger.info("🧹 Cache de clasificaciones limpiado")
+        self._semantic_cache.clear()
+        logger.info("🧹 Cache semántico de clasificaciones limpiado")
 
 # Instancia global del clasificador
 classifier = QuestionClassifier()
