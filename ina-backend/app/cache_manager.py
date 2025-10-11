@@ -5,8 +5,36 @@ from typing import Any, Dict, Optional
 from collections import OrderedDict
 import hashlib
 import json
+import re
+import unicodedata
 
 logger = logging.getLogger(__name__)
+
+def normalize_question(question: str) -> str:
+    """
+    Normaliza una pregunta para cache independiente de variaciones
+    """
+    if not question:
+        return ""
+    
+    # 1. Minúsculas
+    normalized = question.lower()
+    
+    # 2. Remover acentos y caracteres especiales
+    normalized = unicodedata.normalize('NFD', normalized)
+    normalized = normalized.encode('ascii', 'ignore').decode('utf-8')
+    
+    # 3. Remover puntuación y espacios extras
+    normalized = re.sub(r'[^\w\s]', ' ', normalized)  # Remover puntuación
+    normalized = re.sub(r'\s+', ' ', normalized)      # Espacios múltiples a uno
+    normalized = normalized.strip()
+    
+    # 4. Ordenar palabras (para preguntas con mismo significado)
+    words = normalized.split()
+    words_sorted = sorted(words)
+    normalized = ' '.join(words_sorted)
+    
+    return normalized
 
 class AdvancedCache:
     """
