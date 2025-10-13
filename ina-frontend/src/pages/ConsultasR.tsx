@@ -2,12 +2,12 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../css/ConsultasR.css';
-import ina1 from '../css/asuntos.png';
-import ina2 from '../css/faq.png';
-import ina3 from '../css/desarrollo.png';
-import ina4 from '../css/bienestar.png';
-import ina5 from '../css/deportes.png';
-import ina6 from '../css/pastoral.png';
+import ina1 from '../img/asuntos.png';
+import ina2 from '../img/faq.png';
+import ina3 from '../img/desarrollo.png';
+import ina4 from '../img/bienestar.png';
+import ina5 from '../img/deportes.png';
+import ina6 from '../img/pastoral.png';
 
 
 function ConsultasR() {
@@ -130,7 +130,7 @@ function ConsultasR() {
 
                 {/* Desarrollo Profesional y Titulados / Professional Development and Graduates / Développement Professionnel et Diplômés */}
                 <div className="area">
-                    <Link to="/InA" className="area-link">
+                    <Link to="/Desarrollo" className="area-link">
                         <div className="consultas-item tres">
                             <img
                                 src={ina3}
@@ -144,7 +144,7 @@ function ConsultasR() {
 
                 {/* Bienestar Estudiantil / Student Selfcare / Bien-être Estudiantin */}
                 <div className="area">
-                    <Link to="/InA" className="area-link">
+                    <Link to="/Bienestar" className="area-link">
                         <div className="consultas-item cuatro">
                             <img
                                 src={ina4}
@@ -158,7 +158,7 @@ function ConsultasR() {
 
                 {/* Deportes / Sports / Sports */}
                 <div className="area">
-                    <Link to="/InA" className="area-link">
+                    <Link to="/Deportes" className="area-link">
                         <div className="consultas-item cinco">
                             <img
                                 src={ina5}
@@ -172,7 +172,7 @@ function ConsultasR() {
 
                 {/* Pastoral / Pastoral / Pastorale */}
                 <div className="area">
-                    <Link to="/InA" className="area-link">
+                    <Link to="/Pastoral" className="area-link">
                         <div className="consultas-item seis">
                             <img
                                 src={ina6}
