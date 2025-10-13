@@ -47,45 +47,102 @@ const Chat: React.FC = () => {
   };
 
   // Cerrar menús al hacer clic fuera
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-      if (languageMenuRef.current && !languageMenuRef.current.contains(event.target as Node)) {
-        setIsLanguageMenuOpen(false);
-      }
-    };
+ // Cerrar feedback SOLO en áreas específicas - VERSIÓN SEGURA
+useEffect(() => {
+  const handleClickOutsideFeedback = (event: MouseEvent) => {
+    const target = event.target as Element;
+    
+    if (!showFeedback || !feedbackRef.current) return;
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+    // LISTA BLANCA: Elementos que NO deben cerrar el feedback
+    const protectedElements = [
+      '.ai-message',           // Mensajes de IA
+      '.chat-input',           // Área de input
+      '.feedback-widget',      // El feedback mismo
+      '.feedback-widget *',    // Cualquier elemento dentro del feedback
+      '.floating-menu-container', // Menú flotante
+      '.language-selector-container', // Selector de idioma
+      '.back-button',          // Botón de volver
+      '.chat-header',          // Cabecera del chat
+      '.typing-indicator',     // Indicador de typing
+      '.message',              // Cualquier mensaje
+      '.user-message',         // Mensajes de usuario
+      'button',                // Cualquier botón (por si acaso)
+      'input'                  // Cualquier input
+    ];
+
+    // Verificar si el clic fue en un elemento protegido
+    const isProtected = protectedElements.some(selector => 
+      target.closest(selector)
+    );
+
+    // Verificar si el clic fue fuera del feedback
+    const isOutsideFeedback = !feedbackRef.current.contains(target);
+
+    // SOLO cerrar si está fuera del feedback Y NO es un elemento protegido
+    if (isOutsideFeedback && !isProtected) {
+      console.log('Cerrar feedback - Clic fuera en área no protegida');
+      setShowFeedback(false);
+      setShowFollowup(false);
+      resetFeedback();
+    } else {
+      console.log('No cerrar - Clic en área protegida:', target.className);
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutsideFeedback);
+  
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutsideFeedback);
+  };
+}, [showFeedback]);
 
   // Cerrar feedback al hacer clic fuera - VERSIÓN CORREGIDA
-  useEffect(() => {
-    const handleClickOutsideFeedback = (event: MouseEvent) => {
-      if (feedbackRef.current && 
-          !feedbackRef.current.contains(event.target as Node) &&
-          // NO cerrar si se hace clic en mensajes de IA
-          !(event.target as Element).closest('.ai-message') &&
-          // NO cerrar si se hace clic en el input del chat
-          !(event.target as Element).closest('.chat-input')) {
-        setShowFeedback(false);
-        setShowFollowup(false);
-        resetFeedback();
-      }
-    };
+  // Versión con debug completo
+useEffect(() => {
+  const handleClickOutsideFeedback = (event: MouseEvent) => {
+    const target = event.target as Element;
+    
+    console.log('🔍 Click en:', target.tagName, target.className);
+    
+    if (!showFeedback) return;
 
-    if (showFeedback) {
-      document.addEventListener('mousedown', handleClickOutsideFeedback);
+    // Elementos que SÍ pueden cerrar el feedback (lista más restrictiva)
+    const closeAllowedSelectors = [
+      '.chat-messages',        // Fondo del área de mensajes
+      'body',                  // Fondo general
+      '.chat-container'        // Contenedor principal (pero no su contenido)
+    ];
+
+    const canClose = closeAllowedSelectors.some(selector => 
+      target.closest(selector) && 
+      !target.closest('.message') && // Pero no si es un mensaje
+      !target.closest('.feedback-widget') // Ni el feedback mismo
+    );
+
+    const clickedOutside = feedbackRef.current && 
+                          !feedbackRef.current.contains(target);
+
+    console.log('📌 Clicked outside:', clickedOutside);
+    console.log('📌 Can close:', canClose);
+    console.log('📌 Target element:', target);
+
+    if (clickedOutside && canClose) {
+      console.log('✅ Cerrando feedback...');
+      setShowFeedback(false);
+      setShowFollowup(false);
+      resetFeedback();
+    } else {
+      console.log('❌ NO cerrar feedback');
     }
+  };
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutsideFeedback);
-    };
-  }, [showFeedback]);
+  document.addEventListener('mousedown', handleClickOutsideFeedback);
+  
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutsideFeedback);
+  };
+}, [showFeedback]);
 
   // Inicializar el reconocimiento de voz
   useEffect(() => {

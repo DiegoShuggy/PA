@@ -795,5 +795,33 @@ body {
 
   .feedback-btn {
     max-width: none;
+ 
   }
+
+  /* Protección máxima para el feedback */
+.feedback-widget,
+.feedback-widget * {
+  pointer-events: auto !important;
+}
+
+.ai-message,
+.user-message,
+.chat-input,
+.chat-input *,
+.floating-menu-container,
+.floating-menu-container *,
+.language-selector-container,
+.language-selector-container *,
+.back-button {
+  pointer-events: auto !important;
+}
+
+/* Áreas que SÍ pueden cerrar el feedback */
+.chat-messages {
+  pointer-events: auto;
+}
+
+.chat-container {
+  pointer-events: auto;
+}
 }
