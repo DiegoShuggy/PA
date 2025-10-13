@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../css/Chat.css';
-import microIcon from '../css/Micro.png';
+import microIcon from '../img/Micro.png';
 import { useNavigate } from 'react-router-dom';
 
 interface Message {
