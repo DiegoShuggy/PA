@@ -22,6 +22,11 @@ function ConsultasR() {
         navigate(-1); // -1 significa ir a la página anterior en el historial
     };
 
+        // Scroll to top when component mounts
+        useEffect(() => {
+            window.scrollTo(0, 0);
+        }, []);
+    
     // Cerrar menú de idiomas al hacer clic fuera
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
