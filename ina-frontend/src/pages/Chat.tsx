@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import '../css/Chat.css';
 import microIcon from '../css/Micro.png';
 import { useNavigate } from 'react-router-dom';
+
 interface Message {
   text: string;
   isUser: boolean;
@@ -40,13 +41,11 @@ const Chat: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
 
-
   // Función para volver a la página anterior
-    const handleGoBack = () => {
-        navigate(-1); // -1 significa ir a la página anterior en el historial
-    };
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
-    
   // Cerrar menús al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -64,10 +63,15 @@ const Chat: React.FC = () => {
     };
   }, []);
 
-  // Cerrar feedback al hacer clic fuera
+  // Cerrar feedback al hacer clic fuera - VERSIÓN CORREGIDA
   useEffect(() => {
     const handleClickOutsideFeedback = (event: MouseEvent) => {
-      if (feedbackRef.current && !feedbackRef.current.contains(event.target as Node)) {
+      if (feedbackRef.current && 
+          !feedbackRef.current.contains(event.target as Node) &&
+          // NO cerrar si se hace clic en mensajes de IA
+          !(event.target as Element).closest('.ai-message') &&
+          // NO cerrar si se hace clic en el input del chat
+          !(event.target as Element).closest('.chat-input')) {
         setShowFeedback(false);
         setShowFollowup(false);
         resetFeedback();
@@ -538,14 +542,15 @@ const Chat: React.FC = () => {
   return (
     <div className="chat-wrapper">
       {/* Botón para volver atrás */}
-            <button 
-                className="back-button"
-                onClick={handleGoBack}
-                title={t('app.backButton', 'Volver atrás')}
-            >
-                <span className="back-arrow">←</span>
-                {t('app.back')}
-            </button>
+      <button 
+        className="back-button"
+        onClick={handleGoBack}
+        title={t('app.backButton', 'Volver atrás')}
+      >
+        <span className="back-arrow">←</span>
+        {t('app.back')}
+      </button>
+
       {/* Selector de idioma */}
       <div className="language-selector-container" ref={languageMenuRef}>
         <button
