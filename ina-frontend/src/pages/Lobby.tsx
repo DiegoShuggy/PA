@@ -83,7 +83,7 @@ function Lobby() {
             <div className="lobby-grid">
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
                 <div className="FAQ">
-                    <Link to="/Punto" className="FAQ-link">
+                    <Link to="/ConsultasR" className="FAQ-link">
                         <div className="lobby-item uno">
                             
                             <span>{t('Lobby.Preguntas.FAQ1', 'FAQ')}</span>

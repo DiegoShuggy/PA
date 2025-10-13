@@ -1,20 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../css/Coordinadores.css';
-import Profile from '../img/InA3.png';
+import Profile from '../img/InA1.png';
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from 'react-router-dom';
 
-export function Asuntos() {
-    console.log('Asuntos component is rendering');
+export function Bienestar() {
+    console.log('Bienestar component is rendering');
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement>(null);
 
+
+
+    // Scroll to top when component mounts
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
 
     // Función para volver a la página anterior
     const handleGoBack = () => {
@@ -50,7 +52,7 @@ export function Asuntos() {
                 title={t('app.backButton', 'Volver atrás')}
             >
                 <span className="back-arrow">←</span>
-                {t('Asuntos.back', 'Volver')}
+                {t('Bienestar.back', 'Volver')}
             </button>
 
             {/* Selector de idiomas */}
@@ -99,20 +101,20 @@ export function Asuntos() {
             <div className='Perfil-container'>
                 {/* Contenedor para imagen y título */}
                 <div className='imagen-titulo-container'>
-                    <img src={Profile} alt="Profile" className="Perfil-imagen" />
-                    <h2 className='tiutlo'>{t('Asuntos.title')}</h2>
+                    <img src={Profile} alt="Profile" className="Perfil-imagen3" />
+                    <h2 className='tiutlo'>{t('Bienestar.title')}</h2>
                 </div>
 
                 {/* Contenedor para la descripción con título extra */}
                 <div className='descripcion-container'>
                     {/* Título extra encima de la descripción */}
-                    <h3 className='titulo-extra'>{t('Asuntos.cargo')}</h3>
+                    <h3 className='titulo-extra'>{t('Bienestar.cargo')}</h3>
 
                     {/* Descripción */}
                     <p className='desc'>
-                        {t('Asuntos.Descripcion')} <br />
-                        <br />{t('Asuntos.Descripcion2')}
-                        <br />{t('Asuntos.Descripcion3')}
+                        {t('Bienestar.Descripcion')} <br />
+                        <br />{t('Bienestar.Descripcion2')}
+                        <br />{t('Bienestar.Descripcion3')}
                     </p>
                 </div>
             </div>
@@ -120,38 +122,39 @@ export function Asuntos() {
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
                 <div className="CFAQ">
                     <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item uno">
+                        <div className="Coordinador-item cuatro">
                             <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
                         </div>
                     </Link>
                     <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item uno">
+                        <div className="Coordinador-item cuatro">
                             <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
                         </div>
                     </Link>
                     <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item uno">
+                        <div className="Coordinador-item cuatro">
                             <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
                         </div>
                     </Link>
                     <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item uno">
+                        <div className="Coordinador-item cuatro">
                             <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
                         </div>
                     </Link>
                     <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item uno">
+                        <div className="Coordinador-item cuatro">
                             <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
                         </div>
                     </Link>
                     <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item uno">
+                        <div className="Coordinador-item cuatro">
                             <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
                         </div>
                     </Link>
+                    
                 </div>
             </div>
         </div>
     )
 }
-export default Asuntos;
+export default Bienestar;
