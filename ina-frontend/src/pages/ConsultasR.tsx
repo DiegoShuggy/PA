@@ -17,16 +17,16 @@ function ConsultasR() {
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-// Función para volver a la página anterior
+    // Función para volver a la página anterior
     const handleGoBack = () => {
         navigate(-1); // -1 significa ir a la página anterior en el historial
     };
 
-        // Scroll to top when component mounts
-        useEffect(() => {
-            window.scrollTo(0, 0);
-        }, []);
-    
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     // Cerrar menú de idiomas al hacer clic fuera
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -50,7 +50,7 @@ function ConsultasR() {
     return (
         <div className="consultas-container">
             {/* Botón para volver atrás */}
-            <button 
+            <button
                 className="back-button"
                 onClick={handleGoBack}
                 title={t('app.backButton', 'Volver atrás')}
@@ -103,7 +103,7 @@ function ConsultasR() {
             </div>
 
             <h2>{t('consultas.title', 'Área de Consultas')}</h2>
-            
+
             <div className="areas-grid">
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
                 <div className="area">

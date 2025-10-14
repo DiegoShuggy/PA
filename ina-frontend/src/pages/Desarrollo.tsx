@@ -149,7 +149,7 @@ export function Desarrollo() {
                             <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
                         </div>
                     </Link>
-                    
+
                 </div>
             </div>
         </div>

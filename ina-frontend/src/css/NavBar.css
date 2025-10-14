@@ -17,7 +17,8 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1450px; /* Aumenté el ancho máximo para más espacio */
+  max-width: 1450px;
+  /* Aumenté el ancho máximo para más espacio */
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -25,8 +26,10 @@
 .navbar-brand {
   display: flex;
   align-items: center;
-  flex: 1; /* Ocupa 1 parte del espacio disponible */
-  justify-content: flex-start; /* Alinea a la izquierda */
+  flex: 1;
+  /* Ocupa 1 parte del espacio disponible */
+  justify-content: flex-start;
+  /* Alinea a la izquierda */
 }
 
 .app-header {
@@ -34,7 +37,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 2; /* Ocupa 2 partes del espacio (más que los otros) */
+  flex: 2;
+  /* Ocupa 2 partes del espacio (más que los otros) */
   text-align: center;
   color: rgb(0, 0, 0);
 }
@@ -55,8 +59,10 @@
 .navbar-links {
   display: flex;
   gap: 2rem;
-  flex: 1; /* Ocupa 1 parte del espacio disponible */
-  justify-content: flex-end; /* Alinea a la derecha */
+  flex: 1;
+  /* Ocupa 1 parte del espacio disponible */
+  justify-content: flex-end;
+  /* Alinea a la derecha */
 }
 
 .navbar-logo {

@@ -85,7 +85,7 @@ function Lobby() {
                 <div className="FAQ">
                     <Link to="/ConsultasR" className="FAQ-link">
                         <div className="lobby-item uno">
-                            
+
                             <span>{t('Lobby.Preguntas.FAQ1', 'FAQ')}</span>
                         </div>
                     </Link>
@@ -140,7 +140,7 @@ function Lobby() {
                 <div className="FAQ">
                     <Link to="/Punto" className="FAQ-link">
                         <div className="lobby-item uno">
-                            
+
                             <span>{t('Lobby.Preguntas.FAQ7', 'FAQ')}</span>
                         </div>
                     </Link>

@@ -11,10 +11,10 @@ export function Pastoral() {
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement>(null);
 
-        useEffect(() => {
-            window.scrollTo(0, 0);
-        }, []);
-        
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     // Función para volver a la página anterior
     const handleGoBack = () => {
         navigate(-1); // -1 significa ir a la página anterior en el historial
@@ -43,7 +43,7 @@ export function Pastoral() {
     return (
         <div className="Asuntos-container">
             {/* Botón para volver atrás */}
-            <button 
+            <button
                 className="back-button"
                 onClick={handleGoBack}
                 title={t('app.backButton', 'Volver atrás')}
@@ -101,12 +101,12 @@ export function Pastoral() {
                     <img src={Profile} alt="Profile" className="Perfil-imagen5" />
                     <h2 className='tiutlo'>{t('Pastoral.title')}</h2>
                 </div>
-                
+
                 {/* Contenedor para la descripción con título extra */}
                 <div className='descripcion-container'>
                     {/* Título extra encima de la descripción */}
                     <h3 className='titulo-extra'>{t('Pastoral.cargo')}</h3>
-                    
+
                     {/* Descripción */}
                     <p className='desc'>
                         {t('Pastoral.Descripcion')} <br />

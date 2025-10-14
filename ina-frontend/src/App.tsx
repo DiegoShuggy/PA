@@ -2,7 +2,7 @@ import React from 'react';
 import Chat from './pages/Chat';
 import ConsultasR from './pages/ConsultasR';
 import Lobby from './pages/Lobby';
-import Asuntos  from './pages/Asuntos';
+import Asuntos from './pages/Asuntos';
 import Deportes from './pages/Deportes';
 import Bienestar from './pages/Bienestar';
 import Pastoral from './pages/Pastoral';
