@@ -18,20 +18,25 @@ from app.cache_manager import rag_cache, response_cache, normalize_question
 logger = logging.getLogger(__name__)
 
 class SemanticCache:
-    def __init__(self, similarity_threshold: float = 0.75):  # 🆕 Aumentado a 0.75 para mayor precisión
+    def __init__(self, similarity_threshold: float = 0.82):  # 🆕 Mayor precisión para Duoc UC
         try:
-            # 🆕 MODELO MEJORADO para español
-            self.model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
+            # 🆕 MODELO ESPECIALIZADO PARA ESPAÑOL
+            self.model = SentenceTransformer('dccuchile/bert-base-spanish-wwm-uncased')
             self.cache = {}  # {embedding_tuple: respuesta}
             self.threshold = similarity_threshold
-            logger.info(f"✅ Cache semántico universal inicializado (umbral: {similarity_threshold})")
+            logger.info(f"✅ Cache semántico DUOC UC inicializado (umbral: {similarity_threshold})")
         except Exception as e:
             logger.error(f"❌ Error inicializando cache semántico: {e}")
-            self.model = None
-            self.cache = {}
+            # Fallback a modelo más simple
+            try:
+                self.model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
+                logger.info("✅ Usando modelo multilingüe como fallback")
+            except:
+                self.model = None
+                self.cache = {}
     
     def get_embedding(self, text: str) -> Optional[np.ndarray]:
-        """🆕 GENERACIÓN DE EMBEDDINGS MEJORADA"""
+        """🆕 GENERACIÓN DE EMBEDDINGS ESPECIALIZADA DUOC UC"""
         if self.model is None:
             return None
         try:
@@ -43,29 +48,68 @@ class SemanticCache:
             return None
     
     def _preprocess_for_embedding(self, text: str) -> str:
-        """🆕 PREPROCESAMIENTO PARA EMBEDDINGS MÁS PRECISOS"""
+        """🆕 PREPROCESAMIENTO ESPECIALIZADO DUOC UC"""
         # Limpiar texto manteniendo significado
         text = text.lower().strip()
-        text = re.sub(r'[^\w\sáéíóúñ]', ' ', text)  # Mantener acentos
+        text = re.sub(r'[^\w\sáéíóúñü]', ' ', text)  # Mantener acentos y ñ
         text = re.sub(r'\s+', ' ', text)  # Espacios múltiples a uno
         
-        # Palabras clave específicas del contexto estudiantil
-        important_words = [
-            'tne', 'certificado', 'beca', 'práctica', 'deporte', 'psicológico',
-            'matrícula', 'horario', 'ubicación', 'taller', 'bolsa', 'empleo',
-            'salud', 'mental', 'validar', 'renovar', 'solicitar', 'inscripción',
-            'duoc', 'plaza', 'norte', 'punto', 'estudiantil', 'huechuraba'
+        # 🆕 PALABRAS CLAVE ESPECÍFICAS DEL CONTEXTO DUOC UC
+        duoc_keywords = [
+            # TNE y certificados
+            'tne', 'tarjeta nacional estudiantil', 'pase escolar', 'validar', 'renovar', 'revalidar',
+            'certificado', 'constancia', 'alumno regular', 'certificado alumno', 'record académico',
+            'concentración notas', 'certificado de notas', 'constancia de alumno',
+            
+            # Programas de apoyo
+            'beca', 'beneficio', 'ayuda económica', 'programa emergencia', 'programa transporte',
+            'programa materiales', 'subsidio', 'apoyo económico', 'beneficio estudiantil',
+            'financiamiento', 'crédito', 'arancel', 'matrícula',
+            
+            # Desarrollo profesional
+            'práctica', 'practica', 'práctica profesional', 'bolsa trabajo', 'empleo', 'trabajo',
+            'curriculum', 'cv', 'hoja vida', 'entrevista laboral', 'duoclaboral', 'desarrollo laboral',
+            'claudia cortés', 'ccortesn', 'oferta laboral', 'taller empleabilidad',
+            
+            # Bienestar estudiantil
+            'psicológico', 'psicólogo', 'salud mental', 'bienestar', 'apoyo psicológico', 'crisis',
+            'línea ops', 'urgencia psicológica', 'bienestar estudiantil', 'adriana vásquez',
+            'avasquezm', 'consejería', 'apoyo emocional', 'sesión psicológica',
+            
+            # Deportes
+            'deporte', 'taller deportivo', 'fútbol', 'basquetbol', 'voleibol', 'natación',
+            'gimnasio', 'entrenamiento', 'selección deportiva', 'powerlifting', 'boxeo',
+            'entrenamiento funcional', 'tenis de mesa', 'ajedrez', 'futsal', 'rugby',
+            'complejo maiclub', 'gimnasio entretiempo', 'piscina acquatiempo', 'caf',
+            
+            # Inclusión
+            'discapacidad', 'paedis', 'inclusión', 'elizabeth domínguez', 'edominguezs',
+            'acompañamiento', 'estudiantes discapacidad',
+            
+            # Ubicaciones y contactos
+            'plaza norte', 'santa elena', 'huechuraba', 'punto estudiantil', 'sedes duoc',
+            'ubicación', 'dirección', 'horario', 'teléfono', 'email', 'contacto',
+            'puntoestudiantil_pnorte', '2360 6400',
+            
+            # Servicios generales
+            'biblioteca', 'servicios digitales', 'financiamiento', 'coordinación académica',
+            'infraestructura', 'wifi', 'plataforma', 'portal estudiante', 'correo institucional',
+            
+            # Términos específicos Duoc UC
+            'duoc', 'uc', 'ina', 'punto estudiantil', 'asuntos estudiantiles', 'desarrollo profesional',
+            'bienestar estudiantil', 'deportes', 'pastoral', 'institucional'
         ]
         
-        # Mantener palabras importantes y eliminar stopwords básicas
         words = text.split()
         filtered_words = []
         
         for word in words:
-            if (word in important_words or 
-                len(word) > 3 or 
-                word in ['duoc', 'ina', 'punto', 'estudiantil', 'plaza', 'norte']):
-                filtered_words.append(word)
+            # Mantener palabras del contexto Duoc UC
+            word_clean = re.sub(r'[^\wáéíóúñü]', '', word)
+            if (any(keyword in word_clean for keyword in duoc_keywords) or 
+                len(word_clean) > 2 or 
+                word_clean in ['duoc', 'uc', 'ina', 'punto', 'estudiantil', 'plaza', 'norte']):
+                filtered_words.append(word_clean)
         
         return ' '.join(filtered_words) if filtered_words else text
     
@@ -74,7 +118,7 @@ class SemanticCache:
         return tuple(embedding.tolist())
     
     def find_similar(self, query_embedding: np.ndarray) -> Optional[Dict]:
-        """🆕 BÚSQUEDA SEMÁNTICA MEJORADA"""
+        """🆕 BÚSQUEDA SEMÁNTICA MEJORADA DUOC UC"""
         if not self.cache or query_embedding is None:
             return None
             
@@ -96,7 +140,7 @@ class SemanticCache:
         
         if best_response:
             logger.info(f"🎯 Semantic similarity found: {best_similarity:.3f}")
-            best_response['semantic_similarity'] = best_similarity  # 🆕 Agregar métrica
+            best_response['semantic_similarity'] = best_similarity
             return best_response
         
         return None
@@ -116,11 +160,33 @@ class RAGEngine:
             name="duoc_knowledge"
         )
         
+        # 🆕 CONFIGURACIÓN ESPECÍFICA DUOC UC
+        self.duoc_context = {
+            "sede": "Plaza Norte",
+            "direccion": "Santa Elena de Huechuraba 1660, Huechuraba",
+            "horario_punto_estudiantil": "Lunes a Viernes 8:30-19:00",
+            "telefono": "+56 2 2360 6400",
+            "email": "Puntoestudiantil_pnorte@duoc.cl",
+            "contactos_especializados": {
+                "desarrollo_laboral": "Claudia Cortés - ccortesn@duoc.cl",
+                "bienestar_estudiantil": "Adriana Vásquez - avasquezm@duoc.cl", 
+                "inclusión": "Elizabeth Domínguez - edominguezs@duoc.cl"
+            },
+            "urls_oficiales": {
+                "portal_estudiantil": "https://portal.duoc.cl",
+                "centro_ayuda": "https://centroayuda.duoc.cl", 
+                "duoc_laboral": "https://duoclaboral.cl",
+                "certificados": "https://certificados.duoc.cl",
+                "practicas": "https://practicas.duoc.cl",
+                "beneficios": "https://beneficios.duoc.cl"
+            }
+        }
+        
         # 🆕 CACHE SEMÁNTICO MEJORADO
-        self.semantic_cache = SemanticCache(similarity_threshold=0.75)  # 🆕 Mayor precisión
+        self.semantic_cache = SemanticCache(similarity_threshold=0.82)
         self.text_cache = {}  # Cache textual rápido
         
-        logger.info("✅ RAG Engine con Cache Universal inicializado")
+        logger.info("✅ RAG Engine DUOC UC con Cache Universal inicializado")
         self.metrics = {
             'total_queries': 0,
             'successful_responses': 0,
@@ -130,16 +196,16 @@ class RAGEngine:
             'documents_added': 0,
             'errors': 0,
             'categories_used': defaultdict(int),
-            'response_times': []  # 🆕 Métrica nueva
+            'response_times': []
         }
 
     def enhanced_normalize_text(self, text: str) -> str:
         """
-        🔧 NORMALIZACIÓN INTELIGENTE UNIVERSAL MEJORADA
+        🔧 NORMALIZACIÓN INTELIGENTE ESPECIALIZADA DUOC UC
         """
         # 1. Limpieza básica
         text = text.lower().strip()
-        text = re.sub(r'[^\w\sáéíóúñ]', '', text)  # Mantener acentos
+        text = re.sub(r'[^\w\sáéíóúñü]', '', text)  # Mantener acentos y ñ
         
         words = text.split()
         if not words:
@@ -149,24 +215,28 @@ class RAGEngine:
         stopwords = {
             # Saludos básicos
             'hola', 'holas', 'holaa', 'holaaa', 'buenos', 'días', 'buenas', 'tardes', 'noches',
-            'saludos', 'saludo', 'hi', 'hello', 'hey', 'hellow', 'helow', 'buen', 'dia',
+            'saludos', 'saludo', 'hi', 'hello', 'hey', 'hellow', 'helow', 'buen', 'dia', 'ok', 'okis',
             # Palabras vacías generales
-            'por', 'favor', 'puedes', 'puede', 'podrías', 'podría', 'me', 'mi', 'mis',
-            'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'de', 'del',
-            'en', 'con', 'para', 'porque', 'qué', 'cómo', 'dónde', 'cuándo', 'cuál',
-            'eso', 'esa', 'ese', 'aquí', 'allí', 'ahí', 'esto', 'esta', 'este',
+            'por', 'favor', 'puedes', 'puede', 'podrías', 'podría', 'me', 'mi', 'mis', 'mí',
+            'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'de', 'del', 'al',
+            'en', 'con', 'para', 'porque', 'qué', 'cómo', 'dónde', 'cuándo', 'cuál', 'quién',
+            'eso', 'esa', 'ese', 'aquí', 'allí', 'ahí', 'esto', 'esta', 'este', 'estos', 'estas',
             'soy', 'eres', 'es', 'somos', 'son', 'estoy', 'estás', 'está', 'estamos', 'están',
+            'tengo', 'tienes', 'tiene', 'tenemos', 'tienen', 'hay', 'haber', 'ser', 'estar',
             # Términos específicos de conversación con IA
-            'ina', 'asistente', 'virtual', 'punto', 'estudiantil', 'duoc', 'uc'
+            'ina', 'asistente', 'virtual', 'punto', 'estudiantil', 'duoc', 'uc', 'porfa', 'plis'
         }
         
         filtered_words = [word for word in words if word not in stopwords]
         
-        # 🆕 MANTENER PALABRAS CLAVE IMPORTANTES A PESAR DE SER STOPWORDS
+        # 🆕 MANTENER PALABRAS CLAVE IMPORTANTES DUOC UC
         important_words = {
             'tne', 'certificado', 'beca', 'práctica', 'deporte', 'psicológico', 'matrícula',
             'horario', 'ubicación', 'taller', 'bolsa', 'empleo', 'salud', 'mental', 'validar',
-            'renovar', 'solicitar', 'inscripción', 'duoc', 'punto', 'estudiantil', 'plaza', 'norte'
+            'renovar', 'solicitar', 'inscripción', 'duoc', 'punto', 'estudiantil', 'plaza', 'norte',
+            'programa', 'emergencia', 'transporte', 'materiales', 'beneficio', 'ayuda', 'económica',
+            'claudia', 'cortés', 'adriana', 'vasquez', 'elizabeth', 'domínguez', 'ccortesn',
+            'avasquezm', 'edominguezs', 'puntoestudiantil_pnorte', 'huechuraba', 'santa', 'elena'
         }
         
         # Añadir palabras importantes que pudieron ser filtradas
@@ -178,10 +248,10 @@ class RAGEngine:
         if len(filtered_words) <= 1 and len(words) > 2:
             # Mantener las palabras más importantes
             content_words = [w for w in words if w not in {
-                'hola', 'ina', 'buenos', 'días', 'buenas', 'tardes', 'noches', 'saludos'
+                'hola', 'ina', 'buenos', 'días', 'buenas', 'tardes', 'noches', 'saludos', 'por', 'favor'
             }]
             if content_words:
-                filtered_words = content_words[:4]  # 🆕 Aumentado a 4 palabras clave
+                filtered_words = content_words[:5]
         
         # 🔥 NO ORDENAR PALABRAS - Mantener orden natural para preservar semántica
         normalized = ' '.join(filtered_words)
@@ -190,8 +260,9 @@ class RAGEngine:
         return normalized
 
     def add_document(self, document: str, metadata: Dict = None) -> bool:
-        """🆕 AGREGAR DOCUMENTO CON MÁS INFORMACIÓN"""
+        """🆕 AGREGAR DOCUMENTO CON MÁS INFORMACIÓN - MÉTODO CORREGIDO"""
         try:
+            # Verificar si el documento ya existe
             if self.document_exists(document):
                 logger.warning(f"⚠️ Documento duplicado omitido: {document[:50]}...")
                 return False
@@ -215,11 +286,11 @@ class RAGEngine:
             )
             logger.info(f"✅ Documento añadido: {document[:50]}... [Categoría: {enhanced_metadata['category']}]")
             
-            self._update_metrics('documents_added')
+            self.metrics['documents_added'] += 1
             return True
         except Exception as e:
             logger.error(f"❌ Error añadiendo documento: {e}")
-            self._update_metrics('errors')
+            self.metrics['errors'] += 1
             return False
 
     def document_exists(self, document: str) -> bool:
@@ -252,7 +323,6 @@ class RAGEngine:
     def query(self, query_text: str, n_results: int = 3) -> List[str]:
         """🆕 QUERY MEJORADA CON FILTROS POR CATEGORÍA"""
         try:
-            # Primero intentar búsqueda general
             results = self.collection.query(
                 query_texts=[query_text],
                 n_results=n_results
@@ -301,11 +371,12 @@ class RAGEngine:
             'semantic_cache_size': len(self.semantic_cache.cache),
             'metrics': self.metrics,
             'semantic_cache_enabled': self.semantic_cache.model is not None,
-            'total_documents': self.collection.count() if hasattr(self.collection, 'count') else 'N/A'
+            'total_documents': self.collection.count() if hasattr(self.collection, 'count') else 'N/A',
+            'duoc_context': self.duoc_context
         }
 
 def _optimize_response(respuesta: str, pregunta: str) -> str:
-    """🆕 OPTIMIZACIÓN DE RESPUESTA MEJORADA"""
+    """🆕 OPTIMIZACIÓN DE RESPUESTA MEJORADA DUOC UC"""
     
     if respuesta.startswith(("¡Hola! Soy InA", "Hola, soy el asistente")):
         respuesta = respuesta.replace("¡Hola! Soy InA, ", "").replace("Hola, soy el asistente, ", "")
@@ -324,7 +395,9 @@ def _optimize_response(respuesta: str, pregunta: str) -> str:
         "como asistente virtual": "",
         "puedo proporcionarte información": "Información:",
         "hola, soy ina, el asistente virtual": "",
-        "soy ina, el asistente virtual": ""
+        "soy ina, el asistente virtual": "",
+        "duoc uc": "Duoc UC",
+        "plaza norte": "Plaza Norte"
     }
     
     for largo, corto in optimizations.items():
@@ -336,7 +409,7 @@ def _optimize_response(respuesta: str, pregunta: str) -> str:
     
     # 🆕 ASEGURAR QUE LA RESPUESTA INCLUYA INFORMACIÓN ESPECÍFICA DE PLAZA NORTE
     if "plaza norte" not in respuesta.lower() and "santa elena" not in respuesta.lower():
-        if any(keyword in pregunta.lower() for keyword in ['tne', 'certificado', 'trámite', 'punto estudiantil']):
+        if any(keyword in pregunta.lower() for keyword in ['tne', 'certificado', 'trámite', 'punto estudiantil', 'beca', 'práctica']):
             respuesta += "\n\n📍 *Información específica para Plaza Norte: Santa Elena de Huechuraba 1660*"
     
     return respuesta
@@ -360,7 +433,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         response_data['response_time'] = time.time() - start_time
         return response_data
     
-    # 2. 🧠 CACHE SEMÁNTICO INTELIGENTE (similitud 75%+)
+    # 2. 🧠 CACHE SEMÁNTICO INTELIGENTE (similitud 82%+)
     query_embedding = rag_engine.semantic_cache.get_embedding(normalized_message)
     semantic_response = rag_engine.semantic_cache.find_similar(query_embedding)
     
@@ -414,7 +487,8 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
             "• Centro de Ayuda: https://centroayuda.duoc.cl\n"
             "• Duoc Laboral: https://duoclaboral.cl\n"
             "• Certificados: https://certificados.duoc.cl\n"
-            "• Prácticas: https://practicas.duoc.cl\n\n"
+            "• Prácticas: https://practicas.duoc.cl\n"
+            "• Beneficios: https://beneficios.duoc.cl\n\n"
             "SÉ ESPECÍFICO con horarios, ubicaciones y procedimientos del Punto Estudiantil Plaza Norte."
         )
         
@@ -440,8 +514,8 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
                 }
             ],
             options={
-                'temperature': 0.1,  # 🆕 Más bajo para mayor consistencia y precisión
-                'num_predict': 300,  # 🆕 Reducido para respuestas más concisas
+                'temperature': 0.1,
+                'num_predict': 300,
                 'top_p': 0.7,
                 'top_k': 25
             }
@@ -469,8 +543,8 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
             'timestamp': time.time(),
             'qr_codes': qr_codes,
             'urls': urls,
-            'response_time': time.time() - start_time,  # 🆕 Nueva métrica
-            'cache_type': 'ollama_generated'  # 🆕 Tipo de generación
+            'response_time': time.time() - start_time,
+            'cache_type': 'ollama_generated'
         }
         
         # 👇 GUARDAR EN TODOS LOS SISTEMAS DE CACHE

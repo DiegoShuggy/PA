@@ -1,11 +1,10 @@
-# classifier.py - VERSIÓN CON CACHE SEMÁNTICO
 import ollama
 from typing import Dict, List, Tuple
 import logging
 import re
 from sqlmodel import Session
 from app.models import engine
-from app.cache_manager import normalize_question  # 👈 NUEVA IMPORTACIÓN
+from app.cache_manager import normalize_question
 
 logger = logging.getLogger(__name__)
 
@@ -22,52 +21,131 @@ class QuestionClassifier:
             "otros"
         ]
         
-        # ✅ ACTUALIZADO: Patrones alineados con el topic_classifier
+        # ✅ PATRONES EXPANDIDOS Y MEJORADOS PARA DUOC UC
         self.keyword_patterns = {
             "asuntos_estudiantiles": [
-                r'\b(certificado|constancia|matrícula|notas|alumno regular)\b',
-                r'\b(beca|beneficio|ayuda económica|financiamiento|crédito)\b',
+                # TNE y certificados
                 r'\b(tne|tarjeta nacional estudiantil|pase escolar)\b',
-                r'\b(validar|renovar).*(tne|tarjeta)\b',
-                r'\b(trámite|proceso|solicitud|formulario|documentación)\b',
-                r'\b(arancel|pago|matrícula|valor|costo|cuota)\b',
-                r'\b(requisitos|documentos|qué llevar|qué papeles)\b'
+                r'\b(validar tne|renovar tne|revalidar tne|sacar tne)\b',
+                r'\b(certificado.*alumno|constancia.*alumno|certificado.*regular)\b',
+                r'\b(certificado de notas|record académico|concentración de notas)\b',
+                r'\b(certificado|constancia|record|concentración)\b',
+                
+                # Programas de apoyo
+                r'\b(programa emergencia|programa transporte|programa materiales)\b',
+                r'\b(beca|beneficio estudiantil|ayuda económica|subsidio)\b',
+                r'\b(apoyo económico|financiamiento|crédito estudiantil)\b',
+                
+                # Seguro estudiantil
+                r'\b(seguro.*estudiantil|seguro.*accidente|doc duoc)\b',
+                r'\b(accidente estudiantil|atención médica|seguro)\b',
+                
+                # Matrícula y trámites
+                r'\b(matrícula|inscripción|postulación|admisión)\b',
+                r'\b(trámite estudiantil|documentación|requisitos|formulario)\b',
+                r'\b(reasignación|cambio.*horario|modificación)\b',
+                
+                # Información general
+                r'\b(punto estudiantil|asuntos estudiantiles|información estudiantil)\b',
+                r'\b(horario.*punto|ubicación.*punto|contacto.*punto)\b'
             ],
             "desarrollo_profesional": [
-                r'\b(práctica|prácticas profesionales|práctica profesional)\b',
-                r'\b(bolsa de trabajo|empleo|trabajo|oferta laboral)\b',
-                r'\b(curriculum|cv|hoja de vida|entrevista laboral)\b',
-                r'\b(titulación|egresados|convenios empresas)\b',
-                r'\b(taller empleabilidad|orientación laboral)\b'
+                # Prácticas y empleo
+                r'\b(práctica profesional|práctica|practica)\b',
+                r'\b(bolsa.*trabajo|empleo|trabajo|duoclaboral)\b',
+                r'\b(oferta laboral|empleador|convenio.*empresa)\b',
+                
+                # CV y entrevistas
+                r'\b(curriculum|cv|hoja.*vida|currículum)\b',
+                r'\b(entrevista.*laboral|simulación.*entrevista)\b',
+                r'\b(mejorar.*curriculum|asesoría.*curricular)\b',
+                r'\b(preparación.*entrevista|consejos.*entrevista)\b',
+                
+                # Talleres y habilidades
+                r'\b(taller.*empleabilidad|taller.*cv|taller.*entrevista)\b',
+                r'\b(marca personal|comunicación efectiva|liderazgo)\b',
+                r'\b(habilidades blandas|habilidades laborales|soft skills)\b',
+                r'\b(desarrollo laboral|claudia cortés|ccortesn)\b',
+                
+                # Titulación y egresados
+                r'\b(titulación|egresados|titulados|beneficios.*titulados)\b',
+                r'\b(ceremonia.*titulación|diploma|certificado.*titulación)\b'
             ],
             "bienestar_estudiantil": [
-                r'\b(apoyo psicológico|psicólogo|salud mental|bienestar)\b',
-                r'\b(consejería|consejero|talleres bienestar)\b',
-                r'\b(salud estudiantil|medicina|enfermería|apoyo emocional)\b',
-                r'\b(actividades recreativas|clubes estudiantiles)\b'
+                # Salud mental y apoyo psicológico
+                r'\b(apoyo psicológico|psicólogo|salud mental|bienestar emocional)\b',
+                r'\b(consejería|consejero|atención psicológica|urgencia psicológica)\b',
+                r'\b(crisis emocional|línea ops|acompañamiento psicológico)\b',
+                r'\b(sesión psicológica|terapia|consultar.*psicólogo)\b',
+                r'\b(adriana vásquez|avasquezm|bienestar estudiantil)\b',
+                
+                # Talleres y programas
+                r'\b(taller.*bienestar|charla.*bienestar|micro webinar)\b',
+                r'\b(taller.*salud mental|embajadores.*salud mental)\b',
+                r'\b(curso.*embajadores|apoyo emocional|bienestar)\b',
+                
+                # Crisis y urgencias
+                r'\b(crisis.*pánico|angustia|sala.*primeros auxilios)\b',
+                r'\b(apoyo.*crisis|me siento mal|urgencia psicológica)\b',
+                r'\b(atención inmediata|emergencia emocional)\b',
+                
+                # Inclusión y discapacidad
+                r'\b(discapacidad|paedis|programa.*acompañamiento)\b',
+                r'\b(estudiantes.*discapacidad|inclusión|elizabeth domínguez)\b',
+                r'\b(edominguezs|apoyo.*inclusión|accesibilidad)\b'
             ],
             "deportes": [
-                r'\b(deportes|equipos deportivos|entrenamientos|competencias)\b',
-                r'\b(instalaciones deportivas|gimnasio|campeonatos)\b',
-                r'\b(fútbol|básquetbol|vóleibol|natación|actividades físicas)\b'
+                # Talleres deportivos
+                r'\b(taller.*deportivo|actividad.*deportiva|deporte)\b',
+                r'\b(fútbol.*masculino|futbolito.*damas|voleibol.*mixto)\b',
+                r'\b(basquetbol.*mixto|natación.*mixta|tenis.*mesa.*mixto)\b',
+                r'\b(ajedrez.*mixto|entrenamiento.*funcional|boxeo.*mixto)\b',
+                r'\b(powerlifting.*mixto|deportes|actividad.*física)\b',
+                
+                # Instalaciones y ubicaciones
+                r'\b(complejo.*maiclub|gimnasio.*entretiempo|piscina.*acquatiempo)\b',
+                r'\b(caf|centro.*bienestar|acondicionamiento.*físico)\b',
+                r'\b(ubicación.*deportes|lugar.*taller|instalación.*deportiva)\b',
+                
+                # Horarios deportivos
+                r'\b(horario.*taller|horario.*deporte|cuándo.*taller)\b',
+                r'\b(día.*entrenamiento|cuándo.*entrenar|horario.*clase)\b',
+                
+                # Selecciones y becas
+                r'\b(selección.*deportiva|equipo.*deportivo|futsal|rugby)\b',
+                r'\b(beca.*deportiva|postular.*beca|reclutamiento.*deportivo)\b',
+                r'\b(competencia.*deportiva|campeonato|torneo)\b'
             ],
             "pastoral": [
-                r'\b(voluntariado|actividades solidarias|retiros)\b',
-                r'\b(espiritualidad|valores|actividades pastorales)\b',
-                r'\b(ayuda social|solidaridad|comunidad|fe)\b'
+                # Voluntariado y actividades solidarias
+                r'\b(pastoral|voluntariado|voluntario|actividad.*solidaria)\b',
+                r'\b(retiro|espiritualidad|valor|actividad.*pastoral)\b',
+                r'\b(solidaridad|ayuda.*social|comunidad|fe)\b',
+                r'\b(religión.*católica|servicio.*social|ayuda.*comunitaria)\b',
+                r'\b(actividad.*voluntariado|servicio.*voluntario)\b'
             ],
             "institucionales": [
-                r'\b(horario|hora|atiende|abre|cierra|horario de atención)\b',
-                r'\b(ubicación|dirección|sede|cómo llegar|dónde está)\b',
-                r'\b(contacto|teléfono|email|información general)\b',
-                r'\b(hola|buenos días|buenas tardes|saludos|ina)\b',
-                r'\b(portal del estudiante|acceder.*portal|plataforma)\b'
+                # Información general Duoc UC
+                r'\b(horario.*atención|horario|atiende|abre|cierra)\b',
+                r'\b(ubicación|dirección|sede|cómo.*llegar|dónde.*está)\b',
+                r'\b(contacto|teléfono|email|información.*general)\b',
+                r'\b(servicio.*duoc|sedes|directorio|duoc.*uc)\b',
+                
+                # Saludos y conversación
+                r'\b(ina|hola|buenos.*días|buenas.*tardes|buenas.*noches)\b',
+                r'\b(saludos|quién.*eres|qué.*puedes.*hacer|funciones)\b',
+                r'\b(capacidades|ayuda|asistente|virtual)\b',
+                
+                # Servicios digitales
+                r'\b(portal.*estudiante|plataforma|correo.*institucional)\b',
+                r'\b(wifi|contraseña|acceso.*digital|sistema.*online)\b',
+                r'\b(problema.*técnico|plataforma.*duoc|mi.*duoc)\b'
             ]
         }
         
         # ✅ Cache SEMÁNTICO para consultas repetidas (normalizadas)
         self._semantic_cache = {}
-        self._cache_size = 100
+        self._cache_size = 200  # 🆕 Aumentado para mejor cobertura
         
         # ✅ Estadísticas de uso
         self.stats = {
@@ -75,7 +153,7 @@ class QuestionClassifier:
             'ollama_calls': 0,
             'keyword_matches': 0,
             'cache_hits': 0,
-            'semantic_cache_hits': 0,  # 👈 NUEVA MÉTRICA
+            'semantic_cache_hits': 0,
             'category_counts': {category: 0 for category in self.categories}
         }
     
