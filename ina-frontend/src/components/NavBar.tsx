@@ -6,9 +6,9 @@ function NavBar() {
         <div className="navbar-menu_container">
             {/* Añade esta línea para la imagen */}
             <Link to="/" className="FAQ-link">
-            <div className="navbar-brand">
-                <img src={logo} alt="Logo" className="navbar-logo" />
-            </div>
+                <div className="navbar-brand">
+                    <img src={logo} alt="Logo" className="navbar-logo" />
+                </div>
             </Link>
 
             <header className="app-header">

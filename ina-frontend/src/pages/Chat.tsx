@@ -41,108 +41,128 @@ const Chat: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
 
+  // Nuevo ref para el controlador de aborto
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   // Función para volver a la página anterior
   const handleGoBack = () => {
     navigate(-1);
   };
 
-  // Cerrar menús al hacer clic fuera
- // Cerrar feedback SOLO en áreas específicas - VERSIÓN SEGURA
-useEffect(() => {
-  const handleClickOutsideFeedback = (event: MouseEvent) => {
-    const target = event.target as Element;
-    
-    if (!showFeedback || !feedbackRef.current) return;
-
-    // LISTA BLANCA: Elementos que NO deben cerrar el feedback
-    const protectedElements = [
-      '.ai-message',           // Mensajes de IA
-      '.chat-input',           // Área de input
-      '.feedback-widget',      // El feedback mismo
-      '.feedback-widget *',    // Cualquier elemento dentro del feedback
-      '.floating-menu-container', // Menú flotante
-      '.language-selector-container', // Selector de idioma
-      '.back-button',          // Botón de volver
-      '.chat-header',          // Cabecera del chat
-      '.typing-indicator',     // Indicador de typing
-      '.message',              // Cualquier mensaje
-      '.user-message',         // Mensajes de usuario
-      'button',                // Cualquier botón (por si acaso)
-      'input'                  // Cualquier input
-    ];
-
-    // Verificar si el clic fue en un elemento protegido
-    const isProtected = protectedElements.some(selector => 
-      target.closest(selector)
-    );
-
-    // Verificar si el clic fue fuera del feedback
-    const isOutsideFeedback = !feedbackRef.current.contains(target);
-
-    // SOLO cerrar si está fuera del feedback Y NO es un elemento protegido
-    if (isOutsideFeedback && !isProtected) {
-      console.log('Cerrar feedback - Clic fuera en área no protegida');
-      setShowFeedback(false);
-      setShowFollowup(false);
-      resetFeedback();
-    } else {
-      console.log('No cerrar - Clic en área protegida:', target.className);
+  // Función para detener la generación
+  const stopGeneration = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
+    setIsLoading(false);
+
+    // Opcional: agregar un mensaje indicando que se canceló
+    const cancelMessage: Message = {
+      text: t('chat.generationCancelled') || 'Generación cancelada',
+      isUser: false,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, cancelMessage]);
   };
 
-  document.addEventListener('mousedown', handleClickOutsideFeedback);
-  
-  return () => {
-    document.removeEventListener('mousedown', handleClickOutsideFeedback);
-  };
-}, [showFeedback]);
+  // Cerrar menús al hacer clic fuera
+  // Cerrar feedback SOLO en áreas específicas - VERSIÓN SEGURA
+  useEffect(() => {
+    const handleClickOutsideFeedback = (event: MouseEvent) => {
+      const target = event.target as Element;
+
+      if (!showFeedback || !feedbackRef.current) return;
+
+      // LISTA BLANCA: Elementos que NO deben cerrar el feedback
+      const protectedElements = [
+        '.ai-message',           // Mensajes de IA
+        '.chat-input',           // Área de input
+        '.feedback-widget',      // El feedback mismo
+        '.feedback-widget *',    // Cualquier elemento dentro del feedback
+        '.floating-menu-container', // Menú flotante
+        '.language-selector-container', // Selector de idioma
+        '.back-button',          // Botón de volver
+        '.chat-header',          // Cabecera del chat
+        '.typing-indicator',     // Indicador de typing
+        '.message',              // Cualquier mensaje
+        '.user-message',         // Mensajes de usuario
+        'button',                // Cualquier botón (por si acaso)
+        'input'                  // Cualquier input
+      ];
+
+      // Verificar si el clic fue en un elemento protegido
+      const isProtected = protectedElements.some(selector =>
+        target.closest(selector)
+      );
+
+      // Verificar si el clic fue fuera del feedback
+      const isOutsideFeedback = !feedbackRef.current.contains(target);
+
+      // SOLO cerrar si está fuera del feedback Y NO es un elemento protegido
+      if (isOutsideFeedback && !isProtected) {
+        console.log('Cerrar feedback - Clic fuera en área no protegida');
+        setShowFeedback(false);
+        setShowFollowup(false);
+        resetFeedback();
+      } else {
+        console.log('No cerrar - Clic en área protegida:', target.className);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideFeedback);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideFeedback);
+    };
+  }, [showFeedback]);
 
   // Cerrar feedback al hacer clic fuera - VERSIÓN CORREGIDA
   // Versión con debug completo
-useEffect(() => {
-  const handleClickOutsideFeedback = (event: MouseEvent) => {
-    const target = event.target as Element;
-    
-    console.log('🔍 Click en:', target.tagName, target.className);
-    
-    if (!showFeedback) return;
+  useEffect(() => {
+    const handleClickOutsideFeedback = (event: MouseEvent) => {
+      const target = event.target as Element;
 
-    // Elementos que SÍ pueden cerrar el feedback (lista más restrictiva)
-    const closeAllowedSelectors = [
-      '.chat-messages',        // Fondo del área de mensajes
-      'body',                  // Fondo general
-      '.chat-container'        // Contenedor principal (pero no su contenido)
-    ];
+      console.log('🔍 Click en:', target.tagName, target.className);
 
-    const canClose = closeAllowedSelectors.some(selector => 
-      target.closest(selector) && 
-      !target.closest('.message') && // Pero no si es un mensaje
-      !target.closest('.feedback-widget') // Ni el feedback mismo
-    );
+      if (!showFeedback) return;
 
-    const clickedOutside = feedbackRef.current && 
-                          !feedbackRef.current.contains(target);
+      // Elementos que SÍ pueden cerrar el feedback (lista más restrictiva)
+      const closeAllowedSelectors = [
+        '.chat-messages',        // Fondo del área de mensajes
+        'body',                  // Fondo general
+        '.chat-container'        // Contenedor principal (pero no su contenido)
+      ];
 
-    console.log('📌 Clicked outside:', clickedOutside);
-    console.log('📌 Can close:', canClose);
-    console.log('📌 Target element:', target);
+      const canClose = closeAllowedSelectors.some(selector =>
+        target.closest(selector) &&
+        !target.closest('.message') && // Pero no si es un mensaje
+        !target.closest('.feedback-widget') // Ni el feedback mismo
+      );
 
-    if (clickedOutside && canClose) {
-      console.log('✅ Cerrando feedback...');
-      setShowFeedback(false);
-      setShowFollowup(false);
-      resetFeedback();
-    } else {
-      console.log('❌ NO cerrar feedback');
-    }
-  };
+      const clickedOutside = feedbackRef.current &&
+        !feedbackRef.current.contains(target);
 
-  document.addEventListener('mousedown', handleClickOutsideFeedback);
-  
-  return () => {
-    document.removeEventListener('mousedown', handleClickOutsideFeedback);
-  };
-}, [showFeedback]);
+      console.log('📌 Clicked outside:', clickedOutside);
+      console.log('📌 Can close:', canClose);
+      console.log('📌 Target element:', target);
+
+      if (clickedOutside && canClose) {
+        console.log('✅ Cerrando feedback...');
+        setShowFeedback(false);
+        setShowFollowup(false);
+        resetFeedback();
+      } else {
+        console.log('❌ NO cerrar feedback');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideFeedback);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideFeedback);
+    };
+  }, [showFeedback]);
 
   // Inicializar el reconocimiento de voz
   useEffect(() => {
@@ -151,12 +171,12 @@ useEffect(() => {
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       recognition.continuous = false;
-      
+
       // Configurar idioma según el idioma actual
-      const recognitionLang = i18n.language === 'es' ? 'es-ES' : 
-                            i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+      const recognitionLang = i18n.language === 'es' ? 'es-ES' :
+        i18n.language === 'fr' ? 'fr-FR' : 'en-US';
       recognition.lang = recognitionLang;
-      
+
       recognition.interimResults = true;
       recognition.maxAlternatives = 1;
 
@@ -207,6 +227,10 @@ useEffect(() => {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
+      // Limpiar abort controller al desmontar
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [isListening, i18n.language, t]);
 
@@ -214,7 +238,7 @@ useEffect(() => {
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
     setIsLanguageMenuOpen(false);
-    
+
     // Reiniciar reconocimiento de voz si está activo
     if (isListening && recognitionRef.current) {
       try {
@@ -418,9 +442,12 @@ useEffect(() => {
     const messageToSend = inputMessage;
     setInputMessage('');
     finalTranscriptRef.current = '';
-    
+
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
+
+    // Crear nuevo abort controller para esta petición
+    abortControllerRef.current = new AbortController();
 
     try {
       const response = await fetch('http://localhost:8000/chat', {
@@ -430,7 +457,8 @@ useEffect(() => {
         },
         body: JSON.stringify({
           text: messageToSend
-        })
+        }),
+        signal: abortControllerRef.current.signal
       });
 
       if (!response.ok) {
@@ -460,9 +488,9 @@ useEffect(() => {
         feedback_session_id: data.feedback_session_id,
         chatlog_id: data.chatlog_id
       };
-      
+
       setMessages(prev => [...prev, aiMessage]);
-      
+
       // Mostrar feedback después de la respuesta de Ina
       if (data.feedback_session_id) {
         setCurrentFeedbackSession(data.feedback_session_id);
@@ -471,16 +499,20 @@ useEffect(() => {
         setShowFollowup(false);
       }
 
-    } catch (error) {
-      console.error('Error:', error);
-      const errorMessage: Message = {
-        text: t('chat.serverError'),
-        isUser: false,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
+    } catch (error: any) {
+      // Solo mostrar error si no fue una cancelación
+      if (error.name !== 'AbortError') {
+        console.error('Error:', error);
+        const errorMessage: Message = {
+          text: t('chat.serverError'),
+          isUser: false,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      }
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   };
 
@@ -521,15 +553,15 @@ useEffect(() => {
               <div className="feedback-prompt">
                 <p>{t('chat.feedback.initialQuestion')}</p>
                 <div className="feedback-buttons">
-                  <button 
-                    className="feedback-btn positive" 
+                  <button
+                    className="feedback-btn positive"
                     onClick={() => submitFeedback(true)}
                     type="button"
                   >
                     {t('chat.feedback.positive')}
                   </button>
-                  <button 
-                    className="feedback-btn negative" 
+                  <button
+                    className="feedback-btn negative"
                     onClick={() => submitFeedback(false)}
                     type="button"
                   >
@@ -541,12 +573,12 @@ useEffect(() => {
               <div className="feedback-followup">
                 <h4>{t('chat.feedback.thankYouImprove')}</h4>
                 <p>{t('chat.feedback.improvementQuestion')}</p>
-                
+
                 <div className="rating-section">
                   <p>Califica esta respuesta (opcional):</p>
                   <div className="star-rating">
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <span 
+                      <span
                         key={star}
                         className={`star ${currentRating >= star ? 'filled' : ''}`}
                         onClick={() => setCurrentRating(star)}
@@ -556,28 +588,28 @@ useEffect(() => {
                     ))}
                   </div>
                 </div>
-                
-                <textarea 
+
+                <textarea
                   value={userComments}
                   onChange={(e) => setUserComments(e.target.value)}
                   placeholder={t('chat.feedback.commentsPlaceholder')}
                   rows={3}
                 ></textarea>
-                
+
                 <div className="feedback-actions">
-                  <button 
-                    onClick={submitDetailedFeedback} 
+                  <button
+                    onClick={submitDetailedFeedback}
                     className="submit-btn"
                     type="button"
                     disabled={!userComments.trim() && currentRating === 0}
                   >
                     {t('chat.feedback.submitComments')}
                   </button>
-                  <button 
+                  <button
                     onClick={() => {
                       setShowFeedback(false);
                       resetFeedback();
-                    }} 
+                    }}
                     className="cancel-btn"
                     type="button"
                   >
@@ -599,7 +631,7 @@ useEffect(() => {
   return (
     <div className="chat-wrapper">
       {/* Botón para volver atrás */}
-      <button 
+      <button
         className="back-button"
         onClick={handleGoBack}
         title={t('app.backButton', 'Volver atrás')}
@@ -774,9 +806,9 @@ useEffect(() => {
               </div>
             </div>
           ))}
-          
+
           {renderFeedbackWidget()}
-          
+
           {isLoading && (
             <div className="message ai-message">
               <div className="typing-indicator">
@@ -789,8 +821,8 @@ useEffect(() => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* FORMULARIO */}
-        <form 
+        {/* FORMULARIO ACTUALIZADO */}
+        <form
           className="chat-input"
           onSubmit={handleSendMessage}
         >
@@ -816,12 +848,23 @@ useEffect(() => {
               className="mic-icon"
             />
           </button>
-          <button 
-            type="submit"
-            disabled={isLoading || !inputMessage.trim()}
-          >
-            {isLoading ? '...' : t('chat.send')}
-          </button>
+          {isLoading ? (
+            <button
+              type="button"
+              onClick={stopGeneration}
+              className="stop-button"
+              title={t('chat.stopGeneration') || 'Detener generación'}
+            >
+              {t('chat.stopGeneration')}
+            </button>
+          ) : (
+            <button
+              type="submit"
+              disabled={!inputMessage.trim()}
+            >
+              {t('chat.send')}
+            </button>
+          )}
         </form>
 
         {isListening && (
