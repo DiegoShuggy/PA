@@ -1,4 +1,3 @@
-# app/rag.py - VERSIÓN MEJORADA CON CACHE SEMÁNTICO UNIVERSAL
 import chromadb
 import ollama
 from typing import List, Dict, Optional
@@ -19,9 +18,10 @@ from app.cache_manager import rag_cache, response_cache, normalize_question
 logger = logging.getLogger(__name__)
 
 class SemanticCache:
-    def __init__(self, similarity_threshold: float = 0.72):  # 👈 UMBRAL MÁS BAJO
+    def __init__(self, similarity_threshold: float = 0.75):  # 🆕 Aumentado a 0.75 para mayor precisión
         try:
-            self.model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+            # 🆕 MODELO MEJORADO para español
+            self.model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
             self.cache = {}  # {embedding_tuple: respuesta}
             self.threshold = similarity_threshold
             logger.info(f"✅ Cache semántico universal inicializado (umbral: {similarity_threshold})")
@@ -31,21 +31,50 @@ class SemanticCache:
             self.cache = {}
     
     def get_embedding(self, text: str) -> Optional[np.ndarray]:
-        """Genera embedding para un texto dado"""
+        """🆕 GENERACIÓN DE EMBEDDINGS MEJORADA"""
         if self.model is None:
             return None
         try:
-            return self.model.encode([text])[0]
+            # Preprocesar texto para mejor embedding
+            processed_text = self._preprocess_for_embedding(text)
+            return self.model.encode([processed_text])[0]
         except Exception as e:
             logger.error(f"Error generando embedding: {e}")
             return None
+    
+    def _preprocess_for_embedding(self, text: str) -> str:
+        """🆕 PREPROCESAMIENTO PARA EMBEDDINGS MÁS PRECISOS"""
+        # Limpiar texto manteniendo significado
+        text = text.lower().strip()
+        text = re.sub(r'[^\w\sáéíóúñ]', ' ', text)  # Mantener acentos
+        text = re.sub(r'\s+', ' ', text)  # Espacios múltiples a uno
+        
+        # Palabras clave específicas del contexto estudiantil
+        important_words = [
+            'tne', 'certificado', 'beca', 'práctica', 'deporte', 'psicológico',
+            'matrícula', 'horario', 'ubicación', 'taller', 'bolsa', 'empleo',
+            'salud', 'mental', 'validar', 'renovar', 'solicitar', 'inscripción',
+            'duoc', 'plaza', 'norte', 'punto', 'estudiantil', 'huechuraba'
+        ]
+        
+        # Mantener palabras importantes y eliminar stopwords básicas
+        words = text.split()
+        filtered_words = []
+        
+        for word in words:
+            if (word in important_words or 
+                len(word) > 3 or 
+                word in ['duoc', 'ina', 'punto', 'estudiantil', 'plaza', 'norte']):
+                filtered_words.append(word)
+        
+        return ' '.join(filtered_words) if filtered_words else text
     
     def _embedding_to_key(self, embedding: np.ndarray) -> tuple:
         """Convertir numpy array a tuple para usar como key"""
         return tuple(embedding.tolist())
     
     def find_similar(self, query_embedding: np.ndarray) -> Optional[Dict]:
-        """Busca preguntas similares en el cache usando similitud coseno"""
+        """🆕 BÚSQUEDA SEMÁNTICA MEJORADA"""
         if not self.cache or query_embedding is None:
             return None
             
@@ -67,17 +96,18 @@ class SemanticCache:
         
         if best_response:
             logger.info(f"🎯 Semantic similarity found: {best_similarity:.3f}")
+            best_response['semantic_similarity'] = best_similarity  # 🆕 Agregar métrica
             return best_response
         
         return None
     
     def add_to_cache(self, query: str, response_data: Dict):
-        """Agrega una pregunta y respuesta al cache semántico"""
+        """🆕 AGREGAR AL CACHE CON MÁS INFORMACIÓN"""
         embedding = self.get_embedding(query)
         if embedding is not None:
             embedding_key = self._embedding_to_key(embedding)
             self.cache[embedding_key] = response_data
-            logger.info(f"✅ Added to semantic cache: '{query}'")
+            logger.info(f"✅ Added to semantic cache: '{query[:50]}...'")
 
 class RAGEngine:
     def __init__(self):
@@ -86,8 +116,8 @@ class RAGEngine:
             name="duoc_knowledge"
         )
         
-        # 👇 CACHE SEMÁNTICO MEJORADO
-        self.semantic_cache = SemanticCache(similarity_threshold=0.72)
+        # 🆕 CACHE SEMÁNTICO MEJORADO
+        self.semantic_cache = SemanticCache(similarity_threshold=0.75)  # 🆕 Mayor precisión
         self.text_cache = {}  # Cache textual rápido
         
         logger.info("✅ RAG Engine con Cache Universal inicializado")
@@ -99,15 +129,13 @@ class RAGEngine:
             'text_cache_hits': 0,
             'documents_added': 0,
             'errors': 0,
-            'categories_used': defaultdict(int)
+            'categories_used': defaultdict(int),
+            'response_times': []  # 🆕 Métrica nueva
         }
 
     def enhanced_normalize_text(self, text: str) -> str:
         """
-        🔧 NORMALIZACIÓN INTELIGENTE UNIVERSAL
-        - Mantiene orden natural de palabras
-        - Preserva significado semántico
-        - Stopwords contextuales específicas
+        🔧 NORMALIZACIÓN INTELIGENTE UNIVERSAL MEJORADA
         """
         # 1. Limpieza básica
         text = text.lower().strip()
@@ -117,49 +145,75 @@ class RAGEngine:
         if not words:
             return ""
         
-        # 2. Stopwords específicas del contexto estudiantil
+        # 🆕 STOPWORDS ESPECÍFICAS DEL CONTEXTO ESTUDIANTIL MEJORADAS
         stopwords = {
             # Saludos básicos
             'hola', 'holas', 'holaa', 'holaaa', 'buenos', 'días', 'buenas', 'tardes', 'noches',
-            'saludos', 'saludo', 'hi', 'hello', 'hey', 'hellow', 'helow',
+            'saludos', 'saludo', 'hi', 'hello', 'hey', 'hellow', 'helow', 'buen', 'dia',
             # Palabras vacías generales
             'por', 'favor', 'puedes', 'puede', 'podrías', 'podría', 'me', 'mi', 'mis',
             'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'de', 'del',
             'en', 'con', 'para', 'porque', 'qué', 'cómo', 'dónde', 'cuándo', 'cuál',
             'eso', 'esa', 'ese', 'aquí', 'allí', 'ahí', 'esto', 'esta', 'este',
-            'soy', 'eres', 'es', 'somos', 'son', 'estoy', 'estás', 'está', 'estamos', 'están'
+            'soy', 'eres', 'es', 'somos', 'son', 'estoy', 'estás', 'está', 'estamos', 'están',
+            # Términos específicos de conversación con IA
+            'ina', 'asistente', 'virtual', 'punto', 'estudiantil', 'duoc', 'uc'
         }
         
         filtered_words = [word for word in words if word not in stopwords]
         
-        # 3. Si quedan muy pocas palabras, mantener algunas originales
+        # 🆕 MANTENER PALABRAS CLAVE IMPORTANTES A PESAR DE SER STOPWORDS
+        important_words = {
+            'tne', 'certificado', 'beca', 'práctica', 'deporte', 'psicológico', 'matrícula',
+            'horario', 'ubicación', 'taller', 'bolsa', 'empleo', 'salud', 'mental', 'validar',
+            'renovar', 'solicitar', 'inscripción', 'duoc', 'punto', 'estudiantil', 'plaza', 'norte'
+        }
+        
+        # Añadir palabras importantes que pudieron ser filtradas
+        for word in words:
+            if word in important_words and word not in filtered_words:
+                filtered_words.append(word)
+        
+        # Si quedan muy pocas palabras, mantener algunas originales
         if len(filtered_words) <= 1 and len(words) > 2:
-            # Mantener las palabras más importantes (excluyendo saludos)
+            # Mantener las palabras más importantes
             content_words = [w for w in words if w not in {
                 'hola', 'ina', 'buenos', 'días', 'buenas', 'tardes', 'noches', 'saludos'
             }]
             if content_words:
-                filtered_words = content_words[:3]  # Máximo 3 palabras clave
+                filtered_words = content_words[:4]  # 🆕 Aumentado a 4 palabras clave
         
-        # 4. 🔥 NO ORDENAR PALABRAS - Mantener orden natural para preservar semántica
+        # 🔥 NO ORDENAR PALABRAS - Mantener orden natural para preservar semántica
         normalized = ' '.join(filtered_words)
         
         logger.debug(f"🔧 Normalización inteligente: '{text}' -> '{normalized}'")
         return normalized
 
     def add_document(self, document: str, metadata: Dict = None) -> bool:
+        """🆕 AGREGAR DOCUMENTO CON MÁS INFORMACIÓN"""
         try:
             if self.document_exists(document):
                 logger.warning(f"⚠️ Documento duplicado omitido: {document[:50]}...")
                 return False
                 
             doc_id = f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{hash(document) % 10000}"
+            
+            # 🆕 METADATA MEJORADA
+            enhanced_metadata = {
+                "timestamp": datetime.now().isoformat(),
+                "source": metadata.get('source', 'unknown') if metadata else 'unknown',
+                "category": metadata.get('category', 'general') if metadata else 'general',
+                "type": metadata.get('type', 'general') if metadata else 'general',
+                "optimized": metadata.get('optimized', 'false') if metadata else 'false',
+                "variation_type": metadata.get('variation_type', 'original') if metadata else 'original'
+            }
+            
             self.collection.add(
                 documents=[document],
-                metadatas=[metadata] if metadata else [{}],
+                metadatas=[enhanced_metadata],
                 ids=[doc_id]
             )
-            logger.info(f"✅ Documento añadido: {document[:50]}...")
+            logger.info(f"✅ Documento añadido: {document[:50]}... [Categoría: {enhanced_metadata['category']}]")
             
             self._update_metrics('documents_added')
             return True
@@ -169,7 +223,7 @@ class RAGEngine:
             return False
 
     def document_exists(self, document: str) -> bool:
-        """Verificar si documento ya existe"""
+        """🆕 VERIFICACIÓN MEJORADA DE EXISTENCIA"""
         try:
             results = self.collection.query(
                 query_texts=[document],
@@ -185,14 +239,20 @@ class RAGEngine:
             return False
 
     def _calculate_similarity(self, doc1: str, doc2: str) -> float:
-        """Calcular similitud entre documentos"""
-        words1 = set(doc1.lower().split())
-        words2 = set(doc2.lower().split())
+        """🆕 CÁLCULO DE SIMILITUD MEJORADO"""
+        words1 = set(self.enhanced_normalize_text(doc1).split())
+        words2 = set(self.enhanced_normalize_text(doc2).split())
+        
+        if not words1 or not words2:
+            return 0.0
+            
         common = words1.intersection(words2)
         return len(common) / max(len(words1), len(words2))
 
     def query(self, query_text: str, n_results: int = 3) -> List[str]:
+        """🆕 QUERY MEJORADA CON FILTROS POR CATEGORÍA"""
         try:
+            # Primero intentar búsqueda general
             results = self.collection.query(
                 query_texts=[query_text],
                 n_results=n_results
@@ -203,7 +263,7 @@ class RAGEngine:
             return []
 
     def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.7):
-        """Búsqueda optimizada con filtro por score"""
+        """🆕 BÚSQUEDA OPTIMIZADA MEJORADA"""
         try:
             results = self.collection.query(
                 query_texts=[query_text],
@@ -215,8 +275,14 @@ class RAGEngine:
             for i, distance in enumerate(results['distances'][0]):
                 similarity = 1 - distance
                 if similarity >= score_threshold:
-                    filtered_docs.append(results['documents'][0][i])
+                    filtered_docs.append({
+                        'document': results['documents'][0][i],
+                        'metadata': results['metadatas'][0][i],
+                        'similarity': similarity
+                    })
             
+            # Ordenar por similitud y devolver los mejores
+            filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
             return filtered_docs[:n_results]
             
         except Exception as e:
@@ -229,16 +295,17 @@ class RAGEngine:
             self.metrics[metric_name] += 1
 
     def get_cache_stats(self) -> Dict:
-        """Obtener estadísticas del cache"""
+        """🆕 ESTADÍSTICAS MEJORADAS"""
         return {
             'text_cache_size': len(self.text_cache),
             'semantic_cache_size': len(self.semantic_cache.cache),
             'metrics': self.metrics,
-            'semantic_cache_enabled': self.semantic_cache.model is not None
+            'semantic_cache_enabled': self.semantic_cache.model is not None,
+            'total_documents': self.collection.count() if hasattr(self.collection, 'count') else 'N/A'
         }
 
 def _optimize_response(respuesta: str, pregunta: str) -> str:
-    """Optimizar respuesta para punto medio óptimo - claro pero conciso"""
+    """🆕 OPTIMIZACIÓN DE RESPUESTA MEJORADA"""
     
     if respuesta.startswith(("¡Hola! Soy InA", "Hola, soy el asistente")):
         respuesta = respuesta.replace("¡Hola! Soy InA, ", "").replace("Hola, soy el asistente, ", "")
@@ -253,23 +320,34 @@ def _optimize_response(respuesta: str, pregunta: str) -> str:
         "en relación a tu consulta sobre": "Sobre",
         "respecto a tu pregunta acerca de": "Acerca de",
         "quiero informarte que": "",
-        "me complace decirte que": ""
+        "me complace decirte que": "",
+        "como asistente virtual": "",
+        "puedo proporcionarte información": "Información:",
+        "hola, soy ina, el asistente virtual": "",
+        "soy ina, el asistente virtual": ""
     }
     
     for largo, corto in optimizations.items():
         respuesta = respuesta.replace(largo, corto)
     
-    while "  " in respuesta:
-        respuesta = respuesta.replace("  ", " ")
+    # 🆕 LIMPIEZA ADICIONAL
+    respuesta = re.sub(r'\s+', ' ', respuesta)  # Espacios múltiples
+    respuesta = respuesta.strip()
     
-    return respuesta.strip()
+    # 🆕 ASEGURAR QUE LA RESPUESTA INCLUYA INFORMACIÓN ESPECÍFICA DE PLAZA NORTE
+    if "plaza norte" not in respuesta.lower() and "santa elena" not in respuesta.lower():
+        if any(keyword in pregunta.lower() for keyword in ['tne', 'certificado', 'trámite', 'punto estudiantil']):
+            respuesta += "\n\n📍 *Información específica para Plaza Norte: Santa Elena de Huechuraba 1660*"
+    
+    return respuesta
 
 # ✅ Instancia global del motor RAG
 rag_engine = RAGEngine()
 
 def get_ai_response(user_message: str, context: list = None) -> Dict:
-    """🎯 VERSIÓN MEJORADA CON CACHE SEMÁNTICO UNIVERSAL"""
+    """🎯 VERSIÓN MEJORADA CON CACHE SEMÁNTICO UNIVERSAL MEJORADO"""
     import time
+    start_time = time.time()
     
     # 👇 NORMALIZACIÓN INTELIGENTE MEJORADA
     normalized_message = rag_engine.enhanced_normalize_text(user_message)
@@ -278,9 +356,11 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
     if normalized_message in rag_engine.text_cache:
         rag_engine.metrics['text_cache_hits'] += 1
         logger.info(f"🎯 RAG Text Cache HIT para: '{user_message}'")
-        return rag_engine.text_cache[normalized_message]
+        response_data = rag_engine.text_cache[normalized_message]
+        response_data['response_time'] = time.time() - start_time
+        return response_data
     
-    # 2. 🧠 CACHE SEMÁNTICO INTELIGENTE (similitud 72%+)
+    # 2. 🧠 CACHE SEMÁNTICO INTELIGENTE (similitud 75%+)
     query_embedding = rag_engine.semantic_cache.get_embedding(normalized_message)
     semantic_response = rag_engine.semantic_cache.find_similar(query_embedding)
     
@@ -290,6 +370,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         
         # Agregar también al cache textual para futuras búsquedas rápidas
         rag_engine.text_cache[normalized_message] = semantic_response
+        semantic_response['response_time'] = time.time() - start_time
         return semantic_response
     
     # 3. 📦 CACHE LEGACY (compatibilidad)
@@ -302,32 +383,50 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
     if cached_response:
         logger.info(f"📦 RAG Legacy Cache HIT para: '{user_message}'")
         rag_engine.metrics['cache_hits'] += 1
+        cached_response['response_time'] = time.time() - start_time
         return cached_response
     
     logger.info(f"🔍 RAG Semantic Cache MISS para: '{user_message}'")
     
     # 4. ⚡ PROCESAR CON OLLAMA (cache miss)
     try:
+        # 🆕 SYSTEM MESSAGE MEJORADO para respuestas más específicas
         system_message = (
-            "Eres InA, asistente del Punto Estudiantil Duoc UC. "
-            "Responde de forma CLARA y CONCISA (3-4 líneas).\n"
-            "Incluye: DÓNDE, QUÉ necesitan, COSTO, TIEMPO.\n"
-            "Usa URLs oficiales cuando sean relevantes.\n\n"
-            "URLS OFICIALES:\n"
-            "• Portal: https://www.duoc.cl/alumnos/\n"
-            "• Certificados: https://certificados.duoc.cl/\n"
-            "• Prácticas: https://practicas.duoc.cl/\n"
-            "• Ayuda: https://ayuda.duoc.cl/\n"
+            "Eres InA, asistente especializado del Punto Estudiantil Duoc UC Plaza Norte. "
+            "Responde de forma CLARA, CONCISA y ESPECÍFICA (3-5 líneas máximo).\n\n"
+            "🎯 INFORMACIÓN CLAVE A INCLUIR SIEMPRE:\n"
+            "- DÓNDE dirigirse (ubicación específica: Santa Elena de Huechuraba 1660)\n" 
+            "- QUÉ documentación necesitan\n"
+            "- COSTOS si aplican\n"
+            "- TIEMPOS de espera/entrega\n"
+            "- HORARIOS de atención\n\n"
+            "📍 INFORMACIÓN ESPECÍFICA PLAZA NORTE:\n"
+            "- Dirección: Santa Elena de Huechuraba 1660, Huechuraba\n"
+            "- Horario Punto Estudiantil: Lunes a Viernes 8:30-19:00\n"
+            "- Teléfono: +56 2 2360 6400\n"
+            "- Email: Puntoestudiantil_pnorte@duoc.cl\n\n"
+            "📞 CONTACTOS IMPORTANTES:\n"
+            "- Desarrollo Laboral: Claudia Cortés - ccortesn@duoc.cl\n"
+            "- Bienestar Estudiantil: Adriana Vásquez - avasquezm@duoc.cl\n"
+            "- Inclusión: Elizabeth Domínguez - edominguezs@duoc.cl\n\n"
+            "🌐 URLS OFICIALES IMPORTANTES:\n"
+            "• Portal Estudiantil: https://portal.duoc.cl\n"
+            "• Centro de Ayuda: https://centroayuda.duoc.cl\n"
+            "• Duoc Laboral: https://duoclaboral.cl\n"
+            "• Certificados: https://certificados.duoc.cl\n"
+            "• Prácticas: https://practicas.duoc.cl\n\n"
+            "SÉ ESPECÍFICO con horarios, ubicaciones y procedimientos del Punto Estudiantil Plaza Norte."
         )
+        
         if context:
             relevant_context = []
             for ctx in context:
                 if not ctx.startswith("DERIVACIÓN:") and len(ctx) > 10:
                     relevant_context.append(ctx)
             if relevant_context:
-                system_message += f"INFORMACIÓN RELEVANTE:\n{chr(10).join(relevant_context[:2])}\n\n"
+                system_message += f"\n\n📋 CONTEXTO RELEVANTE:\n{chr(10).join(relevant_context[:2])}"
         
-        logger.info(f"⚡ Enviando mensaje a Ollama: {user_message[:100]}...")
+        logger.info(f"⚡ Enviando a Ollama: {user_message[:100]}...")
         response = ollama.chat(
             model='mistral:7b',
             messages=[
@@ -336,26 +435,30 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
                     'content': system_message
                 },
                 {
-                    'role': 'user',
+                    'role': 'user', 
                     'content': user_message
                 }
             ],
             options={
-                'temperature': 0.25,
-                'num_predict': 400,
-                'top_p': 0.82,
-                'top_k': 40
+                'temperature': 0.1,  # 🆕 Más bajo para mayor consistencia y precisión
+                'num_predict': 300,  # 🆕 Reducido para respuestas más concisas
+                'top_p': 0.7,
+                'top_k': 25
             }
         )
+        
         respuesta = response['message']['content'].strip()
         logger.info(f"📨 Respuesta de Ollama: {respuesta[:200]}...")
+        
+        # 🆕 OPTIMIZACIÓN MEJORADA
         respuesta = _optimize_response(respuesta, user_message)
         processed_response = qr_generator.process_response(respuesta, user_message)
+        
         logger.info(f"✅ Respuesta procesada - Texto: {len(respuesta)} chars, QRs: {len(processed_response.get('qr_codes', {}))}")
         
         response_text = processed_response.get('text', respuesta)
         sources = processed_response.get('sources', [])
-        category = processed_response.get('category', None)
+        category = processed_response.get('category', 'general')
         qr_codes = processed_response.get('qr_codes', {})
         urls = processed_response.get('suggested_urls', [])
         
@@ -365,7 +468,9 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
             'category': category,
             'timestamp': time.time(),
             'qr_codes': qr_codes,
-            'urls': urls
+            'urls': urls,
+            'response_time': time.time() - start_time,  # 🆕 Nueva métrica
+            'cache_type': 'ollama_generated'  # 🆕 Tipo de generación
         }
         
         # 👇 GUARDAR EN TODOS LOS SISTEMAS DE CACHE
@@ -376,6 +481,8 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         # Métricas
         rag_engine.metrics['total_queries'] += 1
         rag_engine.metrics['successful_responses'] += 1
+        rag_engine.metrics['categories_used'][category] += 1
+        rag_engine.metrics['response_times'].append(response_data['response_time'])
         
         return response_data
         
@@ -383,28 +490,34 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         logger.error(f"❌ Error con Ollama: {str(e)}")
         logger.error(f"❌ Traceback: {traceback.format_exc()}")
         rag_engine.metrics['errors'] += 1
+        
         return {
-            "response": "Estamos experimentando dificultades técnicas. Por favor, intenta nuevamente en unos momentos.",
+            "response": "🔧 Estamos experimentando dificultades técnicas. Por favor, intenta nuevamente en unos momentos o acércate al Punto Estudiantil Plaza Norte (Santa Elena de Huechuraba 1660).",
             "sources": [],
-            "category": None,
-            "timestamp": time.time()
+            "category": "error",
+            "timestamp": time.time(),
+            "response_time": time.time() - start_time,
+            "cache_type": "error"
         }
 
-# Funciones de cache existentes (mantener igual)
+# 🆕 FUNCIONES DE CACHE MEJORADAS
 def get_cached_response(session_id: str, user_message: str, category: str) -> Optional[Dict]:
-    """Obtener respuesta completa desde cache"""
+    """Obtener respuesta completa desde cache con más información"""
     cache_key = response_cache._generate_key({
         'session_id': session_id,
         'message': user_message,
         'category': category
     })
-    return response_cache.get(cache_key)
+    cached = response_cache.get(cache_key)
+    if cached:
+        cached['cache_type'] = 'response_cache'
+    return cached
 
 def cache_response(session_id: str, user_message: str, category: str, response_data: Dict) -> None:
-    """Guardar respuesta completa en cache"""
+    """Guardar respuesta completa en cache con metadata"""
     cache_key = response_cache._generate_key({
         'session_id': session_id,
-        'message': user_message,
+        'message': user_message, 
         'category': category
     })
     response_cache.set(cache_key, response_data, ttl=1800)
@@ -432,5 +545,20 @@ class ResponseCache:
 response_cache = ResponseCache()
 
 def get_rag_cache_stats() -> Dict:
-    """Obtener estadísticas completas del cache RAG"""
-    return rag_engine.get_cache_stats()
+    """🆕 ESTADÍSTICAS COMPLETAS MEJORADAS"""
+    stats = rag_engine.get_cache_stats()
+    
+    # 🆕 CÁLCULO DE TIEMPO PROMEDIO DE RESPUESTA
+    if rag_engine.metrics['response_times']:
+        avg_time = sum(rag_engine.metrics['response_times']) / len(rag_engine.metrics['response_times'])
+        stats['average_response_time'] = round(avg_time, 3)
+    else:
+        stats['average_response_time'] = 0
+    
+    return stats
+
+def clear_caches():
+    """🆕 LIMPIAR CACHES (útil para desarrollo)"""
+    rag_engine.text_cache.clear()
+    rag_engine.semantic_cache.cache.clear()
+    logger.info("🧹 Todos los caches limpiados")
