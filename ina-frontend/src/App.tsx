@@ -7,6 +7,7 @@ import Deportes from './pages/Deportes';
 import Bienestar from './pages/Bienestar';
 import Pastoral from './pages/Pastoral';
 import Desarrollo from './pages/Desarrollo';
+import Reporte from './pages/Reporte';
 import { Routes, Route } from 'react-router-dom';
 import './App.css'; // Solo estilos globales
 import './translation/i18n'; // Importa la configuración de i18n
@@ -28,6 +29,7 @@ function App() {
             <Route path="/Bienestar" element={<Bienestar />} />
             <Route path="/Desarrollo" element={<Desarrollo />} />
             <Route path="/Pastoral" element={<Pastoral />} />
+            <Route path="/Reporte" element={<Reporte />} />
           </Routes>
         </main>
       </div>
