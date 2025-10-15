@@ -1,4 +1,3 @@
-# app/models.py
 from sqlmodel import SQLModel, Field, create_engine
 from typing import Optional
 from datetime import datetime
@@ -11,7 +10,7 @@ class ChatLog(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_message: str
     ai_response: str
-    timestamp: datetime = Field(default_factory=datetime.now)  # 👈 ESTA LÍNEA DEBE ESTAR
+    timestamp: datetime = Field(default_factory=datetime.now)
 
 class UserQuery(SQLModel, table=True):
     """Registrar todas las preguntas de los usuarios"""
@@ -24,7 +23,7 @@ class UserQuery(SQLModel, table=True):
 class UnansweredQuestion(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     original_question: str
-    category: Optional[str] = Field(default=None, nullable=True)  # 👈 Hacer opcional
+    category: Optional[str] = Field(default=None, nullable=True)
     ai_response: str
     timestamp: datetime = Field(default_factory=datetime.now)
     needs_human_review: bool = Field(default=False)
@@ -33,11 +32,10 @@ class Feedback(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     chatlog_id: int  # ID del mensaje evaluado
     is_helpful: bool  # ¿Fue útil la respuesta?
-    rating: Optional[int] = Field(default=None, ge=1, le=5)  # Opcional: rating 1-5
-    comments: Optional[str] = None  # Comentarios opcionales
+    rating: Optional[int] = Field(default=None, ge=1, le=5)
+    comments: Optional[str] = None
     timestamp: datetime = Field(default_factory=datetime.now)
 
-# En app/models.py - AGREGAR AL FINAL
 class ResponseFeedback(SQLModel, table=True):
     """Feedback específico para cada respuesta de Ina"""
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -48,6 +46,17 @@ class ResponseFeedback(SQLModel, table=True):
     rating: Optional[int] = Field(default=None, ge=1, le=5)
     comments: Optional[str] = None
     response_category: Optional[str] = None
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+# 👇 NUEVO: Modelo para almacenar reportes generados
+class GeneratedReport(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    report_id: str  # ID único del reporte
+    report_type: str  # daily, weekly, monthly, etc.
+    period_days: int
+    generated_data: str  # JSON string con los datos del reporte
+    pdf_path: Optional[str] = None  # Ruta al archivo PDF si se generó
+    sent_to_email: Optional[str] = None  # Email al que se envió
     timestamp: datetime = Field(default_factory=datetime.now)
 
 def init_db():

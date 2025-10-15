@@ -1,5 +1,4 @@
-# app/main.py
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.models import init_db, ChatLog, UserQuery, UnansweredQuestion, engine, ResponseFeedback
@@ -24,6 +23,10 @@ from app.auto_trainer import auto_trainer
 from sqlalchemy import text
 from app.training_data_loader import training_loader
 from app.qr_generator import qr_generator, duoc_url_manager
+
+# 👇 NUEVAS IMPORTACIONES PARA SISTEMA DE REPORTES
+from app.report_generator import report_generator
+from app.report_models import ReportRequest, EmailRequest
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -1065,6 +1068,102 @@ async def test_semantic_cache():
     except Exception as e:
         logger.error(f"Error en test de cache semántico: {e}")
         return {"status": "error", "error": str(e)}
+
+# 👇 NUEVOS ENDPOINTS PARA SISTEMA DE REPORTES
+@app.get("/reports/types")
+async def get_report_types():
+    """Obtener los tipos de reportes disponibles"""
+    return {
+        "available_reports": [
+            {"id": "daily", "name": "Reporte Diario", "days": 1},
+            {"id": "weekly", "name": "Reporte Semanal", "days": 7},
+            {"id": "biweekly", "name": "Reporte Quincenal", "days": 15},
+            {"id": "triweekly", "name": "Reporte de 3 Semanas", "days": 21},
+            {"id": "monthly", "name": "Reporte Mensual", "days": 30}
+        ],
+        "features": {
+            "pdf_generation": True,
+            "email_delivery": True,
+            "custom_periods": False
+        }
+    }
+
+@app.post("/reports/generate")
+async def generate_report(request: ReportRequest, background_tasks: BackgroundTasks):
+    """Generar un reporte basado en el período solicitado"""
+    try:
+        logger.info(f"📊 Generando reporte para {request.period_days} días")
+        
+        # Generar reporte inmediato
+        report_data = report_generator.generate_basic_report(request.period_days)
+        
+        # Si se solicita PDF, programar generación en background
+        pdf_data = None
+        if request.include_pdf:
+            background_tasks.add_task(
+                report_generator.generate_pdf_report,
+                report_data,
+                f"reporte_{request.period_days}dias_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
+            )
+            pdf_data = {
+                "status": "processing",
+                "filename": f"reporte_{request.period_days}dias_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
+            }
+        
+        return {
+            "status": "success",
+            "report_id": f"rep_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            "period_days": request.period_days,
+            "generated_at": datetime.now().isoformat(),
+            "data": report_data,
+            "pdf": pdf_data
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generando reporte: {e}")
+        raise HTTPException(status_code=500, detail=f"Error generando reporte: {str(e)}")
+
+@app.post("/reports/send-email")
+async def send_report_email(request: EmailRequest):
+    """Enviar reporte por correo electrónico"""
+    try:
+        logger.info(f"📧 Enviando reporte a {request.email}")
+        
+        # Generar reporte primero
+        report_data = report_generator.generate_basic_report(request.period_days)
+        
+        # Enviar por email
+        success = report_generator.send_report_by_email(
+            email=request.email,
+            report_data=report_data,
+            period_days=request.period_days
+        )
+        
+        if success:
+            return {
+                "status": "success",
+                "message": f"Reporte enviado exitosamente a {request.email}",
+                "period_days": request.period_days,
+                "sent_at": datetime.now().isoformat()
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Error enviando email")
+            
+    except Exception as e:
+        logger.error(f"Error enviando reporte por email: {e}")
+        raise HTTPException(status_code=500, detail=f"Error enviando email: {str(e)}")
+
+@app.get("/reports/status/{report_id}")
+async def get_report_status(report_id: str):
+    """Obtener estado de un reporte generado"""
+    # Por ahora retornamos estado simulado
+    return {
+        "report_id": report_id,
+        "status": "completed",
+        "progress": 100,
+        "download_url": None,
+        "generated_at": datetime.now().isoformat()
+    }
 
 if __name__ == "__main__":
     import uvicorn
