@@ -1,0 +1,7 @@
+
+/* Asegurar que el modal esté por encima de todo */
+.navbar {
+    position: relative;
+    z-index: 100;
+}
+
