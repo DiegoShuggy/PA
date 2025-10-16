@@ -29,6 +29,7 @@
   flex: 1;
   /* Ocupa 1 parte del espacio disponible */
   justify-content: flex-start;
+  width: 'fit-content'
   /* Alinea a la izquierda */
 }
 
@@ -59,7 +60,7 @@
 .navbar-links {
   display: flex;
   gap: 2rem;
-  flex: 1;
+ 
   /* Ocupa 1 parte del espacio disponible */
   justify-content: flex-end;
   /* Alinea a la derecha */

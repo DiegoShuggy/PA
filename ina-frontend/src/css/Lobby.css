@@ -119,7 +119,8 @@
   border-right: 6px solid rgb(242, 77, 25);
 }
 
-.language-selector-buttons {
+.language-selector-button {
+
   background-color: rgb(0, 237, 164);
   border-left: 4px solid #0038A8;
   border-top: 4px solid #0038A8;
@@ -136,19 +137,15 @@
 
 /* Language Selector Base Styles */
 .language-option {
-  width: 100%;
-  padding: 10px 12px;
-  border: none;
-  background: none;
-  text-align: left;
-  cursor: pointer;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 /* Hover state for all language options */
@@ -260,4 +257,121 @@
 
 .FAQ:nth-child(12) {
   animation-delay: 1.6s;
+}
+/* Controles de accesibilidad */
+.accessibility-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+/* Botón de cambio automático de tamaño de fuente */
+.font-size-toggle-container {
+    display: inline-block;
+}
+
+.font-size-toggle-button {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.font-size-toggle-button:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.font-size-toggle-button:active {
+    transform: translateY(0);
+}
+
+.font-size-toggle-icon {
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Iconos diferentes para cada tamaño */
+.font-small .font-size-toggle-icon {
+    font-size: 14px;
+}
+
+.font-normal .font-size-toggle-icon {
+    font-size: 16px;
+}
+
+.font-large .font-size-toggle-icon {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.font-size-toggle-label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Efectos visuales para el cambio de tamaño */
+.font-size-toggle-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.font-size-toggle-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(0, 123, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.font-size-toggle-button:active::after {
+    width: 100px;
+    height: 100px;
+}
+
+/* Variables de tamaño de fuente */
+:root {
+    --font-size-small: 14px;
+    --font-size-normal: 16px;
+    --font-size-large: 18px;
+}
+
+.font-small {
+    font-size: var(--font-size-small);
+}
+
+.font-normal {
+    font-size: var(--font-size-normal);
+}
+
+.font-large {
+    font-size: var(--font-size-large);
+}
+
+/* Asegurar que los elementos escalen correctamente */
+.lobby-container h2 {
+    font-size: 1.5em;
+}
+
+.lobby-container h3 {
+    font-size: 1.2em;
+}
+
+.lobby-item span {
+    font-size: 1em;
 }

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import ina from '../img/InA6.png';
 
 const Reporte = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     
     // Estados para el sistema de reportes

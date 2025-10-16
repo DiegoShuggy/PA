@@ -37,7 +37,6 @@ const Chat: React.FC = () => {
   const recognitionRef = useRef<any>(null);
   const finalTranscriptRef = useRef('');
   const menuRef = useRef<HTMLDivElement>(null);
-  const languageMenuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
 
@@ -546,51 +545,6 @@ const Chat: React.FC = () => {
         <span className="back-arrow">←</span>
         {t('app.back')}
       </button>
-
-      {/* Selector de idioma */}
-      <div className="language-selector-container" ref={languageMenuRef}>
-        <button
-          className="language-selector-button"
-          onClick={toggleLanguageMenu}
-          title={t('chat.languageSelector')}
-          type="button"
-        >
-          <span className="language-icon">🌐</span>
-          <span className="current-language">
-            {i18n.language === 'es' ? 'ES' : i18n.language === 'fr' ? 'FR' : 'EN'}
-          </span>
-        </button>
-
-        {isLanguageMenuOpen && (
-          <div className="language-dropdown-menu">
-            <button
-              className={`language-option ${i18n.language === 'es' ? 'active' : ''}`}
-              onClick={() => changeLanguage('es')}
-              type="button"
-            >
-              <span className="flag">🇪🇸</span>
-              Español
-            </button>
-            <button
-              className={`language-option ${i18n.language === 'en' ? 'active' : ''}`}
-              onClick={() => changeLanguage('en')}
-              type="button"
-            >
-              <span className="flag">🇺🇸</span>
-              English
-            </button>
-            <button
-              className={`language-option ${i18n.language === 'fr' ? 'active' : ''}`}
-              onClick={() => changeLanguage('fr')}
-              type="button"
-            >
-              <span className="flag">🇫🇷</span>
-              Français
-            </button>
-          </div>
-        )}
-      </div>
-
       {/* Botón del menú flotante */}
       <div className="floating-menu-container" ref={menuRef}>
         <button

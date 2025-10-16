@@ -53,8 +53,8 @@ function NavBar() {
             <nav className="navbar">
                 <div className="navbar-menu_container">
                     {/* Logo con funcionalidad secreta */}
-                    <div className="navbar-brand" onClick={handleSecretClick}>
-                        <img src={logo} alt="Logo" className="navbar-logo" />
+                    <div className="navbar-brand">
+                        <img src={logo} alt="Logo" className="navbar-logo"  onClick={handleSecretClick} />
                     </div>
 
                     <header className="app-header">

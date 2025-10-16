@@ -31,9 +31,6 @@
     transform: translateX(-5px);
 }
 
-.navbar-brand {
-    cursor: pointer;
-}
 
 .navbar-logo {
     height: 60px;
