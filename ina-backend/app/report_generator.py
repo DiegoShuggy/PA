@@ -7,6 +7,8 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+from email.header import Header  # 👈 AGREGAR ESTO
+from email.utils import formataddr  # 👈 AGREGAR ESTO
 
 # Importar nuevos módulos
 from app.pdf_generator import pdf_generator
@@ -92,7 +94,7 @@ class ReportGenerator:
             }
     
     def send_report_by_email(self, email: str, report_data: dict, period_days: int, include_pdf: bool = True):
-        """Enviar reporte por correo electrónico REAL"""
+        """Enviar reporte por correo electrónico REAL - CORREGIDO PARA UTF-8"""
         try:
             # Verificar configuración SMTP
             if not self.smtp_config.is_configured():
@@ -104,20 +106,20 @@ class ReportGenerator:
             
             logger.info(f"📧 Enviando email REAL a: {email}")
             
-            # Crear mensaje
+            # Crear mensaje CON CODIFICACIÓN UTF-8
             msg = MIMEMultipart()
-            msg["Subject"] = f"📊 Reporte InA - Últimos {period_days} días"
-            msg["From"] = self.smtp_config.from_email
+            msg["Subject"] = Header(f"📊 Reporte InA - Últimos {period_days} días", 'utf-8')  # 👈 CORREGIDO
+            msg["From"] = formataddr((str(Header('InA - Asistente Virtual Duoc UC', 'utf-8')), self.smtp_config.from_email))  # 👈 CORREGIDO
             msg["To"] = email
             
-            # Cuerpo del email en texto plano
+            # Cuerpo del email en texto plano CON UTF-8
             text_content = self._format_email_text(report_data, period_days)
-            text_part = MIMEText(text_content, "plain")
+            text_part = MIMEText(text_content, "plain", "utf-8")  # 👈 CORREGIDO
             msg.attach(text_part)
             
-            # Cuerpo del email en HTML
+            # Cuerpo del email en HTML CON UTF-8
             html_content = self._format_email_html(report_data, period_days)
-            html_part = MIMEText(html_content, "html")
+            html_part = MIMEText(html_content, "html", "utf-8")  # 👈 CORREGIDO
             msg.attach(html_part)
             
             # Adjuntar PDF si se solicita
@@ -129,7 +131,7 @@ class ReportGenerator:
                         pdf_attachment.add_header(
                             'Content-Disposition', 
                             'attachment', 
-                            filename=pdf_result["filename"]
+                            filename=Header(pdf_result["filename"], 'utf-8').encode()  # 👈 CORREGIDO
                         )
                         msg.attach(pdf_attachment)
                     logger.info(f"✅ PDF adjuntado: {pdf_result['filename']}")
@@ -166,16 +168,16 @@ class ReportGenerator:
         
         return f"""
 REPORTE INA - ASISTENTE VIRTUAL DUOC UC
-Período: Últimos {period_days} días
+Periodo: Ultimos {period_days} dias
 Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}
 
-📈 MÉTRICAS PRINCIPALES
+📈 METRICAS PRINCIPALES
 • Total de consultas: {summary['total_consultas']}
 • Consultas sin respuesta: {summary['consultas_sin_respuesta']}
 • Tasa de respuesta: {summary['tasa_respuesta']:.1f}%
 • Total de conversaciones: {summary['total_conversaciones']}
 • Total de feedback: {summary['total_feedback']}
-• Tasa de satisfacción: {summary['tasa_satisfaccion']:.1f}%
+• Tasa de satisfaccion: {summary['tasa_satisfaccion']:.1f}%
 
 🎯 FEEDBACK DE USUARIOS
 • Respuestas evaluadas: {feedback['respuestas_evaluadas']}
@@ -183,7 +185,7 @@ Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}
 • Feedback negativo: {feedback['feedback_negativo']}
 • Rating promedio: {feedback['rating_promedio']}/5
 
-📊 CATEGORÍAS MÁS CONSULTADAS
+📊 CATEGORIAS MAS CONSULTADAS
 {self._format_categories_text(report_data['categorias_populares'])}
 
 🔍 PROBLEMAS IDENTIFICADOS
@@ -191,8 +193,8 @@ Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}
 • Quejas comunes: {len(report_data['problemas_comunes']['quejas_frecuentes'])}
 
 ---
-Este es un reporte automático generado por el sistema InA.
-El reporte PDF detallado está adjunto a este email.
+Este es un reporte automatico generado por el sistema InA.
+El reporte PDF detallado esta adjunto a este email.
         """
     
     def _format_email_html(self, report_data: dict, period_days: int) -> str:
@@ -204,6 +206,7 @@ El reporte PDF detallado está adjunto a este email.
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <style>
         body {{ font-family: Arial, sans-serif; margin: 20px; }}
         .header {{ background: #2c3e50; color: white; padding: 20px; border-radius: 5px; }}
@@ -216,22 +219,22 @@ El reporte PDF detallado está adjunto a este email.
 <body>
     <div class="header">
         <h1>📊 REPORTE INA - ASISTENTE VIRTUAL DUOC UC</h1>
-        <p>Período: Últimos {period_days} días | Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>
+        <p>Periodo: Ultimos {period_days} dias | Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>
     </div>
     
     <div class="info-box">
-        <strong>📎 El reporte PDF detallado está adjunto a este email</strong>
+        <strong>📎 El reporte PDF detallado esta adjunto a este email</strong>
     </div>
     
     <div class="metric">
-        <h2>📈 Métricas Principales</h2>
+        <h2>📈 Metricas Principales</h2>
         <ul>
             <li><strong>Total de consultas:</strong> {summary['total_consultas']}</li>
             <li><strong>Consultas sin respuesta:</strong> {summary['consultas_sin_respuesta']}</li>
             <li><strong>Tasa de respuesta:</strong> {summary['tasa_respuesta']:.1f}%</li>
             <li><strong>Total de conversaciones:</strong> {summary['total_conversaciones']}</li>
             <li><strong>Total de feedback:</strong> {summary['total_feedback']}</li>
-            <li><strong>Tasa de satisfacción:</strong> {summary['tasa_satisfaccion']:.1f}%</li>
+            <li><strong>Tasa de satisfaccion:</strong> {summary['tasa_satisfaccion']:.1f}%</li>
         </ul>
     </div>
     
@@ -246,7 +249,7 @@ El reporte PDF detallado está adjunto a este email.
     </div>
     
     <div class="metric">
-        <h2>📊 Categorías Más Consultadas</h2>
+        <h2>📊 Categorias Mas Consultadas</h2>
         {self._format_categories_html(report_data['categorias_populares'])}
     </div>
     
@@ -259,7 +262,7 @@ El reporte PDF detallado está adjunto a este email.
     </div>
     
     <hr>
-    <p><em>Este es un reporte automático generado por el sistema InA - Asistente Virtual Duoc UC.</em></p>
+    <p><em>Este es un reporte automatico generado por el sistema InA - Asistente Virtual Duoc UC.</em></p>
 </body>
 </html>
         """
@@ -267,17 +270,19 @@ El reporte PDF detallado está adjunto a este email.
     def _format_categories_text(self, categories: dict) -> str:
         """Formatear categorías para texto plano"""
         if not categories:
-            return "  No hay datos de categorías disponibles"
+            return "  No hay datos de categorias disponibles"
         
         result = ""
         for category, count in list(categories.items())[:5]:  # Top 5
-            result += f"  • {category}: {count} consultas\n"
+            # Reemplazar caracteres problemáticos
+            safe_category = category.replace('ñ', 'n').replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')
+            result += f"  • {safe_category}: {count} consultas\n"
         return result
     
     def _format_categories_html(self, categories: dict) -> str:
         """Formatear categorías para HTML"""
         if not categories:
-            return "<p>No hay datos de categorías disponibles</p>"
+            return "<p>No hay datos de categorias disponibles</p>"
         
         html = "<ul>"
         for category, count in list(categories.items())[:5]:  # Top 5

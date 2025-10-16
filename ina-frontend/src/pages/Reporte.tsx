@@ -1,151 +1,284 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../css/Reporte.css';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
-import ina from '../img/InA6.png'
+import ina from '../img/InA6.png';
 
 const Reporte = () => {
-        console.log('Reporte component is rendering');
-    const [password, setPassword] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [error, setError] = useState('');
-    const [clickCount, setClickCount] = useState(0);
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
-    const languageMenuRef = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+    
+    // Estados para el sistema de reportes
+    const [selectedPeriod, setSelectedPeriod] = useState<number>(1);
+    const [isGenerating, setIsGenerating] = useState<boolean>(false);
+    const [isSendingEmail, setIsSendingEmail] = useState<boolean>(false);
+    const [reportData, setReportData] = useState<any>(null);
+    const [error, setError] = useState<string>('');
+    const [success, setSuccess] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [showEmailForm, setShowEmailForm] = useState<boolean>(false);
 
-    // Contraseña fija
-    const fixedPassword = "hola";
+    // Opciones de período
+    const periodOptions = [
+        { value: 1, label: '1 Día' },
+        { value: 7, label: '1 Semana' },
+        { value: 14, label: '2 Semanas' },
+        { value: 21, label: '3 Semanas' },
+        { value: 30, label: '1 Mes' }
+    ];
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    // Función para generar reporte
+    const generateReport = async () => {
+        setIsGenerating(true);
+        setError('');
+        setSuccess('');
+        
+        try {
+            const response = await fetch('http://localhost:8000/reports/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    period_days: selectedPeriod,
+                    include_pdf: true
+                })
+            });
 
-        if (password === fixedPassword) {
-            setIsAuthenticated(true);
-            setError('');
-        } else {
-            setError('Contraseña incorrecta');
-            setPassword('');
-        }
-    };
-
-    // Función para manejar el clic secreto
-    const handleSecretClick = () => {
-        // Limpiar temporizador anterior si existe
-
-        const newCount = clickCount + 1;
-        setClickCount(newCount);
-
-        // Si llega a 10 clics, mostrar alerta y resetear
-        if (newCount >= 10) {
-            alert('¡Has descubierto la funcionalidad secreta!');
-            setClickCount(0);
-        }
-    };
-
-    // Cleanup del temporizador al desmontar el componente
-
-    if (isAuthenticated) {
-        return (
-            <div>
-                <h1>Contenido Protegido</h1>
-                <p>¡Bienvenido! Has accedido correctamente.</p>
-            </div>
-        );
-    }
-    // Función para volver a la página anterior
-    const handleGoBack = () => {
-        navigate(-1); // -1 significa ir a la página anterior en el historial
-    };
-
-    // Cerrar menú de idiomas al hacer clic fuera
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (languageMenuRef.current && !languageMenuRef.current.contains(event.target as Node)) {
-                setIsLanguageMenuOpen(false);
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                setReportData(data.data);
+                setSuccess(`✅ Reporte generado exitosamente para ${selectedPeriod} días`);
+                
+                // Mostrar información del PDF generado
+                if (data.pdf) {
+                    setSuccess(prev => prev + `\n📄 PDF: ${data.pdf.filename}`);
+                }
+                
+            } else {
+                setError('❌ Error generando el reporte');
             }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-    // Función para cambiar idioma
-    const changeLanguage = (lng: string) => {
-        i18n.changeLanguage(lng);
-        setIsLanguageMenuOpen(false);
+        } catch (err) {
+            setError('❌ Error de conexión con el servidor');
+            console.error('Error:', err);
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
+    // Función para enviar reporte por email
+    // Función para enviar reporte por email
+const sendReportByEmail = async () => {
+    if (!email) {
+        setError('❌ Por favor ingresa un correo electrónico');
+        return;
+    }
+
+    // Validación básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        setError('❌ Por favor ingresa un correo electrónico válido');
+        return;
+    }
+
+    setIsSendingEmail(true);
+    setError('');
+    
+    try {
+        const response = await fetch('http://localhost:8000/reports/send-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                period_days: selectedPeriod,
+                report_type: "basic"
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            setSuccess(`✅ Reporte enviado exitosamente a: ${email}`);
+            setShowEmailForm(false);
+            setEmail('');
+        } else {
+            // Mostrar mensaje de error más específico
+            const errorMessage = data.message || 'Error desconocido';
+            if (errorMessage.includes('SMTP') || errorMessage.includes('configuración')) {
+                setError('❌ Error de configuración del servidor de correo. Contacta al administrador.');
+            } else {
+                setError(`❌ Error enviando email: ${errorMessage}`);
+            }
+        }
+    } catch (err) {
+        setError('❌ Error de conexión con el servidor');
+        console.error('Error:', err);
+    } finally {
+        setIsSendingEmail(false);
+    }
+};
+
+    // Función para volver
+    const handleGoBack = () => {
+        navigate(-1);
+    };
 
     return (
-
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            {/* Botón para volver atrás */}
-            <button
-                className="back-button"
-                onClick={handleGoBack}
-                title={t('app.backButton', 'Volver atrás')}
-            >
-                <span className="back-arrow">←</span>
-                {t('Asuntos.back', 'Volver')}
-            </button>
-
-            {/* Selector de idiomas */}
-            <div className="language-selector-container" ref={languageMenuRef}>
-                <button
-                    className="language-selector-button"
-                    onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
-                    title={t('chat.languageSelector', 'Seleccionar idioma')}
-                    type="button"
-                >
-                    <span className="language-icon">🌐</span>
-                    <span className="current-language">
-                        {i18n.language === 'es' ? 'ES' : i18n.language === 'fr' ? 'FR' : 'EN'}
-                    </span>
+        <div className="reporte-container">
+            {/* Header con botones de navegación */}
+            <div className="reporte-header">
+                <button className="back-button" onClick={handleGoBack}>
+                    <span className="back-arrow">←</span>
+                    {t('Asuntos.back', 'Volver')}
                 </button>
+                
+                <div className="navbar-brand">
+                    <img src={ina} alt="Logo InA" className="navbar-logo" />
+                </div>
+            </div>
 
-                {isLanguageMenuOpen && (
-                    <div className="language-dropdown-menu">
-                        <button
-                            className={`language-option ${i18n.language === 'es' ? 'active' : ''}`}
-                            onClick={() => changeLanguage('es')}
-                            type="button"
-                        >
-                            <span className="flag">🇪🇸</span>
-                            Español
-                        </button>
-                        <button
-                            className={`language-option ${i18n.language === 'en' ? 'active' : ''}`}
-                            onClick={() => changeLanguage('en')}
-                            type="button"
-                        >
-                            <span className="flag">🇺🇸</span>
-                            English
-                        </button>
-                        <button
-                            className={`language-option ${i18n.language === 'fr' ? 'active' : ''}`}
-                            onClick={() => changeLanguage('fr')}
-                            type="button"
-                        >
-                            <span className="flag">🇫🇷</span>
-                            Français
-                        </button>
+            {/* Contenido principal */}
+            <div className="reporte-content">
+                <h1 className="reporte-title">📊 Generar Reporte de Consultas</h1>
+                <p className="reporte-subtitle">
+                    Selecciona el período para generar un reporte detallado de las consultas realizadas
+                </p>
+
+                {/* Selector de período */}
+                <div className="period-selector">
+                    <label htmlFor="period-select" className="period-label">
+                        Período del Reporte:
+                    </label>
+                    <select
+                        id="period-select"
+                        value={selectedPeriod}
+                        onChange={(e) => setSelectedPeriod(Number(e.target.value))}
+                        className="period-select"
+                    >
+                        {periodOptions.map(option => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Botones de acción */}
+                <div className="action-buttons">
+                    <button
+                        onClick={generateReport}
+                        disabled={isGenerating}
+                        className={`generate-button ${isGenerating ? 'generating' : ''}`}
+                    >
+                        {isGenerating ? '🔄 Generando...' : '📄 Generar Reporte PDF'}
+                    </button>
+
+                    <button
+                        onClick={() => setShowEmailForm(!showEmailForm)}
+                        className="email-toggle-button"
+                    >
+                        📧 {showEmailForm ? 'Cancelar Envío' : 'Enviar por Email'}
+                    </button>
+                </div>
+
+                {/* Formulario de email */}
+                {showEmailForm && (
+                    <div className="email-form">
+                        <h3>📨 Enviar Reporte por Correo</h3>
+                        <div className="email-input-group">
+                            <input
+                                type="email"
+                                placeholder="Ingresa tu correo electrónico"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="email-input"
+                                disabled={isSendingEmail}
+                            />
+                            <button
+                                onClick={sendReportByEmail}
+                                disabled={isSendingEmail || !email}
+                                className="send-email-button"
+                            >
+                                {isSendingEmail ? '📤 Enviando...' : '📤 Enviar Reporte'}
+                            </button>
+                        </div>
+                        <p className="email-note">
+                            El reporte se enviará como PDF adjunto al correo especificado.
+                        </p>
+                    </div>
+                )}
+
+                {/* Mensajes de estado */}
+                {error && (
+                    <div className="message error-message">
+                        {error}
+                    </div>
+                )}
+                
+                {success && (
+                    <div className="message success-message">
+                        {success.split('\n').map((line, index) => (
+                            <div key={index}>{line}</div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Vista previa del reporte */}
+                {reportData && (
+                    <div className="report-preview">
+                        <h3>📋 Vista Previa del Reporte</h3>
+                        
+                        <div className="preview-grid">
+                            <div className="preview-card">
+                                <h4>📈 Métricas Principales</h4>
+                                <p><strong>Total Consultas:</strong> {reportData.summary_metrics?.total_consultas || 0}</p>
+                                <p><strong>Consultas sin Respuesta:</strong> {reportData.summary_metrics?.consultas_sin_respuesta || 0}</p>
+                                <p><strong>Tasa de Respuesta:</strong> {reportData.summary_metrics?.tasa_respuesta?.toFixed(1) || 0}%</p>
+                                <p><strong>Tasa de Satisfacción:</strong> {reportData.summary_metrics?.tasa_satisfaccion?.toFixed(1) || 0}%</p>
+                            </div>
+                            
+                            <div className="preview-card">
+                                <h4>🎯 Feedback</h4>
+                                <p><strong>Respuestas Evaluadas:</strong> {reportData.feedback_detallado?.respuestas_evaluadas || 0}</p>
+                                <p><strong>Feedback Positivo:</strong> {reportData.feedback_detallado?.feedback_positivo || 0}</p>
+                                <p><strong>Feedback Negativo:</strong> {reportData.feedback_detallado?.feedback_negativo || 0}</p>
+                                <p><strong>Rating Promedio:</strong> {reportData.feedback_detallado?.rating_promedio?.toFixed(1) || 0}/5</p>
+                            </div>
+                        </div>
+
+                        {/* Categorías populares */}
+                        {reportData.categorias_populares && Object.keys(reportData.categorias_populares).length > 0 && (
+                            <div className="preview-card full-width">
+                                <h4>📊 Categorías Más Consultadas</h4>
+                                <div className="categories-list">
+                                    {Object.entries(reportData.categorias_populares)
+                                        .slice(0, 5)
+                                        .map(([category, count]) => (
+                                            <div key={category} className="category-item">
+                                                <span className="category-name">{category}</span>
+                                                <span className="category-count">{count as number} consultas</span>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Información del período */}
+                        <div className="preview-card full-width">
+                            <h4>📅 Información del Período</h4>
+                            <p><strong>Período analizado:</strong> {selectedPeriod} día{selectedPeriod !== 1 ? 's' : ''}</p>
+                            <p><strong>Fecha de inicio:</strong> {new Date(reportData.report_metadata?.period_range?.start).toLocaleDateString()}</p>
+                            <p><strong>Fecha de fin:</strong> {new Date(reportData.report_metadata?.period_range?.end).toLocaleDateString()}</p>
+                            <p><strong>Generado el:</strong> {new Date(reportData.report_metadata?.generated_at).toLocaleString()}</p>
+                        </div>
                     </div>
                 )}
             </div>
-<div className="navbar-menu_container">
-                    {/* Logo con funcionalidad secreta */}
-                    <div className="navbar-brand" onClick={handleSecretClick}>
-                        <img src={ina} alt="Logo" className="navbar-WAH" />
-                    </div>
-                    </div>
-                    </div>
+        </div>
     );
 };
 
