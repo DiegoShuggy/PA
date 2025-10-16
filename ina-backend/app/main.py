@@ -29,6 +29,13 @@ from app.qr_generator import qr_generator, duoc_url_manager
 from app.report_generator import report_generator
 from app.report_models import ReportRequest, EmailRequest
 
+# 👇 ✅ NUEVA IMPORTACIÓN PARA EMAIL CON GMAIL
+from app.email_sender import email_sender
+from dotenv import load_dotenv
+
+# Cargar variables de entorno
+load_dotenv()
+
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -141,6 +148,7 @@ def on_startup():
     training_loader.generate_knowledge_from_patterns()
     logger.info("✅ Base de datos y conocimiento histórico cargados")
     logger.info("✅ Sistema de filtros de contenido inicializado")
+    logger.info("✅ Sistema de emails Gmail configurado y listo")
 
 class Message(BaseModel):
     text: str
@@ -307,6 +315,9 @@ async def health_check():
         # Test de ChromaDB
         rag_status = "connected" if rag_engine.client.heartbeat() else "disconnected"
         
+        # Test de email
+        email_status = "configured" if email_sender.GMAIL_USER else "not_configured"
+        
         return {
             "status": "healthy", 
             "model": "mistral:7b",
@@ -314,7 +325,8 @@ async def health_check():
             "database": "connected",
             "chromadb": rag_status,
             "content_filter": "active",
-            "topic_classifier": "active"
+            "topic_classifier": "active",
+            "email_system": email_status  # 👈 NUEVO
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
@@ -347,7 +359,8 @@ async def root():
             "qr_codes": True,
             "feedback_system": True,
             "content_filter": True,  # 👈 NUEVA FUNCIONALIDAD
-            "topic_classifier": True  # 👈 NUEVA FUNCIONALIDAD
+            "topic_classifier": True,  # 👈 NUEVA FUNCIONALIDAD
+            "email_reports": True  # 👈 NUEVA FUNCIONALIDAD
         }
     }
 
@@ -577,7 +590,7 @@ async def generate_specific_qr(url: str):
 @app.post("/feedback/response")
 async def submit_response_feedback(request: dict):  # 👈 Acepta cualquier dict
     """
-    Endpoint DEBUG para ver qué está enviando exactamente el frontend
+    Endpoint DEBUG para ver qué está enviando exactmente el frontend
     """
     
     try:
@@ -1070,7 +1083,7 @@ async def test_semantic_cache():
         logger.error(f"Error en test de cache semántico: {e}")
         return {"status": "error", "error": str(e)}
 
-# 👇 NUEVOS ENDPOINTS PARA SISTEMA DE REPORTES
+# 👇 NUEVOS ENDPOINTS PARA SISTEMA DE REPORTES - ACTUALIZADO CON GMAIL
 @app.get("/reports/types")
 async def get_report_types():
     """Obtener los tipos de reportes disponibles"""
@@ -1126,33 +1139,59 @@ async def generate_report(request: ReportRequest, background_tasks: BackgroundTa
 
 @app.post("/reports/send-email")
 async def send_report_email(request: EmailRequest):
-    """Enviar reporte por correo electrónico"""
+    """Enviar reporte por correo electrónico con PDF adjunto"""
     try:
         logger.info(f"📧 Enviando reporte a {request.email}")
         
         # Generar reporte primero
         report_data = report_generator.generate_basic_report(request.period_days)
         
-        # Enviar por email
-        success = report_generator.send_report_by_email(
-            email=request.email,
+        # Generar PDF - CORREGIDO: obtener solo la ruta del archivo
+        pdf_filename = f"reporte_{request.period_days}dias_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
+        
+        # Llamar al generador de PDF y extraer la ruta real
+        pdf_result = report_generator.generate_pdf_report(report_data, pdf_filename)
+        
+        # Manejar diferentes tipos de retorno
+        if isinstance(pdf_result, dict) and 'file_path' in pdf_result:
+            # Si retorna un dict con file_path
+            pdf_path = pdf_result['file_path']
+        elif isinstance(pdf_result, str):
+            # Si retorna directamente la ruta
+            pdf_path = pdf_result
+        else:
+            # Si no se pudo generar PDF
+            pdf_path = None
+            logger.warning("⚠️ No se pudo obtener la ruta del PDF")
+        
+        # ✅ USAR NUESTRO SISTEMA GMAIL CONFIGURADO CON PDF ADJUNTO
+        success = email_sender.send_report_notification(
+            to_email=request.email,
             report_data=report_data,
-            period_days=request.period_days
+            pdf_path=pdf_path  # 👈 ENVIAR PDF ADJUNTO
         )
         
         if success:
+            logger.info(f"✅ Reporte enviado exitosamente a {request.email}")
+            if pdf_path:
+                logger.info(f"📎 Con PDF adjunto: {pdf_path}")
+            
             return {
                 "status": "success",
-                "message": f"Reporte enviado exitosamente a {request.email}",
+                "message": f"Reporte enviado exitosamente a {request.email}" + (" con PDF adjunto" if pdf_path else ""),
                 "period_days": request.period_days,
+                "pdf_generated": pdf_path is not None,
+                "pdf_filename": os.path.basename(pdf_path) if pdf_path else None,
                 "sent_at": datetime.now().isoformat()
             }
         else:
-            raise HTTPException(status_code=500, detail="Error enviando email")
+            logger.error(f"❌ Error enviando reporte a {request.email}")
+            raise HTTPException(status_code=500, detail="Error enviando email con Gmail")
             
     except Exception as e:
         logger.error(f"Error enviando reporte por email: {e}")
         raise HTTPException(status_code=500, detail=f"Error enviando email: {str(e)}")
+    
 
 @app.get("/reports/status/{report_id}")
 async def get_report_status(report_id: str):
@@ -1165,6 +1204,43 @@ async def get_report_status(report_id: str):
         "download_url": None,
         "generated_at": datetime.now().isoformat()
     }
+
+# 👇 NUEVO ENDPOINT PARA PROBAR EMAILS DIRECTAMENTE
+@app.post("/test-email")
+async def test_email_system(to_email: str = "shaggynator64@gmail.com"):
+    """Endpoint para probar el sistema de emails directamente"""
+    try:
+        logger.info(f"🧪 Probando sistema de emails enviando a {to_email}")
+        
+        success = email_sender.send_email(
+            to_email=to_email,
+            subject="🧪 Test Sistema InA - Email Funcionando",
+            message="""
+            ¡FELICIDADES! 🎉
+
+            El sistema de emails de InA está funcionando correctamente.
+
+            Configuración:
+            - Servicio: Gmail SMTP
+            - Autenticación: App Password
+            - Estado: ✅ OPERATIVO
+
+            Sistema de Reportes InA - DUOC UC
+            """
+        )
+        
+        if success:
+            return {
+                "status": "success",
+                "message": f"Email de prueba enviado exitosamente a {to_email}",
+                "timestamp": datetime.now().isoformat()
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Error enviando email de prueba")
+            
+    except Exception as e:
+        logger.error(f"Error en test de email: {e}")
+        raise HTTPException(status_code=500, detail=f"Error en test de email: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

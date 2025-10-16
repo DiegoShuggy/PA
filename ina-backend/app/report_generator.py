@@ -1,25 +1,25 @@
+# report_generator.py
 import logging
 import os
 from datetime import datetime, timedelta
 from app.analytics import get_detailed_period_stats
 from app.feedback import response_feedback_system
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-from email.header import Header  # 👈 AGREGAR ESTO
-from email.utils import formataddr  # 👈 AGREGAR ESTO
+
+# 👇 ELIMINAR IMPORTACIONES VIEJAS DE EMAIL
+# ❌ QUITAR: import smtplib, MIMEText, MIMEMultipart, MIMEApplication, Header, formataddr
 
 # Importar nuevos módulos
 from app.pdf_generator import pdf_generator
-from app.email_config import email_config
+
+# 👇 IMPORTAR NUESTRO NUEVO SISTEMA DE EMAIL
+from app.email_sender import email_sender
 
 logger = logging.getLogger(__name__)
 
 class ReportGenerator:
     def __init__(self):
-        # Usar la configuración centralizada de email
-        self.smtp_config = email_config
+        # 👇 YA NO USAMOS email_config, usamos email_sender
+        pass
     
     def generate_basic_report(self, period_days: int):
         """Generar reporte básico sin gráficos"""
@@ -78,83 +78,63 @@ class ReportGenerator:
             # Usar el generador de PDFs profesional
             pdf_path = pdf_generator.generate_report_pdf(report_data, filename)
             
-            return {
-                "status": "success",
-                "filename": filename,
-                "pdf_path": pdf_path,
-                "message": "PDF generado exitosamente"
-            }
+            # 👇 CORREGIDO: Retornar SOLO la ruta del archivo, no un dict
+            return pdf_path  # ← Solo la ruta para que funcione con email_sender
             
         except Exception as e:
             logger.error(f"❌ Error generando PDF: {e}")
-            return {
-                "status": "error", 
-                "error": str(e),
-                "message": "Error generando PDF"
-            }
+            return None  # ← Retornar None en caso de error
     
     def send_report_by_email(self, email: str, report_data: dict, period_days: int, include_pdf: bool = True):
-        """Enviar reporte por correo electrónico REAL - CORREGIDO PARA UTF-8"""
+        """Enviar reporte por correo electrónico usando Gmail App Password"""
         try:
-            # Verificar configuración SMTP
-            if not self.smtp_config.is_configured():
-                logger.warning("⚠️ Configuración SMTP no disponible, no se puede enviar email real")
+            logger.info(f"📧 Enviando email a: {email}")
+            
+            # Generar PDF si se solicita
+            pdf_path = None
+            if include_pdf:
+                try:
+                    pdf_filename = f"reporte_ina_{period_days}dias_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
+                    pdf_path = self.generate_pdf_report(report_data, pdf_filename)
+                    
+                    if pdf_path and os.path.exists(pdf_path):
+                        logger.info(f"✅ PDF generado: {pdf_path}")
+                    else:
+                        logger.warning("⚠️ No se pudo generar PDF, enviando solo email")
+                        pdf_path = None
+                        
+                except Exception as pdf_error:
+                    logger.warning(f"⚠️ Error generando PDF: {pdf_error}")
+                    pdf_path = None
+            
+            # 👇 USAR NUESTRO NUEVO SISTEMA DE EMAIL
+            success = email_sender.send_report_notification(
+                to_email=email,
+                report_data=report_data,
+                pdf_path=pdf_path
+            )
+            
+            if success:
+                logger.info(f"✅ Email enviado exitosamente a {email}")
+                if pdf_path:
+                    logger.info(f"📎 Con PDF adjunto: {os.path.basename(pdf_path)}")
+                
+                return {
+                    "status": "success",
+                    "message": f"Reporte enviado exitosamente a {email}" + (" con PDF adjunto" if pdf_path else ""),
+                    "email_sent": True,
+                    "pdf_attached": pdf_path is not None
+                }
+            else:
+                logger.error(f"❌ Error enviando email a {email}")
                 return {
                     "status": "error",
-                    "message": "Configuración SMTP no disponible. Configura las variables de entorno en .env"
+                    "message": "Error enviando email con Gmail",
+                    "email_sent": False
                 }
             
-            logger.info(f"📧 Enviando email REAL a: {email}")
-            
-            # Crear mensaje CON CODIFICACIÓN UTF-8
-            msg = MIMEMultipart()
-            msg["Subject"] = Header(f"📊 Reporte InA - Últimos {period_days} días", 'utf-8')  # 👈 CORREGIDO
-            msg["From"] = formataddr((str(Header('InA - Asistente Virtual Duoc UC', 'utf-8')), self.smtp_config.from_email))  # 👈 CORREGIDO
-            msg["To"] = email
-            
-            # Cuerpo del email en texto plano CON UTF-8
-            text_content = self._format_email_text(report_data, period_days)
-            text_part = MIMEText(text_content, "plain", "utf-8")  # 👈 CORREGIDO
-            msg.attach(text_part)
-            
-            # Cuerpo del email en HTML CON UTF-8
-            html_content = self._format_email_html(report_data, period_days)
-            html_part = MIMEText(html_content, "html", "utf-8")  # 👈 CORREGIDO
-            msg.attach(html_part)
-            
-            # Adjuntar PDF si se solicita
-            if include_pdf:
-                pdf_result = self.generate_pdf_report(report_data)
-                if pdf_result["status"] == "success":
-                    with open(pdf_result["pdf_path"], "rb") as pdf_file:
-                        pdf_attachment = MIMEApplication(pdf_file.read(), _subtype="pdf")
-                        pdf_attachment.add_header(
-                            'Content-Disposition', 
-                            'attachment', 
-                            filename=Header(pdf_result["filename"], 'utf-8').encode()  # 👈 CORREGIDO
-                        )
-                        msg.attach(pdf_attachment)
-                    logger.info(f"✅ PDF adjuntado: {pdf_result['filename']}")
-                else:
-                    logger.warning("⚠️ No se pudo adjuntar PDF")
-            
-            # Enviar email REAL
-            with smtplib.SMTP(self.smtp_config.smtp_host, self.smtp_config.smtp_port) as server:
-                if self.smtp_config.use_tls:
-                    server.starttls()
-                server.login(self.smtp_config.smtp_username, self.smtp_config.smtp_password)
-                server.send_message(msg)
-            
-            logger.info(f"✅ Email REAL enviado exitosamente a {email}")
-            return {
-                "status": "success",
-                "message": f"Reporte enviado exitosamente a {email}",
-                "email_sent": True,
-                "pdf_attached": include_pdf
-            }
-            
         except Exception as e:
-            logger.error(f"❌ Error enviando email REAL: {e}")
+            logger.error(f"❌ Error enviando email: {e}")
             return {
                 "status": "error",
                 "message": f"Error enviando email: {str(e)}",
@@ -168,16 +148,16 @@ class ReportGenerator:
         
         return f"""
 REPORTE INA - ASISTENTE VIRTUAL DUOC UC
-Periodo: Ultimos {period_days} dias
+Periodo: Últimos {period_days} días
 Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}
 
-📈 METRICAS PRINCIPALES
+📈 MÉTRICAS PRINCIPALES
 • Total de consultas: {summary['total_consultas']}
 • Consultas sin respuesta: {summary['consultas_sin_respuesta']}
 • Tasa de respuesta: {summary['tasa_respuesta']:.1f}%
 • Total de conversaciones: {summary['total_conversaciones']}
 • Total de feedback: {summary['total_feedback']}
-• Tasa de satisfaccion: {summary['tasa_satisfaccion']:.1f}%
+• Tasa de satisfacción: {summary['tasa_satisfaccion']:.1f}%
 
 🎯 FEEDBACK DE USUARIOS
 • Respuestas evaluadas: {feedback['respuestas_evaluadas']}
@@ -185,7 +165,7 @@ Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}
 • Feedback negativo: {feedback['feedback_negativo']}
 • Rating promedio: {feedback['rating_promedio']}/5
 
-📊 CATEGORIAS MAS CONSULTADAS
+📊 CATEGORÍAS MÁS CONSULTADAS
 {self._format_categories_text(report_data['categorias_populares'])}
 
 🔍 PROBLEMAS IDENTIFICADOS
@@ -193,9 +173,8 @@ Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}
 • Quejas comunes: {len(report_data['problemas_comunes']['quejas_frecuentes'])}
 
 ---
-Este es un reporte automatico generado por el sistema InA.
-El reporte PDF detallado esta adjunto a este email.
-        """
+Este es un reporte automático generado por el sistema InA.
+"""
     
     def _format_email_html(self, report_data: dict, period_days: int) -> str:
         """Formatear contenido de email en HTML"""
@@ -219,22 +198,18 @@ El reporte PDF detallado esta adjunto a este email.
 <body>
     <div class="header">
         <h1>📊 REPORTE INA - ASISTENTE VIRTUAL DUOC UC</h1>
-        <p>Periodo: Ultimos {period_days} dias | Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>
-    </div>
-    
-    <div class="info-box">
-        <strong>📎 El reporte PDF detallado esta adjunto a este email</strong>
+        <p>Periodo: Últimos {period_days} días | Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>
     </div>
     
     <div class="metric">
-        <h2>📈 Metricas Principales</h2>
+        <h2>📈 Métricas Principales</h2>
         <ul>
             <li><strong>Total de consultas:</strong> {summary['total_consultas']}</li>
             <li><strong>Consultas sin respuesta:</strong> {summary['consultas_sin_respuesta']}</li>
             <li><strong>Tasa de respuesta:</strong> {summary['tasa_respuesta']:.1f}%</li>
             <li><strong>Total de conversaciones:</strong> {summary['total_conversaciones']}</li>
             <li><strong>Total de feedback:</strong> {summary['total_feedback']}</li>
-            <li><strong>Tasa de satisfaccion:</strong> {summary['tasa_satisfaccion']:.1f}%</li>
+            <li><strong>Tasa de satisfacción:</strong> {summary['tasa_satisfaccion']:.1f}%</li>
         </ul>
     </div>
     
@@ -249,7 +224,7 @@ El reporte PDF detallado esta adjunto a este email.
     </div>
     
     <div class="metric">
-        <h2>📊 Categorias Mas Consultadas</h2>
+        <h2>📊 Categorías Más Consultadas</h2>
         {self._format_categories_html(report_data['categorias_populares'])}
     </div>
     
@@ -262,7 +237,7 @@ El reporte PDF detallado esta adjunto a este email.
     </div>
     
     <hr>
-    <p><em>Este es un reporte automatico generado por el sistema InA - Asistente Virtual Duoc UC.</em></p>
+    <p><em>Este es un reporte automático generado por el sistema InA - Asistente Virtual Duoc UC.</em></p>
 </body>
 </html>
         """
@@ -270,19 +245,17 @@ El reporte PDF detallado esta adjunto a este email.
     def _format_categories_text(self, categories: dict) -> str:
         """Formatear categorías para texto plano"""
         if not categories:
-            return "  No hay datos de categorias disponibles"
+            return "  No hay datos de categorías disponibles"
         
         result = ""
         for category, count in list(categories.items())[:5]:  # Top 5
-            # Reemplazar caracteres problemáticos
-            safe_category = category.replace('ñ', 'n').replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')
-            result += f"  • {safe_category}: {count} consultas\n"
+            result += f"  • {category}: {count} consultas\n"
         return result
     
     def _format_categories_html(self, categories: dict) -> str:
         """Formatear categorías para HTML"""
         if not categories:
-            return "<p>No hay datos de categorias disponibles</p>"
+            return "<p>No hay datos de categorías disponibles</p>"
         
         html = "<ul>"
         for category, count in list(categories.items())[:5]:  # Top 5
