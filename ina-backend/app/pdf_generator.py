@@ -1,3 +1,4 @@
+# pdf_generator.py
 import logging
 from datetime import datetime
 from reportlab.pdfgen import canvas
@@ -48,6 +49,15 @@ class PDFGenerator:
                     textColor=colors.HexColor('#2c3e50'),
                     spaceAfter=3
                 ))
+            
+            if 'CustomSmall' not in self.styles:
+                self.styles.add(ParagraphStyle(
+                    name='CustomSmall',
+                    parent=self.styles['Normal'],
+                    fontSize=8,
+                    textColor=colors.HexColor('#666666'),
+                    spaceAfter=2
+                ))
                 
         except Exception as e:
             logger.warning(f"⚠️ Error configurando estilos personalizados: {e}")
@@ -58,7 +68,7 @@ class PDFGenerator:
     
     def generate_report_pdf(self, report_data: dict, filename: str) -> str:
         """
-        Generar reporte PDF profesional para Duoc UC
+        Generar reporte PDF profesional para Duoc UC CON MÉTRICAS AVANZADAS
         
         Args:
             report_data: Datos del reporte generado
@@ -68,7 +78,7 @@ class PDFGenerator:
             Ruta del archivo PDF generado
         """
         try:
-            logger.info(f"📄 Generando PDF profesional: {filename}")
+            logger.info(f"📄 Generando PDF profesional con métricas avanzadas: {filename}")
             
             # Crear documento
             doc = SimpleDocTemplate(
@@ -91,20 +101,24 @@ class PDFGenerator:
             story.extend(self._create_metrics_section(report_data))
             story.append(Spacer(1, 10))
             
-            # 3. Feedback y categorías
+            # 3. MÉTRICAS AVANZADAS - NUEVA SECCIÓN
+            story.extend(self._create_advanced_metrics_section(report_data))
+            story.append(Spacer(1, 10))
+            
+            # 4. Feedback y categorías
             story.extend(self._create_feedback_section(report_data))
             story.append(Spacer(1, 10))
             
-            # 4. Problemas identificados
+            # 5. Problemas identificados
             story.extend(self._create_problems_section(report_data))
             story.append(Spacer(1, 10))
             
-            # 5. Footer
+            # 6. Footer
             story.extend(self._create_footer(report_data))
             
             # Generar PDF
             doc.build(story)
-            logger.info(f"✅ PDF generado exitosamente: {filename}")
+            logger.info(f"✅ PDF con métricas avanzadas generado exitosamente: {filename}")
             return filename
             
         except Exception as e:
@@ -171,6 +185,152 @@ class PDFGenerator:
         
         elements.append(table)
         return elements
+    
+    def _create_advanced_metrics_section(self, report_data: dict):
+        """Crear sección de métricas avanzadas"""
+        elements = []
+        
+        try:
+            # Título de sección
+            title = Paragraph("🚀 MÉTRICAS AVANZADAS", self.styles['CustomSubtitle'])
+            elements.append(title)
+            elements.append(Spacer(1, 8))
+            
+            # Verificar si hay métricas avanzadas en el reporte
+            if 'advanced_metrics' in report_data:
+                advanced_metrics = report_data['advanced_metrics']
+                
+                # 1. ANÁLISIS TEMPORAL
+                temporal_title = Paragraph("📊 ANÁLISIS TEMPORAL", self.styles['Normal'])
+                elements.append(temporal_title)
+                elements.append(Spacer(1, 5))
+                
+                temporal = advanced_metrics.get('temporal_analysis', {})
+                hourly = temporal.get('hourly', {})
+                daily = temporal.get('daily', {})
+                trends = temporal.get('trends', {})
+                
+                # Información temporal clave
+                temporal_data = [
+                    ['Métrica Temporal', 'Valor'],
+                    ['Hora Pico', f"{hourly.get('peak_hour', 'N/A')} ({hourly.get('peak_volume', 0)} consultas)"],
+                    ['Día Más Activo', f"{daily.get('busiest_day', 'N/A')} ({daily.get('busiest_day_volume', 0)} consultas)"],
+                    ['Tendencia', f"{trends.get('trend_direction', '➡️')} {trends.get('trend_percentage', 0):.1f}%"]
+                ]
+                
+                temporal_table = Table(temporal_data, colWidths=[80*mm, 70*mm])
+                temporal_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#3498db')),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#ecf0f1')),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#bdc3c7'))
+                ]))
+                elements.append(temporal_table)
+                elements.append(Spacer(1, 10))
+                
+                # 2. RENDIMIENTO POR CATEGORÍA
+                cat_title = Paragraph("🎯 RENDIMIENTO POR CATEGORÍA", self.styles['Normal'])
+                elements.append(cat_title)
+                elements.append(Spacer(1, 5))
+                
+                categories = advanced_metrics.get('category_analysis', {})
+                if categories:
+                    # Crear tabla de categorías
+                    cat_data = [['Categoría', 'Consultas', 'Rating', 'Satisfacción']]
+                    
+                    for category, data in sorted(categories.items(), key=lambda x: x[1]['count'], reverse=True)[:6]:  # Top 6
+                        stars = data.get('satisfaction_stars', 'N/A')
+                        cat_data.append([
+                            category, 
+                            str(data.get('count', 0)),
+                            f"{data.get('avg_rating', 0)}/5",
+                            stars
+                        ])
+                    
+                    cat_table = Table(cat_data, colWidths=[50*mm, 25*mm, 25*mm, 40*mm])
+                    cat_table.setStyle(TableStyle([
+                        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#9b59b6')),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f4ecf7')),
+                        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#d2b4de')),
+                        ('FONTSIZE', (0, 0), (-1, -1), 8)
+                    ]))
+                    elements.append(cat_table)
+                    elements.append(Spacer(1, 10))
+                
+                # 3. PREGUNTAS RECURRENTES
+                recurrent_title = Paragraph("🔁 TOP CONSULTAS RECURRENTES", self.styles['Normal'])
+                elements.append(recurrent_title)
+                elements.append(Spacer(1, 5))
+                
+                recurrent_questions = advanced_metrics.get('recurrent_questions', [])
+                if recurrent_questions:
+                    for i, item in enumerate(recurrent_questions[:5], 1):
+                        question = item.get('question', '')
+                        # Acortar pregunta si es muy larga
+                        if len(question) > 80:
+                            question = question[:80] + "..."
+                        count = item.get('count', 0)
+                        
+                        question_text = f"{i}. '{question}' ({count} veces)"
+                        question_para = Paragraph(question_text, self.styles['CustomSmall'])
+                        elements.append(question_para)
+                    
+                    elements.append(Spacer(1, 10))
+                
+                # 4. MÉTRICAS DE PERFORMANCE
+                perf_title = Paragraph("⚡ MÉTRICAS DE PERFORMANCE", self.styles['Normal'])
+                elements.append(perf_title)
+                elements.append(Spacer(1, 5))
+                
+                performance = advanced_metrics.get('performance_metrics', {})
+                perf_data = [
+                    ['Métrica de Sistema', 'Valor'],
+                    ['Tiempo promedio respuesta', f"{performance.get('avg_response_time', 0):.2f}s"],
+                    ['Consultas únicas', f"{performance.get('unique_queries', 0)} ({100-performance.get('recurrence_rate', 0):.1f}%)"],
+                    ['Consultas recurrentes', f"{performance.get('recurrent_queries', 0)} ({performance.get('recurrence_rate', 0):.1f}%)"],
+                    ['Eficiencia sistema', f"{self._calculate_efficiency(performance):.1f}%"]
+                ]
+                
+                perf_table = Table(perf_data, colWidths=[70*mm, 50*mm])
+                perf_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#e67e22')),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#fdebd0')),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#f5b041'))
+                ]))
+                elements.append(perf_table)
+                
+            else:
+                # Si no hay métricas avanzadas, mostrar mensaje
+                no_data_msg = Paragraph("ℹ️ Las métricas avanzadas estarán disponibles en el próximo reporte.", self.styles['Italic'])
+                elements.append(no_data_msg)
+                
+        except Exception as e:
+            logger.error(f"Error creando sección avanzada: {e}")
+            error_msg = Paragraph("⚠️ No se pudieron cargar las métricas avanzadas", self.styles['Normal'])
+            elements.append(error_msg)
+        
+        return elements
+    
+    def _calculate_efficiency(self, performance_data):
+        """Calcular eficiencia del sistema"""
+        try:
+            recurrence_rate = performance_data.get('recurrence_rate', 0)
+            avg_response_time = performance_data.get('avg_response_time', 0)
+            
+            recurrence_score = max(0, 100 - recurrence_rate * 0.5)
+            time_score = max(0, 100 - avg_response_time * 10)
+            
+            return (recurrence_score + time_score) / 2
+        except:
+            return 0
     
     def _create_feedback_section(self, report_data: dict):
         """Crear sección de feedback y categorías"""
@@ -260,6 +420,11 @@ class PDFGenerator:
         footer_text = "Este es un reporte automático generado por el sistema InA - Asistente Virtual Duoc UC"
         footer = Paragraph(footer_text, self.styles['Italic'])
         elements.append(footer)
+        
+        # Agregar información de métricas avanzadas
+        advanced_footer = Paragraph("📊 Incluye métricas avanzadas: análisis temporal, rendimiento por categoría y preguntas recurrentes", 
+                                  self.styles['CustomSmall'])
+        elements.append(advanced_footer)
         
         return elements
 

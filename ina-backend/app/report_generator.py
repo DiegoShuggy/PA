@@ -5,13 +5,8 @@ from datetime import datetime, timedelta
 from app.analytics import get_detailed_period_stats
 from app.feedback import response_feedback_system
 
-# 👇 ELIMINAR IMPORTACIONES VIEJAS DE EMAIL
-# ❌ QUITAR: import smtplib, MIMEText, MIMEMultipart, MIMEApplication, Header, formataddr
-
 # Importar nuevos módulos
 from app.pdf_generator import pdf_generator
-
-# 👇 IMPORTAR NUESTRO NUEVO SISTEMA DE EMAIL
 from app.email_sender import email_sender
 
 logger = logging.getLogger(__name__)
@@ -22,7 +17,7 @@ class ReportGenerator:
         pass
     
     def generate_basic_report(self, period_days: int):
-        """Generar reporte básico sin gráficos"""
+        """Generar reporte básico CON MÉTRICAS AVANZADAS"""
         logger.info(f"📊 Generando reporte básico para {period_days} días")
         
         # Obtener datos de analytics
@@ -31,7 +26,31 @@ class ReportGenerator:
         # Obtener datos de feedback
         feedback_data = response_feedback_system.get_response_feedback_stats(period_days)
         
-        # Estructurar reporte
+        # OBTENER MÉTRICAS AVANZADAS
+        try:
+            from app.metrics_tracker import metrics_tracker
+            advanced_metrics = metrics_tracker.get_advanced_metrics(period_days)
+            logger.info(f"✅ Métricas avanzadas obtenidas: {len(advanced_metrics.get('category_analysis', {}))} categorías")
+        except Exception as e:
+            logger.error(f"❌ Error obteniendo métricas avanzadas: {e}")
+            advanced_metrics = {
+                "temporal_analysis": {
+                    "hourly": {"hourly_distribution": {}, "peak_hour": "N/A", "peak_volume": 0},
+                    "daily": {"daily_distribution": {}, "busiest_day": "N/A", "busiest_day_volume": 0},
+                    "trends": {"current_period": 0, "previous_period": 0, "trend_percentage": 0, "trend_direction": "➡️"}
+                },
+                "category_analysis": {},
+                "recurrent_questions": [],
+                "performance_metrics": {
+                    "avg_response_time": 0,
+                    "unique_queries": 0,
+                    "recurrent_queries": 0,
+                    "recurrence_rate": 0,
+                    "total_queries": 0
+                }
+            }
+        
+        # Estructurar reporte CON MÉTRICAS AVANZADAS
         report = {
             "report_metadata": {
                 "title": f"Reporte InA - {period_days} días",
@@ -62,7 +81,9 @@ class ReportGenerator:
                 "preguntas_no_resueltas": analytics_data.get("common_unanswered", []),
                 "quejas_frecuentes": feedback_data.get("common_complaints", [])
             },
-            "tendencias": analytics_data.get("detailed_metrics", {}).get("period_comparison", {})
+            "tendencias": analytics_data.get("detailed_metrics", {}).get("period_comparison", {}),
+            # 👇 NUEVO: INCLUIR MÉTRICAS AVANZADAS
+            "advanced_metrics": advanced_metrics
         }
         
         return report
@@ -146,6 +167,22 @@ class ReportGenerator:
         summary = report_data["summary_metrics"]
         feedback = report_data["feedback_detallado"]
         
+        # Agregar métricas avanzadas si están disponibles
+        advanced_section = ""
+        if "advanced_metrics" in report_data:
+            advanced = report_data["advanced_metrics"]
+            temporal = advanced.get("temporal_analysis", {})
+            hourly = temporal.get("hourly", {})
+            daily = temporal.get("daily", {})
+            trends = temporal.get("trends", {})
+            
+            advanced_section = f"""
+🚀 MÉTRICAS AVANZADAS
+• Hora pico: {hourly.get('peak_hour', 'N/A')}
+• Día más activo: {daily.get('busiest_day', 'N/A')}
+• Tendencia: {trends.get('trend_direction', '➡️')} {trends.get('trend_percentage', 0):.1f}%
+"""
+        
         return f"""
 REPORTE INA - ASISTENTE VIRTUAL DUOC UC
 Periodo: Últimos {period_days} días
@@ -165,6 +202,7 @@ Generado: {datetime.now().strftime("%Y-%m-%d %H:%M")}
 • Feedback negativo: {feedback['feedback_negativo']}
 • Rating promedio: {feedback['rating_promedio']}/5
 
+{advanced_section}
 📊 CATEGORÍAS MÁS CONSULTADAS
 {self._format_categories_text(report_data['categorias_populares'])}
 
@@ -181,6 +219,26 @@ Este es un reporte automático generado por el sistema InA.
         summary = report_data["summary_metrics"]
         feedback = report_data["feedback_detallado"]
         
+        # Agregar métricas avanzadas si están disponibles
+        advanced_html = ""
+        if "advanced_metrics" in report_data:
+            advanced = report_data["advanced_metrics"]
+            temporal = advanced.get("temporal_analysis", {})
+            hourly = temporal.get("hourly", {})
+            daily = temporal.get("daily", {})
+            trends = temporal.get("trends", {})
+            
+            advanced_html = f"""
+    <div class="metric">
+        <h2>🚀 Métricas Avanzadas</h2>
+        <ul>
+            <li><strong>Hora pico:</strong> {hourly.get('peak_hour', 'N/A')}</li>
+            <li><strong>Día más activo:</strong> {daily.get('busiest_day', 'N/A')}</li>
+            <li><strong>Tendencia:</strong> {trends.get('trend_direction', '➡️')} {trends.get('trend_percentage', 0):.1f}%</li>
+        </ul>
+    </div>
+"""
+        
         return f"""
 <!DOCTYPE html>
 <html>
@@ -193,6 +251,7 @@ Este es un reporte automático generado por el sistema InA.
         .positive {{ color: #27ae60; }}
         .negative {{ color: #e74c3c; }}
         .info-box {{ background: #e8f4fd; padding: 15px; border-left: 4px solid #3498db; margin: 10px 0; }}
+        .advanced {{ background: #fff3cd; border-left: 4px solid #ffc107; }}
     </style>
 </head>
 <body>
@@ -222,6 +281,8 @@ Este es un reporte automático generado por el sistema InA.
             <li><strong>Rating promedio:</strong> {feedback['rating_promedio']}/5</li>
         </ul>
     </div>
+
+    {advanced_html}
     
     <div class="metric">
         <h2>📊 Categorías Más Consultadas</h2>
@@ -265,3 +326,120 @@ Este es un reporte automático generado por el sistema InA.
 
 # Instancia global del generador de reportes
 report_generator = ReportGenerator()
+
+# 👇 AGREGAR AL FINAL - GENERADOR MEJORADO PARA MÉTRICAS AVANZADAS
+
+class EnhancedReportGenerator:
+    def __init__(self):
+        from app.metrics_tracker import metrics_tracker
+        self.metrics_tracker = metrics_tracker
+    
+    def generate_advanced_metrics_section(self, days=30):
+        """Generar sección de métricas avanzadas para el PDF"""
+        try:
+            advanced_metrics = self.metrics_tracker.get_advanced_metrics(days)
+            
+            sections = []
+            
+            # 1. ANÁLISIS TEMPORAL
+            temporal = advanced_metrics["temporal_analysis"]
+            sections.append(self._format_temporal_section(temporal))
+            
+            # 2. RENDIMIENTO POR CATEGORÍA
+            categories = advanced_metrics["category_analysis"]
+            sections.append(self._format_categories_section(categories))
+            
+            # 3. PREGUNTAS RECURRENTES
+            recurrent = advanced_metrics["recurrent_questions"]
+            sections.append(self._format_recurrent_section(recurrent))
+            
+            # 4. MÉTRICAS DE PERFORMANCE
+            performance = advanced_metrics["performance_metrics"]
+            sections.append(self._format_performance_section(performance))
+            
+            return "\n\n".join(sections)
+        except Exception as e:
+            logger.error(f"Error generando métricas avanzadas: {e}")
+            return "⚠️ No se pudieron cargar las métricas avanzadas"
+    
+    def _format_temporal_section(self, temporal_data):
+        """Formatear análisis temporal"""
+        hourly = temporal_data["hourly"]
+        daily = temporal_data["daily"]
+        trends = temporal_data["trends"]
+        
+        section = [
+            "📊 ANÁLISIS TEMPORAL AVANZADO",
+            "═" * 40,
+            f"🕐 HORARIO PICO: {hourly['peak_hour']} ({hourly['peak_volume']} consultas)",
+            f"📅 DÍA MÁS ACTIVO: {daily['busiest_day']} ({daily['busiest_day_volume']} consultas)",
+            f"📈 TENDENCIA: {trends['trend_direction']} {trends['trend_percentage']:.1f}% vs período anterior",
+            "",
+            "📋 DISTRIBUCIÓN POR HORAS:"
+        ]
+        
+        # Agregar distribución horaria
+        for hour, count in sorted(hourly["hourly_distribution"].items()):
+            bar_length = max(1, count // 3)  # Ajustar escala
+            bar = "█" * bar_length
+            section.append(f"  {hour}: {bar} {count} consultas")
+        
+        return "\n".join(section)
+    
+    def _format_categories_section(self, categories_data):
+        """Formatear análisis de categorías"""
+        section = [
+            "🎯 RENDIMIENTO POR CATEGORÍA",
+            "═" * 40
+        ]
+        
+        for category, data in sorted(categories_data.items(), key=lambda x: x[1]["count"], reverse=True):
+            stars = data["satisfaction_stars"]
+            section.append(f"• {category}: {data['count']} consultas - {stars} ({data['avg_rating']}/5)")
+        
+        return "\n".join(section)
+    
+    def _format_recurrent_section(self, recurrent_data):
+        """Formatear preguntas recurrentes"""
+        section = [
+            "🔁 TOP CONSULTAS RECURRENTES",
+            "═" * 40
+        ]
+        
+        for i, item in enumerate(recurrent_data, 1):
+            # Acortar pregunta si es muy larga
+            question = item["question"]
+            if len(question) > 50:
+                question = question[:50] + "..."
+            section.append(f"{i}. '{question}' ({item['count']} veces)")
+        
+        return "\n".join(section)
+    
+    def _format_performance_section(self, performance_data):
+        """Formatear métricas de performance"""
+        section = [
+            "⚡ MÉTRICAS DE PERFORMANCE",
+            "═" * 40,
+            f"• Tiempo promedio respuesta: {performance_data['avg_response_time']}s",
+            f"• Consultas únicas: {performance_data['unique_queries']} ({100-performance_data['recurrence_rate']:.1f}%)",
+            f"• Consultas recurrentes: {performance_data['recurrent_queries']} ({performance_data['recurrence_rate']:.1f}%)",
+            f"• Eficiencia sistema: {self._calculate_efficiency(performance_data):.1f}%"
+        ]
+        
+        return "\n".join(section)
+    
+    def _calculate_efficiency(self, performance_data):
+        """Calcular eficiencia del sistema (métrica compuesta)"""
+        try:
+            recurrence_rate = performance_data.get("recurrence_rate", 0)
+            avg_response_time = performance_data.get("avg_response_time", 0)
+            
+            recurrence_score = max(0, 100 - recurrence_rate * 0.5)
+            time_score = max(0, 100 - avg_response_time * 10)
+            
+            return (recurrence_score + time_score) / 2
+        except:
+            return 0
+
+# Instancia global del generador mejorado
+enhanced_report_generator = EnhancedReportGenerator()

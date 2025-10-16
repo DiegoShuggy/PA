@@ -1242,6 +1242,105 @@ async def test_email_system(to_email: str = "shaggynator64@gmail.com"):
         logger.error(f"Error en test de email: {e}")
         raise HTTPException(status_code=500, detail=f"Error en test de email: {str(e)}")
 
+
+@app.get("/analytics/advanced/metrics")
+async def get_advanced_analytics_metrics(days: int = 30):
+    """
+    Endpoint para obtener todas las métricas avanzadas
+    """
+    try:
+        from app.metrics_tracker import metrics_tracker
+        advanced_metrics = metrics_tracker.get_advanced_metrics(days)
+        
+        return {
+            "status": "success",
+            "period_days": days,
+            "advanced_metrics": advanced_metrics,
+            "generated_at": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error obteniendo métricas avanzadas: {e}")
+        return {"status": "error", "error": str(e)}
+
+@app.get("/analytics/hourly")
+async def get_hourly_analytics(days: int = 30):
+    """
+    Endpoint específico para análisis horario
+    """
+    try:
+        from app.metrics_tracker import metrics_tracker
+        hourly_data = metrics_tracker.advanced_tracker.get_hourly_analysis(days)
+        
+        return {
+            "status": "success",
+            "period_days": days,
+            "hourly_analysis": hourly_data
+        }
+    except Exception as e:
+        logger.error(f"Error obteniendo análisis horario: {e}")
+        return {"status": "error", "error": str(e)}
+
+@app.get("/analytics/trends")
+async def get_trend_analytics():
+    """
+    Endpoint para tendencias y comparaciones
+    """
+    try:
+        from app.metrics_tracker import metrics_tracker
+        trend_data = metrics_tracker.advanced_tracker.get_trend_analysis()
+        
+        return {
+            "status": "success",
+            "trend_analysis": trend_data
+        }
+    except Exception as e:
+        logger.error(f"Error obteniendo tendencias: {e}")
+        return {"status": "error", "error": str(e)}
+
+@app.get("/analytics/recurrent-questions")
+async def get_recurrent_questions(days: int = 30, limit: int = 10):
+    """
+    Endpoint para preguntas más frecuentes
+    """
+    try:
+        from app.metrics_tracker import metrics_tracker
+        recurrent_data = metrics_tracker.advanced_tracker.get_recurrent_questions(days, limit)
+        
+        return {
+            "status": "success",
+            "period_days": days,
+            "recurrent_questions": recurrent_data
+        }
+    except Exception as e:
+        logger.error(f"Error obteniendo preguntas recurrentes: {e}")
+        return {"status": "error", "error": str(e)}
+
+@app.get("/reports/advanced")
+async def generate_advanced_report(period_days: int = 30):
+    """
+    Generar reporte con métricas avanzadas
+    """
+    try:
+        # Generar reporte básico
+        report_data = report_generator.generate_basic_report(period_days)
+        
+        # Agregar métricas avanzadas
+        from app.report_generator import enhanced_report_generator
+        advanced_metrics = enhanced_report_generator.metrics_tracker.get_advanced_metrics(period_days)
+        
+        report_data["advanced_metrics"] = advanced_metrics
+        
+        return {
+            "status": "success",
+            "period_days": period_days,
+            "basic_report": report_data,
+            "advanced_metrics": advanced_metrics,
+            "generated_at": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error generando reporte avanzado: {e}")
+        return {"status": "error", "error": str(e)}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
