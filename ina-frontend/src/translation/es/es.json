@@ -106,6 +106,14 @@
       "FAQ12": "Placeholder"
     }
   },
+  "Accesibilidad":{
+    "titulo": "Accesibilidad",
+    "tamaño": "Tamaño de texto",
+    "contraste": "Alto contraste",
+    "altura": "Altura de línea",
+    "saturacion": "Escala de grises",
+    "restablecer": "Restablecer"
+  },
   "Asuntos": {
     "cargo": "Asuntos Estudiantiles",
     "title": "InA",

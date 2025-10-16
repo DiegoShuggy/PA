@@ -119,97 +119,6 @@
   border-right: 6px solid rgb(242, 77, 25);
 }
 
-.language-selector-button {
-
-  background-color: rgb(0, 237, 164);
-  border-left: 4px solid #0038A8;
-  border-top: 4px solid #0038A8;
-  border-bottom: 4px solid #0038A8;
-  border-right: 4px solid #0038A8;
-}
-
-.language-dropdown-menus {
-  border-left: 4px solid #0038A8;
-  border-top: 4px solid #0038A8;
-  border-bottom: 4px solid #0038A8;
-  border-right: 4px solid #0038A8;
-}
-
-/* Language Selector Base Styles */
-.language-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    padding: 10px 12px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-/* Hover state for all language options */
-.language-option:hover {
-  background-color: #f8f9fa;
-  transform: translateX(5px);
-}
-
-/* Active state for all languages */
-.language-option.active {
-  background-color: #007bff;
-  color: white;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
-}
-
-/* Individual language styles */
-.language-option.es {
-  border-left: 3px solid #AA151B;
-  /* Spanish red */
-}
-
-.language-option.en {
-  border-left: 3px solid #B31942;
-  /* American blue */
-}
-
-.language-option.fr {
-  border-left: 3px solid #0055A4;
-  /* French blue */
-}
-
-.language-option.es.active {
-  background: linear-gradient(135deg, #AA151B, #C8414B);
-  border-left: 3px solid #AA151B;
-}
-
-.language-option.en.active {
-  background: linear-gradient(135deg, #B31942, #D42E5A);
-  border-left: 3px solid #B31942;
-}
-
-.language-option.fr.active {
-  background: linear-gradient(135deg, #0055A4, #1A6FD4);
-  border-left: 3px solid #0055A4;
-}
-
-/* Flag icons with language-specific colors */
-.language-option.es .flag {
-  color: #AA151B;
-}
-
-.language-option.en .flag {
-  color: #B31942;
-}
-
-.language-option.fr .flag {
-  color: #0055A4;
-}
-
-.language-option.active .flag {
-  color: white;
-}
-
 /* Animación escalonada para cada item */
 .FAQ:nth-child(1) {
   animation-delay: 0.5s;
@@ -273,29 +182,6 @@
     display: inline-block;
 }
 
-.font-size-toggle-button {
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.font-size-toggle-button:hover {
-    background: #e0e0e0;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.font-size-toggle-button:active {
-    transform: translateY(0);
-}
-
 .font-size-toggle-icon {
     font-weight: bold;
     transition: all 0.3s ease;
@@ -318,37 +204,6 @@
 .font-size-toggle-label {
     font-size: 14px;
     font-weight: 500;
-}
-
-/* Efectos visuales para el cambio de tamaño */
-.font-size-toggle-button {
-    position: relative;
-    overflow: hidden;
-}
-
-.font-size-toggle-button::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(0, 123, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
-}
-
-.font-size-toggle-button:active::after {
-    width: 100px;
-    height: 100px;
-}
-
-/* Variables de tamaño de fuente */
-:root {
-    --font-size-small: 14px;
-    --font-size-normal: 16px;
-    --font-size-large: 18px;
 }
 
 .font-small {
@@ -374,4 +229,323 @@
 
 .lobby-item span {
     font-size: 1em;
+}
+
+/* Botón flotante de accesibilidad */
+.accessibility-floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.accessibility-toggle {
+    background: #2a5298;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accessibility-toggle:hover {
+    background: #1e3a6b;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.accessibility-icon {
+    font-size: 28px;
+}
+
+/* Menú de accesibilidad */
+.accessibility-menu {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 280px;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.accessibility-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.accessibility-header h4 {
+    margin: 0;
+    color: #2a5298;
+    font-size: 1.1rem;
+}
+
+.close-menu {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-menu:hover {
+    color: #333;
+    background: #e0e0e0;
+    border-radius: 50%;
+}
+
+.accessibility-options {
+    padding: 15px;
+}
+
+.accessibility-option {
+    margin-bottom: 15px;
+}
+
+.accessibility-option:last-child {
+    margin-bottom: 0;
+}
+
+.accessibility-option label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+/* Botones de tamaño de fuente */
+.font-size-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.font-size-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.font-size-btn:hover {
+    border-color: #2a5298;
+    background: #f0f4ff;
+}
+
+.font-size-btn.active {
+    border-color: #2a5298;
+    background: #2a5298;
+    color: white;
+}
+
+/* Toggle switches */
+.toggle-label {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 0 !important;
+}
+
+.toggle-label input {
+    display: none;
+}
+
+.toggle-slider {
+    position: relative;
+    width: 50px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 24px;
+    transition: all 0.3s ease;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+}
+
+.toggle-label input:checked + .toggle-slider {
+    background: #2a5298;
+}
+
+.toggle-label input:checked + .toggle-slider::before {
+    transform: translateX(26px);
+}
+
+/* Botón de reset */
+.reset-button {
+    width: 100%;
+    padding: 10px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Estilos de alto contraste */
+.high-contrast {
+    filter: contrast(1.5);
+}
+
+.high-contrast .lobby-item {
+    background: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+.high-contrast .lobby-container {
+    background: #000 !important;
+    color: #fff !important;
+}
+
+.high-contrast h2,
+.high-contrast h3 {
+    color: #fff !important;
+}
+
+/* Estilos de escala de grises */
+.grayscale {
+    filter: grayscale(100%);
+}
+
+/* Botones de altura de línea */
+.line-height-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.line-height-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+
+.line-height-btn:hover {
+    border-color: #2a5298;
+    background: #f0f4ff;
+}
+
+.line-height-btn.active {
+    border-color: #2a5298;
+    background: #2a5298;
+    color: white;
+}
+
+.line-height-normal {
+    line-height: var(--line-height-normal) !important;
+}
+
+.line-height-large {
+    line-height: var(--line-height-large) !important;
+}
+
+.line-height-x-large {
+    line-height: var(--line-height-x-large) !important;
+}
+
+/* Aplicar altura de línea a los elementos específicos */
+.line-height-normal .lobby-item,
+.line-height-normal .lobby-container h2,
+.line-height-normal .lobby-container h3,
+.line-height-normal .FAQ-link {
+    line-height: var(--line-height-normal);
+}
+
+.line-height-large .lobby-item,
+.line-height-large .lobby-container h2,
+.line-height-large .lobby-container h3,
+.line-height-large .FAQ-link {
+    line-height: var(--line-height-large);
+}
+
+.line-height-x-large .lobby-item,
+.line-height-x-large .lobby-container h2,
+.line-height-x-large .lobby-container h3,
+.line-height-x-large .FAQ-link {
+    line-height: var(--line-height-x-large);
+}
+
+/* Asegurar que los elementos de texto hereden la altura de línea */
+.lobby-container,
+.lobby-container h2,
+.lobby-container h3,
+.lobby-item,
+.FAQ-link {
+    transition: line-height 0.3s ease;
+}
+
+/* Mejorar la legibilidad con diferentes alturas de línea */
+.line-height-large .lobby-item {
+    padding: 1.8rem 1.5rem;
+}
+
+.line-height-x-large .lobby-item {
+    padding: 2rem 1.5rem;
+}
+
+/* Ajustes específicos para alto contraste con diferentes alturas de línea */
+.high-contrast.line-height-large .lobby-item,
+.high-contrast.line-height-x-large .lobby-item {
+    padding: 2rem 1.5rem;
 }

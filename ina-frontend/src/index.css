@@ -20,6 +20,9 @@
   --font-size-small: 14px;
   --font-size-normal: 16px;
   --font-size-large: 18px;
+  --line-height-normal: 1.4;
+  --line-height-large: 1.8;
+  --line-height-x-large: 2.2;
 }
 
 a {
