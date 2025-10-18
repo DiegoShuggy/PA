@@ -1,38 +1,87 @@
-from sqlmodel import Session, select
-from app.models import UnansweredQuestion, Feedback, engine
+# app/quality_monitor.py - VERSIÓN CORREGIDA
 import logging
-from datetime import datetime, timedelta
+from sqlmodel import Session, select
+from app.models import UnansweredQuestion, ResponseFeedback, engine  # 👈 CORREGIDO
 
 logger = logging.getLogger(__name__)
 
 class QualityMonitor:
+    def __init__(self):
+        self.unanswered_threshold = 5
+        self.negative_feedback_threshold = 3
+    
     def check_quality_issues(self):
-        """
-        Revisa automáticamente problemas de calidad en las respuestas
-        """
+        """Revisar problemas de calidad en las respuestas"""
         try:
             with Session(engine) as session:
-                # Preguntas no respondidas recientes
-                recent_unanswered = session.exec(
+                # Revisar preguntas no respondidas
+                unanswered_count = session.exec(
                     select(UnansweredQuestion)
-                    .where(UnansweredQuestion.timestamp >= datetime.now() - timedelta(days=7))
                 ).all()
                 
-                # Feedback negativo reciente
+                # Revisar feedback negativo reciente
                 negative_feedback = session.exec(
-                    select(Feedback)
-                    .where(Feedback.is_helpful == False)
-                    .where(Feedback.timestamp >= datetime.now() - timedelta(days=7))
+                    select(ResponseFeedback)  # 👈 CORREGIDO
+                    .where(ResponseFeedback.is_satisfied == False)  # 👈 CORREGIDO
                 ).all()
+                
+                issues = []
+                
+                if len(unanswered_count) > self.unanswered_threshold:
+                    issues.append({
+                        "type": "high_unanswered",
+                        "count": len(unanswered_count),
+                        "message": f"Demasiadas preguntas sin respuesta: {len(unanswered_count)}"
+                    })
+                
+                if len(negative_feedback) > self.negative_feedback_threshold:
+                    issues.append({
+                        "type": "high_negative_feedback", 
+                        "count": len(negative_feedback),
+                        "message": f"Mucho feedback negativo: {len(negative_feedback)}"
+                    })
                 
                 return {
-                    "recent_unanswered": len(recent_unanswered),
-                    "recent_negative_feedback": len(negative_feedback),
-                    "issues_detected": len(recent_unanswered) > 5 or len(negative_feedback) > 3
+                    "has_issues": len(issues) > 0,
+                    "issues": issues,
+                    "unanswered_count": len(unanswered_count),
+                    "negative_feedback_count": len(negative_feedback)
                 }
                 
         except Exception as e:
-            logger.error(f"Error en monitoreo de calidad: {e}")
+            logger.error(f"Error en quality monitor: {e}")
+            return {
+                "has_issues": False,
+                "issues": [],
+                "error": str(e)
+            }
+    
+    def get_quality_metrics(self):
+        """Obtener métricas de calidad generales"""
+        try:
+            with Session(engine) as session:
+                # Total de feedback
+                total_feedback = session.exec(
+                    select(ResponseFeedback)  # 👈 CORREGIDO
+                ).all()
+                
+                # Feedback positivo
+                positive_feedback = session.exec(
+                    select(ResponseFeedback)  # 👈 CORREGIDO
+                    .where(ResponseFeedback.is_satisfied == True)  # 👈 CORREGIDO
+                ).all()
+                
+                satisfaction_rate = len(positive_feedback) / len(total_feedback) * 100 if total_feedback else 0
+                
+                return {
+                    "total_feedback": len(total_feedback),
+                    "positive_feedback": len(positive_feedback),
+                    "satisfaction_rate": satisfaction_rate,
+                    "unanswered_questions": len(session.exec(select(UnansweredQuestion)).all())
+                }
+                
+        except Exception as e:
+            logger.error(f"Error obteniendo métricas de calidad: {e}")
             return {"error": str(e)}
 
 # Instancia global
