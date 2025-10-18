@@ -1137,51 +1137,38 @@ async def generate_report(request: ReportRequest, background_tasks: BackgroundTa
         logger.error(f"Error generando reporte: {e}")
         raise HTTPException(status_code=500, detail=f"Error generando reporte: {str(e)}")
 
+# En app/main.py - CORREGIR ESTA FUNCIÓN
 @app.post("/reports/send-email")
 async def send_report_email(request: EmailRequest):
-    """Enviar reporte por correo electrónico con PDF adjunto"""
+    """Enviar reporte por correo electrónico con PDF adjunto - VERSIÓN CORREGIDA"""
     try:
         logger.info(f"📧 Enviando reporte a {request.email}")
+        
+        # Validar email
+        if not request.email or "@" not in request.email:
+            raise HTTPException(status_code=400, detail="Email inválido")
         
         # Generar reporte primero
         report_data = report_generator.generate_basic_report(request.period_days)
         
-        # Generar PDF - CORREGIDO: obtener solo la ruta del archivo
+        # Generar PDF
         pdf_filename = f"reporte_{request.period_days}dias_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
+        pdf_path = report_generator.generate_pdf_report(report_data, pdf_filename)
         
-        # Llamar al generador de PDF y extraer la ruta real
-        pdf_result = report_generator.generate_pdf_report(report_data, pdf_filename)
-        
-        # Manejar diferentes tipos de retorno
-        if isinstance(pdf_result, dict) and 'file_path' in pdf_result:
-            # Si retorna un dict con file_path
-            pdf_path = pdf_result['file_path']
-        elif isinstance(pdf_result, str):
-            # Si retorna directamente la ruta
-            pdf_path = pdf_result
-        else:
-            # Si no se pudo generar PDF
-            pdf_path = None
-            logger.warning("⚠️ No se pudo obtener la ruta del PDF")
-        
-        # ✅ USAR NUESTRO SISTEMA GMAIL CONFIGURADO CON PDF ADJUNTO
+        # ✅ USAR NUESTRO SISTEMA GMAIL CORREGIDO
         success = email_sender.send_report_notification(
             to_email=request.email,
             report_data=report_data,
-            pdf_path=pdf_path  # 👈 ENVIAR PDF ADJUNTO
+            pdf_path=pdf_path
         )
         
         if success:
             logger.info(f"✅ Reporte enviado exitosamente a {request.email}")
-            if pdf_path:
-                logger.info(f"📎 Con PDF adjunto: {pdf_path}")
-            
             return {
                 "status": "success",
-                "message": f"Reporte enviado exitosamente a {request.email}" + (" con PDF adjunto" if pdf_path else ""),
+                "message": f"Reporte enviado exitosamente a {request.email}",
                 "period_days": request.period_days,
                 "pdf_generated": pdf_path is not None,
-                "pdf_filename": os.path.basename(pdf_path) if pdf_path else None,
                 "sent_at": datetime.now().isoformat()
             }
         else:
@@ -1191,7 +1178,6 @@ async def send_report_email(request: EmailRequest):
     except Exception as e:
         logger.error(f"Error enviando reporte por email: {e}")
         raise HTTPException(status_code=500, detail=f"Error enviando email: {str(e)}")
-    
 
 @app.get("/reports/status/{report_id}")
 async def get_report_status(report_id: str):
