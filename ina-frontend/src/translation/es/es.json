@@ -112,7 +112,10 @@
     "contraste": "Alto contraste",
     "altura": "Altura de línea",
     "saturacion": "Escala de grises",
-    "restablecer": "Restablecer"
+    "restablecer": "Restablecer",
+    "dyslexia": "Fuente para dislexia",
+    "espaciado": "Espaciado de texto",
+    "tracker": "Seguidor de cursor"
   },
   "Asuntos": {
     "cargo": "Asuntos Estudiantiles",

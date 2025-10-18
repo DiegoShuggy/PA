@@ -15,8 +15,14 @@ function NavBar() {
     // Contraseña fija
     const fixedPassword = "hola";
 
+  // Referencia para el temporizador
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
     // Función para manejar el clic secreto en el logo
     const handleSecretClick = () => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+        }
         const newCount = clickCount + 1;
         setClickCount(newCount);
 
@@ -24,6 +30,11 @@ function NavBar() {
         if (newCount >= 5) {
             setShowModal(true);
             setClickCount(0);
+        }else {
+            // Configurar temporizador para resetear el contador después de 2 segundos
+            timerRef.current = setTimeout(() => {
+                setClickCount(0);
+            }, 2000);
         }
     };
 

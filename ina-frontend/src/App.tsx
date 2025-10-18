@@ -16,32 +16,374 @@ import NavBar from './components/NavBar';
 
 function App() {
     const { i18n, t } = useTranslation();
+    const [fontSize, setFontSize] = useState<'small' | 'normal' | 'large'>('normal');
+    const [lineHeight, setLineHeight] = useState<'normal' | 'large' | 'x-large'>('normal');
+    const [textSpacing, setTextSpacing] = useState<'normal' | 'large' | 'x-large'>('normal');
+    const [highContrast, setHighContrast] = useState(false);
+    const [grayscale, setGrayscale] = useState(false);
+    const [dyslexicFont, setDyslexicFont] = useState(false);
+    const [showAccessibilityMenu, setShowAccessibilityMenu] = useState(false);
+    const [readingGuide, setReadingGuide] = useState(false);
+    const [readingPosition, setReadingPosition] = useState(0);
+    const [isDragging, setIsDragging] = useState(false);
+    const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+    const [isCursorInViewport, setIsCursorInViewport] = useState(true);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const guideLineRef = useRef<HTMLDivElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement>(null);
 
-    // Cerrar el menú al hacer clic fuera
-    useEffect(() => {
+        useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (languageMenuRef.current && !languageMenuRef.current.contains(event.target as Node)) {
-                setIsLanguageMenuOpen(false);
+            // Si el menú está abierto y el clic fue fuera del menú y fuera del botón de accesibilidad
+            if (showAccessibilityMenu && 
+                menuRef.current && 
+                !menuRef.current.contains(event.target as Node) &&
+                !(event.target as Element).closest('.accessibility-toggle')) {
+                setShowAccessibilityMenu(false);
             }
         };
-
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
+    }, [showAccessibilityMenu]);
+    // Aplicar los estilos de accesibilidad
+        useEffect(() => {
+            const root = document.documentElement;
+    
+            // Aplicar tamaño de fuente
+            root.classList.remove('font-small', 'font-normal', 'font-large');
+            root.classList.add(`font-${fontSize}`);
+    
+            // Aplicar altura de línea
+            root.classList.remove('line-height-normal', 'line-height-large', 'line-height-x-large');
+            root.classList.add(`line-height-${lineHeight}`);
+    
+            // Aplicar espaciado de texto
+            root.classList.remove('text-spacing-normal', 'text-spacing-large', 'text-spacing-x-large');
+            root.classList.add(`text-spacing-${textSpacing}`);
+    
+            // Aplicar alto contraste
+            if (highContrast) {
+                root.classList.add('high-contrast');
+            } else {
+                root.classList.remove('high-contrast');
+            }
+    
+            // Aplicar escala de grises
+            if (grayscale) {
+                root.classList.add('grayscale');
+            } else {
+                root.classList.remove('grayscale');
+            }
+            // Aplicar fuente para disléxicos
+            if (dyslexicFont) {
+                root.classList.add('dyslexic-font');
+            } else {
+                root.classList.remove('dyslexic-font');
+            }
+            // Aplicar seguidor de cursor
+            if (readingGuide) {
+                root.classList.add('reading-guide-active');
+            } else {
+                root.classList.remove('reading-guide-active');
+            }
+    
+        }, [fontSize, lineHeight, highContrast, grayscale, dyslexicFont, textSpacing, readingGuide]);
+    
+// Efecto para el seguidor de curso - SEPARADO Y MEJORADO
+    useEffect(() => {
+        if (!readingGuide) return;
 
-    const changeLanguage = (lng: string) => {
+        const handleMouseMove = (e: MouseEvent) => {
+            setCursorPosition({ x: e.clientX, y: e.clientY });
+            setIsCursorInViewport(true);
+
+            if (!isDragging) {
+                setReadingPosition(e.clientY);
+            }
+        };
+
+        const handleMouseLeave = () => {
+            setIsCursorInViewport(false);
+        };
+
+        const handleMouseEnter = () => {
+            setIsCursorInViewport(true);
+        };
+
+        const handleMouseDown = (e: MouseEvent) => {
+            if (guideLineRef.current?.contains(e.target as Node)) {
+                setIsDragging(true);
+            }
+        };
+
+        const handleMouseUp = () => {
+            setIsDragging(false);
+        };
+
+        const handleDrag = (e: MouseEvent) => {
+            if (isDragging) {
+                setReadingPosition(e.clientY);
+                setCursorPosition({ x: e.clientX, y: e.clientY });
+            }
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                setCursorPosition({ x: touch.clientX, y: touch.clientY });
+                if (!isDragging) {
+                    setReadingPosition(touch.clientY);
+                }
+            }
+        };
+
+        const handleTouchStart = (e: TouchEvent) => {
+            if (guideLineRef.current?.contains(e.target as Node)) {
+                setIsDragging(true);
+                if (e.touches.length > 0) {
+                    const touch = e.touches[0];
+                    setCursorPosition({ x: touch.clientX, y: touch.clientY });
+                }
+            }
+        };
+
+        const handleTouchEnd = () => {
+            setIsDragging(false);
+        };
+
+        // Agregar event listeners al documento completo
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseleave', handleMouseLeave);
+        document.addEventListener('mouseenter', handleMouseEnter);
+        document.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('mousemove', handleDrag);
+        document.addEventListener('touchmove', handleTouchMove);
+        document.addEventListener('touchstart', handleTouchStart);
+        document.addEventListener('touchend', handleTouchEnd);
+
+        return () => {
+            // Limpiar event listeners
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseleave', handleMouseLeave);
+            document.removeEventListener('mouseenter', handleMouseEnter);
+            document.removeEventListener('mousedown', handleMouseDown);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('mousemove', handleDrag);
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.removeEventListener('touchstart', handleTouchStart);
+            document.removeEventListener('touchend', handleTouchEnd);
+        };
+    }, [readingGuide, isDragging]);
+    // Resetear todas las opciones de accesibilidad
+    const resetAccessibility = () => {
+        setFontSize('normal');
+        setLineHeight('normal');
+        setTextSpacing('normal');
+        setHighContrast(false);
+        setGrayscale(false);
+        setDyslexicFont(false);
+        setReadingGuide(false);
+    };
+    
+
+        
+   
+    
+ const changeLanguage = (lng: string) => {
         i18n.changeLanguage(lng);
         setIsLanguageMenuOpen(false);
     };
-
     return (
         <div className="app">
             <div>
                 <NavBar />
+                {/* Botón flotante de accesibilidad */}
+            <div className="accessibility-floating-button">
+                <button
+                    className="accessibility-toggle"
+                    onClick={() => setShowAccessibilityMenu(!showAccessibilityMenu)}
+                    title={t('accessibility.menu', 'Menú de accesibilidad')}
+                    type="button"
+                    aria-expanded={showAccessibilityMenu}
+                >
+                    <span className="accessibility-icon">♿</span>
+                </button>
+
+                {/* Menú desplegable de accesibilidad */}
+                {showAccessibilityMenu && (
+                    <div className="accessibility-menu" ref={menuRef}>
+                        <div className="accessibility-header">
+                            <h4>{t('Accesibilidad.titulo')}</h4>
+                            <button
+                                className="close-menu"
+                                onClick={() => setShowAccessibilityMenu(false)}
+                            >
+                                ×
+                            </button>
+                        </div>
+
+                        <div className="accessibility-options">
+
+                            {/* Tamaño de fuente */}
+                            <div className="accessibility-option">
+                                <label>{t('Accesibilidad.tamaño')}</label>
+                                <div className="font-size-buttons">
+                                    <button
+                                        className={`font-size-btn ${fontSize === 'small' ? 'active' : ''}`}
+                                        onClick={() => setFontSize('small')}
+                                    >
+                                        a
+                                    </button>
+                                    <button
+                                        className={`font-size-btn ${fontSize === 'normal' ? 'active' : ''}`}
+                                        onClick={() => setFontSize('normal')}
+                                    >
+                                        A
+                                    </button>
+                                    <button
+                                        className={`font-size-btn ${fontSize === 'large' ? 'active' : ''}`}
+                                        onClick={() => setFontSize('large')}
+                                    >
+                                        A+
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Altura de línea */}
+                            <div className="accessibility-option">
+                                <label>{t('Accesibilidad.altura')}</label>
+                                <div className="line-height-buttons">
+                                    <button
+                                        className={`line-height-btn ${lineHeight === 'normal' ? 'active' : ''}`}
+                                        onClick={() => setLineHeight('normal')}
+                                    >
+                                        ─
+                                    </button>
+                                    <button
+                                        className={`line-height-btn ${lineHeight === 'large' ? 'active' : ''}`}
+                                        onClick={() => setLineHeight('large')}
+                                    >
+                                        ──
+                                    </button>
+                                    <button
+                                        className={`line-height-btn ${lineHeight === 'x-large' ? 'active' : ''}`}
+                                        onClick={() => setLineHeight('x-large')}
+                                    >
+                                        ───
+                                    </button>
+                                </div>
+                            </div>
+                            {/* Espaciado de texto */}
+                            <div className="accessibility-option">
+                                <label>{t('Accesibilidad.espaciado')}</label>
+                                <div className="text-spacing-buttons">
+                                    <button
+                                        className={`text-spacing-btn ${textSpacing === 'normal' ? 'active' : ''}`}
+                                        onClick={() => setTextSpacing('normal')}
+                                    >
+                                        Aa
+                                    </button>
+                                    <button
+                                        className={`text-spacing-btn ${textSpacing === 'large' ? 'active' : ''}`}
+                                        onClick={() => setTextSpacing('large')}
+                                        title="Espaciado amplio"
+                                    >
+                                        A a
+                                    </button>
+                                    <button
+                                        className={`text-spacing-btn ${textSpacing === 'x-large' ? 'active' : ''}`}
+                                        onClick={() => setTextSpacing('x-large')}
+                                    >
+                                        A  a
+                                    </button>
+                                </div>
+                            </div>
+                            {/* Seguidor de curso */}
+                            <div className="accessibility-option">
+                                <label className="toggle-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={readingGuide}
+                                        onChange={(e) => setReadingGuide(e.target.checked)}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                    {t('Accesibilidad.tracker')}
+                                </label>
+                                {readingGuide && (
+                                    <div
+                                        className="reading-guide-line"
+                                        ref={guideLineRef}
+                                        style={{ top: `${readingPosition}px` }}
+                                    >
+                                        <div
+                                            className="guide-handle"
+                                            style={{
+                                                left: `${cursorPosition.x}px`,
+                                                opacity: isCursorInViewport ? 1 : 0
+                                            }}
+                                        >
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            {/* Fuente para Dyslexia */}
+                            <div className="accessibility-option">
+                                <label className="toggle-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={dyslexicFont}
+                                        onChange={(e) => setDyslexicFont(e.target.checked)}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                    {t('Accesibilidad.dyslexia')}
+                                </label>
+                            </div>
+
+
+                            {/* Alto contraste */}
+                            <div className="accessibility-option">
+                                <label className="toggle-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={highContrast}
+                                        onChange={(e) => setHighContrast(e.target.checked)}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                    {t('Accesibilidad.contraste')}
+                                </label>
+                            </div>
+
+                            {/* Escala de grises */}
+                            <div className="accessibility-option">
+                                <label className="toggle-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={grayscale}
+                                        onChange={(e) => setGrayscale(e.target.checked)}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                    {t('Accesibilidad.saturacion')}
+                                </label>
+                            </div>
+
+                            {/* Botón de reset */}
+                            <div className="accessibility-option">
+                                <button
+                                    className="reset-button"
+                                    onClick={resetAccessibility}
+                                >
+                                    {t('Accesibilidad.restablecer')}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
                 {/* Selector de idiomas global */}
                 <div className="language-selector-global" ref={languageMenuRef}>
                     <button
@@ -85,7 +427,24 @@ function App() {
                         </div>
                     )}
                 </div>
-                
+                {/* Seguidor de cursor FUERA del menú para que funcione siempre */}
+            {readingGuide && (
+                <div
+                    className="reading-guide-line"
+                    ref={guideLineRef}
+                    style={{ top: `${readingPosition}px` }}
+                >
+                    <div
+                        className="guide-handle"
+                        style={{
+                            left: `${cursorPosition.x}px`,
+                            opacity: isCursorInViewport ? 1 : 0
+                        }}
+                    >
+                    </div>
+                </div>
+            )}
+
                 <main className='main-content'>
                     <Routes>
                         <Route path="/" element={<Lobby />} />

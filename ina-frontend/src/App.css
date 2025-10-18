@@ -153,3 +153,665 @@ body {
 .language-option.active .flag {
   color: white;
 }
+/* Controles de accesibilidad */
+.accessibility-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+
+/* Botón de cambio automático de tamaño de fuente */
+.font-size-toggle-container {
+    display: inline-block;
+}
+
+.font-size-toggle-icon {
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Iconos diferentes para cada tamaño */
+.font-small .font-size-toggle-icon {
+    font-size: 14px;
+}
+
+.font-normal .font-size-toggle-icon {
+    font-size: 16px;
+}
+
+.font-large .font-size-toggle-icon {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.font-size-toggle-label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.font-small {
+    font-size: var(--font-size-small);
+}
+
+.font-normal {
+    font-size: var(--font-size-normal);
+}
+
+.font-large {
+    font-size: var(--font-size-large);
+}
+
+/* Asegurar que los elementos escalen correctamente */
+.lobby-container h2 {
+    font-size: 1.5em;
+}
+
+.lobby-container h3 {
+    font-size: 1.2em;
+}
+
+.lobby-item span {
+    font-size: 1em;
+}
+
+/* Botón flotante de accesibilidad */
+.accessibility-floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.accessibility-toggle {
+    background: #2a5298;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accessibility-toggle:hover {
+    background: #1e3a6b;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.accessibility-icon {
+    font-size: 28px;
+}
+
+/* Menú de accesibilidad */
+.accessibility-menu {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 280px;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.accessibility-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.accessibility-header h4 {
+    margin: 0;
+    color: #2a5298;
+    font-size: 1.1rem;
+}
+
+.close-menu {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-menu:hover {
+    color: #333;
+    background: #e0e0e0;
+    border-radius: 50%;
+}
+
+.accessibility-options {
+    padding: 15px;
+}
+
+.accessibility-option {
+    margin-bottom: 15px;
+}
+
+.accessibility-option:last-child {
+    margin-bottom: 0;
+}
+
+.accessibility-option label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+/* Botones de tamaño de fuente */
+.font-size-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.font-size-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.font-size-btn:hover {
+    border-color: #2a5298;
+    background: #f0f4ff;
+}
+
+.font-size-btn.active {
+    border-color: #2a5298;
+    background: #2a5298;
+    color: white;
+}
+
+/* Toggle switches */
+.toggle-label {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 0 !important;
+}
+
+.toggle-label input {
+    display: none;
+}
+
+.toggle-slider {
+    position: relative;
+    width: 50px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 24px;
+    transition: all 0.3s ease;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+}
+
+.toggle-label input:checked + .toggle-slider {
+    background: #2a5298;
+}
+
+.toggle-label input:checked + .toggle-slider::before {
+    transform: translateX(26px);
+}
+
+/* Botón de reset */
+.reset-button {
+    width: 100%;
+    padding: 10px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Estilos de alto contraste */
+.high-contrast {
+    filter: contrast(1.5);
+}
+
+.high-contrast .lobby-item {
+    background: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+.high-contrast .lobby-container {
+    background: #000 !important;
+    color: #fff !important;
+}
+
+.high-contrast h2,
+.high-contrast h3 {
+    color: #fff !important;
+}
+
+/* Estilos de escala de grises */
+.grayscale {
+    filter: grayscale(100%);
+}
+
+/* Botones de altura de línea */
+.line-height-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.line-height-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+
+.line-height-btn:hover {
+    border-color: #2a5298;
+    background: #f0f4ff;
+}
+
+.line-height-btn.active {
+    border-color: #2a5298;
+    background: #2a5298;
+    color: white;
+}
+
+.line-height-normal {
+    line-height: var(--line-height-normal) !important;
+}
+
+.line-height-large {
+    line-height: var(--line-height-large) !important;
+}
+
+.line-height-x-large {
+    line-height: var(--line-height-x-large) !important;
+}
+
+/* Aplicar altura de línea a los elementos específicos */
+.line-height-normal .lobby-item,
+.line-height-normal .lobby-container h2,
+.line-height-normal .lobby-container h3,
+.line-height-normal .FAQ-link {
+    line-height: var(--line-height-normal);
+}
+
+.line-height-large .lobby-item,
+.line-height-large .lobby-container h2,
+.line-height-large .lobby-container h3,
+.line-height-large .FAQ-link {
+    line-height: var(--line-height-large);
+}
+
+.line-height-x-large .lobby-item,
+.line-height-x-large .lobby-container h2,
+.line-height-x-large .lobby-container h3,
+.line-height-x-large .FAQ-link {
+    line-height: var(--line-height-x-large);
+}
+
+/* Asegurar que los elementos de texto hereden la altura de línea */
+.lobby-container,
+.lobby-container h2,
+.lobby-container h3,
+.lobby-item,
+.FAQ-link {
+    transition: line-height 0.3s ease;
+}
+
+/* Mejorar la legibilidad con diferentes alturas de línea */
+.line-height-large .lobby-item {
+    padding: 1.8rem 1.5rem;
+}
+
+.line-height-x-large .lobby-item {
+    padding: 2rem 1.5rem;
+}
+
+/* Ajustes específicos para alto contraste con diferentes alturas de línea */
+.high-contrast.line-height-large .lobby-item,
+.high-contrast.line-height-x-large .lobby-item {
+    padding: 2rem 1.5rem;
+}
+/* Fuente para disléxicos - VERSIÓN CORREGIDA */
+.dyslexic-font {
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif !important;
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+    line-height: 1.6 !important;
+}
+
+/* Aplicar a todos los elementos de texto */
+.dyslexic-font,
+.dyslexic-font .lobby-item,
+.dyslexic-font .lobby-container h2,
+.dyslexic-font .lobby-container h3,
+.dyslexic-font .FAQ-link,
+.dyslexic-font .lobby-item span {
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif !important;
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+    line-height: 1.6 !important;
+    font-weight: 600 !important;
+}
+
+/* Mejorar la legibilidad específica */
+.dyslexic-font .lobby-item {
+    padding: 2rem 1.5rem !important;
+}
+
+.dyslexic-font .lobby-container h2 {
+    font-size: 2.3rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.dyslexic-font .lobby-container h3 {
+    font-size: 1.4rem !important;
+    margin-bottom: 2rem !important;
+}
+
+/* Combinación con otras opciones de accesibilidad */
+.dyslexic-font.high-contrast .lobby-item {
+    background: #000 !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+}
+
+.dyslexic-font.line-height-large .lobby-item,
+.dyslexic-font.line-height-x-large .lobby-item {
+    padding: 2.2rem 1.5rem !important;
+}
+
+/* Asegurar que el menú de accesibilidad también herede la fuente */
+.dyslexic-font .accessibility-menu,
+.dyslexic-font .accessibility-header h4,
+.dyslexic-font .accessibility-option label,
+.dyslexic-font .font-size-btn,
+.dyslexic-font .line-height-btn,
+.dyslexic-font .reset-button {
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif !important;
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+}
+/* Botones de espaciado de texto */
+.text-spacing-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.text-spacing-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+
+.text-spacing-btn:hover {
+    border-color: #2a5298;
+    background: #f0f4ff;
+}
+
+.text-spacing-btn.active {
+    border-color: #2a5298;
+    background: #2a5298;
+    color: white;
+}
+
+/* Estilos de espaciado de texto */
+.text-spacing-normal {
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+}
+
+.text-spacing-large {
+    letter-spacing: 0.1em !important;
+    word-spacing: 0.2em !important;
+}
+
+.text-spacing-x-large {
+    letter-spacing: 0.15em !important;
+    word-spacing: 0.3em !important;
+}
+
+/* Aplicar espaciado a todos los elementos de texto */
+.text-spacing-normal .lobby-item,
+.text-spacing-normal .lobby-container h2,
+.text-spacing-normal .lobby-container h3,
+.text-spacing-normal .FAQ-link,
+.text-spacing-normal .lobby-item span,
+.text-spacing-normal .accessibility-menu,
+.text-spacing-normal .accessibility-header h4,
+.text-spacing-normal .accessibility-option label {
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+}
+
+.text-spacing-large .lobby-item,
+.text-spacing-large .lobby-container h2,
+.text-spacing-large .lobby-container h3,
+.text-spacing-large .FAQ-link,
+.text-spacing-large .lobby-item span,
+.text-spacing-large .accessibility-menu,
+.text-spacing-large .accessibility-header h4,
+.text-spacing-large .accessibility-option label {
+    letter-spacing: 0.1em !important;
+    word-spacing: 0.2em !important;
+}
+
+.text-spacing-x-large .lobby-item,
+.text-spacing-x-large .lobby-container h2,
+.text-spacing-x-large .lobby-container h3,
+.text-spacing-x-large .FAQ-link,
+.text-spacing-x-large .lobby-item span,
+.text-spacing-x-large .accessibility-menu,
+.text-spacing-x-large .accessibility-header h4,
+.text-spacing-x-large .accessibility-option label {
+    letter-spacing: 0.15em !important;
+    word-spacing: 0.3em !important;
+}
+
+/* Ajustes para elementos específicos con espaciado amplio */
+.text-spacing-large .lobby-item,
+.text-spacing-x-large .lobby-item {
+    padding: 2rem 1.8rem !important; /* Un poco más de padding horizontal */
+}
+
+.text-spacing-large .lobby-container h2,
+.text-spacing-x-large .lobby-container h2 {
+    margin-bottom: 1.2rem !important;
+}
+
+/* Combinación con fuente disléxica */
+.dyslexic-font.text-spacing-large,
+.dyslexic-font.text-spacing-x-large {
+    letter-spacing: 0.12em !important;
+    word-spacing: 0.25em !important;
+}
+
+/* Asegurar transiciones suaves */
+.lobby-container,
+.lobby-container h2,
+.lobby-container h3,
+.lobby-item,
+.FAQ-link,
+.lobby-item span,
+.accessibility-menu,
+.accessibility-header h4,
+.accessibility-option label {
+    transition: letter-spacing 0.3s ease, word-spacing 0.3s ease;
+}
+/* Seguidor de curso - Reading Guide */
+.reading-guide-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1rem;
+    background:#000000;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.8;
+    box-shadow: 0 0 10px rgba(255, 242, 0);
+}
+
+.guide-handle {
+    position: absolute;
+    top: -1rem;
+    transform: translateX(-50%);
+    background: #000000;
+    width: 24px;
+    height: 16px;
+    cursor: move;
+    box-shadow: 0 0 10px rgba(255, 242, 0);
+    user-select: none;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* Efecto cuando el seguidor está activo */
+.reading-guide-active .lobby-item:hover {
+    color: rgba(251, 255, 4, 0.95) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Mejorar la legibilidad cuando el seguidor está activo */
+.reading-guide-active .lobby-container {
+    position: relative;
+}
+
+/* Efecto de resaltado para elementos cerca del seguidor */
+.reading-guide-active .FAQ {
+    position: relative;
+}
+
+.reading-guide-active .FAQ::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -5px;
+    right: -5px;
+    bottom: 0;
+    background: rgba(255, 255, 0, 0.05);
+    border-radius: 8px;
+    z-index: -1;
+    opacity: 0;
+}
+
+.reading-guide-active .FAQ:hover::before {
+    opacity: 1;
+}
+
+/* Versión de alto contraste para el seguidor */
+.high-contrast .reading-guide-line {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        #ffff00 20%, 
+        #ffff00 80%, 
+        transparent 100%);
+    box-shadow: 0 0 15px rgba(255, 255, 0, 0.7);
+}
+
+.high-contrast .guide-handle {
+    background: #ffff00;
+    color: #000;
+}
+
+/* Versión para escala de grises */
+.grayscale .reading-guide-line {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        #888 20%, 
+        #888 80%, 
+        transparent 100%);
+}
+
+.grayscale .guide-handle {
+    background: #666;
+    color: white;
+}
+
+/* Ajustes para modo disléxico */
+.dyslexic-font .guide-handle {
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif;
+}
+
+/* Asegurar que el seguidor esté por encima del contenido pero debajo del menú */
+.accessibility-floating-button {
+    z-index: 10000;
+}
+
+.reading-guide-line {
+    z-index: 9998;
+}

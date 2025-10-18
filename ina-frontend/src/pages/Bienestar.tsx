@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../css/Coordinadores.css';
 import Profile from '../img/InA1.png';
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,14 @@ export function Bienestar() {
     console.log('Bienestar component is rendering');
     const { t } = useTranslation();
     const navigate = useNavigate();
+        const [fontSize, setFontSize] = useState<'small' | 'normal' | 'large'>('normal');
+        const [lineHeight, setLineHeight] = useState<'normal' | 'large' | 'x-large'>('normal');
+        const [highContrast, setHighContrast] = useState(false);
+        const [grayscale, setGrayscale] = useState(false);
+        const [dyslexicFont, setDyslexicFont] = useState(false);
+        const [textSpacing, setTextSpacing] = useState<'normal' | 'large' | 'x-large'>('normal');
+        const [showAccessibilityMenu, setShowAccessibilityMenu] = useState(false);
+        const messagesEndRef = useRef<HTMLDivElement>(null);
 
 
 

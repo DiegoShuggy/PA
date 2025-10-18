@@ -47,8 +47,8 @@ body {
   transform: translate(-50%, -50%);
   /* Centrado perfecto */
   overflow: hidden;
-  background: white;
-  background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);
+  background: rgb(255, 255, 255);
+  /*background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);*/
   z-index: 100;
   /* Asegura que esté por encima */
 }
@@ -57,8 +57,8 @@ body {
 .chat-header {
   margin-top: 10%;
   padding: 20px;
-  background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);
-  color: rgb(255, 255, 255);
+  /*background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);*/
+  color: rgb(0, 0, 0);
   text-align: center;
   font-weight: 600;
   font-size: 1.2rem;
@@ -84,12 +84,12 @@ body {
 }
 
 .floating-menu-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
   border: none;
   border-radius: 50%;
   width: 50px;
   height: 50px;
-  color: white;
+  color: rgb(0, 0, 0);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -178,7 +178,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23667eea' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-image: url('../img/InA3.png');
   z-index: -1;
 }
 
@@ -205,8 +205,8 @@ body {
 }
 
 .user-message {
-  background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);
-  color: white;
+  /*background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);*/
+  color: rgb(0, 0, 0);
   align-self: flex-end;
   border-bottom-right-radius: 4px;
   text-align: left;
@@ -281,8 +281,8 @@ body {
 .chat-input {
   display: flex;
   padding: 20px;
-  background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);
-  border-top: 1px solid #eaeaea;
+  /*background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);*/
+  border-top: 1px solid #000000;
   align-items: center;
 }
 
@@ -305,8 +305,8 @@ body {
 
 .chat-input button {
   padding: 14px 24px;
-  background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);
-  color: white;
+  /*background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);*/
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: 24px;
   cursor: pointer;
@@ -364,7 +364,7 @@ body {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);
+  /*background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);*/
   border: none;
   cursor: pointer;
   margin-right: 12px;
@@ -384,7 +384,7 @@ body {
 }
 
 .mic-button.listening {
-  background: linear-gradient(135deg, #ff4b4b 0%, #d74141 100%);
+  /*background: linear-gradient(135deg, #ff4b4b 0%, #d74141 100%);*/
   animation: pulse 1.5s infinite;
 }
 
@@ -773,7 +773,7 @@ body {
   .chat-container {
     height: 95vh;
     border-radius: 12px;
-    background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);
+    /*background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);*/
   }
 
   .message {
