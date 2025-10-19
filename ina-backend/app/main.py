@@ -1,5 +1,4 @@
-# main.py
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.models import init_db, ChatLog, UserQuery, UnansweredQuestion, engine, ResponseFeedback
@@ -32,6 +31,10 @@ from app.report_models import ReportRequest, EmailRequest
 # 👇 ✅ NUEVA IMPORTACIÓN PARA EMAIL CON GMAIL
 from app.email_sender import email_sender
 from dotenv import load_dotenv
+
+# 👇 ✅ NUEVA IMPORTACIÓN PARA MÉTRICAS AVANZADAS
+from app.metrics_tracker import metrics_tracker
+from datetime import datetime, timedelta
 
 # Cargar variables de entorno
 load_dotenv()
@@ -117,7 +120,6 @@ async def cleanup_cache_endpoint():
 from app.response_feedback import response_feedback_system
 from app.sentiment_analyzer import sentiment_analyzer
 from app.feedback_rewards import feedback_rewards
-from datetime import datetime, timedelta
 import glob
 import os
 
@@ -154,8 +156,9 @@ class Message(BaseModel):
     text: str
 
 @app.post("/chat")
-async def chat(message: Message):
+async def chat(message: Message, request: Request):
     try:
+        start_time = datetime.now()
         question = message.text.strip()
         
         # 👇 1. VALIDACIÓN DE CONTENIDO - NUEVO SISTEMA
@@ -209,6 +212,7 @@ async def chat(message: Message):
                     "timestamp": datetime.now().isoformat()
                 }
         
+        
         # 👇 3. SI PASÓ TODOS LOS FILTROS - PROCESAR NORMALMENTE
         logger.info(f"✅ Pregunta aprobada por filtros: {question} - Categoría: {topic_classification['category']}")
         
@@ -241,7 +245,21 @@ async def chat(message: Message):
                 "has_qr": False
             }
         
-        # 3.5 CREAR SESIÓN DE FEEDBACK PARA ESTA RESPUESTA
+        # 3.5 CALCULAR TIEMPO DE RESPUESTA Y GUARDAR EN MÉTRICAS
+        response_time = (datetime.now() - start_time).total_seconds()
+        
+        # 🔥 AGREGAR: Trackear la interacción para métricas
+        try:
+            metrics_tracker.track_response_time(
+                query=question, 
+                response_time=response_time, 
+                category=category
+            )
+            logger.info(f"📊 Métricas trackeadas: {response_time:.2f}s para categoría '{category}'")
+        except Exception as e:
+            logger.warning(f"⚠️ Error trackeando métricas: {e}")
+        
+        # 3.6 CREAR SESIÓN DE FEEDBACK PARA ESTA RESPUESTA
         # Compatibilidad: usar 'response' si 'text' no existe
         ai_response_text = response_data.get("text") or response_data.get("response")
         feedback_session_id = response_feedback_system.create_feedback_session(
@@ -250,7 +268,7 @@ async def chat(message: Message):
             category=category
         )
 
-        # 3.6 REGISTRAR PREGUNTAS NO RESPONDIDAS - CORREGIDO
+        # 3.7 REGISTRAR PREGUNTAS NO RESPONDIDAS - CORREGIDO
         # Compatibilidad: usar 'response' si 'text' no existe
         response_text = response_data.get("text") or response_data.get("response")
         if ("no puedo ayudar" in response_text.lower() or 
@@ -265,7 +283,7 @@ async def chat(message: Message):
                 session.add(unanswered)
                 session.commit()
         
-        # 3.7 GUARDAR EN LOG DE CONVERSACIONES
+        # 3.8 GUARDAR EN LOG DE CONVERSACIONES
         try:
             with Session(engine) as session:
                 chat_log = ChatLog(
@@ -279,7 +297,7 @@ async def chat(message: Message):
             logger.error(f"Error en base de datos: {db_error}")
             chatlog_id = None
         
-        # 3.8 RETORNAR RESPUESTA CON QR CODES Y FEEDBACK SESSION
+        # 3.9 RETORNAR RESPUESTA CON QR CODES Y FEEDBACK SESSION
         return {
             "response": response_data.get("text") or response_data.get("response"),
             "has_context": has_context,
@@ -326,7 +344,8 @@ async def health_check():
             "chromadb": rag_status,
             "content_filter": "active",
             "topic_classifier": "active",
-            "email_system": email_status  # 👈 NUEVO
+            "email_system": email_status,
+            "metrics_tracker": "active"
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
@@ -360,7 +379,8 @@ async def root():
             "feedback_system": True,
             "content_filter": True,  # 👈 NUEVA FUNCIONALIDAD
             "topic_classifier": True,  # 👈 NUEVA FUNCIONALIDAD
-            "email_reports": True  # 👈 NUEVA FUNCIONALIDAD
+            "email_reports": True,  # 👈 NUEVA FUNCIONALIDAD
+            "advanced_metrics": True  # 👈 NUEVA FUNCIONALIDAD
         }
     }
 
@@ -971,37 +991,6 @@ async def analytics_health():
 async def get_semantic_cache_stats():
     """Endpoint para ver estadísticas del cache semántico"""
     try:
-        from app.cache_manager import normalize_question
-        
-        # Ejemplos de normalización
-        test_questions = [
-            "Hola Ina",
-            "hola ina", 
-            "¿Hola Ina?",
-            "Donde obtengo mi TNE?",
-            "DONDE OBTENGO MI TNE",
-            "dónde obtengo mi tne?"
-        ]
-        
-        normalized_examples = {}
-        for q in test_questions:
-            normalized_examples[q] = normalize_question(q)
-        
-        return {
-            "status": "success",
-            "normalization_examples": normalized_examples,
-            "classifier_semantic_cache": classifier.get_classification_stats(),
-            "rag_metrics": rag_engine.metrics
-        }
-    except Exception as e:
-        logger.error(f"Error obteniendo stats de cache semántico: {e}")
-        return {"status": "error", "error": str(e)}
-# app/main.py - AGREGAR ESTOS ENDPOINTS AL FINAL DEL ARCHIVO
-
-@app.get("/cache/semantic-stats")
-async def get_semantic_cache_stats():
-    """Endpoint para ver estadísticas del cache semántico"""
-    try:
         from app.rag import get_rag_cache_stats
         
         # Ejemplos de normalización mejorada
@@ -1228,14 +1217,13 @@ async def test_email_system(to_email: str = "shaggynator64@gmail.com"):
         logger.error(f"Error en test de email: {e}")
         raise HTTPException(status_code=500, detail=f"Error en test de email: {str(e)}")
 
-
+# 👇 NUEVOS ENDPOINTS PARA MÉTRICAS AVANZADAS
 @app.get("/analytics/advanced/metrics")
 async def get_advanced_analytics_metrics(days: int = 30):
     """
     Endpoint para obtener todas las métricas avanzadas
     """
     try:
-        from app.metrics_tracker import metrics_tracker
         advanced_metrics = metrics_tracker.get_advanced_metrics(days)
         
         return {
@@ -1254,7 +1242,6 @@ async def get_hourly_analytics(days: int = 30):
     Endpoint específico para análisis horario
     """
     try:
-        from app.metrics_tracker import metrics_tracker
         hourly_data = metrics_tracker.advanced_tracker.get_hourly_analysis(days)
         
         return {
@@ -1272,7 +1259,6 @@ async def get_trend_analytics():
     Endpoint para tendencias y comparaciones
     """
     try:
-        from app.metrics_tracker import metrics_tracker
         trend_data = metrics_tracker.advanced_tracker.get_trend_analysis()
         
         return {
@@ -1289,7 +1275,6 @@ async def get_recurrent_questions(days: int = 30, limit: int = 10):
     Endpoint para preguntas más frecuentes
     """
     try:
-        from app.metrics_tracker import metrics_tracker
         recurrent_data = metrics_tracker.advanced_tracker.get_recurrent_questions(days, limit)
         
         return {
@@ -1311,8 +1296,7 @@ async def generate_advanced_report(period_days: int = 30):
         report_data = report_generator.generate_basic_report(period_days)
         
         # Agregar métricas avanzadas
-        from app.report_generator import enhanced_report_generator
-        advanced_metrics = enhanced_report_generator.metrics_tracker.get_advanced_metrics(period_days)
+        advanced_metrics = metrics_tracker.get_advanced_metrics(period_days)
         
         report_data["advanced_metrics"] = advanced_metrics
         
