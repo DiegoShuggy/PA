@@ -24,6 +24,7 @@
     "languageSelector": "Seleccionar idioma",
     "helpMessage": "Mostrar ayuda del chat",
     "stopGeneration": "Cancelar",
+    "listening": "Escuchando...",
     "generationCancelled": "Respuesta cancelada :c",
     "menu": {
       "quickQuestions": "- Preguntas rápidas",

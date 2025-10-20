@@ -10,8 +10,9 @@
     z-index: 1;
   background-color: #f8f9fa;
 }
-
-
+span{
+  cursor: default;
+}
 
 .lobby-container h2 {
   color: #2a5298;
