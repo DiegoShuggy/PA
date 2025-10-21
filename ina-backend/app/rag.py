@@ -214,7 +214,7 @@ class RAGEngine:
         # 🆕 STOPWORDS ESPECÍFICAS DEL CONTEXTO ESTUDIANTIL MEJORADAS
         stopwords = {
             # Saludos básicos
-            'hola', 'holas', 'holaa', 'holaaa', 'buenos', 'días', 'buenas', 'tardes', 'noches',
+            'hola', 'holas', 'holaa', 'holi', 'holiwis', 'holaaa', 'buenos', 'días', 'buenas', 'tardes', 'noches',
             'saludos', 'saludo', 'hi', 'hello', 'hey', 'hellow', 'helow', 'buen', 'dia', 'ok', 'okis',
             # Palabras vacías generales
             'por', 'favor', 'puedes', 'puede', 'podrías', 'podría', 'me', 'mi', 'mis', 'mí',
