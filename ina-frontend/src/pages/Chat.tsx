@@ -72,6 +72,12 @@ const Chat: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
 
+  const [inactivityTime, setInactivityTime] = useState(0);
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inactivityCounterRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+   // Configuración del temporizador de inactividad (en milisegundos)
+  const INACTIVITY_TIMEOUT = 300000;
   // Estados para feedback
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentFeedbackSession, setCurrentFeedbackSession] = useState<string | null>(null);
@@ -98,14 +104,73 @@ const Chat: React.FC = () => {
     navigate(-1);
   };
 
-    useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate('/'); // Redirige después del tiempo
-    }, 300000); // 300000 ms = 300 segundos
+ // Función para reiniciar el temporizador de inactividad
+  const resetInactivityTimer = useCallback(() => {
+    setInactivityTime(0);
+    
+    // Limpiar temporizadores existentes
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    if (inactivityCounterRef.current) {
+      clearInterval(inactivityCounterRef.current);
+    }
+    
+    // Crear nuevo temporizador
+    inactivityTimerRef.current = setTimeout(() => {
+      console.log('Tiempo de inactividad agotado - redirigiendo...');
+      navigate('/'); // Redirige a la página principal
+    }, INACTIVITY_TIMEOUT);
 
-    // Limpiar el timer si el componente se desmonta
-    return () => clearTimeout(timer);
+    // Opcional: Contador para debug (puedes remover esto en producción)
+    inactivityCounterRef.current = setInterval(() => {
+      setInactivityTime(prev => prev + 1000);
+    }, 1000);
   }, [navigate]);
+
+  // Función para manejar eventos de actividad
+  const handleActivity = useCallback(() => {
+    resetInactivityTimer();
+  }, [resetInactivityTimer]);
+
+  // Efecto para inicializar los detectores de actividad
+  useEffect(() => {
+    // Lista de eventos que indican actividad del usuario
+    const events = [
+      'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 
+      'click', 'input', 'focus'
+    ];
+
+    // Agregar event listeners
+    events.forEach(event => {
+      document.addEventListener(event, handleActivity, true);
+    });
+
+    // Iniciar el temporizador por primera vez
+    resetInactivityTimer();
+
+    // Cleanup: remover event listeners y limpiar temporizadores
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, handleActivity, true);
+      });
+
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+      if (inactivityCounterRef.current) {
+        clearInterval(inactivityCounterRef.current);
+      }
+    };
+  }, [handleActivity, resetInactivityTimer]);
+
+  // Efecto opcional para mostrar el tiempo de inactividad en consola (debug)
+  useEffect(() => {
+    if (inactivityTime > 0 && inactivityTime % 5000 === 0) {
+      console.log(`Tiempo de inactividad: ${inactivityTime / 1000} segundos`);
+    }
+  }, [inactivityTime]);
+
 
   // Función para detener la generación
   const stopGeneration = () => {
