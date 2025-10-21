@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../css/Chat.css';
 import microIcon from '../img/Micro.png';
@@ -101,7 +101,7 @@ const Chat: React.FC = () => {
     useEffect(() => {
     const timer = setTimeout(() => {
       navigate('/'); // Redirige después del tiempo
-    }, 10000); // 10000 ms = 10 segundos
+    }, 300000); // 300000 ms = 300 segundos
 
     // Limpiar el timer si el componente se desmonta
     return () => clearTimeout(timer);
