@@ -1,29 +1,283 @@
+# training_data_loader.py - VERSIÓN CORREGIDA SIN VERIFICACIÓN DE DUPLICADOS
 import json
 import os
 import glob
 import logging
-from typing import List, Dict, Any
+import re
+from typing import List, Dict, Any, Optional
+from datetime import datetime
 from app.rag import rag_engine
 
+# Importar para procesar documentos Word
+try:
+    import docx
+    DOCX_AVAILABLE = True
+except ImportError:
+    DOCX_AVAILABLE = False
+    logging.warning("❌ python-docx no instalado. No se podrán procesar documentos Word.")
+
 logger = logging.getLogger(__name__)
+
+class DocumentProcessor:
+    """Procesador especializado para documentos Word de Duoc UC"""
+    
+    def __init__(self):
+        self.processed_count = 0
+        logger.info("✅ DocumentProcessor inicializado")
+
+    def extract_from_docx(self, file_path: str) -> List[Dict[str, str]]:
+        """Extrae contenido estructurado de documentos Word con enfoque Duoc UC"""
+        try:
+            if not DOCX_AVAILABLE:
+                logger.error("❌ python-docx no disponible")
+                return []
+
+            doc = docx.Document(file_path)
+            content = []
+            current_section = ""
+            
+            logger.info(f"📖 Extrayendo contenido de: {os.path.basename(file_path)}")
+            
+            # Extraer todos los párrafos con contexto
+            for i, paragraph in enumerate(doc.paragraphs):
+                text = paragraph.text.strip()
+                
+                if not text or len(text) < 5:
+                    continue
+                
+                # Detectar secciones/títulos (texto en negrita o con formato especial)
+                is_section_header = (
+                    paragraph.style.name.lower() in ['heading 1', 'heading 2', 'heading 3', 'título'] or
+                    any(run.bold for run in paragraph.runs) or
+                    text.isupper() or
+                    '---' in text or
+                    '🟢' in text or '🔵' in text or '🎯' in text
+                )
+                
+                if is_section_header:
+                    current_section = text
+                    logger.debug(f"📑 Nueva sección detectada: {text[:50]}...")
+                else:
+                    # Agregar contenido con contexto de sección
+                    content.append({
+                        'text': text,
+                        'section': current_section,
+                        'style': paragraph.style.name,
+                        'is_structured': self._is_structured_content(text),
+                        'page_reference': f"doc_{i}"
+                    })
+            
+            # Extraer tablas (procedimientos, horarios, etc.)
+            for table_index, table in enumerate(doc.tables):
+                table_content = self._extract_table_content(table, table_index)
+                content.extend(table_content)
+            
+            structured_content = self._structure_for_rag(content, os.path.basename(file_path))
+            logger.info(f"✅ {os.path.basename(file_path)}: {len(structured_content)} fragmentos útiles")
+            
+            return structured_content
+            
+        except Exception as e:
+            logger.error(f"❌ Error extrayendo {file_path}: {str(e)}")
+            return []
+
+    def _extract_table_content(self, table, table_index: int) -> List[Dict]:
+        """Extrae contenido de tablas en documentos Word"""
+        table_content = []
+        
+        try:
+            for row_index, row in enumerate(table.rows):
+                row_data = []
+                for cell in row.cells:
+                    cell_text = cell.text.strip()
+                    if cell_text:
+                        row_data.append(cell_text)
+                
+                if row_data and len(' '.join(row_data)) > 10:
+                    table_content.append({
+                        'text': ' | '.join(row_data),
+                        'section': f'Tabla_{table_index + 1}',
+                        'style': 'Table',
+                        'is_structured': True,
+                        'page_reference': f"table_{table_index}_{row_index}"
+                    })
+        except Exception as e:
+            logger.warning(f"⚠️ Error procesando tabla: {e}")
+        
+        return table_content
+
+    def _is_structured_content(self, text: str) -> bool:
+        """Identifica contenido estructurado (listas, procedimientos, etc.)"""
+        structured_indicators = [
+            r'^\d+\.',  # Numeración: 1., 2., etc.
+            r'^•',      # Viñetas
+            r'^- ',     # Guiones
+            r'^\[',     # Corchetes
+            r'paso \d+', # Pasos numerados
+            r'requisito', # Requisitos
+            r'horario',   # Horarios
+            r'lunes|martes|miércoles|jueves|viernes|sábado|domingo', # Días
+        ]
+        
+        return any(re.search(pattern, text.lower()) for pattern in structured_indicators)
+
+    def _structure_for_rag(self, content: List[Dict], filename: str) -> List[Dict[str, str]]:
+        """Convierte contenido extraído en formato optimizado para RAG"""
+        structured = []
+        current_category = self._detect_category_from_filename(filename)
+        
+        for item in content:
+            text = item['text']
+            
+            if not self._is_relevant_content(text):
+                continue
+            
+            # Refinar categoría basado en contenido
+            content_category = self._detect_category_from_content(text)
+            final_category = content_category if content_category else current_category
+            
+            # Formatear para RAG
+            formatted_content = self._format_for_rag(text, item['section'], item['is_structured'])
+            
+            structured.append({
+                'content': formatted_content,
+                'category': final_category,
+                'source': filename,
+                'type': 'document_extract',
+                'section': item['section'],
+                'is_structured': item['is_structured']
+            })
+        
+        return structured
+
+    def _detect_category_from_filename(self, filename: str) -> str:
+        """Detecta categoría basado en el nombre del archivo"""
+        filename_lower = filename.lower()
+        
+        category_mapping = {
+            'deport': 'deportes',
+            'bienestar': 'bienestar_estudiantil', 
+            'be': 'bienestar_estudiantil',
+            'desarrollo': 'desarrollo_profesional',
+            'dl': 'desarrollo_profesional',
+            'asuntos': 'asuntos_estudiantiles',
+            'tne': 'asuntos_estudiantiles',
+            'certificados': 'asuntos_estudiantiles'
+        }
+        
+        for key, category in category_mapping.items():
+            if key in filename_lower:
+                return category
+        
+        return "general"
+
+    def _detect_category_from_content(self, text: str) -> str:
+        """Detecta categoría basado en el contenido del texto"""
+        text_lower = text.lower()
+        
+        # Asuntos Estudiantiles
+        if any(word in text_lower for word in ['tne', 'tarjeta nacional estudiantil', 'pase escolar', 
+                                              'certificado', 'seguro', 'matrícula', 'trámite', 
+                                              'programa emergencia', 'programa transporte', 
+                                              'programa materiales', 'beca', 'beneficio']):
+            return 'asuntos_estudiantiles'
+        
+        # Bienestar Estudiantil
+        elif any(word in text_lower for word in ['psicológico', 'salud mental', 'bienestar', 
+                                                'crisis', 'línea ops', 'urgencia', 'apoyo emocional',
+                                                'embajadores salud mental', 'paedis', 'discapacidad',
+                                                'inclusión', 'acompañamiento']):
+            return 'bienestar_estudiantil'
+        
+        # Deportes
+        elif any(word in text_lower for word in ['deporte', 'taller deportivo', 'entrenamiento',
+                                                'fútbol', 'voleibol', 'basquetbol', 'natación',
+                                                'gimnasio', 'caf', 'complejo maiclub', 
+                                                'selección deportiva', 'horario taller']):
+            return 'deportes'
+        
+        # Desarrollo Profesional
+        elif any(word in text_lower for word in ['trabajo', 'empleo', 'práctica', 'curriculum',
+                                                'entrevista', 'bolsa trabajo', 'duoclaboral',
+                                                'desarrollo laboral', 'claudia cortés', 'ccortesn']):
+            return 'desarrollo_profesional'
+        
+        return ""
+
+    def _is_relevant_content(self, text: str) -> bool:
+        """Filtra contenido relevante vs irrelevante"""
+        # Muy corto
+        if len(text) < 15:
+            return False
+        
+        # Patrones de contenido irrelevante
+        irrelevant_patterns = [
+            r'^página\s+\d+', r'^\d+\s+de\s+\d+', r'^tabla de contenido',
+            r'^índice', r'^capítulo', r'^\.\.\.$', r'^documento:\s*',
+            r'^versión\s+\d+', r'^fecha:\s*\d+', r'^elaborado por',
+            r'^\*+\s*$', r'^_+\s*$', r'^─+\s*$'
+        ]
+        
+        for pattern in irrelevant_patterns:
+            if re.search(pattern, text.lower()):
+                return False
+        
+        # Contenido demasiado genérico
+        generic_phrases = [
+            'documento interno', 'uso exclusivo', 'confidencial',
+            'todos los derechos reservados', 'copyright'
+        ]
+        
+        if any(phrase in text.lower() for phrase in generic_phrases):
+            return False
+        
+        return True
+
+    def _format_for_rag(self, text: str, section: str, is_structured: bool) -> str:
+        """Formatea el contenido para optimizar búsqueda en RAG"""
+        
+        # Para contenido estructurado (listas, procedimientos)
+        if is_structured:
+            # Limpiar y normalizar
+            text = re.sub(r'\s+', ' ', text).strip()
+            
+            # Agregar contexto de sección si existe
+            if section and len(section) > 5:
+                return f"{section}: {text}"
+            else:
+                return text
+        
+        # Para contenido normal
+        else:
+            # Limpiar espacios múltiples
+            text = re.sub(r'\s+', ' ', text).strip()
+            
+            # Si es una pregunta frecuente
+            if text.endswith('?') or '?' in text:
+                return f"Pregunta: {text}"
+            else:
+                return text
 
 class TrainingDataLoader:
     def __init__(self):
         self.data_loaded = False
         self.training_data_path = "./training_data"
-        self.documents_path = "./documents"
+        self.documents_path = "./app/documents"  # ← RUTA CORREGIDA
         self.base_knowledge_loaded = False
         self.word_documents_loaded = False
+        self.document_processor = DocumentProcessor()
 
     def load_all_training_data(self):
         """Cargar TODOS los datos con información CORRECTA y ESPECÍFICA para Plaza Norte"""
         try:
+            logger.info("🚀 INICIANDO CARGA COMPLETA DE DATOS DE ENTRENAMIENTO")
+            
             # 1. ✅ Cargar conocimiento base CORREGIDO
             if not self.base_knowledge_loaded:
                 self._load_corrected_base_knowledge()
                 self.base_knowledge_loaded = True
 
-            # 2. 📂 Cargar documentos Word (si existen)
+            # 2. 📂 Cargar documentos Word (PROCESAMIENTO REAL)
             if not self.word_documents_loaded and os.path.exists(self.documents_path):
                 self._load_word_documents()
                 self.word_documents_loaded = True
@@ -34,13 +288,13 @@ class TrainingDataLoader:
             # 4. 🔄 Cargar conocimiento adicional
             self._load_derivation_knowledge()
             self._load_centro_ayuda_knowledge()
-            self._load_specific_duoc_knowledge()  # 🆕 CONOCIMIENTO ESPECÍFICO
+            self._load_specific_duoc_knowledge()
 
             # 5. 🆕 GENERAR CONOCIMIENTO ADICIONAL DESDE PATRONES
             self.generate_knowledge_from_patterns()
 
             self.data_loaded = True
-            logger.info("✅ ✅ ✅ CARGA COMPLETA CON INFORMACIÓN CORREGIDA")
+            logger.info("✅ ✅ ✅ CARGA COMPLETA FINALIZADA - RAG OPTIMIZADO")
             return True
 
         except Exception as e:
@@ -274,7 +528,191 @@ class TrainingDataLoader:
                 "original"
             )
 
-        logger.info(f"✅ Cargado conocimiento base corregido: {len(corrected_knowledge)} items + variaciones")
+        logger.info(f"✅ Cargado conocimiento base corregido: {len(corrected_knowledge)} items")
+
+    def _load_word_documents(self):
+        """📂 Cargar y procesar documentos Word - VERSIÓN CORREGIDA SIN VERIFICACIÓN DE DUPLICADOS"""
+        try:
+            if not os.path.exists(self.documents_path):
+                logger.warning("📁 Directorio de documentos no encontrado")
+                return
+
+            if not DOCX_AVAILABLE:
+                logger.error("❌ python-docx no instalado. Ejecuta: pip install python-docx")
+                return
+
+            word_files = glob.glob(os.path.join(self.documents_path, "*.docx"))
+            logger.info(f"📄 Encontrados {len(word_files)} documentos Word para procesar")
+            
+            total_documents_added = 0
+            processed_files = 0
+
+            for file_path in word_files:
+                filename = os.path.basename(file_path)
+                logger.info(f"🔍 Procesando documento: {filename}")
+                
+                try:
+                    # Extraer contenido estructurado usando DocumentProcessor
+                    structured_content = self.document_processor.extract_from_docx(file_path)
+                    
+                    if not structured_content:
+                        logger.warning(f"⚠️ No se pudo extraer contenido de {filename}")
+                        continue
+
+                    # Agregar cada fragmento al RAG SIN VERIFICAR DUPLICADOS
+                    documents_added_from_file = 0
+                    for item in structured_content:
+                        # 🚨 AGREGAR DIRECTAMENTE SIN VERIFICAR DUPLICADOS
+                        success = self._add_document_direct(
+                            document=item['content'],
+                            metadata={
+                                "type": item['type'],
+                                "category": item['category'],
+                                "source": item['source'],
+                                "section": item.get('section', ''),
+                                "is_structured": item.get('is_structured', False),
+                                "optimized": "true"
+                            }
+                        )
+                        if success:
+                            documents_added_from_file += 1
+                            total_documents_added += 1
+
+                    logger.info(f"✅ {filename}: {documents_added_from_file}/{len(structured_content)} fragmentos agregados")
+                    processed_files += 1
+
+                except Exception as e:
+                    logger.error(f"❌ Error procesando {filename}: {e}")
+                    continue
+
+            logger.info(f"🎉 PROCESAMIENTO COMPLETADO: {processed_files}/{len(word_files)} archivos procesados, {total_documents_added} documentos agregados al RAG")
+            self.word_documents_loaded = True
+
+        except Exception as e:
+            logger.error(f"❌ Error en procesamiento de documentos Word: {e}")
+            self.word_documents_loaded = False
+
+    def _add_document_direct(self, document: str, metadata: Dict = None) -> bool:
+        """🆕 AGREGAR DOCUMENTO DIRECTAMENTE SIN VERIFICAR DUPLICADOS"""
+        try:
+            # Generar ID único basado en timestamp y hash
+            doc_id = f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}_{hash(document) % 10000:04d}"
+            
+            # Metadata mejorada
+            enhanced_metadata = {
+                "timestamp": datetime.now().isoformat(),
+                "source": metadata.get('source', 'unknown') if metadata else 'unknown',
+                "category": metadata.get('category', 'general') if metadata else 'general',
+                "type": metadata.get('type', 'general') if metadata else 'general',
+                "optimized": metadata.get('optimized', 'false') if metadata else 'false',
+                "section": metadata.get('section', ''),
+                "is_structured": metadata.get('is_structured', False)
+            }
+            
+            # Agregar directamente a ChromaDB
+            rag_engine.collection.add(
+                documents=[document],
+                metadatas=[enhanced_metadata],
+                ids=[doc_id]
+            )
+            
+            logger.debug(f"✅ Documento agregado directamente: '{document[:50]}...' [Categoría: {enhanced_metadata['category']}]")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Error agregando documento directamente: {e}")
+            return False
+
+    def _load_historical_training_data(self):
+        """Cargar training data histórica (existente)"""
+        try:
+            pattern = os.path.join(self.training_data_path, "training_data_*.json")
+            json_files = glob.glob(pattern)
+            
+            if not json_files:
+                logger.warning("❌ No se encontraron archivos training_data.json")
+                return
+            
+            all_questions = []
+            
+            for file_path in json_files:
+                logger.info(f"📂 Cargando histórico: {os.path.basename(file_path)}")
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    
+                    if isinstance(data, list):
+                        all_questions.extend(data)
+                    elif isinstance(data, dict) and 'questions' in data:
+                        all_questions.extend(data['questions'])
+                    else:
+                        all_questions.append(data)
+            
+            logger.info(f"📊 Encontradas {len(all_questions)} preguntas históricas")
+            
+            for i, item in enumerate(all_questions):
+                try:
+                    if isinstance(item, dict):
+                        question = item.get('input', '') or item.get('question', '')
+                        category = item.get('category', 'general')
+                        
+                        if question and len(question) > 5:
+                            self._add_document_direct(
+                                document=question,
+                                metadata={
+                                    "type": "training_question",
+                                    "category": category,
+                                    "source": "historical_questions"
+                                }
+                            )
+                            
+                except Exception as e:
+                    logger.warning(f"⚠️ Error procesando item histórico {i}: {e}")
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"❌ Error cargando training data histórico: {e}")
+
+    def _load_derivation_knowledge(self):
+        """Cargar conocimiento sobre derivación"""
+        derivation_knowledge = [
+            {
+                "document": "DERIVACIÓN: Problemas técnicos con Portal del Estudiante, MiClase, contraseñas → Centro de Ayuda Duoc UC: https://centroayuda.duoc.cl",
+                "category": "derivacion"
+            },
+            {
+                "document": "DERIVACIÓN: Consultas académicas específicas, mallas curriculares, profesores → Jefatura de carrera correspondiente",
+                "category": "derivacion"  
+            }
+        ]
+        
+        for item in derivation_knowledge:
+            self._add_document_direct(
+                document=item["document"],
+                metadata={
+                    "type": "derivacion",
+                    "category": item["category"],
+                    "source": "centro_ayuda",
+                    "optimized": "true"
+                }
+            )
+
+    def _load_centro_ayuda_knowledge(self):
+        """Cargar información sobre el Centro de Ayuda"""
+        centro_ayuda_knowledge = [
+            "Centro de Ayuda Duoc UC: https://centroayuda.duoc.cl - Soporte técnico para plataformas institucionales.",
+            "Portal del Estudiante: https://portal.duoc.cl - Acceso con RUT y contraseña personal."
+        ]
+        
+        for doc in centro_ayuda_knowledge:
+            self._add_document_direct(
+                document=doc,
+                metadata={
+                    "type": "informacion_general",
+                    "category": self._categorize_document(doc),
+                    "source": "centro_ayuda", 
+                    "optimized": "true"
+                }
+            )
 
     def _load_specific_duoc_knowledge(self):
         """🆕 CARGA DE INFORMACIÓN ESPECÍFICA Y ESTRUCTURADA DE DUOC"""
@@ -311,7 +749,7 @@ class TrainingDataLoader:
         ]
         
         for item in specific_knowledge:
-            rag_engine.add_document(
+            self._add_document_direct(
                 document=item["document"],
                 metadata={
                     "type": "specific_knowledge",
@@ -321,119 +759,11 @@ class TrainingDataLoader:
                 }
             )
 
-    def _load_word_documents(self):
-        """Cargar documentos Word si existen"""
-        try:
-            if not os.path.exists(self.documents_path):
-                logger.warning("📁 Directorio de documentos no encontrado")
-                return
-
-            word_files = glob.glob(os.path.join(self.documents_path, "*.docx"))
-            logger.info(f"📄 Encontrados {len(word_files)} documentos Word")
-            
-            # Por ahora solo log, implementar procesamiento real después
-            for file_path in word_files:
-                logger.info(f"📖 Documento encontrado: {os.path.basename(file_path)}")
-                
-        except Exception as e:
-            logger.error(f"❌ Error con documentos Word: {e}")
-
-    def _load_historical_training_data(self):
-        """Cargar training data histórica (existente)"""
-        try:
-            pattern = os.path.join(self.training_data_path, "training_data_*.json")
-            json_files = glob.glob(pattern)
-            
-            if not json_files:
-                logger.warning("❌ No se encontraron archivos training_data.json")
-                return
-            
-            all_questions = []
-            
-            for file_path in json_files:
-                logger.info(f"📂 Cargando histórico: {os.path.basename(file_path)}")
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    
-                    if isinstance(data, list):
-                        all_questions.extend(data)
-                    elif isinstance(data, dict) and 'questions' in data:
-                        all_questions.extend(data['questions'])
-                    else:
-                        all_questions.append(data)
-            
-            logger.info(f"📊 Encontradas {len(all_questions)} preguntas históricas")
-            
-            for i, item in enumerate(all_questions):
-                try:
-                    if isinstance(item, dict):
-                        question = item.get('input', '') or item.get('question', '')
-                        category = item.get('category', 'general')
-                        
-                        if question and len(question) > 5:
-                            rag_engine.add_document(
-                                document=question,
-                                metadata={
-                                    "type": "training_question",
-                                    "category": category,
-                                    "source": "historical_questions"
-                                }
-                            )
-                            
-                except Exception as e:
-                    logger.warning(f"⚠️ Error procesando item histórico {i}: {e}")
-                    continue
-                    
-        except Exception as e:
-            logger.error(f"❌ Error cargando training data histórico: {e}")
-
-    def _load_derivation_knowledge(self):
-        """Cargar conocimiento sobre derivación"""
-        derivation_knowledge = [
-            {
-                "document": "DERIVACIÓN: Problemas técnicos con Portal del Estudiante, MiClase, contraseñas → Centro de Ayuda Duoc UC: https://centroayuda.duoc.cl",
-                "category": "derivacion"
-            },
-            {
-                "document": "DERIVACIÓN: Consultas académicas específicas, mallas curriculares, profesores → Jefatura de carrera correspondiente",
-                "category": "derivacion"  
-            }
-        ]
-        
-        for item in derivation_knowledge:
-            rag_engine.add_document(
-                document=item["document"],
-                metadata={
-                    "type": "derivacion",
-                    "category": item["category"],
-                    "source": "centro_ayuda",
-                    "optimized": "true"
-                }
-            )
-
-    def _load_centro_ayuda_knowledge(self):
-        """Cargar información sobre el Centro de Ayuda"""
-        centro_ayuda_knowledge = [
-            "Centro de Ayuda Duoc UC: https://centroayuda.duoc.cl - Soporte técnico para plataformas institucionales.",
-            "Portal del Estudiante: https://portal.duoc.cl - Acceso con RUT y contraseña personal."
-        ]
-        
-        for doc in centro_ayuda_knowledge:
-            rag_engine.add_document(
-                document=doc,
-                metadata={
-                    "type": "informacion_general",
-                    "category": self._categorize_document(doc),
-                    "source": "centro_ayuda", 
-                    "optimized": "true"
-                }
-            )
-
     def _add_to_rag(self, question: str, answer: str, category: str, source: str, variation_type: str):
         """Método unificado para agregar al RAG"""
         document = f"Pregunta: {question}\nRespuesta: {answer}"
         
-        success = rag_engine.add_document(
+        success = self._add_document_direct(
             document=document,
             metadata={
                 "type": "corrected_faq",
@@ -463,7 +793,7 @@ class TrainingDataLoader:
             return "general"
 
     def generate_knowledge_from_patterns(self):
-        """🆕 MÉTODO REQUERIDO - Generar conocimiento adicional basado en patrones"""
+        """🆕 Generar conocimiento adicional basado en patrones"""
         logger.info("🔧 Generando conocimiento adicional desde patrones...")
         
         pattern_knowledge = [
@@ -485,7 +815,7 @@ class TrainingDataLoader:
         ]
         
         for doc in pattern_knowledge:
-            success = rag_engine.add_document(
+            success = self._add_document_direct(
                 document=doc,
                 metadata={
                     "type": "pattern_knowledge",
@@ -505,7 +835,8 @@ class TrainingDataLoader:
             "base_knowledge_loaded": self.base_knowledge_loaded,
             "word_documents_loaded": self.word_documents_loaded,
             "data_loaded": self.data_loaded,
-            "mode": "corrected_loading"
+            "mode": "corrected_loading",
+            "docx_support": DOCX_AVAILABLE
         }
 
 # Instancia global

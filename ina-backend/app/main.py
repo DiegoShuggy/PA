@@ -14,12 +14,11 @@ from pydantic import BaseModel as BaseModelOriginal
 from typing import Optional
 from app.quality_monitor import quality_monitor
 
+
 # 👇 NUEVAS IMPORTACIONES PARA FILTROS DE CONTENIDO
 from app.content_filter import ContentFilter
 from app.topic_classifier import TopicClassifier
-
 from app.advanced_analytics import advanced_analytics
-from app.auto_trainer import auto_trainer
 from sqlalchemy import text
 from app.training_data_loader import training_loader
 from app.qr_generator import qr_generator, duoc_url_manager
@@ -61,6 +60,12 @@ topic_classifier = TopicClassifier()
 
 # Importar funciones y objetos de cache_manager después de definir app
 from app.cache_manager import get_cache_stats, rag_cache, classification_cache
+
+success = training_loader.load_all_training_data()
+if success:
+    print("✅ RAG cargado con toda la información de documentos Word")
+else:
+    print("❌ Error en carga")
 
 # ENDPOINTS DE CACHE
 @app.get("/cache/stats")

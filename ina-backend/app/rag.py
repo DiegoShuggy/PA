@@ -1,3 +1,4 @@
+# rag.py
 import chromadb
 import ollama
 from typing import List, Dict, Optional
@@ -18,7 +19,7 @@ from app.cache_manager import rag_cache, response_cache, normalize_question
 logger = logging.getLogger(__name__)
 
 class SemanticCache:
-    def __init__(self, similarity_threshold: float = 0.82):  # 🆕 Mayor precisión para Duoc UC
+    def __init__(self, similarity_threshold: float = 0.75):  # 🆕 Umbral ajustado para español
         try:
             # 🆕 MODELO ESPECIALIZADO PARA ESPAÑOL
             self.model = SentenceTransformer('dccuchile/bert-base-spanish-wwm-uncased')
@@ -183,7 +184,7 @@ class RAGEngine:
         }
         
         # 🆕 CACHE SEMÁNTICO MEJORADO
-        self.semantic_cache = SemanticCache(similarity_threshold=0.82)
+        self.semantic_cache = SemanticCache(similarity_threshold=0.75)  # 🆕 Umbral ajustado
         self.text_cache = {}  # Cache textual rápido
         
         logger.info("✅ RAG Engine DUOC UC con Cache Universal inicializado")
@@ -262,12 +263,8 @@ class RAGEngine:
     def add_document(self, document: str, metadata: Dict = None) -> bool:
         """🆕 AGREGAR DOCUMENTO CON MÁS INFORMACIÓN - MÉTODO CORREGIDO"""
         try:
-            # Verificar si el documento ya existe
-            if self.document_exists(document):
-                logger.warning(f"⚠️ Documento duplicado omitido: {document[:50]}...")
-                return False
-                
-            doc_id = f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{hash(document) % 10000}"
+            # 🆕 ELIMINAR VERIFICACIÓN DE DUPLICADOS - Agregar directamente
+            doc_id = f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}_{hash(document) % 10000}"
             
             # 🆕 METADATA MEJORADA
             enhanced_metadata = {
@@ -332,31 +329,88 @@ class RAGEngine:
             logger.error(f"Error en query RAG: {e}")
             return []
 
-    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.7):
-        """🆕 BÚSQUEDA OPTIMIZADA MEJORADA"""
+    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.65):
+        """🆕 BÚSQUEDA OPTIMIZADA REPARADA - UMBRAL AJUSTADO"""
         try:
+            # 🆕 PREPROCESAR LA CONSULTA para mejor matching
+            processed_query = self.enhanced_normalize_text(query_text)
+            
             results = self.collection.query(
-                query_texts=[query_text],
-                n_results=n_results * 2,
+                query_texts=[processed_query],
+                n_results=n_results * 3,  # Buscar más resultados para filtrar
                 include=['distances', 'documents', 'metadatas']
             )
             
             filtered_docs = []
             for i, distance in enumerate(results['distances'][0]):
                 similarity = 1 - distance
+                
+                # 🆕 CRITERIOS MÁS FLEXIBLES para español
                 if similarity >= score_threshold:
-                    filtered_docs.append({
-                        'document': results['documents'][0][i],
-                        'metadata': results['metadatas'][0][i],
-                        'similarity': similarity
-                    })
+                    doc_metadata = results['metadatas'][0][i]
+                    doc_content = results['documents'][0][i]
+                    
+                    # 🆕 VERIFICACIÓN ADICIONAL: contenido relevante
+                    if self._is_relevant_document(processed_query, doc_content):
+                        filtered_docs.append({
+                            'document': doc_content,
+                            'metadata': doc_metadata,
+                            'similarity': similarity
+                        })
             
             # Ordenar por similitud y devolver los mejores
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
+            
+            logger.info(f"🔍 Query: '{query_text}' -> {len(filtered_docs)} resultados (umbral: {score_threshold})")
+            
             return filtered_docs[:n_results]
             
         except Exception as e:
-            logger.error(f"Error en query optimizada: {e}")
+            logger.error(f"❌ Error en query optimizada: {e}")
+            # Fallback a query simple
+            simple_results = self.query(query_text, n_results)
+            return [{'document': doc, 'metadata': {}, 'similarity': 0.7} for doc in simple_results]
+
+    def _is_relevant_document(self, query: str, document: str) -> bool:
+        """🆕 VERIFICACIÓN DE RELEVANCIA MEJORADA"""
+        query_words = set(query.lower().split())
+        doc_words = set(document.lower().split())
+        
+        # Palabras muy comunes que no cuentan para relevancia
+        stop_words = {'el', 'la', 'los', 'las', 'de', 'en', 'y', 'que', 'con', 'para', 'por'}
+        query_words = query_words - stop_words
+        doc_words = doc_words - stop_words
+        
+        if not query_words:
+            return True
+        
+        # Calcular superposición de palabras clave
+        overlap = len(query_words.intersection(doc_words))
+        relevance_ratio = overlap / len(query_words)
+        
+        return relevance_ratio >= 0.3  # Al menos 30% de palabras clave coinciden
+
+    def query_with_sources(self, query_text: str, n_results: int = 3) -> List[Dict]:
+        """🆕 BÚSQUEDA ESPECÍFICA PARA FUENTES - MÉTODO NUEVO"""
+        try:
+            # Usar query optimizada con umbral más bajo para fuentes
+            results = self.query_optimized(query_text, n_results, score_threshold=0.6)
+            
+            # Formatear resultados para fuentes
+            sources = []
+            for result in results:
+                sources.append({
+                    'content': result['document'],
+                    'category': result['metadata'].get('category', 'general'),
+                    'source': result['metadata'].get('source', 'unknown'),
+                    'similarity': result['similarity']
+                })
+            
+            logger.info(f"📚 Fuentes encontradas para '{query_text}': {len(sources)}")
+            return sources
+            
+        except Exception as e:
+            logger.error(f"❌ Error en query con fuentes: {e}")
             return []
 
     def _update_metrics(self, metric_name: str):
@@ -433,7 +487,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         response_data['response_time'] = time.time() - start_time
         return response_data
     
-    # 2. 🧠 CACHE SEMÁNTICO INTELIGENTE (similitud 82%+)
+    # 2. 🧠 CACHE SEMÁNTICO INTELIGENTE (similitud 75%+)
     query_embedding = rag_engine.semantic_cache.get_embedding(normalized_message)
     semantic_response = rag_engine.semantic_cache.find_similar(query_embedding)
     
@@ -463,6 +517,9 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
     
     # 4. ⚡ PROCESAR CON OLLAMA (cache miss)
     try:
+        # 🆕 BUSCAR FUENTES ANTES DE GENERAR RESPUESTA
+        sources = rag_engine.query_with_sources(user_message, n_results=3)
+        
         # 🆕 SYSTEM MESSAGE MEJORADO para respuestas más específicas
         system_message = (
             "Eres InA, asistente especializado del Punto Estudiantil Duoc UC Plaza Norte. "
@@ -491,6 +548,13 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
             "• Beneficios: https://beneficios.duoc.cl\n\n"
             "SÉ ESPECÍFICO con horarios, ubicaciones y procedimientos del Punto Estudiantil Plaza Norte."
         )
+        
+        # 🆕 INCLUIR FUENTES EN EL CONTEXTO SI HAY
+        if sources:
+            sources_context = "\n📚 INFORMACIÓN DE FUENTES ENCONTRADAS:\n"
+            for i, source in enumerate(sources[:2]):  # Máximo 2 fuentes
+                sources_context += f"{i+1}. {source['content'][:200]}...\n"
+            system_message += sources_context
         
         if context:
             relevant_context = []
@@ -531,14 +595,25 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         logger.info(f"✅ Respuesta procesada - Texto: {len(respuesta)} chars, QRs: {len(processed_response.get('qr_codes', {}))}")
         
         response_text = processed_response.get('text', respuesta)
-        sources = processed_response.get('sources', [])
+        
+        # 🆕 USAR FUENTES ENCONTRADAS en lugar de las del QR generator
         category = processed_response.get('category', 'general')
         qr_codes = processed_response.get('qr_codes', {})
         urls = processed_response.get('suggested_urls', [])
         
+        # 🆕 FORMATEAR FUENTES PARA LA RESPUESTA
+        formatted_sources = []
+        for source in sources:
+            formatted_sources.append({
+                'content': source['content'][:150] + '...' if len(source['content']) > 150 else source['content'],
+                'category': source['category'],
+                'source_file': source['source'],
+                'similarity': round(source['similarity'], 3)
+            })
+        
         response_data = {
             'response': response_text,
-            'sources': sources,
+            'sources': formatted_sources,  # 🆕 USAR FUENTES REALES
             'category': category,
             'timestamp': time.time(),
             'qr_codes': qr_codes,
