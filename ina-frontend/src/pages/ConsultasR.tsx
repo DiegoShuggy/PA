@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import '../css/ConsultasR.css';
@@ -10,21 +10,96 @@ import ina5 from '../img/deportes.png';
 import ina6 from '../img/pastoral.png';
 
 
+
 function ConsultasR() {
     console.log('ConsultasR component is rendering');
     const { t } = useTranslation();
     const navigate = useNavigate();
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Estado y refs para el temporizador de inactividad
+    const [inactivityTime, setInactivityTime] = useState(0);
+    const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const inactivityCounterRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // Configuración del temporizador de inactividad (en milisegundos)
+    const INACTIVITY_TIMEOUT = 300000; // 5 minutos
+
+    // Función para reiniciar el temporizador de inactividad
+    const resetInactivityTimer = useCallback(() => {
+        setInactivityTime(0);
+
+        // Limpiar temporizadores existentes
+        if (inactivityTimerRef.current) {
+            clearTimeout(inactivityTimerRef.current);
+        }
+        if (inactivityCounterRef.current) {
+            clearInterval(inactivityCounterRef.current);
+        }
+
+        // Crear nuevo temporizador
+        inactivityTimerRef.current = setTimeout(() => {
+            console.log('Tiempo de inactividad agotado - redirigiendo...');
+            navigate('/'); // Redirige a la página principal
+        }, INACTIVITY_TIMEOUT);
+
+        // Opcional: Contador para debug (puedes remover esto en producción)
+        inactivityCounterRef.current = setInterval(() => {
+            setInactivityTime(prev => prev + 1000);
+        }, 1000);
+    }, [navigate]);
+
+    // Función para manejar eventos de actividad
+    const handleActivity = useCallback(() => {
+        resetInactivityTimer();
+    }, [resetInactivityTimer]);
+
+    // Efecto para inicializar los detectores de actividad
+    useEffect(() => {
+        // Lista de eventos que indican actividad del usuario
+        const events = [
+            'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart',
+            'click', 'input', 'focus'
+        ];
+
+        // Agregar event listeners
+        events.forEach(event => {
+            document.addEventListener(event, handleActivity, true);
+        });
+
+        // Iniciar el temporizador por primera vez
+        resetInactivityTimer();
+
+        // Cleanup: remover event listeners y limpiar temporizadores
+        return () => {
+            events.forEach(event => {
+                document.removeEventListener(event, handleActivity, true);
+            });
+
+            if (inactivityTimerRef.current) {
+                clearTimeout(inactivityTimerRef.current);
+            }
+            if (inactivityCounterRef.current) {
+                clearInterval(inactivityCounterRef.current);
+            }
+        };
+    }, [handleActivity, resetInactivityTimer]);
+
+    // Efecto opcional para mostrar el tiempo de inactividad en consola (debug)
+    useEffect(() => {
+        if (inactivityTime > 0 && inactivityTime % 5000 === 0) {
+            console.log(`Tiempo de inactividad: ${inactivityTime / 1000} segundos`);
+        }
+    }, [inactivityTime]);
+
     // Función para volver a la página anterior
-    const handleGoBack = () => {
+    const handleGoBack = useCallback(() => {
         navigate(-1); // -1 significa ir a la página anterior en el historial
-    };
+    }, [navigate]);
 
     // Scroll to top when component mounts
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
 
     return (
         <div className="consultas-container">
@@ -35,7 +110,7 @@ function ConsultasR() {
                 title={t('app.backButton', 'Volver atrás')}
             >
                 <span className="back-arrow">←</span>
-                {t('Asuntos.back', 'Volver')}
+                {t('app.back')}
             </button>
 
             <h2>{t('consultas.title', 'Área de Consultas')}</h2>

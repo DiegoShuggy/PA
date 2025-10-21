@@ -132,7 +132,7 @@ const sendReportByEmail = async () => {
             <div className="reporte-header">
                 <button className="back-button" onClick={handleGoBack}>
                     <span className="back-arrow">←</span>
-                    {t('Asuntos.back', 'Volver')}
+                    {t('app.back')}
                 </button>
                 
                 <div className="navbar-brand">

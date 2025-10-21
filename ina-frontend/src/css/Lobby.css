@@ -11,7 +11,7 @@
   background-color: #f8f9fa;
 }
 span{
-  cursor: default;
+  cursor: pointer;
 }
 
 .lobby-container h2 {
@@ -169,4 +169,7 @@ span{
 
 .FAQ:nth-child(12) {
   animation-delay: 1.6s;
+}
+.FAQ:nth-child(13) {
+  animation-delay: 1.7s;
 }
