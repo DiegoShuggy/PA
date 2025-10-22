@@ -730,208 +730,177 @@ rag_engine = RAGEngine()
 
 
 def get_ai_response(user_message: str, context: list = None) -> Dict:
-    """🎯 VERSIÓN MEJORADA CON CACHE SEMÁNTICO UNIVERSAL MEJORADO"""
+    """🎯 VERSIÓN OPTIMIZADA - SELECCIÓN INTELIGENTE DE FUENTES"""
     import time
     start_time = time.time()
 
-    # 👇 NORMALIZACIÓN INTELIGENTE MEJORADA
+    # Normalización mejorada
     normalized_message = rag_engine.enhanced_normalize_text(user_message)
+    cache_key = f"rag_{hashlib.md5(user_message.encode()).hexdigest()}"
 
-    # 1. 🚀 CACHE TEXTUAL RÁPIDO (coincidencia exacta)
-    if normalized_message in rag_engine.text_cache:
+    # 1. 🚀 CACHE TEXTUAL RÁPIDO
+    if cache_key in rag_engine.text_cache:
+        cached_response = rag_engine.text_cache[cache_key]
         rag_engine.metrics['text_cache_hits'] += 1
         logger.info(f"🎯 RAG Text Cache HIT para: '{user_message}'")
-        response_data = rag_engine.text_cache[normalized_message]
-        response_data['response_time'] = time.time() - start_time
-        return response_data
-
-    # 2. 🧠 CACHE SEMÁNTICO INTELIGENTE (similitud 35%+)
-    query_embedding = rag_engine.semantic_cache.get_embedding(
-        normalized_message)
-    semantic_response = rag_engine.semantic_cache.find_similar(
-        query_embedding)
-
-    if semantic_response:
-        rag_engine.metrics['semantic_cache_hits'] += 1
-        logger.info(f"🧠 RAG Semantic Cache HIT para: '{user_message}'")
-
-        # Agregar también al cache textual para futuras búsquedas rápidas
-        rag_engine.text_cache[normalized_message] = semantic_response
-        semantic_response['response_time'] = time.time() - start_time
-        return semantic_response
-
-    # 3. 📦 CACHE LEGACY (compatibilidad)
-    cache_key = rag_cache._generate_key({
-        'message': normalized_message,
-        'context': context[:3] if context else []
-    })
-
-    cached_response = rag_cache.get(cache_key)
-    if cached_response:
-        logger.info(f"📦 RAG Legacy Cache HIT para: '{user_message}'")
-        rag_engine.metrics['cache_hits'] += 1
         cached_response['response_time'] = time.time() - start_time
         return cached_response
 
-    logger.info(f"🔍 RAG Semantic Cache MISS para: '{user_message}'")
+    logger.info(f"🔍 RAG Cache MISS para: '{user_message}'")
 
-    # 4. ⚡ PROCESAR CON OLLAMA (cache miss)
+    # 2. ⚡ PROCESAR CON OLLAMA
     try:
-        # 🆕 BUSCAR FUENTES CON BÚSQUEDA HÍBRIDA MEJORADA
-        sources = rag_engine.hybrid_search(user_message, n_results=3)
-
-        # 🆕 SYSTEM MESSAGE SUPER DIRECTIVO Y ESPECÍFICO - VERSIÓN CORREGIDA
+        # Buscar fuentes (más resultados para mejor selección)
+        sources = rag_engine.hybrid_search(user_message, n_results=6)
+        
+        # 🆕 ALGORITMO MEJORADO DE SELECCIÓN DE FUENTES
+        final_sources = []
+        seen_hashes = set()
+        
+        query_lower = user_message.lower()
+        logger.info(f"🔍 Búsqueda para: '{user_message}' - Fuentes encontradas: {len(sources)}")
+        
+        # 🎯 CLASIFICAR Y PRIORIZAR FUENTES
+        highly_relevant_sources = []
+        relevant_sources = []
+        other_sources = []
+        
+        for source in sources:
+            content_hash = hashlib.md5(source['document'].encode()).hexdigest()
+            
+            # Evitar duplicados exactos
+            if content_hash in seen_hashes:
+                continue
+            seen_hashes.add(content_hash)
+            
+            content_lower = source['document'].lower()
+            category = source['metadata'].get('category', 'general')
+            score = source.get('final_score', 0)
+            
+            # 🎯 DETECCIÓN ESPECÍFICA PARA CLAUDIA CORTÉS
+            if any(keyword in query_lower for keyword in ['claudia', 'cortés', 'cv', 'curriculum', 'laboral']):
+                if any(kw in content_lower for kw in ['claudia cortés', 'claudia', 'cortés']):
+                    highly_relevant_sources.append((source, 100))  # Máxima prioridad
+                    logger.info(f"🎯🏆 FUENTE CLAUDIA CORTÉS ENCONTRADA: {content_hash[:8]}")
+                elif any(kw in content_lower for kw in ['cv', 'curriculum', 'laboral', 'empleo']):
+                    highly_relevant_sources.append((source, 90))
+                elif 'desarrollo laboral' in content_lower:
+                    relevant_sources.append((source, 80))
+            
+            # 🎯 DETECCIÓN PARA TNE
+            elif any(keyword in query_lower for keyword in ['tne', 'tarjeta nacional']):
+                if any(kw in content_lower for kw in ['tne', 'tarjeta nacional']):
+                    highly_relevant_sources.append((source, 100))
+            
+            # 🎯 DETECCIÓN PARA SESIONES PSICOLÓGICAS
+            elif any(keyword in query_lower for keyword in ['sesion', 'psicológica', 'psicológico']):
+                if any(kw in content_lower for kw in ['sesion', 'psicológica', '8 sesiones']):
+                    highly_relevant_sources.append((source, 100))
+            
+            # Fuentes con buena puntuación general
+            elif score > 40:
+                relevant_sources.append((source, score))
+            else:
+                other_sources.append(source)
+        
+        # 🏆 CONSTRUIR LISTA FINAL ORDENADA POR PRIORIDAD
+        # Primero las altamente relevantes (ordenadas por prioridad)
+        highly_relevant_sources.sort(key=lambda x: x[1], reverse=True)
+        for source, priority in highly_relevant_sources:
+            if len(final_sources) < 2:
+                final_sources.append(source)
+                logger.info(f"🏆 Añadida fuente altamente relevante (prioridad: {priority})")
+        
+        # Luego las relevantes por score
+        relevant_sources.sort(key=lambda x: x[1], reverse=True)
+        for source, score in relevant_sources:
+            if len(final_sources) < 2:
+                final_sources.append(source)
+                logger.info(f"✅ Añadida fuente relevante (score: {score})")
+        
+        # Finalmente otras fuentes si aún hay espacio
+        for source in other_sources:
+            if len(final_sources) < 2:
+                final_sources.append(source)
+                logger.info(f"ℹ️ Añadida otra fuente")
+        
+        logger.info(f"📊 Fuentes finales seleccionadas: {len(final_sources)}")
+        
+        # 🆕 SYSTEM MESSAGE MEJORADO
         system_message = (
-            "Eres InA, asistente especializado EXCLUSIVAMENTE del Punto Estudiantil Duoc UC Plaza Norte. "
-            "🚫 **INSTRUCCIÓN CRÍTICA**: DEBES usar SOLAMENTE la información de las FUENTES proporcionadas. "
-            "🚫 NO inventes información, NO uses conocimiento general.\n\n"
-            
-            "📋 **FORMATO OBLIGATORIO DE RESPUESTA**:\n"
-            "1. 💬 Respuesta directa y específica (2-4 líneas máximo)\n"
-            "2. 📍 Información de ubicación ESPECÍFICA de Plaza Norte\n"
-            "3. ⏰ Horarios si están en las fuentes\n"
-            "4. 💰 Costos si están en las fuentes\n"
-            "5. 📄 Documentación requerida si está en las fuentes\n\n"
-            
-            "📍 **INFORMACIÓN BASE PLAZA NORTE**:\n"
-            "- Dirección: Santa Elena de Huechuraba 1660, Huechuraba\n"
-            "- Horario Punto Estudiantil: Lunes a Viernes 8:30-19:00\n"
-            "- Teléfono: +56 2 2360 6400\n"
-            "- Email: Puntoestudiantil_pnorte@duoc.cl\n\n"
+            "Eres InA, asistente del Punto Estudiantil Duoc UC Plaza Norte. "
+            "Responde SOLO con la información de las fuentes proporcionadas.\n\n"
         )
 
-        # 🆕 INCLUIR FUENTES CON INSTRUCCIÓN EXPLÍCITA
-        if sources:
-            sources_context = "\n🎯 **FUENTES ESPECÍFICAS ENCONTRADAS (USA ESTA INFORMACIÓN)**:\n"
-            sources_context += "⚠️ **OBLIGATORIO**: Tu respuesta DEBE basarse ÚNICAMENTE en esta información:\n\n"
-            
-            # 🆕 ELIMINAR FUENTES DUPLICADAS
-            unique_sources = []
-            seen_contents = set()
-            
-            for source in sources:
-                content_hash = hash(source['document'][:100])  # Hash del inicio para identificar duplicados
-                if content_hash not in seen_contents:
-                    seen_contents.add(content_hash)
-                    unique_sources.append(source)
-            
-            for i, source in enumerate(unique_sources[:3]):  # Máximo 3 fuentes únicas
+        if final_sources:
+            system_message += "📚 INFORMACIÓN DISPONIBLE:\n\n"
+            for i, source in enumerate(final_sources):
                 content = source['document']
                 category = source['metadata'].get('category', 'general')
-                
-                sources_context += f"📄 **Fuente {i+1}** [Categoría: {category}]:\n"
-                sources_context += f"{content}\n\n"
+                system_message += f"--- Fuente {i+1} [Categoría: {category}] ---\n{content}\n\n"
             
-            system_message += sources_context
-            
-            # 🆕 INSTRUCCIÓN FINAL MUY DIRECTIVA
             system_message += (
-                "\n🔍 **INSTRUCCIÓN FINAL**:\n"
-                "- ✅ USA EXCLUSIVAMENTE la información de las FUENTES proporcionadas\n"
-                "- ✅ Sé ESPECÍFICO con procedimientos, costos, horarios y ubicaciones\n"
-                "- ✅ Responde de forma CONCRETA y DIRECTA\n"
-                "- 🚫 NO inventes información que no esté en las fuentes\n"
-                "- 🚫 NO des respuestas genéricas o de conocimiento general\n"
+                "💡 INSTRUCCIÓN CRÍTICA: Responde ÚNICAMENTE con la información de arriba. "
+                "Si la información no responde completamente la pregunta, di solo lo que está en las fuentes.\n"
+                "NO inventes información. Si no hay datos suficientes, di 'No hay información específica sobre esto'.\n"
             )
         else:
-            system_message += "\n⚠️ **NO SE ENCONTRARON FUENTES ESPECÍFICAS**. Responde indicando que no hay información específica disponible.\n"
+            system_message += "⚠️ No hay información específica disponible sobre este tema.\n"
 
-        if context:
-            relevant_context = []
-            for ctx in context:
-                if not ctx.startswith("DERIVACIÓN:") and len(ctx) > 10:
-                    relevant_context.append(ctx)
-            if relevant_context:
-                system_message += f"\n\n📋 CONTEXTO RELEVANTE:\n{chr(10).join(relevant_context[:2])}"
+        # 🆕 LOG DETALLADO
+        logger.info(f"⚡ Enviando a Ollama: '{user_message}'")
+        logger.info(f"📚 Fuentes finales: {len(final_sources)}")
+        for i, source in enumerate(final_sources):
+            category = source['metadata'].get('category', 'N/A')
+            content_preview = source['document'][:80] + "..."
+            logger.info(f"   📄 Fuente {i+1}: Categoría: {category}")
+            logger.info(f"      {content_preview}")
 
-        logger.info(f"⚡ Enviando a Ollama: {user_message[:100]}...")
-        logger.info(f"📚 Fuentes únicas enviadas: {len(unique_sources) if sources else 0}")
-        
         response = ollama.chat(
             model='mistral:7b',
             messages=[
-                {
-                    'role': 'system',
-                    'content': system_message
-                },
-                {
-                    'role': 'user',
-                    'content': user_message
-                }
+                {'role': 'system', 'content': system_message},
+                {'role': 'user', 'content': user_message}
             ],
-            options={
-                'temperature': 0.1,
-                'num_predict': 300,
-                'top_p': 0.7,
-                'top_k': 25
-            }
+            options={'temperature': 0.1, 'num_predict': 200}
         )
 
         respuesta = response['message']['content'].strip()
-        logger.info(f"📨 Respuesta de Ollama: {respuesta[:200]}...")
+        logger.info(f"📨 Respuesta: {respuesta[:100]}...")
 
-        # 🆕 OPTIMIZACIÓN MEJORADA
+        # Optimización de respuesta
         respuesta = _optimize_response(respuesta, user_message)
-        processed_response = qr_generator.process_response(
-            respuesta, user_message)
 
-        logger.info(
-            f"✅ Respuesta procesada - Texto: {len(respuesta)} chars, QRs: {len(processed_response.get('qr_codes', {}))}")
-
-        response_text = processed_response.get('text', respuesta)
-
-        # 🆕 USAR FUENTES ENCONTRADAS en lugar de las del QR generator
-        category = processed_response.get('category', 'general')
-        qr_codes = processed_response.get('qr_codes', {})
-        urls = processed_response.get('suggested_urls', [])
-
-        # 🆕 FORMATEAR FUENTES PARA LA RESPUESTA
+        # Formatear fuentes
         formatted_sources = []
-        for source in (unique_sources if sources else []):
+        for source in final_sources:
             formatted_sources.append({
-                'content': source['document'][:150] + '...' if len(source['document']) > 150 else source['document'],
+                'content': source['document'][:120] + '...',
                 'category': source['metadata'].get('category', 'general'),
-                'source_file': source['metadata'].get('source', 'unknown'),
-                'similarity': round(source.get('final_score', source.get('similarity', 0.5)), 3)
+                'similarity': round(source.get('final_score', 0.5), 3)
             })
 
         response_data = {
-            'response': response_text,
-            'sources': formatted_sources,  # 🆕 USAR FUENTES REALES
-            'category': category,
+            'response': respuesta,
+            'sources': formatted_sources,
+            'category': 'general',
             'timestamp': time.time(),
-            'qr_codes': qr_codes,
-            'urls': urls,
             'response_time': time.time() - start_time,
             'cache_type': 'ollama_generated'
         }
 
-        # 👇 GUARDAR EN TODOS LOS SISTEMAS DE CACHE
-        rag_engine.text_cache[normalized_message] = response_data
-        rag_engine.semantic_cache.add_to_cache(normalized_message, response_data)
-        rag_cache.set(cache_key, response_data)
-
-        # Métricas
-        rag_engine.metrics['total_queries'] += 1
-        rag_engine.metrics['successful_responses'] += 1
-        rag_engine.metrics['categories_used'][category] += 1
-        rag_engine.metrics['response_times'].append(
-            response_data['response_time'])
+        # Guardar en cache
+        rag_engine.text_cache[cache_key] = response_data
 
         return response_data
 
     except Exception as e:
-        logger.error(f"❌ Error con Ollama: {str(e)}")
-        logger.error(f"❌ Traceback: {traceback.format_exc()}")
-        rag_engine.metrics['errors'] += 1
-
+        logger.error(f"❌ Error: {str(e)}")
         return {
-            "response": "🔧 Estamos experimentando dificultades técnicas. Por favor, intenta nuevamente en unos momentos o acércate al Punto Estudiantil Plaza Norte (Santa Elena de Huechuraba 1660).",
+            "response": "🔧 Error técnico. Intenta nuevamente.",
             "sources": [],
             "category": "error",
-            "timestamp": time.time(),
-            "response_time": time.time() - start_time,
-            "cache_type": "error"
+            "response_time": time.time() - start_time
         }
 
 
