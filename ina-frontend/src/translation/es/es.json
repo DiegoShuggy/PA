@@ -52,6 +52,7 @@
       "negative": "👎 No, podría mejorar",
       "thankYouImprove": "¡Gracias por ayudarnos a mejorar!",
       "improvementQuestion": "¿Podrías contarnos más sobre cómo podemos mejorar?",
+      "optional": "Califica esta respuesta (opcional):",
       "commentsPlaceholder": "Ej: La respuesta fue muy técnica, necesitaba más detalles prácticos...",
       "submitComments": "Enviar comentarios",
       "cancel": "Cancelar",
@@ -59,7 +60,11 @@
     },
     "feedbackError": "Error: No hay sesión de feedback activa",
     "feedbackServerError": "Error al enviar feedback. Intenta nuevamente.",
-    "feedbackConnectionError": "Error de conexión. Verifica que el servidor esté funcionando."
+    "feedbackConnectionError": "Error de conexión. Verifica que el servidor esté funcionando.",
+    "readAloud": "Leer en voz alta",
+    "stopReading": "Detener lectura",
+    "ttsNotSupported": "El lector de texto no es compatible con tu navegador",
+    "ttsPermission": "Permiso de síntesis de voz denegado"
   },
   "consultas": {
     "title": "Área del Punto Estudiantil",

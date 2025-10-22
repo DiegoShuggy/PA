@@ -72,12 +72,21 @@ const Chat: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
 
+  // Estados para el lector de texto (TTS)
+  const [isReading, setIsReading] = useState(false);
+  const [currentReadingIndex, setCurrentReadingIndex] = useState<number | null>(null);
+  const [isTtsSupported, setIsTtsSupported] = useState(true);
+
   const [inactivityTime, setInactivityTime] = useState(0);
   const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inactivityCounterRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
    // Configuración del temporizador de inactividad (en milisegundos)
-  const INACTIVITY_TIMEOUT = 300000;
+  const INACTIVITY_TIMEOUT = 30000;
+  const FEEDBACK_AUTO_PRESS_TIMEOUT = 29999; // 20 segundos para feedback automático
+
+  // Agrega este estado adicional
+const feedbackAutoPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Estados para feedback
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentFeedbackSession, setCurrentFeedbackSession] = useState<string | null>(null);
@@ -96,38 +105,239 @@ const Chat: React.FC = () => {
   const silenceTimerRef = useRef<number | null>(null);
   const restartTimerRef = useRef<number | null>(null);
 
+  // Referencias para el lector de texto
+  const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
+  const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+
   // Obtener la pregunta predefinida del estado de navegación
-  const predefinedQuestion = (location.state as LocationState)?.predefinedQuestion;
   const abortControllerRef = useRef<AbortController | null>(null);
   // Función para volver a la página anterior
   const handleGoBack = () => {
     navigate(-1);
   };
 
- // Función para reiniciar el temporizador de inactividad
-  const resetInactivityTimer = useCallback(() => {
-    setInactivityTime(0);
-    
-    // Limpiar temporizadores existentes
-    if (inactivityTimerRef.current) {
-      clearTimeout(inactivityTimerRef.current);
-    }
-    if (inactivityCounterRef.current) {
-      clearInterval(inactivityCounterRef.current);
-    }
-    
-    // Crear nuevo temporizador
-    inactivityTimerRef.current = setTimeout(() => {
-      console.log('Tiempo de inactividad agotado - redirigiendo...');
-      navigate('/'); // Redirige a la página principal
-    }, INACTIVITY_TIMEOUT);
+  // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO (TEXT-TO-SPEECH)
 
-    // Opcional: Contador para debug (puedes remover esto en producción)
-    inactivityCounterRef.current = setInterval(() => {
-      setInactivityTime(prev => prev + 1000);
-    }, 1000);
-  }, [navigate]);
+  // Verificar soporte del lector de texto al cargar el componente
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      speechSynthesisRef.current = window.speechSynthesis;
+      setIsTtsSupported(true);
+    } else {
+      setIsTtsSupported(false);
+      console.warn('El lector de texto no es compatible con este navegador');
+    }
 
+    // Cleanup: detener la lectura al desmontar el componente
+    return () => {
+      stopReading();
+    };
+  }, []);
+
+  // Función para leer un mensaje en voz alta
+  const readMessage = useCallback((text: string, messageIndex: number) => {
+    if (!speechSynthesisRef.current || !isTtsSupported) {
+      alert(t('chat.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+      return;
+    }
+
+    // Detener cualquier lectura en curso
+    stopReading();
+
+    // Configurar el idioma para la síntesis de voz
+    const ttsLang = i18n.language === 'es' ? 'es-ES' :
+                   i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+
+    try {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = ttsLang;
+      utterance.rate = 0.9; // Velocidad de lectura (0.1 - 10)
+      utterance.pitch = 1; // Tono (0 - 2)
+      utterance.volume = 1; // Volumen (0 - 1)
+
+      utterance.onstart = () => {
+        setIsReading(true);
+        setCurrentReadingIndex(messageIndex);
+        console.log('Iniciando lectura del mensaje:', messageIndex);
+      };
+
+      utterance.onend = () => {
+        console.log('Lectura finalizada');
+        setIsReading(false);
+        setCurrentReadingIndex(null);
+        currentUtteranceRef.current = null;
+      };
+
+      utterance.onerror = (event) => {
+        console.error('Error en la lectura:', event);
+        setIsReading(false);
+        setCurrentReadingIndex(null);
+        currentUtteranceRef.current = null;
+        
+        if (event.error === 'not-allowed') {
+          alert(t('chat.ttsPermission') || 'Permiso de síntesis de voz denegado.');
+        }
+      };
+
+      currentUtteranceRef.current = utterance;
+      speechSynthesisRef.current.speak(utterance);
+
+    } catch (error) {
+      console.error('Error al configurar la lectura:', error);
+      setIsTtsSupported(false);
+    }
+  }, [i18n.language, t, isTtsSupported]);
+
+  // Función para detener la lectura actual
+  const stopReading = useCallback(() => {
+    if (speechSynthesisRef.current && currentUtteranceRef.current) {
+      speechSynthesisRef.current.cancel();
+      currentUtteranceRef.current = null;
+    }
+    setIsReading(false);
+    setCurrentReadingIndex(null);
+  }, []);
+
+  // Función para alternar lectura de un mensaje
+  const toggleReading = useCallback((message: Message, index: number) => {
+    if (isReading && currentReadingIndex === index) {
+      // Si ya está leyendo este mensaje, detener
+      stopReading();
+    } else {
+      // Si está leyendo otro mensaje, detener y empezar este
+      if (isReading) {
+        stopReading();
+      }
+      // Leer el mensaje seleccionado
+      readMessage(message.text, index);
+    }
+  }, [isReading, currentReadingIndex, readMessage, stopReading]);
+
+  // FIN - FUNCIONALIDAD DEL LECTOR DE TEXTO
+
+// Función para resetear el feedback - MOVER ARRIBA DE submitFeedback
+const resetFeedback = useCallback(() => {
+  setCurrentFeedbackSession(null);
+  setFeedbackSubmitted(false);
+  setShowFollowup(false);
+  setCurrentRating(0);
+  setUserComments('');
+  // Limpiar timer de feedback automático
+  if (feedbackAutoPressTimerRef.current) {
+    clearTimeout(feedbackAutoPressTimerRef.current);
+    feedbackAutoPressTimerRef.current = null;
+  }
+}, []); // No tiene dependencias
+
+// Función para enviar feedback básico (Sí/No) - CON useCallback
+const submitFeedback = useCallback(async (isSatisfied: boolean) => {
+  if (!currentFeedbackSession) {
+    console.error(t('chat.feedbackError'));
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:8000/feedback/response', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        currentFeedbackSession: currentFeedbackSession,
+        isSatisfied: isSatisfied
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+
+    if (response.ok) {
+      console.log(`Feedback ${isSatisfied ? 'positivo' : 'negativo'} enviado exitosamente`);
+
+      if (isSatisfied) {
+        setFeedbackSubmitted(true);
+        setTimeout(() => {
+          setShowFeedback(false);
+          resetFeedback();
+        }, 2000);
+      } else {
+        setShowFollowup(true);
+      }
+      
+      if (feedbackAutoPressTimerRef.current) {
+        clearTimeout(feedbackAutoPressTimerRef.current);
+        feedbackAutoPressTimerRef.current = null;
+      }
+    }
+  } catch (error) {
+    console.error(t('chat.feedbackServerError'), error);
+  }
+}, [currentFeedbackSession, t, resetFeedback]); // AGREGAR resetFeedback COMO DEPENDENCIA
+
+  
+// LUEGO la función autoPressFeedbackButton
+const autoPressFeedbackButton = useCallback(() => {
+  console.log('Presionando automáticamente botón de feedback por inactividad');
+  
+  // Verificar que el feedback esté visible y no se haya enviado
+  if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
+    console.log('Condiciones cumplidas - enviando feedback positivo automáticamente');
+    
+    // Presionar el botón "Sí" (feedback positivo) automáticamente
+    submitFeedback(true);
+    
+    // Limpiar el timer después de ejecutar
+    if (feedbackAutoPressTimerRef.current) {
+      clearTimeout(feedbackAutoPressTimerRef.current);
+      feedbackAutoPressTimerRef.current = null;
+    }
+  } else {
+    console.log('Feedback automático no ejecutado - condiciones:', {
+      showFeedback,
+      feedbackSubmitted,
+      hasSession: !!currentFeedbackSession
+    });
+  }
+}, [showFeedback, feedbackSubmitted, currentFeedbackSession, submitFeedback])
+
+// Función para reiniciar el temporizador de inactividad
+const resetInactivityTimer = useCallback(() => {
+  setInactivityTime(0);
+  
+  // Limpiar temporizadores existentes
+  if (inactivityTimerRef.current) {
+    clearTimeout(inactivityTimerRef.current);
+  }
+  if (inactivityCounterRef.current) {
+    clearInterval(inactivityCounterRef.current);
+  }
+  if (feedbackAutoPressTimerRef.current) {
+    clearTimeout(feedbackAutoPressTimerRef.current);
+    feedbackAutoPressTimerRef.current = null;
+  }
+    
+  // Crear nuevo temporizador de redirección
+  inactivityTimerRef.current = setTimeout(() => {
+    console.log('Tiempo de inactividad agotado - redirigiendo...');
+    navigate('/');
+  }, INACTIVITY_TIMEOUT);
+  
+  // SOLO crear temporizador para feedback automático si el feedback está visible
+  if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
+    feedbackAutoPressTimerRef.current = setTimeout(() => {
+      console.log('20 segundos de inactividad - activando feedback automático');
+      autoPressFeedbackButton();
+    }, FEEDBACK_AUTO_PRESS_TIMEOUT);
+  }
+
+  // Opcional: Contador para debug
+  inactivityCounterRef.current = setInterval(() => {
+    setInactivityTime(prev => prev + 1000);
+  }, 1000);
+}, [navigate, showFeedback, feedbackSubmitted, currentFeedbackSession, autoPressFeedbackButton]); // AGREGAR DEPENDENCIAS FALTANTES
   // Función para manejar eventos de actividad
   const handleActivity = useCallback(() => {
     resetInactivityTimer();
@@ -138,7 +348,7 @@ const Chat: React.FC = () => {
     // Lista de eventos que indican actividad del usuario
     const events = [
       'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 
-      'click', 'input', 'focus'
+      'click', 'input', 'focus','submit'
     ];
 
     // Agregar event listeners
@@ -161,8 +371,24 @@ const Chat: React.FC = () => {
       if (inactivityCounterRef.current) {
         clearInterval(inactivityCounterRef.current);
       }
+      if (feedbackAutoPressTimerRef.current) {
+    clearTimeout(feedbackAutoPressTimerRef.current);
+  }
     };
   }, [handleActivity, resetInactivityTimer]);
+  useEffect(() => {
+  return () => {
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    if (inactivityCounterRef.current) {
+      clearInterval(inactivityCounterRef.current);
+    }
+    if (feedbackAutoPressTimerRef.current) {
+      clearTimeout(feedbackAutoPressTimerRef.current);
+    }
+  };
+}, []);
 
   // Efecto opcional para mostrar el tiempo de inactividad en consola (debug)
   useEffect(() => {
@@ -346,6 +572,34 @@ const Chat: React.FC = () => {
       }
     }, 30000); // 30 segundos de silencio antes de detenerse
   };
+  // Efecto para manejar el timer automático cuando cambia el estado del feedback
+useEffect(() => {
+  // Cuando el feedback se muestra, iniciar el timer automático si no existe
+  if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
+    if (!feedbackAutoPressTimerRef.current) {
+      console.log('Feedback visible - iniciando timer de 4 minutos para feedback automático');
+      feedbackAutoPressTimerRef.current = setTimeout(() => {
+        console.log('Timer de feedback automático ejecutado');
+        autoPressFeedbackButton();
+      }, FEEDBACK_AUTO_PRESS_TIMEOUT);
+    }
+  } else {
+    // Cuando el feedback se oculta o se envía, limpiar el timer
+    if (feedbackAutoPressTimerRef.current) {
+      console.log('Feedback no visible o enviado - limpiando timer automático');
+      clearTimeout(feedbackAutoPressTimerRef.current);
+      feedbackAutoPressTimerRef.current = null;
+    }
+  }
+
+  // Cleanup
+  return () => {
+    if (feedbackAutoPressTimerRef.current) {
+      clearTimeout(feedbackAutoPressTimerRef.current);
+      feedbackAutoPressTimerRef.current = null;
+    }
+  };
+}, [showFeedback, feedbackSubmitted, currentFeedbackSession, autoPressFeedbackButton]);
 
   const clearSilenceTimer = () => {
     if (silenceTimerRef.current) {
@@ -441,55 +695,10 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Función para resetear el feedback
-  const resetFeedback = () => {
-    setCurrentFeedbackSession(null);
-    setFeedbackSubmitted(false);
-    setShowFollowup(false);
-    setCurrentRating(0);
-    setUserComments('');
-  };
 
-  // Función para enviar feedback básico (Sí/No)
-  const submitFeedback = async (isSatisfied: boolean) => {
-    if (!currentFeedbackSession) {
-      console.error(t('chat.feedbackError'));
-      return;
-    }
+  
 
-    try {
-      const response = await fetch('http://localhost:8000/feedback/response', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          currentFeedbackSession: currentFeedbackSession,
-          isSatisfied: isSatisfied
-        })
-      });
 
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-
-      if (response.ok) {
-        if (isSatisfied) {
-          setFeedbackSubmitted(true);
-          setTimeout(() => {
-            setShowFeedback(false);
-            resetFeedback();
-          }, 2000);
-        } else {
-          setShowFollowup(true);
-        }
-      }
-    } catch (error) {
-      console.error(t('chat.feedbackServerError'), error);
-    }
-  };
 
 // Función para enviar feedback detallado
   const submitDetailedFeedback = async () => {
@@ -678,6 +887,7 @@ const handleAutoSend = async (question: string) => {
     switch (action) {
       case 'clear':
         setMessages([]);
+        stopReading(); // Detener lectura al limpiar chat
         break;
       case 'help':
         alert(t('chat.helpMessage'));
@@ -831,7 +1041,8 @@ const handleAutoSend = async (question: string) => {
     ));
   };
 
-  // Componente de Feedback
+
+    // Componente de Feedback
   const renderFeedbackWidget = () => {
     if (!showFeedback) return null;
 
@@ -865,7 +1076,7 @@ const handleAutoSend = async (question: string) => {
                 <p>{t('chat.feedback.improvementQuestion')}</p>
 
                 <div className="rating-section">
-                  <p>Califica esta respuesta (opcional):</p>
+                  <p>{t('chat.feedback.optional')}</p>
                   <div className="star-rating">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <span
@@ -914,6 +1125,46 @@ const handleAutoSend = async (question: string) => {
             <p>{t('chat.feedback.thankYouFinal')}</p>
           </div>
         )}
+      </div>
+    );
+  };
+
+  // Función para renderizar cada mensaje con botón de lectura
+  const renderMessage = (msg: Message, index: number) => {
+    const isCurrentMessageReading = isReading && currentReadingIndex === index;
+    
+    return (
+      <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
+        <div className="message-content">
+          <div className="message-text">{msg.text}</div>
+          
+          {/* Botón de lectura solo para mensajes de AI */}
+          {!msg.isUser && isTtsSupported && (
+            <button
+              className={`tts-button ${isCurrentMessageReading ? 'reading' : ''}`}
+              onClick={() => toggleReading(msg, index)}
+              type="button"
+              title={isCurrentMessageReading ? 
+                (t('chat.stopReading') || 'Detener lectura') : 
+                (t('chat.readAloud') || 'Leer en voz alta')}
+            >
+              {isCurrentMessageReading ? '⏹️' : '🔊'}
+            </button>
+          )}
+        </div>
+
+        {msg.qr_codes && Object.keys(msg.qr_codes).length > 0 && (
+          <div className="qr-codes-section">
+            <div className="qr-section-title">{t('chat.qrSectionTitle')}</div>
+            <div className="qr-codes-container">
+              {renderQRCodes(msg.qr_codes)}
+            </div>
+          </div>
+        )}
+
+        <div className="message-time">
+          {msg.timestamp.toLocaleTimeString()}
+        </div>
       </div>
     );
   };
@@ -1038,24 +1289,7 @@ const handleAutoSend = async (question: string) => {
         </div>
 
         <div className="chat-messages">
-          {messages.map((msg, index) => (
-            <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
-              <div className="message-text">{msg.text}</div>
-
-              {msg.qr_codes && Object.keys(msg.qr_codes).length > 0 && (
-                <div className="qr-codes-section">
-                  <div className="qr-section-title">{t('chat.qrSectionTitle')}</div>
-                  <div className="qr-codes-container">
-                    {renderQRCodes(msg.qr_codes)}
-                  </div>
-                </div>
-              )}
-
-              <div className="message-time">
-                {msg.timestamp.toLocaleTimeString()}
-              </div>
-            </div>
-          ))}
+          {messages.map((msg, index) => renderMessage(msg, index))}
 
           {renderFeedbackWidget()}
 
