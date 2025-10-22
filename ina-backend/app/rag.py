@@ -101,7 +101,7 @@ class SemanticCache:
             'infraestructura', 'wifi', 'plataforma', 'portal estudiante', 'correo institucional',
 
             # Términos específicos Duoc UC
-            'duoc', 'uc', 'ina', 'punto estudiantil', 'asuntos estudiantiles', 'desarrollo profesional',
+            'duoc', 'uc', 'ina', 'punto estudiantil', 'asuntos estudiantil', 'desarrollo profesional',
             'bienestar estudiantil', 'deportes', 'pastoral', 'institucional'
         ]
 
@@ -483,38 +483,44 @@ class RAGEngine:
             return []
 
     def hybrid_search(self, query_text: str, n_results: int = 3) -> List[Dict]:
-        """🆕 BÚSQUEDA HÍBRIDA CON CATEGORÍAS REALES DE LA BD"""
+        """🆕 BÚSQUEDA HÍBRIDA CON CATEGORÍAS REALES DE LA BD - VERSIÓN CORREGIDA"""
         try:
             logger.info(f"🔍 Hybrid search con categorías REALES para: '{query_text}'")
             
             query_lower = query_text.lower()
             
-            # 🎯 MAPEO DE CONSULTAS A CATEGORÍAS REALES DE LA BD
-            if any(word in query_lower for word in ['sesion', 'psicológica', 'psicólogo', 'bienestar', '8 sesiones']):
-                expected_categories = ["bienestar_estudiantil"]
-                priority_keywords = ['8 sesiones', 'psicológica', 'máximo', 'año', 'bienestar']
+            # 🎯 MAPEO CORREGIDO CON CATEGORÍAS REALES DE LA BD
+            if any(word in query_lower for word in ['sesion', 'psicológica', 'psicólogo', 'bienestar', '8 sesiones', 'salud mental']):
+                # 🆕 BUSCAR EN CATEGORÍAS EXISTENTES que puedan contener info de bienestar
+                expected_categories = ["general", "academico"]  # Categorías reales que podrían tener esta info
+                priority_keywords = ['psicológica', 'sesiones', 'bienestar', 'salud mental', 'apoyo']
             elif any(word in query_lower for word in ['tne', 'tarjeta nacional', 'pase escolar']):
-                expected_categories = ["asuntos_estudiantiles", "institucionales", "tnè"]  # Categorías reales para TNE
-                priority_keywords = ['TNE', 'primera vez', '2700', '3600', 'pago', 'validar']
-            elif any(word in query_lower for word in ['taller', 'deporte', 'fútbol', 'voleibol', 'basquetbol']):
-                expected_categories = ["deportes"]
-                priority_keywords = ['talleres', 'deportivos', 'fútbol', 'voleibol', 'basquetbol']
-            elif any(word in query_lower for word in ['claudia', 'cortés', 'ccortesn', 'cv', 'curriculum', 'laboral']):
-                expected_categories = ["desarrollo_profesional", "laboral"]  # Categorías reales para desarrollo laboral
-                priority_keywords = ['Claudia', 'Cortés', 'ccortesn', 'CV', 'curriculum', 'laboral']
-            elif any(word in query_lower for word in ['gimnasio', 'entretiempo']):
-                expected_categories = ["deportes"]
-                priority_keywords = ['gimnasio', 'entretiempo', 'ejército libertador']
+                # 🆕 CATEGORÍA REAL: 'tné' (con acento agudo)
+                expected_categories = ["certificados", "tné", "general"]  # Categorías reales para TNE
+                priority_keywords = ['TNE', 'tarjeta', 'nacional', 'estudiantil', 'validar', 'primera vez']
+            elif any(word in query_lower for word in ['taller', 'deporte', 'fútbol', 'voleibol', 'basquetbol', 'gimnasio']):
+                # 🆕 BUSCAR EN CATEGORÍAS EXISTENTES que puedan contener info deportiva
+                expected_categories = ["general", "horarios"]  # Categorías reales que podrían tener esta info
+                priority_keywords = ['deporte', 'taller', 'fútbol', 'voleibol', 'basquetbol', 'gimnasio']
+            elif any(word in query_lower for word in ['claudia', 'cortés', 'ccortesn', 'cv', 'curriculum', 'laboral', 'empleo']):
+                # 🆕 CATEGORÍA REAL: 'laboral'
+                expected_categories = ["laboral", "general"]  # Categorías reales para desarrollo laboral
+                priority_keywords = ['Claudia', 'Cortés', 'ccortesn', 'CV', 'curriculum', 'laboral', 'bolsa', 'trabajo']
+            elif any(word in query_lower for word in ['certificado', 'alumno regular', 'constancia']):
+                # 🆕 CATEGORÍA REAL: 'certificados'
+                expected_categories = ["certificados", "general"]
+                priority_keywords = ['certificado', 'alumno', 'regular', 'constancia']
             else:
-                expected_categories = ["general"]
+                expected_categories = ["general"]  # Buscar en todas las categorías
                 priority_keywords = []
             
-            logger.info(f"   Categorías esperadas: {expected_categories}")
+            logger.info(f"   🎯 Categorías esperadas (REALES): {expected_categories}")
+            logger.info(f"   🔑 Keywords prioritarias: {priority_keywords}")
             
             # 1. Obtener TODOS los documentos
             all_docs = self.collection.get()
             
-            # 2. CALIFICAR CADA DOCUMENTO manualmente con las categorías REALES
+            # 2. CALIFICAR CADA DOCUMENTO con las categorías REALES
             scored_docs = []
             
             for i, document in enumerate(all_docs['documents']):
@@ -525,35 +531,50 @@ class RAGEngine:
                 # PUNTUACIÓN BASE
                 score = 0
                 
-                # 🎯 BONUS MASIVO por categoría correcta (usando categorías REALES)
+                # 🎯 BONUS por categoría correcta (usando categorías REALES)
                 if any(expected_cat in actual_category for expected_cat in expected_categories):
-                    score += 20.0  # Bonus ENORME por categoría correcta
+                    score += 15.0  # Bonus por categoría correcta
                 
                 # 🎯 BONUS por keywords prioritarias
                 for keyword in priority_keywords:
                     if keyword.lower() in content_lower:
-                        score += 10.0  # Bonus grande por keyword específica
+                        score += 8.0  # Bonus por keyword específica
                 
                 # 🎯 BONUS por palabras de la consulta en el contenido
                 query_words = [word for word in query_lower.split() if len(word) > 3]
                 for word in query_words:
                     if word in content_lower:
-                        score += 2.0
+                        score += 3.0
+                
+                # 🎯 BONUS EXTRA por contenido específico
+                specific_bonus_patterns = {
+                    'sesiones psicológicas': ['8 sesiones', 'psicológica', 'bienestar'],
+                    'tne': ['tne', 'tarjeta nacional', 'pase escolar'],
+                    'talleres deportivos': ['taller deportivo', 'fútbol', 'voleibol'],
+                    'claudia cortés': ['claudia', 'cortés', 'ccortesn']
+                }
+                
+                for pattern_key, patterns in specific_bonus_patterns.items():
+                    if pattern_key in query_lower:
+                        for pattern in patterns:
+                            if pattern.lower() in content_lower:
+                                score += 5.0
                 
                 # Solo incluir documentos con puntuación mínima
-                if score >= 5.0:  # Umbral más alto para mayor calidad
+                if score >= 8.0:  # Umbral razonable
                     scored_docs.append({
                         'document': document,
                         'metadata': metadata,
                         'score': score,
-                        'similarity': score / 30.0,  # Normalizar para compatibilidad
+                        'similarity': min(score / 30.0, 1.0),
                         'final_score': score
                     })
             
             # 3. Si no hay suficientes resultados, bajar el umbral
             if len(scored_docs) < n_results:
+                logger.info(f"   🔄 Bajando umbral - Solo {len(scored_docs)} resultados con umbral alto")
                 for i, document in enumerate(all_docs['documents']):
-                    if len(scored_docs) >= n_results * 2:  # Máximo doble de lo necesario
+                    if len(scored_docs) >= n_results * 3:  # Máximo triple de lo necesario
                         break
                         
                     metadata = all_docs['metadatas'][i]
@@ -574,14 +595,19 @@ class RAGEngine:
                     # Bonus por keywords
                     for keyword in priority_keywords:
                         if keyword.lower() in content_lower:
-                            score += 3.0
+                            score += 2.0
                     
-                    if score >= 1.0:
+                    # Bonus por cualquier palabra de la consulta
+                    for word in query_lower.split():
+                        if len(word) > 3 and word in content_lower:
+                            score += 1.0
+                    
+                    if score >= 2.0:  # Umbral muy bajo para resultados secundarios
                         scored_docs.append({
                             'document': document,
                             'metadata': metadata,
                             'score': score,
-                            'similarity': score / 10.0,
+                            'similarity': min(score / 10.0, 1.0),
                             'final_score': score
                         })
             
@@ -590,21 +616,56 @@ class RAGEngine:
             final_results = scored_docs[:n_results]
             
             logger.info(f"✅ Hybrid search COMPLETADO: '{query_text}'")
-            logger.info(f"   Resultados: {len(final_results)} de {len(scored_docs)} calificados")
+            logger.info(f"   📊 Resultados: {len(final_results)} de {len(scored_docs)} calificados")
             
             for i, result in enumerate(final_results):
                 category = result['metadata'].get('category', 'N/A')
                 logger.info(f"     {i+1}. Score: {result['final_score']:.1f}, Categoría: {category}")
+                if i == 0:  # Mostrar preview del mejor resultado
+                    logger.info(f"        Preview: {result['document'][:100]}...")
             
             return final_results
             
         except Exception as e:
             logger.error(f"❌ Error en hybrid search: {e}")
-            # Fallback simple
+            # Fallback a búsqueda simple
             try:
-                return self.keyword_search(query_text, n_results)
+                return self.fallback_search(query_text, n_results)
             except:
                 return []
+
+    def fallback_search(self, query_text: str, n_results: int = 3) -> List[Dict]:
+        """🆕 BÚSQUEDA DE FALLBACK SIMPLE"""
+        try:
+            all_docs = self.collection.get()
+            query_lower = query_text.lower()
+            
+            scored_docs = []
+            for i, document in enumerate(all_docs['documents']):
+                content_lower = document.lower()
+                score = 0
+                
+                # Contar coincidencias de palabras
+                for word in query_lower.split():
+                    if len(word) > 3 and word in content_lower:
+                        score += 1
+                
+                if score > 0:
+                    metadata = all_docs['metadatas'][i]
+                    scored_docs.append({
+                        'document': document,
+                        'metadata': metadata,
+                        'score': score,
+                        'similarity': min(score / 5.0, 1.0),
+                        'final_score': score
+                    })
+            
+            scored_docs.sort(key=lambda x: x['score'], reverse=True)
+            return scored_docs[:n_results]
+            
+        except Exception as e:
+            logger.error(f"❌ Error en fallback search: {e}")
+            return []
 
     def _update_metrics(self, metric_name: str):
         """Actualizar métricas"""
@@ -719,43 +780,61 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         # 🆕 BUSCAR FUENTES CON BÚSQUEDA HÍBRIDA MEJORADA
         sources = rag_engine.hybrid_search(user_message, n_results=3)
 
-        # 🆕 SYSTEM MESSAGE MEJORADO para respuestas más específicas
+        # 🆕 SYSTEM MESSAGE SUPER DIRECTIVO Y ESPECÍFICO - VERSIÓN CORREGIDA
         system_message = (
-            "Eres InA, asistente especializado del Punto Estudiantil Duoc UC Plaza Norte. "
-            "Responde de forma CLARA, CONCISA y ESPECÍFICA (3-5 líneas máximo).\n\n"
-            "🎯 INFORMACIÓN CLAVE A INCLUIR SIEMPRE:\n"
-            "- DÓNDE dirigirse (ubicación específica: Santa Elena de Huechuraba 1660)\n"
-            "- QUÉ documentación necesitan\n"
-            "- COSTOS si aplican\n"
-            "- TIEMPOS de espera/entrega\n"
-            "- HORARIOS de atención\n\n"
-            "📍 INFORMACIÓN ESPECÍFICA PLAZA NORTE:\n"
+            "Eres InA, asistente especializado EXCLUSIVAMENTE del Punto Estudiantil Duoc UC Plaza Norte. "
+            "🚫 **INSTRUCCIÓN CRÍTICA**: DEBES usar SOLAMENTE la información de las FUENTES proporcionadas. "
+            "🚫 NO inventes información, NO uses conocimiento general.\n\n"
+            
+            "📋 **FORMATO OBLIGATORIO DE RESPUESTA**:\n"
+            "1. 💬 Respuesta directa y específica (2-4 líneas máximo)\n"
+            "2. 📍 Información de ubicación ESPECÍFICA de Plaza Norte\n"
+            "3. ⏰ Horarios si están en las fuentes\n"
+            "4. 💰 Costos si están en las fuentes\n"
+            "5. 📄 Documentación requerida si está en las fuentes\n\n"
+            
+            "📍 **INFORMACIÓN BASE PLAZA NORTE**:\n"
             "- Dirección: Santa Elena de Huechuraba 1660, Huechuraba\n"
             "- Horario Punto Estudiantil: Lunes a Viernes 8:30-19:00\n"
             "- Teléfono: +56 2 2360 6400\n"
             "- Email: Puntoestudiantil_pnorte@duoc.cl\n\n"
-            "📞 CONTACTOS IMPORTANTES:\n"
-            "- Desarrollo Laboral: Claudia Cortés - ccortesn@duoc.cl\n"
-            "- Bienestar Estudiantil: Adriana Vásquez - avasquezm@duoc.cl\n"
-            "- Inclusión: Elizabeth Domínguez - edominguezs@duoc.cl\n\n"
-            "🌐 URLS OFICIALES IMPORTANTES:\n"
-            "• Portal Estudiantil: https://portal.duoc.cl\n"
-            "• Centro de Ayuda: https://centroayuda.duoc.cl\n"
-            "• Duoc Laboral: https://duoclaboral.cl\n"
-            "• Certificados: https://certificados.duoc.cl\n"
-            "• Prácticas: https://practicas.duoc.cl\n"
-            "• Beneficios: https://beneficios.duoc.cl\n\n"
-            "SÉ ESPECÍFICO con horarios, ubicaciones y procedimientos del Punto Estudiantil Plaza Norte."
         )
 
-        # 🆕 INCLUIR FUENTES EN EL CONTEXTO SI HAY
+        # 🆕 INCLUIR FUENTES CON INSTRUCCIÓN EXPLÍCITA
         if sources:
-            sources_context = "\n📚 INFORMACIÓN DE FUENTES ENCONTRADAS:\n"
-            for i, source in enumerate(sources[:2]):  # Máximo 2 fuentes
-                content_preview = source['document'][:150] + \
-                    '...' if len(source['document']) > 150 else source['document']
-                sources_context += f"{i+1}. {content_preview}\n"
+            sources_context = "\n🎯 **FUENTES ESPECÍFICAS ENCONTRADAS (USA ESTA INFORMACIÓN)**:\n"
+            sources_context += "⚠️ **OBLIGATORIO**: Tu respuesta DEBE basarse ÚNICAMENTE en esta información:\n\n"
+            
+            # 🆕 ELIMINAR FUENTES DUPLICADAS
+            unique_sources = []
+            seen_contents = set()
+            
+            for source in sources:
+                content_hash = hash(source['document'][:100])  # Hash del inicio para identificar duplicados
+                if content_hash not in seen_contents:
+                    seen_contents.add(content_hash)
+                    unique_sources.append(source)
+            
+            for i, source in enumerate(unique_sources[:3]):  # Máximo 3 fuentes únicas
+                content = source['document']
+                category = source['metadata'].get('category', 'general')
+                
+                sources_context += f"📄 **Fuente {i+1}** [Categoría: {category}]:\n"
+                sources_context += f"{content}\n\n"
+            
             system_message += sources_context
+            
+            # 🆕 INSTRUCCIÓN FINAL MUY DIRECTIVA
+            system_message += (
+                "\n🔍 **INSTRUCCIÓN FINAL**:\n"
+                "- ✅ USA EXCLUSIVAMENTE la información de las FUENTES proporcionadas\n"
+                "- ✅ Sé ESPECÍFICO con procedimientos, costos, horarios y ubicaciones\n"
+                "- ✅ Responde de forma CONCRETA y DIRECTA\n"
+                "- 🚫 NO inventes información que no esté en las fuentes\n"
+                "- 🚫 NO des respuestas genéricas o de conocimiento general\n"
+            )
+        else:
+            system_message += "\n⚠️ **NO SE ENCONTRARON FUENTES ESPECÍFICAS**. Responde indicando que no hay información específica disponible.\n"
 
         if context:
             relevant_context = []
@@ -766,6 +845,8 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
                 system_message += f"\n\n📋 CONTEXTO RELEVANTE:\n{chr(10).join(relevant_context[:2])}"
 
         logger.info(f"⚡ Enviando a Ollama: {user_message[:100]}...")
+        logger.info(f"📚 Fuentes únicas enviadas: {len(unique_sources) if sources else 0}")
+        
         response = ollama.chat(
             model='mistral:7b',
             messages=[
@@ -806,7 +887,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
 
         # 🆕 FORMATEAR FUENTES PARA LA RESPUESTA
         formatted_sources = []
-        for source in sources:
+        for source in (unique_sources if sources else []):
             formatted_sources.append({
                 'content': source['document'][:150] + '...' if len(source['document']) > 150 else source['document'],
                 'category': source['metadata'].get('category', 'general'),

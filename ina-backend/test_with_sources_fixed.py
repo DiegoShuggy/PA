@@ -20,18 +20,14 @@ def test_rag_with_sources_fixed():
     for question in test_questions:
         print(f"\n🎯 PREGUNTA: {question}")
         
-        # 1. Primero probar búsqueda directa
-        print("🔍 Búsqueda directa en ChromaDB:")
-        direct_results = rag_engine.query_optimized(
-            question, 
-            n_results=3, 
-            score_threshold=0.6  # Umbral más bajo para testing
-        )
+        # 1. Primero probar búsqueda directa con hybrid_search (la nueva función)
+        print("🔍 Búsqueda híbrida en ChromaDB:")
+        hybrid_results = rag_engine.hybrid_search(question, n_results=3)
         
-        print(f"   📍 Fuentes encontradas: {len(direct_results)}")
+        print(f"   📍 Fuentes encontradas: {len(hybrid_results)}")
         
-        for i, result in enumerate(direct_results):
-            print(f"      {i+1}. Similitud: {result['similarity']:.3f}")
+        for i, result in enumerate(hybrid_results):
+            print(f"      {i+1}. Score: {result.get('final_score', result.get('score', 0)):.1f}")
             print(f"         Categoría: {result['metadata'].get('category', 'N/A')}")
             print(f"         Contenido: {result['document'][:80]}...")
         
@@ -43,8 +39,11 @@ def test_rag_with_sources_fixed():
         print(f"   🏷️  Categoría: {response_data.get('category', 'N/A')}")
         print(f"   📝 Respuesta: {response_data.get('response', '')[:100]}...")
         
+        # Mostrar detalles de las fuentes encontradas
         if response_data.get('sources'):
             print("   ✅ RAG ENCUENTRA FUENTES!")
+            for i, source in enumerate(response_data['sources']):
+                print(f"      📄 Fuente {i+1}: {source['content']}")
         else:
             print("   ❌ RAG NO ENCUENTRA FUENTES")
 
