@@ -82,8 +82,8 @@ const Chat: React.FC = () => {
   const inactivityCounterRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
    // Configuración del temporizador de inactividad (en milisegundos)
-  const INACTIVITY_TIMEOUT = 30000;
-  const FEEDBACK_AUTO_PRESS_TIMEOUT = 29999; // 20 segundos para feedback automático
+  const INACTIVITY_TIMEOUT = 300000;
+  const FEEDBACK_AUTO_PRESS_TIMEOUT = 299999; // 20 segundos para feedback automático
 
   // Agrega este estado adicional
 const feedbackAutoPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -577,7 +577,7 @@ useEffect(() => {
   // Cuando el feedback se muestra, iniciar el timer automático si no existe
   if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
     if (!feedbackAutoPressTimerRef.current) {
-      console.log('Feedback visible - iniciando timer de 4 minutos para feedback automático');
+      console.log('Feedback visible - iniciando timer de 4,59 minutos para feedback automático');
       feedbackAutoPressTimerRef.current = setTimeout(() => {
         console.log('Timer de feedback automático ejecutado');
         autoPressFeedbackButton();
