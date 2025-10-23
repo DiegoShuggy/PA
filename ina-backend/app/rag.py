@@ -1,4 +1,4 @@
-# rag.py
+# rag.py - VERSIÓN COMPLETA Y CORREGIDA
 import chromadb
 import ollama
 from typing import List, Dict, Optional
@@ -19,111 +19,171 @@ from app.cache_manager import rag_cache, response_cache, normalize_question
 logger = logging.getLogger(__name__)
 
 
+class TopicClassifier:
+    """🆕 CLASIFICADOR DE TEMAS PARA DERIVACIÓN INTELIGENTE"""
+    
+    def __init__(self):
+        # ✅ TEMAS PERMITIDOS (Punto Estudiantil)
+        self.allowed_topics = {
+            # ASUNTOS ESTUDIANTILES
+            'tne': ['tne', 'tarjeta nacional estudiantil', 'pase escolar', 'validar tne', 'renovar tne', 'revalidar tne'],
+            'certificados': ['certificado', 'alumno regular', 'constancia', 'record académico', 'concentración notas'],
+            'programas_apoyo': ['programa emergencia', 'programa transporte', 'programa materiales', 'ayuda económica', 'subsidio'],
+            'seguro': ['seguro estudiantil', 'seguro accidentes', 'doc duoc', '600 362 3862'],
+            
+            # BIENESTAR ESTUDIANTIL
+            'salud_mental': ['psicológico', 'psicólogo', 'salud mental', 'bienestar', 'apoyo psicológico', 'sesión psicológica', '8 sesiones'],
+            'crisis': ['crisis', 'urgencia psicológica', 'línea ops', '+56 2 2820 3450', 'sala primeros auxilios'],
+            'inclusión': ['discapacidad', 'paedis', 'inclusión', 'elizabeth domínguez', 'edominguezs'],
+            
+            # DEPORTES
+            'deportes': ['deporte', 'taller deportivo', 'fútbol', 'basquetbol', 'voleibol', 'natación', 'gimnasio'],
+            'actividades': ['entrenamiento', 'selección deportiva', 'powerlifting', 'boxeo', 'entrenamiento funcional'],
+            'instalaciones': ['complejo maiclub', 'gimnasio entretiempo', 'piscina acquatiempo', 'caf'],
+            
+            # DESARROLLO LABORAL
+            'desarrollo_laboral': ['claudia cortés', 'ccortesn', 'cv', 'curriculum', 'entrevista laboral', 'bolsa trabajo'],
+            'practicas': ['práctica', 'practica profesional', 'duoclaboral', 'oferta laboral'],
+            'empleabilidad': ['taller empleabilidad', 'desarrollo laboral', 'feria laboral']
+        }
+        
+        # ❌ TEMAS NO PERMITIDOS (Para derivar)
+        self.excluded_topics = {
+            'servicios_digitales': [
+                'mi duoc', 'midooc', 'plataforma', 'correo institucional', 'contraseña', 'acceso', 
+                'login', 'portal', 'clave', 'bloqueado', 'no puedo entrar', 'olvidé mi contraseña',
+                'wifi', 'conexión', 'internet'
+            ],
+            'financiamiento': [
+                'matrícula', 'arancel', 'pago', 'deuda', 'beca', 'crédito', 'financiamiento', 
+                'dinero', 'cuota', 'factura', 'boleta', 'costo', 'precio', 'gratis', 'subvención',
+                'finanzas', 'tesorería'
+            ],
+            'academico': [
+                'inscribir ramos', 'calificaciones', 'notas', 'malla', 'asignatura', 'ramo', 
+                'profesor', 'jefe de carrera', 'convalidar', 'prerrequisito', 'nivelación',
+                'horario clases', 'jornada', 'carrera'
+            ],
+            'tecnologia': [
+                'laboratorio', 'computador', 'software', 'aplicación', 'sistema', 'tecnología',
+                'equipo', 'impresora', 'scanner'
+            ]
+        }
+        
+        # 🎯 PALABRAS CLAVE PARA DETECCIÓN DE CONSULTAS MÚLTIPLES
+        self.multiple_query_indicators = [
+            ' y ', ' también ', ' además ', ' por otro lado ', ' asimismo ', ' igualmente ',
+            ' otra cosa ', ' aparte ', ' adicionalmente '
+        ]
+
+    def classify_topic(self, query: str) -> Dict:
+        """🆕 CLASIFICAR CONSULTA Y DETERMINAR SI ES PERMITIDA"""
+        query_lower = query.lower()
+        
+        # 1. Verificar si es tema excluido (derivar)
+        for topic_type, keywords in self.excluded_topics.items():
+            if any(keyword in query_lower for keyword in keywords):
+                return {
+                    'type': 'excluded',
+                    'topic': topic_type,
+                    'action': 'derivar',
+                    'confidence': 0.9
+                }
+        
+        # 2. Verificar si es tema permitido
+        for topic_type, keywords in self.allowed_topics.items():
+            if any(keyword in query_lower for keyword in keywords):
+                return {
+                    'type': 'allowed',
+                    'topic': topic_type,
+                    'action': 'responder',
+                    'confidence': 0.8
+                }
+        
+        # 3. Consulta ambigua o no reconocida
+        return {
+            'type': 'ambiguous',
+            'topic': 'unknown',
+            'action': 'clarificar',
+            'confidence': 0.3
+        }
+    
+    def detect_multiple_queries(self, query: str) -> List[str]:
+        """🆕 DETECTAR Y SEPARAR CONSULTAS MÚLTIPLES"""
+        query_lower = query.lower()
+        
+        # Buscar indicadores de múltiples consultas
+        for indicator in self.multiple_query_indicators:
+            if indicator in query_lower:
+                parts = query_lower.split(indicator)
+                if len(parts) > 1:
+                    # Verificar que las partes sean independientes
+                    independent_parts = []
+                    for part in parts:
+                        part_clean = part.strip()
+                        if len(part_clean.split()) >= 2:  # Al menos 2 palabras
+                            independent_parts.append(part_clean)
+                    
+                    if len(independent_parts) > 1:
+                        return independent_parts
+        
+        return [query]
+    
+    def get_derivation_suggestion(self, topic_type: str) -> str:
+        """🆕 SUGERENCIAS ESPECÍFICAS PARA DERIVACIÓN"""
+        suggestions = {
+            'servicios_digitales': (
+                "🔧 Veo que tu consulta es sobre servicios digitales. "
+                "Este tema lo maneja el área de Tecnologías de la Información. "
+                "Te recomiendo contactar a Mesa de ayuda TI."
+            ),
+            'financiamiento': (
+                "💰 Entiendo que necesitas información sobre financiamiento. "
+                "Este tema corresponde al área de Finanzas y Beneficios Estudiantiles. "
+                "Te sugiero dirigirte a la Oficina de Finanzas."
+            ),
+            'academico': (
+                "📚 Tu pregunta parece ser de carácter académico. "
+                "Esto lo maneja directamente tu Escuela o Jefatura de Carrera. "
+                "Puedes contactar a tu jefe de carrera o secretaría académica."
+            ),
+            'tecnologia': (
+                "💻 Esta consulta es sobre temas tecnológicos. "
+                "El área de Infraestructura Tecnológica puede ayudarte mejor. "
+                "Te recomiendo contactar a soporte técnico."
+            )
+        }
+        
+        return suggestions.get(topic_type, 
+            "🔍 Esta consulta requiere atención especializada. Te recomiendo contactar al área correspondiente.")
+
+
 class SemanticCache:
-    def __init__(self, similarity_threshold: float = 0.35):
+    def __init__(self, similarity_threshold: float = 0.65):
         try:
-            # 🆕 MODELO ESPECIALIZADO PARA ESPAÑOL
             self.model = SentenceTransformer(
-                'dccuchile/bert-base-spanish-wwm-uncased')
-            self.cache = {}  # {embedding_tuple: respuesta}
+                'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
+            self.cache = {}
             self.threshold = similarity_threshold
-            logger.info(
-                f"✅ Cache semántico DUOC UC inicializado (umbral: {similarity_threshold})")
+            logger.info(f"✅ Cache semántico inicializado (umbral: {similarity_threshold})")
         except Exception as e:
             logger.error(f"❌ Error inicializando cache semántico: {e}")
-            # Fallback a modelo más simple
-            try:
-                self.model = SentenceTransformer(
-                    'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
-                logger.info("✅ Usando modelo multilingüe como fallback")
-            except:
-                self.model = None
-                self.cache = {}
+            self.model = None
+            self.cache = {}
 
     def get_embedding(self, text: str) -> Optional[np.ndarray]:
-        """🆕 GENERACIÓN DE EMBEDDINGS ESPECIALIZADA DUOC UC"""
         if self.model is None:
             return None
         try:
-            # Preprocesar texto para mejor embedding
-            processed_text = self._preprocess_for_embedding(text)
-            return self.model.encode([processed_text])[0]
+            return self.model.encode([text])[0]
         except Exception as e:
             logger.error(f"Error generando embedding: {e}")
             return None
 
-    def _preprocess_for_embedding(self, text: str) -> str:
-        """🆕 PREPROCESAMIENTO ESPECIALIZADO DUOC UC"""
-        # Limpiar texto manteniendo significado
-        text = text.lower().strip()
-        text = re.sub(r'[^\w\sáéíóúñü]', ' ', text)  # Mantener acentos y ñ
-        text = re.sub(r'\s+', ' ', text)  # Espacios múltiples a uno
-
-        # 🆕 PALABRAS CLAVE ESPECÍFICAS DEL CONTEXTO DUOC UC
-        duoc_keywords = [
-            # TNE y certificados
-            'tne', 'tarjeta nacional estudiantil', 'pase escolar', 'validar', 'renovar', 'revalidar',
-            'certificado', 'constancia', 'alumno regular', 'certificado alumno', 'record académico',
-            'concentración notas', 'certificado de notas', 'constancia de alumno',
-
-            # Programas de apoyo
-            'beca', 'beneficio', 'ayuda económica', 'programa emergencia', 'programa transporte',
-            'programa materiales', 'subsidio', 'apoyo económico', 'beneficio estudiantil',
-            'financiamiento', 'crédito', 'arancel', 'matrícula',
-
-            # Desarrollo profesional
-            'práctica', 'practica', 'práctica profesional', 'bolsa trabajo', 'empleo', 'trabajo',
-            'curriculum', 'cv', 'hoja vida', 'entrevista laboral', 'duoclaboral', 'desarrollo laboral',
-            'claudia cortés', 'ccortesn', 'oferta laboral', 'taller empleabilidad',
-
-            # Bienestar estudiantil
-            'psicológico', 'psicólogo', 'salud mental', 'bienestar', 'apoyo psicológico', 'crisis',
-            'línea ops', 'urgencia psicológica', 'bienestar estudiantil', 'adriana vásquez',
-            'avasquezm', 'consejería', 'apoyo emocional', 'sesión psicológica',
-
-            # Deportes
-            'deporte', 'taller deportivo', 'fútbol', 'basquetbol', 'voleibol', 'natación',
-            'gimnasio', 'entrenamiento', 'selección deportiva', 'powerlifting', 'boxeo',
-            'entrenamiento funcional', 'tenis de mesa', 'ajedrez', 'futsal', 'rugby',
-            'complejo maiclub', 'gimnasio entretiempo', 'piscina acquatiempo', 'caf',
-
-            # Inclusión
-            'discapacidad', 'paedis', 'inclusión', 'elizabeth domínguez', 'edominguezs',
-            'acompañamiento', 'estudiantes discapacidad',
-
-            # Ubicaciones y contactos
-            'plaza norte', 'santa elena', 'huechuraba', 'punto estudiantil', 'sedes duoc',
-            'ubicación', 'dirección', 'horario', 'teléfono', 'email', 'contacto',
-            'puntoestudiantil_pnorte', '2360 6400',
-
-            # Servicios generales
-            'biblioteca', 'servicios digitales', 'financiamiento', 'coordinación académica',
-            'infraestructura', 'wifi', 'plataforma', 'portal estudiante', 'correo institucional',
-
-            # Términos específicos Duoc UC
-            'duoc', 'uc', 'ina', 'punto estudiantil', 'asuntos estudiantil', 'desarrollo profesional',
-            'bienestar estudiantil', 'deportes', 'pastoral', 'institucional'
-        ]
-
-        words = text.split()
-        filtered_words = []
-
-        for word in words:
-            # Mantener palabras del contexto Duoc UC
-            word_clean = re.sub(r'[^\wáéíóúñü]', '', word)
-            if (any(keyword in word_clean for keyword in duoc_keywords) or
-                    len(word_clean) > 2 or
-                    word_clean in ['duoc', 'uc', 'ina', 'punto', 'estudiantil', 'plaza', 'norte']):
-                filtered_words.append(word_clean)
-
-        return ' '.join(filtered_words) if filtered_words else text
-
     def _embedding_to_key(self, embedding: np.ndarray) -> tuple:
-        """Convertir numpy array a tuple para usar como key"""
         return tuple(embedding.tolist())
 
     def find_similar(self, query_embedding: np.ndarray) -> Optional[Dict]:
-        """🆕 BÚSQUEDA SEMÁNTICA MEJORADA DUOC UC"""
         if not self.cache or query_embedding is None:
             return None
 
@@ -152,7 +212,6 @@ class SemanticCache:
         return None
 
     def add_to_cache(self, query: str, response_data: Dict):
-        """🆕 AGREGAR AL CACHE CON MÁS INFORMACIÓN"""
         embedding = self.get_embedding(query)
         if embedding is not None:
             embedding_key = self._embedding_to_key(embedding)
@@ -167,33 +226,23 @@ class RAGEngine:
             name="duoc_knowledge"
         )
 
+        # 🆕 CLASIFICADOR DE TEMAS
+        self.topic_classifier = TopicClassifier()
+
         # 🆕 CONFIGURACIÓN ESPECÍFICA DUOC UC
         self.duoc_context = {
             "sede": "Plaza Norte",
             "direccion": "Santa Elena de Huechuraba 1660, Huechuraba",
             "horario_punto_estudiantil": "Lunes a Viernes 8:30-19:00",
             "telefono": "+56 2 2360 6400",
-            "email": "Puntoestudiantil_pnorte@duoc.cl",
-            "contactos_especializados": {
-                "desarrollo_laboral": "Claudia Cortés - ccortesn@duoc.cl",
-                "bienestar_estudiantil": "Adriana Vásquez - avasquezm@duoc.cl",
-                "inclusión": "Elizabeth Domínguez - edominguezs@duoc.cl"
-            },
-            "urls_oficiales": {
-                "portal_estudiantil": "https://portal.duoc.cl",
-                "centro_ayuda": "https://centroayuda.duoc.cl",
-                "duoc_laboral": "https://duoclaboral.cl",
-                "certificados": "https://certificados.duoc.cl",
-                "practicas": "https://practicas.duoc.cl",
-                "beneficios": "https://beneficios.duoc.cl"
-            }
+            "email": "Puntoestudiantil_pnorte@duoc.cl"
         }
 
         # 🆕 CACHE SEMÁNTICO MEJORADO
-        self.semantic_cache = SemanticCache(similarity_threshold=0.35)
-        self.text_cache = {}  # Cache textual rápido
+        self.semantic_cache = SemanticCache(similarity_threshold=0.65)
+        self.text_cache = {}
 
-        logger.info("✅ RAG Engine DUOC UC con Cache Universal inicializado")
+        logger.info("✅ RAG Engine DUOC UC inicializado")
         self.metrics = {
             'total_queries': 0,
             'successful_responses': 0,
@@ -203,83 +252,100 @@ class RAGEngine:
             'documents_added': 0,
             'errors': 0,
             'categories_used': defaultdict(int),
-            'response_times': []
+            'response_times': [],
+            'derivations': 0,
+            'multiple_queries': 0,
+            'ambiguous_queries': 0
         }
 
     def enhanced_normalize_text(self, text: str) -> str:
-        """
-        🔧 NORMALIZACIÓN INTELIGENTE ESPECIALIZADA DUOC UC
-        """
-        # 1. Limpieza básica
+        """🔧 NORMALIZACIÓN INTELIGENTE ESPECIALIZADA DUOC UC"""
         text = text.lower().strip()
-        text = re.sub(r'[^\w\sáéíóúñü]', '', text)  # Mantener acentos y ñ
+        text = re.sub(r'[^\w\sáéíóúñü]', '', text)
 
         words = text.split()
         if not words:
             return ""
 
-        # 🆕 STOPWORDS ESPECÍFICAS DEL CONTEXTO ESTUDIANTIL MEJORADAS
         stopwords = {
-            # Saludos básicos
-            'hola', 'holas', 'holaa', 'holi', 'holiwis', 'holaaa', 'buenos', 'días', 'buenas', 'tardes', 'noches',
-            'saludos', 'saludo', 'hi', 'hello', 'hey', 'hellow', 'helow', 'buen', 'dia', 'ok', 'okis',
-            # Palabras vacías generales
-            'por', 'favor', 'puedes', 'puede', 'podrías', 'podría', 'me', 'mi', 'mis', 'mí',
-            'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'de', 'del', 'al',
-            'en', 'con', 'para', 'porque', 'qué', 'cómo', 'dónde', 'cuándo', 'cuál', 'quién',
-            'eso', 'esa', 'ese', 'aquí', 'allí', 'ahí', 'esto', 'esta', 'este', 'estos', 'estas',
-            'soy', 'eres', 'es', 'somos', 'son', 'estoy', 'estás', 'está', 'estamos', 'están',
-            'tengo', 'tienes', 'tiene', 'tenemos', 'tienen', 'hay', 'haber', 'ser', 'estar',
-            # Términos específicos de conversación con IA
-            'ina', 'asistente', 'virtual', 'punto', 'estudiantil', 'duoc', 'uc', 'porfa', 'plis'
+            'hola', 'buenos', 'días', 'buenas', 'tardes', 'noches', 'saludos',
+            'por', 'favor', 'puedes', 'puede', 'podrías', 'podría', 'me', 'mi',
+            'el', 'la', 'los', 'las', 'de', 'en', 'con', 'para', 'qué', 'cómo',
+            'ina', 'asistente', 'virtual', 'duoc', 'uc', 'porfa', 'plis'
         }
 
         filtered_words = [word for word in words if word not in stopwords]
 
-        # 🆕 MANTENER PALABRAS CLAVE IMPORTANTES DUOC UC
         important_words = {
-            'tne', 'certificado', 'beca', 'práctica', 'deporte', 'psicológico', 'matrícula',
-            'horario', 'ubicación', 'taller', 'bolsa', 'empleo', 'salud', 'mental', 'validar',
-            'renovar', 'solicitar', 'inscripción', 'duoc', 'punto', 'estudiantil', 'plaza', 'norte',
-            'programa', 'emergencia', 'transporte', 'materiales', 'beneficio', 'ayuda', 'económica',
-            'claudia', 'cortés', 'adriana', 'vasquez', 'elizabeth', 'domínguez', 'ccortesn',
-            'avasquezm', 'edominguezs', 'puntoestudiantil_pnorte', 'huechuraba', 'santa', 'elena'
+            'tne', 'certificado', 'beca', 'práctica', 'deporte', 'psicológico',
+            'horario', 'ubicación', 'taller', 'bolsa', 'empleo', 'salud', 'mental',
+            'programa', 'emergencia', 'transporte', 'materiales', 'beneficio',
+            'claudia', 'cortés', 'adriana', 'vasquez', 'elizabeth', 'domínguez'
         }
 
-        # Añadir palabras importantes que pudieron ser filtradas
         for word in words:
             if word in important_words and word not in filtered_words:
                 filtered_words.append(word)
 
-        # Si quedan muy pocas palabras, mantener algunas originales
         if len(filtered_words) <= 1 and len(words) > 2:
-            # Mantener las palabras más importantes
             content_words = [w for w in words if w not in {
                 'hola', 'ina', 'buenos', 'días', 'buenas', 'tardes', 'noches', 'saludos', 'por', 'favor'
             }]
             if content_words:
                 filtered_words = content_words[:5]
 
-        # 🔥 NO ORDENAR PALABRAS - Mantener orden natural para preservar semántica
         normalized = ' '.join(filtered_words)
-
-        logger.debug(f"🔧 Normalización inteligente: '{text}' -> '{normalized}'")
         return normalized
 
+    def process_user_query(self, user_message: str) -> Dict:
+        """🆕 PROCESAMIENTO INTELIGENTE DE CONSULTAS"""
+        self.metrics['total_queries'] += 1
+        
+        # 1. Clasificar tema
+        topic_info = self.topic_classifier.classify_topic(user_message)
+        
+        # 2. Detectar consultas múltiples
+        query_parts = self.topic_classifier.detect_multiple_queries(user_message)
+        
+        response_info = {
+            'original_query': user_message,
+            'topic_classification': topic_info,
+            'multiple_queries_detected': len(query_parts) > 1,
+            'query_parts': query_parts,
+            'processing_strategy': 'standard'
+        }
+        
+        # 🎯 ESTRATEGIAS DIFERENCIADAS
+        if topic_info['type'] == 'excluded':
+            response_info['processing_strategy'] = 'derivation'
+            response_info['derivation_suggestion'] = self.topic_classifier.get_derivation_suggestion(topic_info['topic'])
+            self.metrics['derivations'] += 1
+            
+        elif topic_info['type'] == 'ambiguous':
+            response_info['processing_strategy'] = 'clarification'
+            self.metrics['ambiguous_queries'] += 1
+            
+        elif len(query_parts) > 1:
+            response_info['processing_strategy'] = 'multiple_queries'
+            self.metrics['multiple_queries'] += 1
+            
+        else:
+            response_info['processing_strategy'] = 'standard_rag'
+            
+        logger.info(f"🎯 Procesamiento: '{user_message}' -> Estrategia: {response_info['processing_strategy']}")
+        
+        return response_info
+
     def add_document(self, document: str, metadata: Dict = None) -> bool:
-        """🆕 AGREGAR DOCUMENTO CON MÁS INFORMACIÓN - MÉTODO CORREGIDO"""
+        """AGREGAR DOCUMENTO AL RAG"""
         try:
-            # 🆕 ELIMINAR VERIFICACIÓN DE DUPLICADOS - Agregar directamente
             doc_id = f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}_{hash(document) % 10000}"
 
-            # 🆕 METADATA MEJORADA
             enhanced_metadata = {
                 "timestamp": datetime.now().isoformat(),
                 "source": metadata.get('source', 'unknown') if metadata else 'unknown',
                 "category": metadata.get('category', 'general') if metadata else 'general',
-                "type": metadata.get('type', 'general') if metadata else 'general',
-                "optimized": metadata.get('optimized', 'false') if metadata else 'false',
-                "variation_type": metadata.get('variation_type', 'original') if metadata else 'original'
+                "type": metadata.get('type', 'general') if metadata else 'general'
             }
 
             self.collection.add(
@@ -287,45 +353,17 @@ class RAGEngine:
                 metadatas=[enhanced_metadata],
                 ids=[doc_id]
             )
-            logger.info(
-                f"✅ Documento añadido: {document[:50]}... [Categoría: {enhanced_metadata['category']}]")
-
+            
             self.metrics['documents_added'] += 1
             return True
+            
         except Exception as e:
             logger.error(f"❌ Error añadiendo documento: {e}")
             self.metrics['errors'] += 1
             return False
 
-    def document_exists(self, document: str) -> bool:
-        """🆕 VERIFICACIÓN MEJORADA DE EXISTENCIA"""
-        try:
-            results = self.collection.query(
-                query_texts=[document],
-                n_results=1
-            )
-            if results['documents']:
-                existing_doc = results['documents'][0][0]
-                similarity = self._calculate_similarity(document, existing_doc)
-                return similarity > 0.95
-            return False
-        except Exception as e:
-            logger.error(f"Error checking document existence: {e}")
-            return False
-
-    def _calculate_similarity(self, doc1: str, doc2: str) -> float:
-        """🆕 CÁLCULO DE SIMILITUD MEJORADO"""
-        words1 = set(self.enhanced_normalize_text(doc1).split())
-        words2 = set(self.enhanced_normalize_text(doc2).split())
-
-        if not words1 or not words2:
-            return 0.0
-
-        common = words1.intersection(words2)
-        return len(common) / max(len(words1), len(words2))
-
     def query(self, query_text: str, n_results: int = 3) -> List[str]:
-        """🆕 QUERY MEJORADA CON FILTROS POR CATEGORÍA"""
+        """QUERY BÁSICA - MÉTODO REQUERIDO POR OTROS COMPONENTES"""
         try:
             results = self.collection.query(
                 query_texts=[query_text],
@@ -336,28 +374,24 @@ class RAGEngine:
             logger.error(f"Error en query RAG: {e}")
             return []
 
-    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.25):
-        """🆕 BÚSQUEDA OPTIMIZADA CON UMBRAL REALISTA"""
+    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.45):
+        """BÚSQUEDA OPTIMIZADA CON UMBRAL"""
         try:
-            # 🆕 PREPROCESAR LA CONSULTA para mejor matching
             processed_query = self.enhanced_normalize_text(query_text)
 
             results = self.collection.query(
                 query_texts=[processed_query],
-                n_results=n_results * 3,  # Buscar más resultados para filtrar
+                n_results=n_results * 3,
                 include=['distances', 'documents', 'metadatas']
             )
 
             filtered_docs = []
             for i, distance in enumerate(results['distances'][0]):
                 similarity = 1 - distance
-
-                # 🆕 CRITERIOS MÁS FLEXIBLES para español - UMBRAL BAJADO
                 if similarity >= score_threshold:
                     doc_metadata = results['metadatas'][0][i]
                     doc_content = results['documents'][0][i]
-
-                    # 🆕 VERIFICACIÓN ADICIONAL: contenido relevante
+                    
                     if self._is_relevant_document(processed_query, doc_content):
                         filtered_docs.append({
                             'document': doc_content,
@@ -365,48 +399,36 @@ class RAGEngine:
                             'similarity': similarity
                         })
 
-            # Ordenar por similitud y devolver los mejores
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
-
-            logger.info(
-                f"🔍 Query: '{query_text}' -> {len(filtered_docs)} resultados (umbral: {score_threshold})")
-
             return filtered_docs[:n_results]
 
         except Exception as e:
             logger.error(f"❌ Error en query optimizada: {e}")
-            # Fallback a query simple
             simple_results = self.query(query_text, n_results)
             return [{'document': doc, 'metadata': {}, 'similarity': 0.7} for doc in simple_results]
 
     def _is_relevant_document(self, query: str, document: str) -> bool:
-        """🆕 VERIFICACIÓN DE RELEVANCIA MEJORADA"""
+        """VERIFICACIÓN DE RELEVANCIA"""
         query_words = set(query.lower().split())
         doc_words = set(document.lower().split())
 
-        # Palabras muy comunes que no cuentan para relevancia
-        stop_words = {'el', 'la', 'los', 'las', 'de', 'en', 'y',
-                      'que', 'con', 'para', 'por'}
+        stop_words = {'el', 'la', 'los', 'las', 'de', 'en', 'y', 'que', 'con', 'para', 'por'}
         query_words = query_words - stop_words
         doc_words = doc_words - stop_words
 
         if not query_words:
             return True
 
-        # Calcular superposición de palabras clave
         overlap = len(query_words.intersection(doc_words))
         relevance_ratio = overlap / len(query_words)
 
-        return relevance_ratio >= 0.2  # 🆕 BAJADO: 0.3 → 0.2
+        return relevance_ratio >= 0.2
 
     def query_with_sources(self, query_text: str, n_results: int = 3) -> List[Dict]:
-        """🆕 BÚSQUEDA ESPECÍFICA PARA FUENTES CON UMBRAL BAJO"""
+        """BÚSQUEDA CON FUENTES"""
         try:
-            # Usar query optimizada con umbral MUCHO más bajo para fuentes
-            results = self.query_optimized(
-                query_text, n_results, score_threshold=0.2)
+            results = self.query_optimized(query_text, n_results, score_threshold=0.45)
 
-            # Formatear resultados para fuentes
             sources = []
             for result in results:
                 sources.append({
@@ -416,313 +438,158 @@ class RAGEngine:
                     'similarity': result['similarity']
                 })
 
-            logger.info(
-                f"📚 Fuentes encontradas para '{query_text}': {len(sources)}")
             return sources
 
         except Exception as e:
             logger.error(f"❌ Error en query con fuentes: {e}")
             return []
 
-    def keyword_search(self, query: str, n_results: int = 3) -> List[Dict]:
-        """🆕 BÚSQUEDA ALTERNATIVA POR PALABRAS CLAVE - MÉTODO NUEVO"""
-        try:
-            all_docs = self.collection.get()
-            query_lower = query.lower()
-
-            # Keywords específicas para diferentes tipos de consultas
-            keyword_patterns = {
-                'sesiones psicológicas': ['sesiones', 'psicológicas', '8 sesiones', 'año', 'máximo'],
-                'tne': ['tne', 'primera vez', 'pago', '2700', '3600', 'validar'],
-                'talleres deportivos': ['talleres', 'deportivos', 'fútbol', 'voleibol', 'basquetbol'],
-                'claudia cortés': ['claudia', 'cortés', 'ccortesn', 'desarrollo laboral', 'cv'],
-                'gimnasio entretiempo': ['gimnasio', 'entretiempo', 'ejército libertador']
-            }
-
-            # Determinar qué patrones usar
-            used_keywords = []
-            for key, patterns in keyword_patterns.items():
-                if key in query_lower:
-                    used_keywords.extend(patterns)
-
-            # Si no hay coincidencia específica, usar palabras de la consulta
-            if not used_keywords:
-                used_keywords = [
-                    word for word in query_lower.split() if len(word) > 3]
-
-            # Buscar coincidencias
-            matches = []
-            for i, doc in enumerate(all_docs['documents']):
-                doc_lower = doc.lower()
-                score = 0
-                matched_words = []
-
-                for keyword in used_keywords:
-                    if keyword in doc_lower:
-                        score += 1
-                        matched_words.append(keyword)
-
-                if score > 0:
-                    metadata = all_docs['metadatas'][i]
-                    matches.append({
-                        'document': doc,
-                        'metadata': metadata,
-                        'score': score,
-                        'matched_keywords': matched_words,
-                        'similarity': min(0.5 + (score * 0.1), 0.8)  # Simular similitud
-                    })
-
-            # Ordenar por score y devolver mejores resultados
-            matches.sort(key=lambda x: x['score'], reverse=True)
-            logger.info(f"🔍 Keyword search: '{query}' -> {len(matches)} resultados")
-
-            return matches[:n_results]
-
-        except Exception as e:
-            logger.error(f"❌ Error en keyword search: {e}")
-            return []
-
     def hybrid_search(self, query_text: str, n_results: int = 3) -> List[Dict]:
-        """🆕 BÚSQUEDA HÍBRIDA CON CATEGORÍAS REALES DE LA BD - VERSIÓN CORREGIDA"""
+        """BÚSQUEDA HÍBRIDA MEJORADA"""
         try:
-            logger.info(f"🔍 Hybrid search con categorías REALES para: '{query_text}'")
-            
-            query_lower = query_text.lower()
-            
-            # 🎯 MAPEO CORREGIDO CON CATEGORÍAS REALES DE LA BD
-            if any(word in query_lower for word in ['sesion', 'psicológica', 'psicólogo', 'bienestar', '8 sesiones', 'salud mental']):
-                # 🆕 BUSCAR EN CATEGORÍAS EXISTENTES que puedan contener info de bienestar
-                expected_categories = ["general", "academico"]  # Categorías reales que podrían tener esta info
-                priority_keywords = ['psicológica', 'sesiones', 'bienestar', 'salud mental', 'apoyo']
-            elif any(word in query_lower for word in ['tne', 'tarjeta nacional', 'pase escolar']):
-                # 🆕 CATEGORÍA REAL: 'tné' (con acento agudo)
-                expected_categories = ["certificados", "tné", "general"]  # Categorías reales para TNE
-                priority_keywords = ['TNE', 'tarjeta', 'nacional', 'estudiantil', 'validar', 'primera vez']
-            elif any(word in query_lower for word in ['taller', 'deporte', 'fútbol', 'voleibol', 'basquetbol', 'gimnasio']):
-                # 🆕 BUSCAR EN CATEGORÍAS EXISTENTES que puedan contener info deportiva
-                expected_categories = ["general", "horarios"]  # Categorías reales que podrían tener esta info
-                priority_keywords = ['deporte', 'taller', 'fútbol', 'voleibol', 'basquetbol', 'gimnasio']
-            elif any(word in query_lower for word in ['claudia', 'cortés', 'ccortesn', 'cv', 'curriculum', 'laboral', 'empleo']):
-                # 🆕 CATEGORÍA REAL: 'laboral'
-                expected_categories = ["laboral", "general"]  # Categorías reales para desarrollo laboral
-                priority_keywords = ['Claudia', 'Cortés', 'ccortesn', 'CV', 'curriculum', 'laboral', 'bolsa', 'trabajo']
-            elif any(word in query_lower for word in ['certificado', 'alumno regular', 'constancia']):
-                # 🆕 CATEGORÍA REAL: 'certificados'
-                expected_categories = ["certificados", "general"]
-                priority_keywords = ['certificado', 'alumno', 'regular', 'constancia']
-            else:
-                expected_categories = ["general"]  # Buscar en todas las categorías
-                priority_keywords = []
-            
-            logger.info(f"   🎯 Categorías esperadas (REALES): {expected_categories}")
-            logger.info(f"   🔑 Keywords prioritarias: {priority_keywords}")
-            
-            # 1. Obtener TODOS los documentos
-            all_docs = self.collection.get()
-            
-            # 2. CALIFICAR CADA DOCUMENTO con las categorías REALES
-            scored_docs = []
-            
-            for i, document in enumerate(all_docs['documents']):
-                metadata = all_docs['metadatas'][i]
-                actual_category = metadata.get('category', '').lower()
-                content_lower = document.lower()
-                
-                # PUNTUACIÓN BASE
-                score = 0
-                
-                # 🎯 BONUS por categoría correcta (usando categorías REALES)
-                if any(expected_cat in actual_category for expected_cat in expected_categories):
-                    score += 15.0  # Bonus por categoría correcta
-                
-                # 🎯 BONUS por keywords prioritarias
-                for keyword in priority_keywords:
-                    if keyword.lower() in content_lower:
-                        score += 8.0  # Bonus por keyword específica
-                
-                # 🎯 BONUS por palabras de la consulta en el contenido
-                query_words = [word for word in query_lower.split() if len(word) > 3]
-                for word in query_words:
-                    if word in content_lower:
-                        score += 3.0
-                
-                # 🎯 BONUS EXTRA por contenido específico
-                specific_bonus_patterns = {
-                    'sesiones psicológicas': ['8 sesiones', 'psicológica', 'bienestar'],
-                    'tne': ['tne', 'tarjeta nacional', 'pase escolar'],
-                    'talleres deportivos': ['taller deportivo', 'fútbol', 'voleibol'],
-                    'claudia cortés': ['claudia', 'cortés', 'ccortesn']
-                }
-                
-                for pattern_key, patterns in specific_bonus_patterns.items():
-                    if pattern_key in query_lower:
-                        for pattern in patterns:
-                            if pattern.lower() in content_lower:
-                                score += 5.0
-                
-                # Solo incluir documentos con puntuación mínima
-                if score >= 8.0:  # Umbral razonable
-                    scored_docs.append({
-                        'document': document,
-                        'metadata': metadata,
-                        'score': score,
-                        'similarity': min(score / 30.0, 1.0),
-                        'final_score': score
-                    })
-            
-            # 3. Si no hay suficientes resultados, bajar el umbral
-            if len(scored_docs) < n_results:
-                logger.info(f"   🔄 Bajando umbral - Solo {len(scored_docs)} resultados con umbral alto")
-                for i, document in enumerate(all_docs['documents']):
-                    if len(scored_docs) >= n_results * 3:  # Máximo triple de lo necesario
-                        break
-                        
-                    metadata = all_docs['metadatas'][i]
-                    actual_category = metadata.get('category', '').lower()
-                    content_lower = document.lower()
-                    
-                    # Verificar si ya está en los resultados
-                    if any(doc['document'] == document for doc in scored_docs):
-                        continue
-                    
-                    # Puntuación más baja para resultados secundarios
-                    score = 0
-                    
-                    # Bonus por categoría relacionada
-                    if any(expected_cat in actual_category for expected_cat in expected_categories):
-                        score += 5.0
-                    
-                    # Bonus por keywords
-                    for keyword in priority_keywords:
-                        if keyword.lower() in content_lower:
-                            score += 2.0
-                    
-                    # Bonus por cualquier palabra de la consulta
-                    for word in query_lower.split():
-                        if len(word) > 3 and word in content_lower:
-                            score += 1.0
-                    
-                    if score >= 2.0:  # Umbral muy bajo para resultados secundarios
-                        scored_docs.append({
-                            'document': document,
-                            'metadata': metadata,
-                            'score': score,
-                            'similarity': min(score / 10.0, 1.0),
-                            'final_score': score
-                        })
-            
-            # 4. ORDENAR por puntuación y tomar los mejores
-            scored_docs.sort(key=lambda x: x['final_score'], reverse=True)
-            final_results = scored_docs[:n_results]
-            
-            logger.info(f"✅ Hybrid search COMPLETADO: '{query_text}'")
-            logger.info(f"   📊 Resultados: {len(final_results)} de {len(scored_docs)} calificados")
-            
-            for i, result in enumerate(final_results):
-                category = result['metadata'].get('category', 'N/A')
-                logger.info(f"     {i+1}. Score: {result['final_score']:.1f}, Categoría: {category}")
-                if i == 0:  # Mostrar preview del mejor resultado
-                    logger.info(f"        Preview: {result['document'][:100]}...")
-            
-            return final_results
-            
+            results = self.query_optimized(query_text, n_results * 2, score_threshold=0.45)
+
+            filtered_docs = []
+            for result in results:
+                if result['similarity'] >= 0.45:
+                    filtered_docs.append(result)
+
+            filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
+            return filtered_docs[:n_results]
+
         except Exception as e:
             logger.error(f"❌ Error en hybrid search: {e}")
-            # Fallback a búsqueda simple
-            try:
-                return self.fallback_search(query_text, n_results)
-            except:
-                return []
-
-    def fallback_search(self, query_text: str, n_results: int = 3) -> List[Dict]:
-        """🆕 BÚSQUEDA DE FALLBACK SIMPLE"""
-        try:
-            all_docs = self.collection.get()
-            query_lower = query_text.lower()
-            
-            scored_docs = []
-            for i, document in enumerate(all_docs['documents']):
-                content_lower = document.lower()
-                score = 0
-                
-                # Contar coincidencias de palabras
-                for word in query_lower.split():
-                    if len(word) > 3 and word in content_lower:
-                        score += 1
-                
-                if score > 0:
-                    metadata = all_docs['metadatas'][i]
-                    scored_docs.append({
-                        'document': document,
-                        'metadata': metadata,
-                        'score': score,
-                        'similarity': min(score / 5.0, 1.0),
-                        'final_score': score
-                    })
-            
-            scored_docs.sort(key=lambda x: x['score'], reverse=True)
-            return scored_docs[:n_results]
-            
-        except Exception as e:
-            logger.error(f"❌ Error en fallback search: {e}")
             return []
 
-    def _update_metrics(self, metric_name: str):
-        """Actualizar métricas"""
-        if metric_name in self.metrics:
-            self.metrics[metric_name] += 1
+    def generate_derivation_response(self, processing_info: Dict) -> Dict:
+        """GENERAR RESPUESTA DE DERIVACIÓN"""
+        suggestion = processing_info.get('derivation_suggestion', '')
+        
+        response = f"""
+{suggestion}
+
+📍 *Mis áreas de especialización son:*
+• 🎓 Asuntos Estudiantiles (TNE, certificados, programas de apoyo)
+• 🧠 Bienestar Estudiantil (salud mental, apoyo psicológico)  
+• 🏀 Deportes y Actividades (talleres, gimnasio, selecciones)
+• 💼 Desarrollo Laboral (CV, prácticas, empleabilidad)
+
+¿Puedo ayudarte con alguno de estos temas?
+"""
+        
+        return {
+            'response': response.strip(),
+            'sources': [],
+            'category': 'derivation',
+            'response_time': 0.1,
+            'cache_type': 'derivation',
+            'processing_info': processing_info
+        }
+
+    def generate_multiple_queries_response(self, processing_info: Dict) -> Dict:
+        """GENERAR RESPUESTA PARA CONSULTAS MÚLTIPLES"""
+        query_parts = processing_info['query_parts']
+        
+        response_lines = ["📋 Veo que tienes varias consultas. Te ayudo con cada una:\n"]
+        
+        for i, part in enumerate(query_parts, 1):
+            part_response = self._process_single_query(part)
+            response_lines.append(f"\n📌 **{i}. Sobre '{part}':**")
+            response_lines.append(part_response['response'])
+        
+        response_lines.append("\n💡 ¿Te gustaría más detalles sobre alguna de estas consultas?")
+        
+        return {
+            'response': '\n'.join(response_lines),
+            'sources': [],
+            'category': 'multiple_queries',
+            'response_time': 0.2,
+            'cache_type': 'multiple_queries',
+            'processing_info': processing_info
+        }
+
+    def _process_single_query(self, query: str) -> Dict:
+        """PROCESAR CONSULTA INDIVIDUAL"""
+        try:
+            sources = self.hybrid_search(query, n_results=2)
+            
+            if not sources:
+                return {
+                    'response': "ℹ️ No tengo información específica sobre este tema en mis fuentes actuales.",
+                    'sources': []
+                }
+            
+            best_source = sources[0]
+            return {
+                'response': best_source['document'][:200] + "...",
+                'sources': [{
+                    'content': best_source['document'][:120] + '...',
+                    'category': best_source['metadata'].get('category', 'general'),
+                    'similarity': round(best_source.get('similarity', 0.5), 3)
+                }]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error procesando consulta individual: {e}")
+            return {
+                'response': "🔧 Error procesando esta consulta específica.",
+                'sources': []
+            }
+
+    def generate_clarification_response(self, processing_info: Dict) -> Dict:
+        """GENERAR RESPUESTA PARA CONSULTAS AMBIGUAS"""
+        original_query = processing_info['original_query']
+        
+        response = f"""
+🤔 No estoy seguro de entender completamente tu consulta sobre '{original_query}'.
+
+¿Podrías especificar si te refieres a alguno de estos temas?
+
+• TNE y certificados estudiantiles
+• Programas de apoyo económico
+• Salud mental y bienestar
+• Deportes y actividades
+• Desarrollo laboral y prácticas
+
+💡 *Ejemplos de consultas específicas:*
+- "¿Cómo saco mi TNE por primera vez?"
+- "¿Dónde está el gimnasio Entretiempo?"  
+- "¿Cuántas sesiones psicológicas tengo disponibles?"
+- "¿Cómo contacto a Claudia Cortés para mi CV?"
+"""
+        
+        return {
+            'response': response.strip(),
+            'sources': [],
+            'category': 'clarification',
+            'response_time': 0.1,
+            'cache_type': 'clarification',
+            'processing_info': processing_info
+        }
 
     def get_cache_stats(self) -> Dict:
-        """🆕 ESTADÍSTICAS MEJORADAS"""
-        return {
+        """ESTADÍSTICAS MEJORADAS"""
+        stats = {
             'text_cache_size': len(self.text_cache),
             'semantic_cache_size': len(self.semantic_cache.cache),
             'metrics': self.metrics,
             'semantic_cache_enabled': self.semantic_cache.model is not None,
             'total_documents': self.collection.count() if hasattr(self.collection, 'count') else 'N/A',
-            'duoc_context': self.duoc_context
+            'duoc_context': self.duoc_context,
+            'topic_classification_stats': {
+                'total_derivations': self.metrics['derivations'],
+                'total_multiple_queries': self.metrics['multiple_queries'],
+                'total_ambiguous': self.metrics['ambiguous_queries']
+            }
         }
 
+        if self.metrics['response_times']:
+            avg_time = sum(self.metrics['response_times']) / len(self.metrics['response_times'])
+            stats['average_response_time'] = round(avg_time, 3)
+        else:
+            stats['average_response_time'] = 0
 
-def _optimize_response(respuesta: str, pregunta: str) -> str:
-    """🆕 OPTIMIZACIÓN DE RESPUESTA MEJORADA DUOC UC"""
-
-    if respuesta.startswith(("¡Hola! Soy InA", "Hola, soy el asistente")):
-        respuesta = respuesta.replace("¡Hola! Soy InA, ", "").replace(
-            "Hola, soy el asistente, ", "")
-
-    optimizations = {
-        "soy el asistente virtual del Punto Estudiantil": "Punto Estudiantil:",
-        "estoy aquí para ayudarte con": "Puedo informarte sobre",
-        "por favor, no dudes en contactarnos": "puedes acercarte",
-        "te recomiendo que te dirijas": "recomiendo dirigirte",
-        "debes saber que el proceso": "el proceso",
-        "es importante mencionar que": "",
-        "en relación a tu consulta sobre": "Sobre",
-        "respecto a tu pregunta acerca de": "Acerca de",
-        "quiero informarte que": "",
-        "me complace decirte que": "",
-        "como asistente virtual": "",
-        "puedo proporcionarte información": "Información:",
-        "hola, soy ina, el asistente virtual": "",
-        "soy ina, el asistente virtual": "",
-        "duoc uc": "Duoc UC",
-        "plaza norte": "Plaza Norte"
-    }
-
-    for largo, corto in optimizations.items():
-        respuesta = respuesta.replace(largo, corto)
-
-    # 🆕 LIMPIEZA ADICIONAL
-    respuesta = re.sub(r'\s+', ' ', respuesta)  # Espacios múltiples
-    respuesta = respuesta.strip()
-
-    # 🆕 ASEGURAR QUE LA RESPUESTA INCLUYA INFORMACIÓN ESPECÍFICA DE PLAZA NORTE
-    if "plaza norte" not in respuesta.lower() and "santa elena" not in respuesta.lower():
-        if any(keyword in pregunta.lower() for keyword in ['tne', 'certificado', 'trámite', 'punto estudiantil', 'beca', 'práctica']):
-            respuesta += "\n\n📍 *Información específica para Plaza Norte: Santa Elena de Huechuraba 1660*"
-
-    return respuesta
+        return stats
 
 
 # ✅ Instancia global del motor RAG
@@ -730,15 +597,35 @@ rag_engine = RAGEngine()
 
 
 def get_ai_response(user_message: str, context: list = None) -> Dict:
-    """🎯 VERSIÓN OPTIMIZADA - SELECCIÓN INTELIGENTE DE FUENTES"""
+    """🎯 VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE DE CONSULTAS"""
     import time
     start_time = time.time()
 
-    # Normalización mejorada
+    # 🆕 1. PROCESAMIENTO INTELIGENTE DE LA CONSULTA
+    processing_info = rag_engine.process_user_query(user_message)
+    strategy = processing_info['processing_strategy']
+
+    # 🆕 2. ESTRATEGIAS DIFERENCIADAS
+    if strategy == 'derivation':
+        response_data = rag_engine.generate_derivation_response(processing_info)
+        response_data['response_time'] = time.time() - start_time
+        return response_data
+
+    elif strategy == 'multiple_queries':
+        response_data = rag_engine.generate_multiple_queries_response(processing_info)
+        response_data['response_time'] = time.time() - start_time
+        return response_data
+
+    elif strategy == 'clarification':
+        response_data = rag_engine.generate_clarification_response(processing_info)
+        response_data['response_time'] = time.time() - start_time
+        return response_data
+
+    # 🆕 3. ESTRATEGIA ESTÁNDAR RAG
     normalized_message = rag_engine.enhanced_normalize_text(user_message)
     cache_key = f"rag_{hashlib.md5(user_message.encode()).hexdigest()}"
 
-    # 1. 🚀 CACHE TEXTUAL RÁPIDO
+    # Cache textual rápido
     if cache_key in rag_engine.text_cache:
         cached_response = rag_engine.text_cache[cache_key]
         rag_engine.metrics['text_cache_hits'] += 1
@@ -748,85 +635,24 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
 
     logger.info(f"🔍 RAG Cache MISS para: '{user_message}'")
 
-    # 2. ⚡ PROCESAR CON OLLAMA
+    # ⚡ PROCESAR CON OLLAMA
     try:
-        # Buscar fuentes (más resultados para mejor selección)
-        sources = rag_engine.hybrid_search(user_message, n_results=6)
+        sources = rag_engine.hybrid_search(user_message, n_results=4)
         
-        # 🆕 ALGORITMO MEJORADO DE SELECCIÓN DE FUENTES
         final_sources = []
         seen_hashes = set()
-        
-        query_lower = user_message.lower()
-        logger.info(f"🔍 Búsqueda para: '{user_message}' - Fuentes encontradas: {len(sources)}")
-        
-        # 🎯 CLASIFICAR Y PRIORIZAR FUENTES
-        highly_relevant_sources = []
-        relevant_sources = []
-        other_sources = []
         
         for source in sources:
             content_hash = hashlib.md5(source['document'].encode()).hexdigest()
             
-            # Evitar duplicados exactos
             if content_hash in seen_hashes:
                 continue
             seen_hashes.add(content_hash)
             
-            content_lower = source['document'].lower()
-            category = source['metadata'].get('category', 'general')
-            score = source.get('final_score', 0)
-            
-            # 🎯 DETECCIÓN ESPECÍFICA PARA CLAUDIA CORTÉS
-            if any(keyword in query_lower for keyword in ['claudia', 'cortés', 'cv', 'curriculum', 'laboral']):
-                if any(kw in content_lower for kw in ['claudia cortés', 'claudia', 'cortés']):
-                    highly_relevant_sources.append((source, 100))  # Máxima prioridad
-                    logger.info(f"🎯🏆 FUENTE CLAUDIA CORTÉS ENCONTRADA: {content_hash[:8]}")
-                elif any(kw in content_lower for kw in ['cv', 'curriculum', 'laboral', 'empleo']):
-                    highly_relevant_sources.append((source, 90))
-                elif 'desarrollo laboral' in content_lower:
-                    relevant_sources.append((source, 80))
-            
-            # 🎯 DETECCIÓN PARA TNE
-            elif any(keyword in query_lower for keyword in ['tne', 'tarjeta nacional']):
-                if any(kw in content_lower for kw in ['tne', 'tarjeta nacional']):
-                    highly_relevant_sources.append((source, 100))
-            
-            # 🎯 DETECCIÓN PARA SESIONES PSICOLÓGICAS
-            elif any(keyword in query_lower for keyword in ['sesion', 'psicológica', 'psicológico']):
-                if any(kw in content_lower for kw in ['sesion', 'psicológica', '8 sesiones']):
-                    highly_relevant_sources.append((source, 100))
-            
-            # Fuentes con buena puntuación general
-            elif score > 40:
-                relevant_sources.append((source, score))
-            else:
-                other_sources.append(source)
-        
-        # 🏆 CONSTRUIR LISTA FINAL ORDENADA POR PRIORIDAD
-        # Primero las altamente relevantes (ordenadas por prioridad)
-        highly_relevant_sources.sort(key=lambda x: x[1], reverse=True)
-        for source, priority in highly_relevant_sources:
             if len(final_sources) < 2:
                 final_sources.append(source)
-                logger.info(f"🏆 Añadida fuente altamente relevante (prioridad: {priority})")
-        
-        # Luego las relevantes por score
-        relevant_sources.sort(key=lambda x: x[1], reverse=True)
-        for source, score in relevant_sources:
-            if len(final_sources) < 2:
-                final_sources.append(source)
-                logger.info(f"✅ Añadida fuente relevante (score: {score})")
-        
-        # Finalmente otras fuentes si aún hay espacio
-        for source in other_sources:
-            if len(final_sources) < 2:
-                final_sources.append(source)
-                logger.info(f"ℹ️ Añadida otra fuente")
-        
-        logger.info(f"📊 Fuentes finales seleccionadas: {len(final_sources)}")
-        
-        # 🆕 SYSTEM MESSAGE MEJORADO
+
+        # SYSTEM MESSAGE MEJORADO
         system_message = (
             "Eres InA, asistente del Punto Estudiantil Duoc UC Plaza Norte. "
             "Responde SOLO con la información de las fuentes proporcionadas.\n\n"
@@ -840,21 +666,12 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
                 system_message += f"--- Fuente {i+1} [Categoría: {category}] ---\n{content}\n\n"
             
             system_message += (
-                "💡 INSTRUCCIÓN CRÍTICA: Responde ÚNICAMENTE con la información de arriba. "
-                "Si la información no responde completamente la pregunta, di solo lo que está en las fuentes.\n"
+                "💡 Responde ÚNICAMENTE con la información de arriba. "
                 "NO inventes información. Si no hay datos suficientes, di 'No hay información específica sobre esto'.\n"
+                "📍 Incluye información de contacto específica cuando sea relevante.\n"
             )
         else:
             system_message += "⚠️ No hay información específica disponible sobre este tema.\n"
-
-        # 🆕 LOG DETALLADO
-        logger.info(f"⚡ Enviando a Ollama: '{user_message}'")
-        logger.info(f"📚 Fuentes finales: {len(final_sources)}")
-        for i, source in enumerate(final_sources):
-            category = source['metadata'].get('category', 'N/A')
-            content_preview = source['document'][:80] + "..."
-            logger.info(f"   📄 Fuente {i+1}: Categoría: {category}")
-            logger.info(f"      {content_preview}")
 
         response = ollama.chat(
             model='mistral:7b',
@@ -866,8 +683,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         )
 
         respuesta = response['message']['content'].strip()
-        logger.info(f"📨 Respuesta: {respuesta[:100]}...")
-
+        
         # Optimización de respuesta
         respuesta = _optimize_response(respuesta, user_message)
 
@@ -877,55 +693,65 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
             formatted_sources.append({
                 'content': source['document'][:120] + '...',
                 'category': source['metadata'].get('category', 'general'),
-                'similarity': round(source.get('final_score', 0.5), 3)
+                'similarity': round(source.get('similarity', 0.5), 3)
             })
 
         response_data = {
             'response': respuesta,
             'sources': formatted_sources,
-            'category': 'general',
+            'category': processing_info['topic_classification']['topic'],
             'timestamp': time.time(),
             'response_time': time.time() - start_time,
-            'cache_type': 'ollama_generated'
+            'cache_type': 'ollama_generated',
+            'processing_info': processing_info
         }
 
         # Guardar en cache
         rag_engine.text_cache[cache_key] = response_data
+        rag_engine.metrics['successful_responses'] += 1
 
         return response_data
 
     except Exception as e:
-        logger.error(f"❌ Error: {str(e)}")
+        logger.error(f"❌ Error en RAG estándar: {str(e)}")
         return {
-            "response": "🔧 Error técnico. Intenta nuevamente.",
+            "response": "🔧 Error técnico al procesar tu consulta. Intenta nuevamente.",
             "sources": [],
             "category": "error",
-            "response_time": time.time() - start_time
+            "response_time": time.time() - start_time,
+            "processing_info": processing_info
         }
 
 
-# 🆕 FUNCIONES DE CACHE MEJORADAS
-def get_cached_response(session_id: str, user_message: str, category: str) -> Optional[Dict]:
-    """Obtener respuesta completa desde cache con más información"""
-    cache_key = response_cache._generate_key({
-        'session_id': session_id,
-        'message': user_message,
-        'category': category
-    })
-    cached = response_cache.get(cache_key)
-    if cached:
-        cached['cache_type'] = 'response_cache'
-    return cached
+def _optimize_response(respuesta: str, pregunta: str) -> str:
+    """OPTIMIZACIÓN DE RESPUESTA"""
+    if respuesta.startswith(("¡Hola! Soy InA", "Hola, soy el asistente")):
+        respuesta = respuesta.replace("¡Hola! Soy InA, ", "").replace(
+            "Hola, soy el asistente, ", "")
 
+    optimizations = {
+        "soy el asistente virtual del Punto Estudiantil": "Punto Estudiantil:",
+        "estoy aquí para ayudarte con": "Puedo informarte sobre",
+        "te recomiendo que te dirijas": "recomiendo dirigirte",
+        "debes saber que el proceso": "el proceso",
+        "es importante mencionar que": "",
+        "en relación a tu consulta sobre": "Sobre",
+        "respecto a tu pregunta acerca de": "Acerca de",
+        "quiero informarte que": "",
+        "me complace decirte que": "",
+        "como asistente virtual": "",
+        "puedo proporcionarte información": "Información:",
+        "hola, soy ina, el asistente virtual": "",
+        "soy ina, el asistente virtual": "",
+    }
 
-def cache_response(session_id: str, user_message: str, category: str, response_data: Dict) -> None:
-    """Guardar respuesta completa en cache con metadata"""
-    cache_key = response_cache._generate_key({
-        'session_id': session_id,
-        'message': user_message,
-        'category': category
-    })
-    response_cache.set(cache_key, response_data, ttl=1800)
+    for largo, corto in optimizations.items():
+        respuesta = respuesta.replace(largo, corto)
+
+    respuesta = re.sub(r'\s+', ' ', respuesta)
+    respuesta = respuesta.strip()
+
+    return respuesta
 
 
 class ResponseCache:
@@ -953,22 +779,12 @@ response_cache = ResponseCache()
 
 
 def get_rag_cache_stats() -> Dict:
-    """🆕 ESTADÍSTICAS COMPLETAS MEJORADAS"""
-    stats = rag_engine.get_cache_stats()
-
-    # 🆕 CÁLCULO DE TIEMPO PROMEDIO DE RESPUESTA
-    if rag_engine.metrics['response_times']:
-        avg_time = sum(rag_engine.metrics['response_times']) / \
-            len(rag_engine.metrics['response_times'])
-        stats['average_response_time'] = round(avg_time, 3)
-    else:
-        stats['average_response_time'] = 0
-
-    return stats
+    """ESTADÍSTICAS COMPLETAS"""
+    return rag_engine.get_cache_stats()
 
 
 def clear_caches():
-    """🆕 LIMPIAR CACHES (útil para desarrollo)"""
+    """LIMPIAR CACHES"""
     rag_engine.text_cache.clear()
     rag_engine.semantic_cache.cache.clear()
     logger.info("🧹 Todos los caches limpiados")

@@ -82,8 +82,8 @@ const Chat: React.FC = () => {
   const inactivityCounterRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
    // Configuración del temporizador de inactividad (en milisegundos)
-  const INACTIVITY_TIMEOUT = 30000;
-  const FEEDBACK_AUTO_PRESS_TIMEOUT = 29999; // 20 segundos para feedback automático
+  const INACTIVITY_TIMEOUT = 3000000; // 50 minutos para redirección
+  const FEEDBACK_AUTO_PRESS_TIMEOUT = 299999; // 5 minutos para feedback automático
 
   // Agrega este estado adicional
 const feedbackAutoPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
