@@ -52,10 +52,10 @@ interface SpeechRecognition extends EventTarget {
 declare global {
   interface Window {
     SpeechRecognition: {
-      new (): SpeechRecognition;
+      new(): SpeechRecognition;
     };
     webkitSpeechRecognition: {
-      new (): SpeechRecognition;
+      new(): SpeechRecognition;
     };
   }
 }
@@ -81,12 +81,12 @@ const Chat: React.FC = () => {
   const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inactivityCounterRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-   // Configuración del temporizador de inactividad (en milisegundos)
+  // Configuración del temporizador de inactividad (en milisegundos)
   const INACTIVITY_TIMEOUT = 300000;
-  const FEEDBACK_AUTO_PRESS_TIMEOUT = 299999; // 20 segundos para feedback automático
+  const FEEDBACK_AUTO_PRESS_TIMEOUT = 299999; // 4.59 minutos para feedback automático
 
   // Agrega este estado adicional
-const feedbackAutoPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const feedbackAutoPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Estados para feedback
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentFeedbackSession, setCurrentFeedbackSession] = useState<string | null>(null);
@@ -116,228 +116,390 @@ const feedbackAutoPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(n
     navigate(-1);
   };
 
-  // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO (TEXT-TO-SPEECH)
+ // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO (TEXT-TO-SPEECH)
+ // Agregar un ref para controlar si la detención fue manual
+const isManualStopRef = useRef(false);
 
-  // Verificar soporte del lector de texto al cargar el componente
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      speechSynthesisRef.current = window.speechSynthesis;
-      setIsTtsSupported(true);
-    } else {
-      setIsTtsSupported(false);
-      console.warn('El lector de texto no es compatible con este navegador');
-    }
+// Función para detener la lectura actual
+const stopReading = useCallback((isManual = false) => {
+  if (isManual) {
+    isManualStopRef.current = true;
+  }
+  
+  if (speechSynthesisRef.current) {
+    // Cancelar inmediatamente
+    speechSynthesisRef.current.cancel();
 
-    // Cleanup: detener la lectura al desmontar el componente
-    return () => {
-      stopReading();
+    // Limpiar referencia
+    currentUtteranceRef.current = null;
+
+    // Resetear estados inmediatamente
+    setIsReading(false);
+    setCurrentReadingIndex(null);
+  }
+}, []);
+
+// Verificar soporte del lector de texto al cargar el componente
+useEffect(() => {
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    speechSynthesisRef.current = window.speechSynthesis;
+    setIsTtsSupported(true);
+
+    // Función para cargar voces en Chrome
+    const loadVoices = () => {
+      if (speechSynthesisRef.current) {
+        try {
+          // Esperar a que Chrome cargue las voces
+          const waitForVoices = (attempt = 1) => {
+            const voices = speechSynthesisRef.current?.getVoices() || [];
+
+            if (voices.length > 0) {
+              console.log(`✅ ${voices.length} voces cargadas en intento ${attempt}:`);
+              voices.forEach(voice => {
+                console.log(`   - ${voice.name} (${voice.lang})`);
+              });
+            } else if (attempt < 10) {
+              console.log(`⏳ Esperando voces... intento ${attempt}`);
+              setTimeout(() => waitForVoices(attempt + 1), 500);
+            } else {
+              console.warn('⚠️ No se pudieron cargar voces después de 10 intentos');
+            }
+          };
+
+          waitForVoices(1);
+        } catch (error) {
+          console.error('Error cargando voces:', error);
+        }
+      }
     };
-  }, []);
 
-  // Función para leer un mensaje en voz alta
-  const readMessage = useCallback((text: string, messageIndex: number) => {
-    if (!speechSynthesisRef.current || !isTtsSupported) {
-      alert(t('chat.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
-      return;
-    }
+    // Configurar event listener para cuando las voces cambien
+    speechSynthesisRef.current.onvoiceschanged = loadVoices;
 
-    // Detener cualquier lectura en curso
+    // Cargar voces inicialmente
+    loadVoices();
+
+  } else {
+    setIsTtsSupported(false);
+    console.warn('El lector de texto no es compatible con este navegador');
+  }
+
+  return () => {
     stopReading();
+  };
+}, [stopReading]);
 
-    // Configurar el idioma para la síntesis de voz
-    const ttsLang = i18n.language === 'es' ? 'es-ES' :
-                   i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+// Función para leer un mensaje en voz alta
+const readMessage = useCallback((text: string, messageIndex: number, isAutoRead = false) => {
+  // Si es lectura automática y hubo una detención manual, no leer
+  if (isAutoRead && isManualStopRef.current) {
+    console.log('🚫 Lectura automática bloqueada por detención manual');
+    return;
+  }
 
+  if (!speechSynthesisRef.current || !isTtsSupported) {
+    alert(t('chat.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+    return;
+  }
+
+  // Resetear el flag de detención manual si es una lectura manual
+  if (!isAutoRead) {
+    isManualStopRef.current = false;
+  }
+
+  // Detener cualquier lectura en curso ANTES de crear el nuevo utterance
+  stopReading();
+
+  // Pequeña pausa para asegurar que se detuvo completamente
+  setTimeout(() => {
     try {
+      // Configurar el idioma para la síntesis de voz
+      const ttsLang = i18n.language === 'es' ? 'es-ES' :
+        i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = ttsLang;
-      utterance.rate = 0.9; // Velocidad de lectura (0.1 - 10)
-      utterance.pitch = 1; // Tono (0 - 2)
-      utterance.volume = 1; // Volumen (0 - 1)
+      utterance.rate = 0.8;
+      utterance.pitch = 1.4;
+      utterance.volume = 1;
+
+      // BUSCAR Y SELECCIONAR UNA VOZ FEMENINA ESPECÍFICA
+      const voices = speechSynthesisRef.current?.getVoices() || [];
+      console.log('Todas las voces disponibles:', voices.map(v => ({ name: v.name, lang: v.lang })));
+
+      let femaleVoice = null;
+
+      // BUSCAR VOCES FEMENINAS ESPECÍFICAS POR NOMBRE
+      const femaleVoiceNames = [
+        // Voces femeninas en español
+        'google español', 'español', 'spanish', 'mujer', 'female', 'femenina',
+        'mexico', 'colombia', 'argentina', 'latina', 'latino', 'españa',
+        'sabina', 'helena', 'juana', 'catalina', 'sofia', 'valeria',
+        'google español de estados unidos', 'microsoft sabina', 'microsoft helena'
+      ];
+
+      const maleVoiceNames = [
+        // Voces masculinas a EVITAR
+        'raul', 'pablo', 'carlos', 'diego', 'jorge', 'miguel', 'male', 'masculino',
+        'microsoft raul', 'microsoft pablo', 'google español masculino'
+      ];
+
+      // Primero buscar voces femeninas explícitas
+      for (let voice of voices) {
+        const voiceName = voice.name.toLowerCase();
+        const voiceLang = voice.lang.toLowerCase();
+
+        // Verificar que sea del idioma correcto
+        if (!voiceLang.startsWith(ttsLang.substring(0, 2))) continue;
+
+        // Buscar características femeninas en el nombre
+        const isFemale = femaleVoiceNames.some(femaleName =>
+          voiceName.includes(femaleName.toLowerCase())
+        );
+
+        // Evitar voces masculinas explícitas
+        const isMale = maleVoiceNames.some(maleName =>
+          voiceName.includes(maleName.toLowerCase())
+        );
+
+        if (isFemale && !isMale) {
+          femaleVoice = voice;
+          console.log('✅ Voz femenina encontrada:', voice.name);
+          break;
+        }
+      }
+
+      // Si no encontramos voz femenina explícita, buscar cualquier voz que no sea masculina
+      if (!femaleVoice) {
+        for (let voice of voices) {
+          const voiceName = voice.name.toLowerCase();
+          const voiceLang = voice.lang.toLowerCase();
+
+          if (!voiceLang.startsWith(ttsLang.substring(0, 2))) continue;
+
+          // Evitar voces masculinas conocidas
+          const isMale = maleVoiceNames.some(maleName =>
+            voiceName.includes(maleName.toLowerCase())
+          );
+
+          if (!isMale) {
+            femaleVoice = voice;
+            console.log('⚠️ Usando voz no-masculina:', voice.name);
+            break;
+          }
+        }
+      }
+
+      // Si todavía no hay voz, usar la primera voz disponible del idioma
+      if (!femaleVoice) {
+        femaleVoice = voices.find(voice =>
+          voice.lang.startsWith(ttsLang.substring(0, 2))
+        );
+        console.warn('🚨 Usando primera voz disponible:', femaleVoice?.name);
+      }
+
+      if (femaleVoice) {
+        utterance.voice = femaleVoice;
+        console.log('🎯 Voz seleccionada finalmente:', femaleVoice.name);
+      } else {
+        console.error('❌ No se pudo encontrar ninguna voz adecuada');
+      }
 
       utterance.onstart = () => {
         setIsReading(true);
         setCurrentReadingIndex(messageIndex);
-        console.log('Iniciando lectura del mensaje:', messageIndex);
+        console.log(`🔊 ${isAutoRead ? 'Auto-' : ''}Lectura iniciada con voz:`, utterance.voice?.name);
       };
 
       utterance.onend = () => {
-        console.log('Lectura finalizada');
-        setIsReading(false);
-        setCurrentReadingIndex(null);
-        currentUtteranceRef.current = null;
-      };
-
-      utterance.onerror = (event) => {
-        console.error('Error en la lectura:', event);
+        console.log(`✅ ${isAutoRead ? 'Auto-' : ''}Lectura finalizada`);
         setIsReading(false);
         setCurrentReadingIndex(null);
         currentUtteranceRef.current = null;
         
-        if (event.error === 'not-allowed') {
-          alert(t('chat.ttsPermission') || 'Permiso de síntesis de voz denegado.');
+        // Resetear el flag de detención manual cuando termina naturalmente
+        if (!isAutoRead) {
+          isManualStopRef.current = false;
+        }
+      };
+
+      utterance.onerror = (event) => {
+        console.error(`❌ Error en la ${isAutoRead ? 'auto-' : ''}lectura:`, event.error);
+        setIsReading(false);
+        setCurrentReadingIndex(null);
+        currentUtteranceRef.current = null;
+
+        if (event.error !== 'interrupted') {
+          console.warn('Error de TTS:', event.error);
+        }
+        
+        // Resetear el flag de detención manual en caso de error
+        if (!isAutoRead) {
+          isManualStopRef.current = false;
         }
       };
 
       currentUtteranceRef.current = utterance;
-      speechSynthesisRef.current.speak(utterance);
+
+      // Pequeño delay antes de empezar a hablar
+      setTimeout(() => {
+        if (speechSynthesisRef.current) {
+          speechSynthesisRef.current.speak(utterance);
+        }
+      }, 100);
 
     } catch (error) {
-      console.error('Error al configurar la lectura:', error);
-      setIsTtsSupported(false);
+      console.error('💥 Error al configurar la lectura:', error);
+      setIsReading(false);
+      setCurrentReadingIndex(null);
     }
-  }, [i18n.language, t, isTtsSupported]);
+  }, 50);
+}, [i18n.language, t, isTtsSupported, stopReading]);
 
-  // Función para detener la lectura actual
-  const stopReading = useCallback(() => {
-    if (speechSynthesisRef.current && currentUtteranceRef.current) {
-      speechSynthesisRef.current.cancel();
-      currentUtteranceRef.current = null;
+// Función para alternar lectura de un mensaje
+const toggleReading = useCallback((message: Message, index: number) => {
+  if (isReading && currentReadingIndex === index) {
+    // Si ya está leyendo este mensaje, detener (marcar como manual)
+    stopReading(true);
+  } else {
+    // Si está leyendo otro mensaje, detener y empezar este
+    if (isReading) {
+      stopReading(true);
     }
-    setIsReading(false);
-    setCurrentReadingIndex(null);
-  }, []);
-
-  // Función para alternar lectura de un mensaje
-  const toggleReading = useCallback((message: Message, index: number) => {
-    if (isReading && currentReadingIndex === index) {
-      // Si ya está leyendo este mensaje, detener
-      stopReading();
-    } else {
-      // Si está leyendo otro mensaje, detener y empezar este
-      if (isReading) {
-        stopReading();
-      }
-      // Leer el mensaje seleccionado
-      readMessage(message.text, index);
-    }
-  }, [isReading, currentReadingIndex, readMessage, stopReading]);
-
-  // FIN - FUNCIONALIDAD DEL LECTOR DE TEXTO
-
-// Función para resetear el feedback - MOVER ARRIBA DE submitFeedback
-const resetFeedback = useCallback(() => {
-  setCurrentFeedbackSession(null);
-  setFeedbackSubmitted(false);
-  setShowFollowup(false);
-  setCurrentRating(0);
-  setUserComments('');
-  // Limpiar timer de feedback automático
-  if (feedbackAutoPressTimerRef.current) {
-    clearTimeout(feedbackAutoPressTimerRef.current);
-    feedbackAutoPressTimerRef.current = null;
+    // Leer el mensaje seleccionado (no es automático)
+    readMessage(message.text, index, false);
   }
-}, []); // No tiene dependencias
+}, [isReading, currentReadingIndex, readMessage, stopReading]);
+// Función para lectura automática (si existe en tu código)
+const autoReadMessage = useCallback((message: Message, index: number) => {
+  readMessage(message.text, index, true);
+}, [readMessage]);
 
-// Función para enviar feedback básico (Sí/No) - CON useCallback
-const submitFeedback = useCallback(async (isSatisfied: boolean) => {
-  if (!currentFeedbackSession) {
-    console.error(t('chat.feedbackError'));
-    return;
-  }
+// FIN - FUNCIONALIDAD DEL LECTOR DE TEXTO
 
-  try {
-    const response = await fetch('http://localhost:8000/feedback/response', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        currentFeedbackSession: currentFeedbackSession,
-        isSatisfied: isSatisfied
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-
-    if (response.ok) {
-      console.log(`Feedback ${isSatisfied ? 'positivo' : 'negativo'} enviado exitosamente`);
-
-      if (isSatisfied) {
-        setFeedbackSubmitted(true);
-        setTimeout(() => {
-          setShowFeedback(false);
-          resetFeedback();
-        }, 2000);
-      } else {
-        setShowFollowup(true);
-      }
-      
-      if (feedbackAutoPressTimerRef.current) {
-        clearTimeout(feedbackAutoPressTimerRef.current);
-        feedbackAutoPressTimerRef.current = null;
-      }
-    }
-  } catch (error) {
-    console.error(t('chat.feedbackServerError'), error);
-  }
-}, [currentFeedbackSession, t, resetFeedback]); // AGREGAR resetFeedback COMO DEPENDENCIA
-
-  
-// LUEGO la función autoPressFeedbackButton
-const autoPressFeedbackButton = useCallback(() => {
-  console.log('Presionando automáticamente botón de feedback por inactividad');
-  
-  // Verificar que el feedback esté visible y no se haya enviado
-  if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
-    console.log('Condiciones cumplidas - enviando feedback positivo automáticamente');
-    
-    // Presionar el botón "Sí" (feedback positivo) automáticamente
-    submitFeedback(true);
-    
-    // Limpiar el timer después de ejecutar
+  // Función para resetear el feedback - MOVER ARRIBA DE submitFeedback
+  const resetFeedback = useCallback(() => {
+    setCurrentFeedbackSession(null);
+    setFeedbackSubmitted(false);
+    setShowFollowup(false);
+    setCurrentRating(0);
+    setUserComments('');
+    // Limpiar timer de feedback automático
     if (feedbackAutoPressTimerRef.current) {
       clearTimeout(feedbackAutoPressTimerRef.current);
       feedbackAutoPressTimerRef.current = null;
     }
-  } else {
-    console.log('Feedback automático no ejecutado - condiciones:', {
-      showFeedback,
-      feedbackSubmitted,
-      hasSession: !!currentFeedbackSession
-    });
-  }
-}, [showFeedback, feedbackSubmitted, currentFeedbackSession, submitFeedback])
+  }, []); // No tiene dependencias
 
-// Función para reiniciar el temporizador de inactividad
-const resetInactivityTimer = useCallback(() => {
-  setInactivityTime(0);
-  
-  // Limpiar temporizadores existentes
-  if (inactivityTimerRef.current) {
-    clearTimeout(inactivityTimerRef.current);
-  }
-  if (inactivityCounterRef.current) {
-    clearInterval(inactivityCounterRef.current);
-  }
-  if (feedbackAutoPressTimerRef.current) {
-    clearTimeout(feedbackAutoPressTimerRef.current);
-    feedbackAutoPressTimerRef.current = null;
-  }
-    
-  // Crear nuevo temporizador de redirección
-  inactivityTimerRef.current = setTimeout(() => {
-    console.log('Tiempo de inactividad agotado - redirigiendo...');
-    navigate('/');
-  }, INACTIVITY_TIMEOUT);
-  
-  // SOLO crear temporizador para feedback automático si el feedback está visible
-  if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
-    feedbackAutoPressTimerRef.current = setTimeout(() => {
-      console.log('20 segundos de inactividad - activando feedback automático');
-      autoPressFeedbackButton();
-    }, FEEDBACK_AUTO_PRESS_TIMEOUT);
-  }
+  // Función para enviar feedback básico (Sí/No) - CON useCallback
+  const submitFeedback = useCallback(async (isSatisfied: boolean) => {
+    if (!currentFeedbackSession) {
+      console.error(t('chat.feedbackError'));
+      return;
+    }
 
-  // Opcional: Contador para debug
-  inactivityCounterRef.current = setInterval(() => {
-    setInactivityTime(prev => prev + 1000);
-  }, 1000);
-}, [navigate, showFeedback, feedbackSubmitted, currentFeedbackSession, autoPressFeedbackButton]); // AGREGAR DEPENDENCIAS FALTANTES
+    try {
+      const response = await fetch('http://localhost:8000/feedback/response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          currentFeedbackSession: currentFeedbackSession,
+          isSatisfied: isSatisfied
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log(`Feedback ${isSatisfied ? 'positivo' : 'negativo'} enviado exitosamente`);
+
+        if (isSatisfied) {
+          setFeedbackSubmitted(true);
+          setTimeout(() => {
+            setShowFeedback(false);
+            resetFeedback();
+          }, 2000);
+        } else {
+          setShowFollowup(true);
+        }
+
+        if (feedbackAutoPressTimerRef.current) {
+          clearTimeout(feedbackAutoPressTimerRef.current);
+          feedbackAutoPressTimerRef.current = null;
+        }
+      }
+    } catch (error) {
+      console.error(t('chat.feedbackServerError'), error);
+    }
+  }, [currentFeedbackSession, t, resetFeedback]); // AGREGAR resetFeedback COMO DEPENDENCIA
+
+
+  // LUEGO la función autoPressFeedbackButton
+  const autoPressFeedbackButton = useCallback(() => {
+    console.log('Presionando automáticamente botón de feedback por inactividad');
+
+    // Verificar que el feedback esté visible y no se haya enviado
+    if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
+      console.log('Condiciones cumplidas - enviando feedback positivo automáticamente');
+
+      // Presionar el botón "Sí" (feedback positivo) automáticamente
+      submitFeedback(true);
+
+      // Limpiar el timer después de ejecutar
+      if (feedbackAutoPressTimerRef.current) {
+        clearTimeout(feedbackAutoPressTimerRef.current);
+        feedbackAutoPressTimerRef.current = null;
+      }
+    } else {
+      console.log('Feedback automático no ejecutado - condiciones:', {
+        showFeedback,
+        feedbackSubmitted,
+        hasSession: !!currentFeedbackSession
+      });
+    }
+  }, [showFeedback, feedbackSubmitted, currentFeedbackSession, submitFeedback])
+
+  // Función para reiniciar el temporizador de inactividad
+  const resetInactivityTimer = useCallback(() => {
+    setInactivityTime(0);
+
+    // Limpiar temporizadores existentes
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    if (inactivityCounterRef.current) {
+      clearInterval(inactivityCounterRef.current);
+    }
+    if (feedbackAutoPressTimerRef.current) {
+      clearTimeout(feedbackAutoPressTimerRef.current);
+      feedbackAutoPressTimerRef.current = null;
+    }
+
+    // Crear nuevo temporizador de redirección
+    inactivityTimerRef.current = setTimeout(() => {
+      console.log('Tiempo de inactividad agotado - redirigiendo...');
+      navigate('/');
+    }, INACTIVITY_TIMEOUT);
+
+    // SOLO crear temporizador para feedback automático si el feedback está visible
+    if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
+      feedbackAutoPressTimerRef.current = setTimeout(() => {
+        console.log('20 segundos de inactividad - activando feedback automático');
+        autoPressFeedbackButton();
+      }, FEEDBACK_AUTO_PRESS_TIMEOUT);
+    }
+
+    // Opcional: Contador para debug
+    inactivityCounterRef.current = setInterval(() => {
+      setInactivityTime(prev => prev + 1000);
+    }, 1000);
+  }, [navigate, showFeedback, feedbackSubmitted, currentFeedbackSession, autoPressFeedbackButton]); // AGREGAR DEPENDENCIAS FALTANTES
   // Función para manejar eventos de actividad
   const handleActivity = useCallback(() => {
     resetInactivityTimer();
@@ -347,8 +509,8 @@ const resetInactivityTimer = useCallback(() => {
   useEffect(() => {
     // Lista de eventos que indican actividad del usuario
     const events = [
-      'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 
-      'click', 'input', 'focus','submit'
+      'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart',
+      'click', 'input', 'focus', 'submit'
     ];
 
     // Agregar event listeners
@@ -372,23 +534,23 @@ const resetInactivityTimer = useCallback(() => {
         clearInterval(inactivityCounterRef.current);
       }
       if (feedbackAutoPressTimerRef.current) {
-    clearTimeout(feedbackAutoPressTimerRef.current);
-  }
+        clearTimeout(feedbackAutoPressTimerRef.current);
+      }
     };
   }, [handleActivity, resetInactivityTimer]);
   useEffect(() => {
-  return () => {
-    if (inactivityTimerRef.current) {
-      clearTimeout(inactivityTimerRef.current);
-    }
-    if (inactivityCounterRef.current) {
-      clearInterval(inactivityCounterRef.current);
-    }
-    if (feedbackAutoPressTimerRef.current) {
-      clearTimeout(feedbackAutoPressTimerRef.current);
-    }
-  };
-}, []);
+    return () => {
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+      if (inactivityCounterRef.current) {
+        clearInterval(inactivityCounterRef.current);
+      }
+      if (feedbackAutoPressTimerRef.current) {
+        clearTimeout(feedbackAutoPressTimerRef.current);
+      }
+    };
+  }, []);
 
   // Efecto opcional para mostrar el tiempo de inactividad en consola (debug)
   useEffect(() => {
@@ -426,7 +588,7 @@ const resetInactivityTimer = useCallback(() => {
 
     try {
       const recognition = new SpeechRecognition();
-      
+
       // CONFIGURACIÓN MEJORADA PARA DURACIÓN EXTENDIDA
       recognition.continuous = true; // Cambiado a true para escucha continua
       recognition.interimResults = true;
@@ -434,7 +596,7 @@ const resetInactivityTimer = useCallback(() => {
 
       // Configurar idioma según el idioma actual
       const recognitionLang = i18n.language === 'es' ? 'es-ES' :
-                            i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+        i18n.language === 'fr' ? 'fr-FR' : 'en-US';
       recognition.lang = recognitionLang;
 
       // Configuraciones específicas para navegadores Webkit (Chrome, Safari)
@@ -442,7 +604,7 @@ const resetInactivityTimer = useCallback(() => {
         // Estas propiedades pueden ayudar a extender el tiempo de escucha
         (recognition as any).continuous = true;
         (recognition as any).interimResults = true;
-        
+
         // Intentar configurar tiempo máximo de escucha (no estándar pero funciona en algunos navegadores)
         try {
           (recognition as any).maxDuration = 60000; // 60 segundos máximo
@@ -454,7 +616,7 @@ const resetInactivityTimer = useCallback(() => {
       recognition.onstart = () => {
         console.log('Reconocimiento de voz iniciado - Modo escucha extendida');
         isStartingRef.current = false;
-        
+
         // Reiniciar el temporizador de silencio
         resetSilenceTimer();
       };
@@ -462,7 +624,7 @@ const resetInactivityTimer = useCallback(() => {
       recognition.onresult = (event: SpeechRecognitionEvent) => {
         // Reiniciar el temporizador de silencio cada vez que se detecte voz
         resetSilenceTimer();
-        
+
         let interimTranscript = '';
         let finalTranscript = finalTranscriptRef.current;
 
@@ -477,7 +639,7 @@ const resetInactivityTimer = useCallback(() => {
 
         finalTranscriptRef.current = finalTranscript;
         setInputMessage(finalTranscript + interimTranscript);
-        
+
         console.log('Voz detectada - Reiniciando temporizador');
       };
 
@@ -485,7 +647,7 @@ const resetInactivityTimer = useCallback(() => {
         console.error('Error en reconocimiento de voz:', event.error);
         isStartingRef.current = false;
         clearSilenceTimer();
-        
+
         switch (event.error) {
           case 'not-allowed':
           case 'permission-denied':
@@ -506,7 +668,7 @@ const resetInactivityTimer = useCallback(() => {
           default:
             console.warn('Error de reconocimiento de voz:', event.error);
         }
-        
+
         setIsListening(false);
       };
 
@@ -514,7 +676,7 @@ const resetInactivityTimer = useCallback(() => {
         console.log('Reconocimiento de voz finalizado');
         isStartingRef.current = false;
         clearSilenceTimer();
-        
+
         // Solo reiniciar si todavía estamos en modo escucha
         if (isListening && !silenceTimerRef.current) {
           console.log('Reiniciando reconocimiento de voz automáticamente...');
@@ -573,33 +735,33 @@ const resetInactivityTimer = useCallback(() => {
     }, 30000); // 30 segundos de silencio antes de detenerse
   };
   // Efecto para manejar el timer automático cuando cambia el estado del feedback
-useEffect(() => {
-  // Cuando el feedback se muestra, iniciar el timer automático si no existe
-  if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
-    if (!feedbackAutoPressTimerRef.current) {
-      console.log('Feedback visible - iniciando timer de 4,59 minutos para feedback automático');
-      feedbackAutoPressTimerRef.current = setTimeout(() => {
-        console.log('Timer de feedback automático ejecutado');
-        autoPressFeedbackButton();
-      }, FEEDBACK_AUTO_PRESS_TIMEOUT);
+  useEffect(() => {
+    // Cuando el feedback se muestra, iniciar el timer automático si no existe
+    if (showFeedback && !feedbackSubmitted && currentFeedbackSession) {
+      if (!feedbackAutoPressTimerRef.current) {
+        console.log('Feedback visible - iniciando timer de 4,59 minutos para feedback automático');
+        feedbackAutoPressTimerRef.current = setTimeout(() => {
+          console.log('Timer de feedback automático ejecutado');
+          autoPressFeedbackButton();
+        }, FEEDBACK_AUTO_PRESS_TIMEOUT);
+      }
+    } else {
+      // Cuando el feedback se oculta o se envía, limpiar el timer
+      if (feedbackAutoPressTimerRef.current) {
+        console.log('Feedback no visible o enviado - limpiando timer automático');
+        clearTimeout(feedbackAutoPressTimerRef.current);
+        feedbackAutoPressTimerRef.current = null;
+      }
     }
-  } else {
-    // Cuando el feedback se oculta o se envía, limpiar el timer
-    if (feedbackAutoPressTimerRef.current) {
-      console.log('Feedback no visible o enviado - limpiando timer automático');
-      clearTimeout(feedbackAutoPressTimerRef.current);
-      feedbackAutoPressTimerRef.current = null;
-    }
-  }
 
-  // Cleanup
-  return () => {
-    if (feedbackAutoPressTimerRef.current) {
-      clearTimeout(feedbackAutoPressTimerRef.current);
-      feedbackAutoPressTimerRef.current = null;
-    }
-  };
-}, [showFeedback, feedbackSubmitted, currentFeedbackSession, autoPressFeedbackButton]);
+    // Cleanup
+    return () => {
+      if (feedbackAutoPressTimerRef.current) {
+        clearTimeout(feedbackAutoPressTimerRef.current);
+        feedbackAutoPressTimerRef.current = null;
+      }
+    };
+  }, [showFeedback, feedbackSubmitted, currentFeedbackSession, autoPressFeedbackButton]);
 
   const clearSilenceTimer = () => {
     if (silenceTimerRef.current) {
@@ -615,7 +777,7 @@ useEffect(() => {
     if (isListening && !isStartingRef.current) {
       startRecognition();
     }
-    
+
     if (!isListening) {
       stopRecognition();
     }
@@ -639,15 +801,15 @@ useEffect(() => {
 
       isStartingRef.current = true;
       finalTranscriptRef.current = inputMessage;
-      
+
       // Configuración adicional para escucha extendida
       const recognition = recognitionRef.current;
       recognition.continuous = true;
       recognition.interimResults = true;
-      
+
       recognition.start();
       console.log('Iniciando reconocimiento de voz - Escucha extendida activada');
-      
+
     } catch (error) {
       console.error('Error al iniciar reconocimiento:', error);
       isStartingRef.current = false;
@@ -681,7 +843,7 @@ useEffect(() => {
         stopRecognition();
         setTimeout(() => {
           const recognitionLang = lng === 'es' ? 'es-ES' :
-                                lng === 'fr' ? 'fr-FR' : 'en-US';
+            lng === 'fr' ? 'fr-FR' : 'en-US';
           if (recognitionRef.current) {
             recognitionRef.current.lang = recognitionLang;
           }
@@ -696,11 +858,11 @@ useEffect(() => {
   };
 
 
-  
 
 
 
-// Función para enviar feedback detallado
+
+  // Función para enviar feedback detallado
   const submitDetailedFeedback = async () => {
     if (!currentFeedbackSession) {
       console.error(t('chat.feedbackError'));
@@ -738,117 +900,117 @@ useEffect(() => {
     }
   };
 
-// Efecto para manejar la pregunta predefinida y auto-enviar
-useEffect(() => {
-  const locationState = location.state as LocationState;
-  
-  if (locationState?.predefinedQuestion) {
-    setInputMessage(locationState.predefinedQuestion);
-    
-    // Si autoSend es true, enviar automáticamente después de un breve delay
-    if (locationState.autoSend) {
-      const timer = setTimeout(() => {
-        handleAutoSend(locationState.predefinedQuestion!);
-      }, 500);
-      
-      return () => clearTimeout(timer); // Cleanup
-    } else {
-      // Solo enfocar el input si no es auto-envío
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+  // Efecto para manejar la pregunta predefinida y auto-enviar
+  useEffect(() => {
+    const locationState = location.state as LocationState;
+
+    if (locationState?.predefinedQuestion) {
+      setInputMessage(locationState.predefinedQuestion);
+
+      // Si autoSend es true, enviar automáticamente después de un breve delay
+      if (locationState.autoSend) {
+        const timer = setTimeout(() => {
+          handleAutoSend(locationState.predefinedQuestion!);
+        }, 500);
+
+        return () => clearTimeout(timer); // Cleanup
+      } else {
+        // Solo enfocar el input si no es auto-envío
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
+      }
     }
-  }
-}, [location.state]);
+  }, [location.state]);
 
-// Función para manejar el envío automático
-const handleAutoSend = async (question: string) => {
-  if (!question.trim() || isLoading) return;
+  // Función para manejar el envío automático
+  const handleAutoSend = async (question: string) => {
+    if (!question.trim() || isLoading) return;
 
-  // Detener reconocimiento de voz si está activo
-  if (isListening) {
-    setIsListening(false);
-  }
-
-  const userMessage: Message = {
-    text: question,
-    isUser: true,
-    timestamp: new Date()
-  };
-
-  // Limpiar input
-  setInputMessage('');
-  finalTranscriptRef.current = '';
-
-  setMessages(prev => [...prev, userMessage]);
-  setIsLoading(true);
-
-  // Crear nuevo abort controller para esta petición
-  abortControllerRef.current = new AbortController();
-
-  try {
-    const response = await fetch('http://localhost:8000/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ text: question }),
-      signal: abortControllerRef.current.signal
-    });
-
-    if (!response.ok) {
-      throw new Error(t('chat.serverError'));
+    // Detener reconocimiento de voz si está activo
+    if (isListening) {
+      setIsListening(false);
     }
 
-    const data = await response.json();
-
-    // Normalizar qr_codes
-    let qrCodesObj: { [url: string]: string } = {};
-    if (Array.isArray(data.qr_codes)) {
-      data.qr_codes.forEach((qr: any) => {
-        if (qr.url && qr.qr_data) {
-          qrCodesObj[qr.url] = qr.qr_data;
-        }
-      });
-    } else if (typeof data.qr_codes === 'object' && data.qr_codes !== null) {
-      qrCodesObj = data.qr_codes;
-    }
-
-    const aiMessage: Message = {
-      text: data.response,
-      isUser: false,
-      timestamp: new Date(),
-      qr_codes: qrCodesObj,
-      has_qr: data.has_qr || false,
-      feedback_session_id: data.feedback_session_id,
-      chatlog_id: data.chatlog_id
+    const userMessage: Message = {
+      text: question,
+      isUser: true,
+      timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, aiMessage]);
+    // Limpiar input
+    setInputMessage('');
+    finalTranscriptRef.current = '';
 
-    // Mostrar feedback después de la respuesta de Ina
-    if (data.feedback_session_id) {
-      setCurrentFeedbackSession(data.feedback_session_id);
-      setShowFeedback(true);
-      setFeedbackSubmitted(false);
-      setShowFollowup(false);
-    }
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
 
-  } catch (error: any) {
-    if (error.name !== 'AbortError') {
-      console.error('Error:', error);
-      const errorMessage: Message = {
-        text: t('chat.serverError'),
+    // Crear nuevo abort controller para esta petición
+    abortControllerRef.current = new AbortController();
+
+    try {
+      const response = await fetch('http://localhost:8000/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: question }),
+        signal: abortControllerRef.current.signal
+      });
+
+      if (!response.ok) {
+        throw new Error(t('chat.serverError'));
+      }
+
+      const data = await response.json();
+
+      // Normalizar qr_codes
+      let qrCodesObj: { [url: string]: string } = {};
+      if (Array.isArray(data.qr_codes)) {
+        data.qr_codes.forEach((qr: any) => {
+          if (qr.url && qr.qr_data) {
+            qrCodesObj[qr.url] = qr.qr_data;
+          }
+        });
+      } else if (typeof data.qr_codes === 'object' && data.qr_codes !== null) {
+        qrCodesObj = data.qr_codes;
+      }
+
+      const aiMessage: Message = {
+        text: data.response,
         isUser: false,
-        timestamp: new Date()
+        timestamp: new Date(),
+        qr_codes: qrCodesObj,
+        has_qr: data.has_qr || false,
+        feedback_session_id: data.feedback_session_id,
+        chatlog_id: data.chatlog_id
       };
-      setMessages(prev => [...prev, errorMessage]);
+
+      setMessages(prev => [...prev, aiMessage]);
+
+      // Mostrar feedback después de la respuesta de Ina
+      if (data.feedback_session_id) {
+        setCurrentFeedbackSession(data.feedback_session_id);
+        setShowFeedback(true);
+        setFeedbackSubmitted(false);
+        setShowFollowup(false);
+      }
+
+    } catch (error: any) {
+      if (error.name !== 'AbortError') {
+        console.error('Error:', error);
+        const errorMessage: Message = {
+          text: t('chat.serverError'),
+          isUser: false,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      }
+    } finally {
+      setIsLoading(false);
+      abortControllerRef.current = null;
     }
-  } finally {
-    setIsLoading(false);
-    abortControllerRef.current = null;
-  }
-};
+  };
 
   // Función mejorada para toggle del micrófono
   const toggleListening = async () => {
@@ -1040,9 +1202,35 @@ const handleAutoSend = async (question: string) => {
       </div>
     ));
   };
+  // Agrega este useEffect para lectura automática
+useEffect(() => {
+  // Si hubo una detención manual, no activar lectura automática
+  if (isManualStopRef.current) {
+    return;
+  }
+
+  // Buscar el último mensaje de la AI que no se haya leído
+  const lastAIMessageIndex = messages.findIndex((msg, index) => 
+    !msg.isUser && 
+    index > (currentReadingIndex ?? -1)
+  );
+
+  // Si hay un nuevo mensaje de AI y no estamos leyendo actualmente
+  if (lastAIMessageIndex !== -1 && !isReading && isTtsSupported) {
+    const lastAIMessage = messages[lastAIMessageIndex];
+    
+    // Pequeño delay para que el usuario pueda ver el mensaje primero
+    const autoReadTimer = setTimeout(() => {
+      console.log('🔊 Lectura automática del mensaje:', lastAIMessageIndex);
+      readMessage(lastAIMessage.text, lastAIMessageIndex, true); // <-- Agregar true para indicar que es automática
+    }, 1000); // 1 segundo de delay
+
+    return () => clearTimeout(autoReadTimer);
+  }
+}, [messages, isReading, currentReadingIndex, isTtsSupported, readMessage]);
 
 
-    // Componente de Feedback
+  // Componente de Feedback
   const renderFeedbackWidget = () => {
     if (!showFeedback) return null;
 
@@ -1132,20 +1320,19 @@ const handleAutoSend = async (question: string) => {
   // Función para renderizar cada mensaje con botón de lectura
   const renderMessage = (msg: Message, index: number) => {
     const isCurrentMessageReading = isReading && currentReadingIndex === index;
-    
+
     return (
       <div key={index} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
         <div className="message-content">
           <div className="message-text">{msg.text}</div>
-          
-          {/* Botón de lectura solo para mensajes de AI */}
+
           {!msg.isUser && isTtsSupported && (
             <button
               className={`tts-button ${isCurrentMessageReading ? 'reading' : ''}`}
               onClick={() => toggleReading(msg, index)}
               type="button"
-              title={isCurrentMessageReading ? 
-                (t('chat.stopReading') || 'Detener lectura') : 
+              title={isCurrentMessageReading ?
+                (t('chat.stopReading') || 'Detener lectura') :
                 (t('chat.readAloud') || 'Leer en voz alta')}
             >
               {isCurrentMessageReading ? '⏹️' : '🔊'}
@@ -1180,7 +1367,7 @@ const handleAutoSend = async (question: string) => {
         <span className="back-arrow">←</span>
         {t('app.back')}
       </button>
-      
+
       {/* Botón del menú flotante */}
       <div className="floating-menu-container" ref={menuRef}>
         <button
@@ -1355,7 +1542,7 @@ const handleAutoSend = async (question: string) => {
           <div className="voice-status">
             <div className="pulse-ring"></div>
             <div className="listening-text">
-              {t('chat.listening')} 
+              {t('chat.listening')}
             </div>
             <div className="silence-timer">
             </div>
