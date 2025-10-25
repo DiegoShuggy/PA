@@ -242,6 +242,18 @@ async def chat(message: Message, request: Request):
         try:
             # get_ai_response es síncrona, NO usar await
             response_data = get_ai_response(question, context_results)
+            # 🆕 AGREGAR LOGGING MEJORADO
+            
+            strategy = response_data.get('processing_info', {}).get('processing_strategy', 'N/A')
+            response_time = response_data.get('response_time', 0)
+            sources_count = len(response_data.get('sources', []))
+            
+            logger.info(f"🎯 RESPUESTA GENERADA - Estrategia: {strategy}")
+            logger.info(f"📊 Tiempo total: {response_time:.2f}s")
+            logger.info(f"🔍 Fuentes utilizadas: {sources_count}")
+            logger.info(f"📝 Longitud respuesta: {len(response_data.get('response', ''))} caracteres")
+            
+            
         except Exception as e:
             logger.error(f"Error en la generación de respuesta: {e}")
             response_data = {

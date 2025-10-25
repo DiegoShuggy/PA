@@ -1,4 +1,4 @@
-# rag.py - VERSIÓN COMPLETA Y CORREGIDA
+# rag.py - VERSIÓN COMPLETA OPTIMIZADA PARA EQUIPO FINAL
 import chromadb
 import ollama
 from typing import List, Dict, Optional
@@ -15,147 +15,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # 👈 IMPORTACIONES EXISTENTES
 from app.cache_manager import rag_cache, response_cache, normalize_question
+from app.topic_classifier import TopicClassifier
 
 logger = logging.getLogger(__name__)
-
-
-class TopicClassifier:
-    """🆕 CLASIFICADOR DE TEMAS PARA DERIVACIÓN INTELIGENTE"""
-    
-    def __init__(self):
-        # ✅ TEMAS PERMITIDOS (Punto Estudiantil)
-        self.allowed_topics = {
-            # ASUNTOS ESTUDIANTILES
-            'tne': ['tne', 'tarjeta nacional estudiantil', 'pase escolar', 'validar tne', 'renovar tne', 'revalidar tne'],
-            'certificados': ['certificado', 'alumno regular', 'constancia', 'record académico', 'concentración notas'],
-            'programas_apoyo': ['programa emergencia', 'programa transporte', 'programa materiales', 'ayuda económica', 'subsidio'],
-            'seguro': ['seguro estudiantil', 'seguro accidentes', 'doc duoc', '600 362 3862'],
-            
-            # BIENESTAR ESTUDIANTIL
-            'salud_mental': ['psicológico', 'psicólogo', 'salud mental', 'bienestar', 'apoyo psicológico', 'sesión psicológica', '8 sesiones'],
-            'crisis': ['crisis', 'urgencia psicológica', 'línea ops', '+56 2 2820 3450', 'sala primeros auxilios'],
-            'inclusión': ['discapacidad', 'paedis', 'inclusión', 'elizabeth domínguez', 'edominguezs'],
-            
-            # DEPORTES
-            'deportes': ['deporte', 'taller deportivo', 'fútbol', 'basquetbol', 'voleibol', 'natación', 'gimnasio'],
-            'actividades': ['entrenamiento', 'selección deportiva', 'powerlifting', 'boxeo', 'entrenamiento funcional'],
-            'instalaciones': ['complejo maiclub', 'gimnasio entretiempo', 'piscina acquatiempo', 'caf'],
-            
-            # DESARROLLO LABORAL
-            'desarrollo_laboral': ['claudia cortés', 'ccortesn', 'cv', 'curriculum', 'entrevista laboral', 'bolsa trabajo'],
-            'practicas': ['práctica', 'practica profesional', 'duoclaboral', 'oferta laboral'],
-            'empleabilidad': ['taller empleabilidad', 'desarrollo laboral', 'feria laboral']
-        }
-        
-        # ❌ TEMAS NO PERMITIDOS (Para derivar)
-        self.excluded_topics = {
-            'servicios_digitales': [
-                'mi duoc', 'midooc', 'plataforma', 'correo institucional', 'contraseña', 'acceso', 
-                'login', 'portal', 'clave', 'bloqueado', 'no puedo entrar', 'olvidé mi contraseña',
-                'wifi', 'conexión', 'internet'
-            ],
-            'financiamiento': [
-                'matrícula', 'arancel', 'pago', 'deuda', 'beca', 'crédito', 'financiamiento', 
-                'dinero', 'cuota', 'factura', 'boleta', 'costo', 'precio', 'gratis', 'subvención',
-                'finanzas', 'tesorería'
-            ],
-            'academico': [
-                'inscribir ramos', 'calificaciones', 'notas', 'malla', 'asignatura', 'ramo', 
-                'profesor', 'jefe de carrera', 'convalidar', 'prerrequisito', 'nivelación',
-                'horario clases', 'jornada', 'carrera'
-            ],
-            'tecnologia': [
-                'laboratorio', 'computador', 'software', 'aplicación', 'sistema', 'tecnología',
-                'equipo', 'impresora', 'scanner'
-            ]
-        }
-        
-        # 🎯 PALABRAS CLAVE PARA DETECCIÓN DE CONSULTAS MÚLTIPLES
-        self.multiple_query_indicators = [
-            ' y ', ' también ', ' además ', ' por otro lado ', ' asimismo ', ' igualmente ',
-            ' otra cosa ', ' aparte ', ' adicionalmente '
-        ]
-
-    def classify_topic(self, query: str) -> Dict:
-        """🆕 CLASIFICAR CONSULTA Y DETERMINAR SI ES PERMITIDA"""
-        query_lower = query.lower()
-        
-        # 1. Verificar si es tema excluido (derivar)
-        for topic_type, keywords in self.excluded_topics.items():
-            if any(keyword in query_lower for keyword in keywords):
-                return {
-                    'type': 'excluded',
-                    'topic': topic_type,
-                    'action': 'derivar',
-                    'confidence': 0.9
-                }
-        
-        # 2. Verificar si es tema permitido
-        for topic_type, keywords in self.allowed_topics.items():
-            if any(keyword in query_lower for keyword in keywords):
-                return {
-                    'type': 'allowed',
-                    'topic': topic_type,
-                    'action': 'responder',
-                    'confidence': 0.8
-                }
-        
-        # 3. Consulta ambigua o no reconocida
-        return {
-            'type': 'ambiguous',
-            'topic': 'unknown',
-            'action': 'clarificar',
-            'confidence': 0.3
-        }
-    
-    def detect_multiple_queries(self, query: str) -> List[str]:
-        """🆕 DETECTAR Y SEPARAR CONSULTAS MÚLTIPLES"""
-        query_lower = query.lower()
-        
-        # Buscar indicadores de múltiples consultas
-        for indicator in self.multiple_query_indicators:
-            if indicator in query_lower:
-                parts = query_lower.split(indicator)
-                if len(parts) > 1:
-                    # Verificar que las partes sean independientes
-                    independent_parts = []
-                    for part in parts:
-                        part_clean = part.strip()
-                        if len(part_clean.split()) >= 2:  # Al menos 2 palabras
-                            independent_parts.append(part_clean)
-                    
-                    if len(independent_parts) > 1:
-                        return independent_parts
-        
-        return [query]
-    
-    def get_derivation_suggestion(self, topic_type: str) -> str:
-        """🆕 SUGERENCIAS ESPECÍFICAS PARA DERIVACIÓN"""
-        suggestions = {
-            'servicios_digitales': (
-                "🔧 Veo que tu consulta es sobre servicios digitales. "
-                "Este tema lo maneja el área de Tecnologías de la Información. "
-                "Te recomiendo contactar a Mesa de ayuda TI."
-            ),
-            'financiamiento': (
-                "💰 Entiendo que necesitas información sobre financiamiento. "
-                "Este tema corresponde al área de Finanzas y Beneficios Estudiantiles. "
-                "Te sugiero dirigirte a la Oficina de Finanzas."
-            ),
-            'academico': (
-                "📚 Tu pregunta parece ser de carácter académico. "
-                "Esto lo maneja directamente tu Escuela o Jefatura de Carrera. "
-                "Puedes contactar a tu jefe de carrera o secretaría académica."
-            ),
-            'tecnologia': (
-                "💻 Esta consulta es sobre temas tecnológicos. "
-                "El área de Infraestructura Tecnológica puede ayudarte mejor. "
-                "Te recomiendo contactar a soporte técnico."
-            )
-        }
-        
-        return suggestions.get(topic_type, 
-            "🔍 Esta consulta requiere atención especializada. Te recomiendo contactar al área correspondiente.")
 
 
 class SemanticCache:
@@ -219,6 +81,115 @@ class SemanticCache:
             logger.info(f"✅ Added to semantic cache: '{query[:50]}...'")
 
 
+class EnhancedTopicClassifier:
+    """🆕 CLASIFICADOR MEJORADO CON DETECCIÓN INTELIGENTE"""
+    
+    def __init__(self):
+        self.topic_classifier = TopicClassifier()
+        
+        # 🎯 PALABRAS CLAVE CRÍTICAS PARA DETECCIÓN MEJORADA
+        self.critical_keywords = {
+            'tne': ['tne', 'tarjeta nacional estudiantil', 'pase escolar', 'validar tne', 'renovar tne'],
+            'deporte': ['deporte', 'taller deportivo', 'gimnasio', 'entrenamiento', 'fútbol', 'basquetbol'],
+            'certificado': ['certificado', 'alumno regular', 'constancia', 'record académico'],
+            'bienestar': ['psicológico', 'salud mental', 'bienestar', 'crisis', 'urgencia'],
+            'practicas': ['práctica', 'empleo', 'curriculum', 'entrevista', 'duoclaboral'],
+            'contraseña': ['contraseña', 'password', 'mi duoc', 'plataforma', 'correo institucional']
+        }
+
+    def classify_topic(self, query: str) -> Dict:
+        """🆕 CLASIFICACIÓN MEJORADA"""
+        return self.topic_classifier.classify_topic(query)
+
+    def should_derive(self, query: str) -> bool:
+        """🆕 DETECCIÓN MEJORADA DE CONSULTAS PARA DERIVAR"""
+        topic_info = self.classify_topic(query)
+        
+        # Consultas que SIEMPRE deben derivarse
+        derivation_keywords = [
+            'contraseña', 'password', 'mi duoc', 'plataforma', 'correo institucional',
+            'wifi', 'acceso denegado', 'bloqueado', 'login', 'portal', 'olvidé contraseña',
+            'recuperar contraseña', 'no puedo entrar', 'error acceso'
+        ]
+        
+        query_lower = query.lower()
+        if any(keyword in query_lower for keyword in derivation_keywords):
+            return True
+        
+        return not topic_info.get('is_institutional', True)
+
+    def detect_multiple_queries(self, query: str) -> List[str]:
+        """🆕 DETECCIÓN INTELIGENTE MEJORADA DE CONSULTAS MÚLTIPLES"""
+        query_lower = query.lower().strip()
+        
+        # 🎯 EVITAR DIVIDIR CONSULTAS DE DERIVACIÓN
+        if self.should_derive(query):
+            return [query]
+        
+        # 🎯 PATRONES MÁS INTELIGENTES PARA DIVISIÓN
+        split_patterns = [
+            r'\s+y\s+',          # " y "
+            r'\s+también\s+',    # " también "
+            r'\s+además\s+',     # " además "
+            r'\s+por otro lado\s+', # " por otro lado "
+            r'\s+asimismo\s+',   # " asimismo "
+            r',\s*',             # Comas
+            r';\s*',             # Puntos y coma
+        ]
+        
+        # Intentar dividir por patrones
+        for pattern in split_patterns:
+            parts = re.split(pattern, query_lower)
+            if len(parts) > 1:
+                # 🎯 VERIFICAR QUE LAS PARTES TIENEN SENTIDO
+                valid_parts = []
+                for part in parts:
+                    part_clean = part.strip()
+                    # 🎯 CRITERIOS MÁS FLEXIBLES
+                    words = part_clean.split()
+                    if (len(words) >= 2 or 
+                        any(keyword in part_clean for keyword in ['tne', 'deporte', 'taller', 'gimnasio', 'certificado', 'psicológico', 'práctica'])):
+                        valid_parts.append(part_clean)
+                
+                if len(valid_parts) > 1:
+                    logger.info(f"🎯 Consulta múltiple detectada por patrón: {valid_parts}")
+                    return valid_parts
+        
+        # 🎯 DETECCIÓN POR PALABRAS CLAVE CONJUNTAS
+        topic_combinations = [
+            ('tne', 'deporte'), ('tne', 'taller'), ('certificado', 'deporte'),
+            ('beca', 'deporte'), ('psicológico', 'deporte'), ('tne', 'certificado'),
+            ('deporte', 'taller'), ('práctica', 'deporte')
+        ]
+        
+        for combo in topic_combinations:
+            if combo[0] in query_lower and combo[1] in query_lower:
+                # Extraer partes basadas en palabras clave con contexto
+                parts = []
+                for keyword in combo:
+                    if keyword in query_lower:
+                        # Buscar contexto alrededor de la palabra clave
+                        keyword_pos = query_lower.find(keyword)
+                        # Contexto más amplio para mejor comprensión
+                        start = max(0, keyword_pos - 30)
+                        end = min(len(query_lower), keyword_pos + len(keyword) + 40)
+                        context = query_lower[start:end].strip()
+                        # Limpiar y validar
+                        context = re.sub(r'^\W+', '', context)  # Remover puntuación inicial
+                        if len(context.split()) >= 2:
+                            parts.append(context)
+                
+                if len(parts) > 1:
+                    logger.info(f"🎯 Combo detectado: {parts}")
+                    return parts
+        
+        return [query]
+    
+    def get_derivation_suggestion(self, topic_type: str) -> str:
+        """🆕 SUGERENCIAS ESPECÍFICAS PARA DERIVACIÓN"""
+        return self.topic_classifier.get_redirection_message(topic_type)
+
+
 class RAGEngine:
     def __init__(self):
         self.client = chromadb.PersistentClient(path="./chroma_db")
@@ -226,8 +197,8 @@ class RAGEngine:
             name="duoc_knowledge"
         )
 
-        # 🆕 CLASIFICADOR DE TEMAS
-        self.topic_classifier = TopicClassifier()
+        # 🆕 CLASIFICADOR DE TEMAS MEJORADO
+        self.topic_classifier = EnhancedTopicClassifier()
 
         # 🆕 CONFIGURACIÓN ESPECÍFICA DUOC UC
         self.duoc_context = {
@@ -255,56 +226,123 @@ class RAGEngine:
             'response_times': [],
             'derivations': 0,
             'multiple_queries': 0,
-            'ambiguous_queries': 0
+            'ambiguous_queries': 0,
+            'greetings': 0,
+            'emergencies': 0
         }
 
     def enhanced_normalize_text(self, text: str) -> str:
-        """🔧 NORMALIZACIÓN INTELIGENTE ESPECIALIZADA DUOC UC"""
+        """🆕 NORMALIZACIÓN SUPER MEJORADA PARA DUOC UC"""
         text = text.lower().strip()
-        text = re.sub(r'[^\w\sáéíóúñü]', '', text)
-
-        words = text.split()
-        if not words:
-            return ""
-
-        stopwords = {
-            'hola', 'buenos', 'días', 'buenas', 'tardes', 'noches', 'saludos',
-            'por', 'favor', 'puedes', 'puede', 'podrías', 'podría', 'me', 'mi',
-            'el', 'la', 'los', 'las', 'de', 'en', 'con', 'para', 'qué', 'cómo',
-            'ina', 'asistente', 'virtual', 'duoc', 'uc', 'porfa', 'plis'
+        
+        # 🎯 EXPANDIR SINÓNIMOS Y VARIANTES ESPECÍFICAS DUOC
+        synonym_expansions = {
+            'tne': ['tarjeta nacional estudiantil', 'pase escolar', 'tne duoc', 'beneficio tne'],
+            'deporte': ['deportes', 'actividad física', 'entrenamiento', 'ejercicio', 'taller deportivo'],
+            'taller': ['talleres', 'clase', 'actividad deportiva', 'entrenamiento grupal'],
+            'gimnasio': ['gimnasio duoc', 'complejo deportivo', 'instalaciones deportivas', 'maiclub'],
+            'certificado': ['certificados', 'constancia', 'documento oficial', 'record académico'],
+            'psicológico': ['psicólogo', 'salud mental', 'bienestar', 'apoyo emocional', 'consejería'],
+            'beca': ['becas', 'ayuda económica', 'beneficio estudiantil', 'subsidio'],
+            'práctica': ['practica profesional', 'empleo', 'trabajo', 'duoclaboral', 'bolsa trabajo'],
+            'contraseña': ['password', 'acceso', 'login', 'plataforma', 'mi duoc'],
         }
-
-        filtered_words = [word for word in words if word not in stopwords]
-
-        important_words = {
-            'tne', 'certificado', 'beca', 'práctica', 'deporte', 'psicológico',
-            'horario', 'ubicación', 'taller', 'bolsa', 'empleo', 'salud', 'mental',
-            'programa', 'emergencia', 'transporte', 'materiales', 'beneficio',
-            'claudia', 'cortés', 'adriana', 'vasquez', 'elizabeth', 'domínguez'
+        
+        # Aplicar expansiones
+        expanded_terms = []
+        for base, variants in synonym_expansions.items():
+            if base in text:
+                expanded_terms.extend(variants)
+        
+        if expanded_terms:
+            text += " " + " ".join(expanded_terms)
+    
+        # 🎯 PATRONES ESPECÍFICOS DUOC
+        duoc_patterns = {
+            r'plaza norte': 'sede plaza norte ubicación',
+            r'mi duoc': 'plataforma mi duoc portal duoc acceso digital',
+            r'punto estudiantil': 'punto estudiantil duoc uc atención estudiante',
+            r'claudia cortés': 'desarrollo laboral claudia cortes empleabilidad',
+            r'elizabeth domínguez': 'inclusión paedis elizabeth dominguez discapacidad',
+            r'adriana vásquez': 'bienestar estudiantil adriana vasquez salud mental',
+            r'complejo maiclub': 'complejo deportivo maiclub gimnasio instalaciones',
+            r'gimnasio entretiempo': 'gimnasio entretiempo centro acondicionamiento físico',
         }
-
-        for word in words:
-            if word in important_words and word not in filtered_words:
-                filtered_words.append(word)
-
-        if len(filtered_words) <= 1 and len(words) > 2:
-            content_words = [w for w in words if w not in {
-                'hola', 'ina', 'buenos', 'días', 'buenas', 'tardes', 'noches', 'saludos', 'por', 'favor'
-            }]
-            if content_words:
-                filtered_words = content_words[:5]
-
-        normalized = ' '.join(filtered_words)
-        return normalized
+        
+        for pattern, replacement in duoc_patterns.items():
+            text = re.sub(pattern, replacement, text)
+        
+        # Limpieza final
+        text = re.sub(r'[^\w\sáéíóúñü]', ' ', text)
+        text = re.sub(r'\s+', ' ', text)
+        
+        return text.strip()
 
     def process_user_query(self, user_message: str) -> Dict:
-        """🆕 PROCESAMIENTO INTELIGENTE DE CONSULTAS"""
+        """🆕 PROCESAMIENTO INTELIGENTE MEJORADO"""
         self.metrics['total_queries'] += 1
         
-        # 1. Clasificar tema
+        query_lower = user_message.lower().strip()
+        
+        # 🆕 DETECCIÓN PRIORITARIA DE SALUDOS
+        greeting_keywords = [
+            'hola', 'holi', 'holis', 'holaa', 'buenos días', 'buenas tardes', 
+            'buenas noches', 'saludos', 'quién eres', 'presentate', 'presentación',
+            'qué eres', 'tu nombre', 'hola ina', 'hola iná', 'ina hola'
+        ]
+        
+        if any(greeting in query_lower for greeting in greeting_keywords):
+            logger.info(f"👋 SALUDO DETECTADO: {user_message}")
+            self.metrics['greetings'] += 1
+            return {
+                'processing_strategy': 'greeting',
+                'original_query': user_message,
+                'topic_classification': {'topic': 'greeting', 'type': 'allowed', 'confidence': 0.95},
+                'is_greeting': True,
+                'query_parts': [user_message]
+            }
+        
+        # 🆕 DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
+        emergency_keywords = [
+            'crisis', 'urgencia', 'emergencia', 'línea ops', 
+            'me siento mal', 'ayuda urgente', 'necesito ayuda ahora',
+            'estoy desesperado', 'no puedo más', 'pensamientos suicidas',
+            'ataque de pánico', 'ansiedad extrema', 'angustia severa'
+        ]
+        
+        if any(keyword in query_lower for keyword in emergency_keywords):
+            logger.warning(f"🚨 URGENCIA DETECTADA: {user_message}")
+            self.metrics['emergencies'] += 1
+            return {
+                'processing_strategy': 'emergency',
+                'original_query': user_message,
+                'topic_classification': {
+                    'topic': 'bienestar_estudiantil', 
+                    'type': 'allowed',
+                    'confidence': 0.95
+                },
+                'is_emergency': True,
+                'query_parts': [user_message]
+            }
+        
+        # 🆕 1. PRIMERO VERIFICAR SI ES DERIVACIÓN
+        if self.topic_classifier.should_derive(user_message):
+            topic_info = self.topic_classifier.classify_topic(user_message)
+            logger.info(f"🎯 DERIVACIÓN DETECTADA: {user_message} -> {topic_info.get('category', 'unknown')}")
+            self.metrics['derivations'] += 1
+            return {
+                'processing_strategy': 'derivation',
+                'original_query': user_message,
+                'topic_classification': topic_info,
+                'derivation_suggestion': self.topic_classifier.get_derivation_suggestion(topic_info.get('category', 'unknown')),
+                'multiple_queries_detected': False,
+                'query_parts': [user_message]
+            }
+        
+        # 2. Clasificar tema
         topic_info = self.topic_classifier.classify_topic(user_message)
         
-        # 2. Detectar consultas múltiples
+        # 3. Detectar consultas múltiples SOLO para temas institucionales
         query_parts = self.topic_classifier.detect_multiple_queries(user_message)
         
         response_info = {
@@ -315,13 +353,8 @@ class RAGEngine:
             'processing_strategy': 'standard'
         }
         
-        # 🎯 ESTRATEGIAS DIFERENCIADAS
-        if topic_info['type'] == 'excluded':
-            response_info['processing_strategy'] = 'derivation'
-            response_info['derivation_suggestion'] = self.topic_classifier.get_derivation_suggestion(topic_info['topic'])
-            self.metrics['derivations'] += 1
-            
-        elif topic_info['type'] == 'ambiguous':
+        # 🎯 ESTRATEGIAS DIFERENCIADAS MEJORADAS
+        if topic_info.get('category') == 'unknown':
             response_info['processing_strategy'] = 'clarification'
             self.metrics['ambiguous_queries'] += 1
             
@@ -335,6 +368,268 @@ class RAGEngine:
         logger.info(f"🎯 Procesamiento: '{user_message}' -> Estrategia: {response_info['processing_strategy']}")
         
         return response_info
+
+    def generate_greeting_response(self, processing_info: Dict) -> Dict:
+        """🆕 RESPUESTA CORTA Y AMIGABLE PARA SALUDOS"""
+        import random
+        greeting_options = [
+            "¡Hola! 👋 Soy InA, tu asistente del Punto Estudiantil Duoc UC. ¿En qué puedo ayudarte hoy?",
+            "¡Hola! 😊 Soy InA, estoy aquí para ayudarte con información del Punto Estudiantil.",
+            "¡Hola! 🎓 Soy InA, tu asistente de Duoc UC. ¿Qué necesitas saber?",
+            "¡Hola! 💫 Soy InA, del Punto Estudiantil. ¿En qué te puedo ayudar?",
+        ]
+        
+        greeting = random.choice(greeting_options)
+        
+        # 🆕 SUGERENCIAS DE CONSULTAS COMUNES
+        suggestions = """
+        
+💡 *Puedo ayudarte con:*
+• 🎓 TNE, certificados, programas de apoyo
+• 🧠 Salud mental, bienestar estudiantil  
+• 🏀 Deportes, talleres, gimnasio
+• 💼 CV, prácticas, empleabilidad
+
+*¿Qué necesitas?* 🙂
+"""
+        
+        response = greeting + suggestions
+        
+        return {
+            'response': response.strip(),
+            'sources': [],
+            'category': 'greeting',
+            'response_time': 0.05,
+            'cache_type': 'greeting',
+            'processing_info': processing_info
+        }
+
+    def generate_emergency_response(self, processing_info: Dict) -> Dict:
+        """🆕 RESPUESTA DE EMERGENCIA PRIORITARIA"""
+        response = """
+🚨 **URGENCIA - APOYO INMEDIATO DISPONIBLE**
+
+📞 *Líneas de ayuda 24/7:*
+• **Línea OPS Duoc UC**: +56 2 2820 3450
+• **Salud Responde**: 600 360 7777
+• **Fono Mayor**: 800 4000 35
+
+🏥 *Atención en sede:*
+• **Sala primeros auxilios**: Primer piso, junto a caja
+• **Teléfono interno**: +56 2 2999 3005
+
+💙 *Recuerda: No estás solo/a - hay ayuda disponible*
+
+⚠️ *Si es emergencia médica vital, llama al 131*
+"""
+        
+        return {
+            'response': response.strip(),
+            'sources': [],
+            'category': 'emergency',
+            'response_time': 0.05,
+            'cache_type': 'emergency',
+            'processing_info': processing_info
+        }
+
+    def generate_derivation_response(self, processing_info: Dict) -> Dict:
+        """🆕 DERIVACIÓN MEJORADA CON INFORMACIÓN ESPECÍFICA"""
+        suggestion = processing_info.get('derivation_suggestion', 
+            "🔍 **Consulta especializada**\n\n"
+            "Te recomiendo acercarte a Punto Estudiantil para derivación al área correspondiente.\n\n"
+            "📍 Santa Elena de Huechuraba 1660\n"
+            "📞 +56 2 2360 6400\n"
+            "⏰ L-V 8:30-19:00"
+        )
+        
+        response = f"""
+{suggestion}
+
+💡 *¿Puedo ayudarte con TNE, bienestar, deportes o desarrollo laboral?*
+"""
+        
+        return {
+            'response': response.strip(),
+            'sources': [],
+            'category': 'derivation',
+            'response_time': 0.1,
+            'cache_type': 'derivation',
+            'processing_info': processing_info
+        }
+
+    def generate_multiple_queries_response(self, processing_info: Dict) -> Dict:
+        """🆕 RESPUESTA OPTIMIZADA PARA CONSULTAS MÚLTIPLES"""
+        import time
+        start_time = time.time()
+        
+        query_parts = processing_info['query_parts']
+        original_query = processing_info['original_query']
+        
+        logger.info(f"🔍 Procesando {len(query_parts)} consultas múltiples: {query_parts}")
+        
+        # 🎯 ESTRATEGIA MEJORADA
+        detailed_responses = []
+        all_sources = []
+        
+        for i, part in enumerate(query_parts):
+            logger.info(f"  📝 Procesando parte {i+1}: '{part}'")
+            
+            # 🆕 BUSCAR CON TÉRMINOS EXPANDIDOS
+            expanded_query = self._expand_query_with_context(part, original_query)
+            sources = self.hybrid_search(expanded_query, n_results=2)
+            
+            if sources:
+                part_response = self._process_with_ollama_optimized(expanded_query, sources)
+                response_text = part_response['response']
+                
+                # 🎯 MEJORAR CALIDAD DE RESPUESTA
+                if "no hay información" in response_text.lower() or "consulta en punto estudiantil" in response_text.lower():
+                    # Intentar con búsqueda más amplia
+                    broader_sources = self.hybrid_search(part, n_results=3)
+                    if broader_sources:
+                        part_response = self._process_with_ollama_optimized(part, broader_sources)
+                
+                detailed_responses.append(f"**{i+1}. {part}:**\n{part_response['response']}")
+                all_sources.extend(part_response['sources'])
+            else:
+                # 🆕 RESPUESTA MÁS ÚTIL CON INFORMACIÓN GENÉRICA
+                generic_info = self._get_generic_topic_info(part)
+                detailed_responses.append(f"**{i+1}. {part}:**\n{generic_info}")
+        
+        # 🎯 CONSTRUIR RESPUESTA MÁS COHERENTE
+        if detailed_responses:
+            response = "📋 **Varias consultas detectadas:**\n\n" + "\n\n".join(detailed_responses)
+            response += "\n\n💡 *¿Necesitas más detalles de alguna consulta?*"
+        else:
+            response = "🤔 No pude procesar todas las consultas. ¿Podrías reformularlas por separado?"
+        
+        processing_time = time.time() - start_time
+        logger.info(f"✅ Consultas múltiples procesadas en {processing_time:.2f}s")
+        
+        return {
+            'response': response,
+            'sources': all_sources[:3],
+            'category': 'multiple_queries',
+            'response_time': processing_time,
+            'cache_type': 'multiple_queries',
+            'processing_info': processing_info
+        }
+
+    def _expand_query_with_context(self, partial_query: str, full_query: str) -> str:
+        """🆕 EXPANDIR CONSULTA PARCIAL CON CONTEXTO COMPLETO"""
+        important_keywords = ['tne', 'deporte', 'taller', 'certificado', 'beca', 'psicológico', 'práctica']
+        
+        expanded = partial_query
+        
+        for keyword in important_keywords:
+            if keyword in full_query and keyword not in partial_query:
+                expanded += f" {keyword}"
+        
+        return expanded
+
+    def _get_generic_topic_info(self, query: str) -> str:
+        """🆕 INFORMACIÓN GENÉRICA POR TEMA CUANDO NO HAY FUENTES"""
+        query_lower = query.lower()
+        
+        generic_responses = {
+            'tne': "ℹ️ **TNE**: Para trámites de Tarjeta Nacional Estudiantil, acude a Punto Estudiantil con tu cédula de identidad. Horario: L-V 8:30-19:00",
+            'deporte': "🏀 **Deportes**: Duoc UC ofrece talleres deportivos, gimnasio y selecciones. Información en Complejo Deportivo Maiclub.",
+            'taller': "🎯 **Talleres**: Hay talleres deportivos, culturales y de desarrollo. Consulta programación en Punto Estudiantil.",
+            'certificado': "📄 **Certificados**: Solicita certificados de alumno regular en Punto Estudiantil o portal Mi Duoc.",
+            'gimnasio': "💪 **Gimnasio**: El Complejo Deportivo Maiclub tiene gimnasio, piscina y canchas. Horario: L-V 8:00-21:00.",
+            'psicológico': "🧠 **Apoyo Psicológico**: Sesiones de apoyo psicológico disponibles. Contacta a Bienestar Estudiantil.",
+            'práctica': "💼 **Prácticas**: Asesoría para prácticas profesionales con Claudia Cortés. Desarrollo Laboral, edificio central.",
+        }
+        
+        for topic, response in generic_responses.items():
+            if topic in query_lower:
+                return response
+        
+        return "ℹ️ Consulta en Punto Estudiantil para información específica sobre este tema."
+
+    def _process_with_ollama_optimized(self, query: str, sources: List[Dict]) -> Dict:
+        """🆕 VERSIÓN OPTIMIZADA PARA EQUIPO FINAL"""
+        try:
+            limited_sources = sources[:2]
+            
+            if not limited_sources:
+                return {
+                    'response': "Consulta en Punto Estudiantil para más información.",
+                    'sources': []
+                }
+            
+            context_parts = []
+            for i, source in enumerate(limited_sources):
+                content = source['document']
+                short_content = content[:150] + "..." if len(content) > 150 else content
+                context_parts.append(f"Fuente {i+1}: {short_content}")
+            
+            context = "\n".join(context_parts)
+            
+            system_message = (
+                "Eres InA, asistente del Punto Estudiantil Duoc UC. "
+                f"Responde BREVE y ÚTIL con esta información: {context}\n\n"
+                "INSTRUCCIONES:\n- Máximo 3 líneas\n- Sé específico\n- Si no hay info suficiente, di 'Consulta en Punto Estudiantil'"
+            )
+            
+            response = ollama.chat(
+                model='mistral:7b',
+                messages=[
+                    {'role': 'system', 'content': system_message},
+                    {'role': 'user', 'content': query}
+                ],
+                options={'temperature': 0.1, 'num_predict': 80}
+            )
+            
+            return {
+                'response': response['message']['content'].strip(),
+                'sources': [{
+                    'content': source['document'][:80] + '...',
+                    'category': source['metadata'].get('category', 'general'),
+                    'similarity': round(source.get('similarity', 0.5), 3)
+                } for source in limited_sources]
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Error procesando con Ollama: {e}")
+            if sources:
+                short_response = sources[0]['document'][:100] + "..." if len(sources[0]['document']) > 100 else sources[0]['document']
+                return {
+                    'response': short_response,
+                    'sources': []
+                }
+            else:
+                return {
+                    'response': "Consulta en Punto Estudiantil para información específica.",
+                    'sources': []
+                }
+
+    def generate_clarification_response(self, processing_info: Dict) -> Dict:
+        """GENERAR RESPUESTA PARA CONSULTAS AMBIGUAS"""
+        original_query = processing_info['original_query']
+        
+        response = f"""
+🤔 No entiendo completamente '{original_query}'.
+
+💡 *¿Te refieres a alguno de estos temas?*
+
+• TNE y certificados
+• Programas de apoyo económico  
+• Salud mental y bienestar
+• Deportes y actividades
+• Desarrollo laboral y CV
+
+*Ejemplo: "¿Cómo saco mi TNE?"*
+"""
+        
+        return {
+            'response': response.strip(),
+            'sources': [],
+            'category': 'clarification',
+            'response_time': 0.1,
+            'cache_type': 'clarification',
+            'processing_info': processing_info
+        }
 
     def add_document(self, document: str, metadata: Dict = None) -> bool:
         """AGREGAR DOCUMENTO AL RAG"""
@@ -363,7 +658,7 @@ class RAGEngine:
             return False
 
     def query(self, query_text: str, n_results: int = 3) -> List[str]:
-        """QUERY BÁSICA - MÉTODO REQUERIDO POR OTROS COMPONENTES"""
+        """QUERY BÁSICA"""
         try:
             results = self.collection.query(
                 query_texts=[query_text],
@@ -374,25 +669,30 @@ class RAGEngine:
             logger.error(f"Error en query RAG: {e}")
             return []
 
-    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.45):
-        """BÚSQUEDA OPTIMIZADA CON UMBRAL"""
+    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.35):
+        """🆕 BÚSQUEDA OPTIMIZADA CON UMBRALES FLEXIBLES"""
         try:
             processed_query = self.enhanced_normalize_text(query_text)
 
             results = self.collection.query(
                 query_texts=[processed_query],
-                n_results=n_results * 3,
+                n_results=n_results * 4,
                 include=['distances', 'documents', 'metadatas']
             )
 
             filtered_docs = []
             for i, distance in enumerate(results['distances'][0]):
                 similarity = 1 - distance
-                if similarity >= score_threshold:
-                    doc_metadata = results['metadatas'][0][i]
+                
+                current_threshold = score_threshold
+                if 'dónde' in query_text.lower() or 'ubicación' in query_text.lower():
+                    current_threshold = 0.25
+                
+                if similarity >= current_threshold:
                     doc_content = results['documents'][0][i]
+                    doc_metadata = results['metadatas'][0][i]
                     
-                    if self._is_relevant_document(processed_query, doc_content):
+                    if self._is_relevant_document_improved(processed_query, doc_content):
                         filtered_docs.append({
                             'document': doc_content,
                             'metadata': doc_metadata,
@@ -400,6 +700,11 @@ class RAGEngine:
                         })
 
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
+            
+            if not filtered_docs and len(processed_query.split()) > 2:
+                broader_terms = ' '.join(processed_query.split()[:2])
+                return self.query_optimized(broader_terms, n_results, score_threshold)
+            
             return filtered_docs[:n_results]
 
         except Exception as e:
@@ -407,10 +712,22 @@ class RAGEngine:
             simple_results = self.query(query_text, n_results)
             return [{'document': doc, 'metadata': {}, 'similarity': 0.7} for doc in simple_results]
 
-    def _is_relevant_document(self, query: str, document: str) -> bool:
-        """VERIFICACIÓN DE RELEVANCIA"""
+    def _is_relevant_document_improved(self, query: str, document: str) -> bool:
+        """🆕 VERIFICACIÓN DE RELEVANCIA MEJORADA"""
         query_words = set(query.lower().split())
         doc_words = set(document.lower().split())
+
+        critical_keywords = {
+            'tne', 'deporte', 'taller', 'gimnasio', 'certificado', 'beca', 
+            'psicológico', 'claudia', 'elizabeth', 'adriana', 'duoc', 'estudiantil',
+            'práctica', 'empleo', 'curriculum', 'entrevista'
+        }
+        
+        critical_matches = critical_keywords.intersection(query_words)
+        if critical_matches:
+            doc_has_critical = any(keyword in document.lower() for keyword in critical_matches)
+            if doc_has_critical:
+                return True
 
         stop_words = {'el', 'la', 'los', 'las', 'de', 'en', 'y', 'que', 'con', 'para', 'por'}
         query_words = query_words - stop_words
@@ -422,12 +739,12 @@ class RAGEngine:
         overlap = len(query_words.intersection(doc_words))
         relevance_ratio = overlap / len(query_words)
 
-        return relevance_ratio >= 0.2
+        return relevance_ratio >= 0.15
 
     def query_with_sources(self, query_text: str, n_results: int = 3) -> List[Dict]:
         """BÚSQUEDA CON FUENTES"""
         try:
-            results = self.query_optimized(query_text, n_results, score_threshold=0.45)
+            results = self.query_optimized(query_text, n_results, score_threshold=0.35)
 
             sources = []
             for result in results:
@@ -445,13 +762,13 @@ class RAGEngine:
             return []
 
     def hybrid_search(self, query_text: str, n_results: int = 3) -> List[Dict]:
-        """BÚSQUEDA HÍBRIDA MEJORADA"""
+        """🆕 BÚSQUEDA HÍBRIDA MEJORADA"""
         try:
-            results = self.query_optimized(query_text, n_results * 2, score_threshold=0.45)
+            results = self.query_optimized(query_text, n_results * 2, score_threshold=0.35)
 
             filtered_docs = []
             for result in results:
-                if result['similarity'] >= 0.45:
+                if result['similarity'] >= 0.35:
                     filtered_docs.append(result)
 
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
@@ -460,112 +777,6 @@ class RAGEngine:
         except Exception as e:
             logger.error(f"❌ Error en hybrid search: {e}")
             return []
-
-    def generate_derivation_response(self, processing_info: Dict) -> Dict:
-        """GENERAR RESPUESTA DE DERIVACIÓN"""
-        suggestion = processing_info.get('derivation_suggestion', '')
-        
-        response = f"""
-{suggestion}
-
-📍 *Mis áreas de especialización son:*
-• 🎓 Asuntos Estudiantiles (TNE, certificados, programas de apoyo)
-• 🧠 Bienestar Estudiantil (salud mental, apoyo psicológico)  
-• 🏀 Deportes y Actividades (talleres, gimnasio, selecciones)
-• 💼 Desarrollo Laboral (CV, prácticas, empleabilidad)
-
-¿Puedo ayudarte con alguno de estos temas?
-"""
-        
-        return {
-            'response': response.strip(),
-            'sources': [],
-            'category': 'derivation',
-            'response_time': 0.1,
-            'cache_type': 'derivation',
-            'processing_info': processing_info
-        }
-
-    def generate_multiple_queries_response(self, processing_info: Dict) -> Dict:
-        """GENERAR RESPUESTA PARA CONSULTAS MÚLTIPLES"""
-        query_parts = processing_info['query_parts']
-        
-        response_lines = ["📋 Veo que tienes varias consultas. Te ayudo con cada una:\n"]
-        
-        for i, part in enumerate(query_parts, 1):
-            part_response = self._process_single_query(part)
-            response_lines.append(f"\n📌 **{i}. Sobre '{part}':**")
-            response_lines.append(part_response['response'])
-        
-        response_lines.append("\n💡 ¿Te gustaría más detalles sobre alguna de estas consultas?")
-        
-        return {
-            'response': '\n'.join(response_lines),
-            'sources': [],
-            'category': 'multiple_queries',
-            'response_time': 0.2,
-            'cache_type': 'multiple_queries',
-            'processing_info': processing_info
-        }
-
-    def _process_single_query(self, query: str) -> Dict:
-        """PROCESAR CONSULTA INDIVIDUAL"""
-        try:
-            sources = self.hybrid_search(query, n_results=2)
-            
-            if not sources:
-                return {
-                    'response': "ℹ️ No tengo información específica sobre este tema en mis fuentes actuales.",
-                    'sources': []
-                }
-            
-            best_source = sources[0]
-            return {
-                'response': best_source['document'][:200] + "...",
-                'sources': [{
-                    'content': best_source['document'][:120] + '...',
-                    'category': best_source['metadata'].get('category', 'general'),
-                    'similarity': round(best_source.get('similarity', 0.5), 3)
-                }]
-            }
-            
-        except Exception as e:
-            logger.error(f"Error procesando consulta individual: {e}")
-            return {
-                'response': "🔧 Error procesando esta consulta específica.",
-                'sources': []
-            }
-
-    def generate_clarification_response(self, processing_info: Dict) -> Dict:
-        """GENERAR RESPUESTA PARA CONSULTAS AMBIGUAS"""
-        original_query = processing_info['original_query']
-        
-        response = f"""
-🤔 No estoy seguro de entender completamente tu consulta sobre '{original_query}'.
-
-¿Podrías especificar si te refieres a alguno de estos temas?
-
-• TNE y certificados estudiantiles
-• Programas de apoyo económico
-• Salud mental y bienestar
-• Deportes y actividades
-• Desarrollo laboral y prácticas
-
-💡 *Ejemplos de consultas específicas:*
-- "¿Cómo saco mi TNE por primera vez?"
-- "¿Dónde está el gimnasio Entretiempo?"  
-- "¿Cuántas sesiones psicológicas tengo disponibles?"
-- "¿Cómo contacto a Claudia Cortés para mi CV?"
-"""
-        
-        return {
-            'response': response.strip(),
-            'sources': [],
-            'category': 'clarification',
-            'response_time': 0.1,
-            'cache_type': 'clarification',
-            'processing_info': processing_info
-        }
 
     def get_cache_stats(self) -> Dict:
         """ESTADÍSTICAS MEJORADAS"""
@@ -576,10 +787,12 @@ class RAGEngine:
             'semantic_cache_enabled': self.semantic_cache.model is not None,
             'total_documents': self.collection.count() if hasattr(self.collection, 'count') else 'N/A',
             'duoc_context': self.duoc_context,
-            'topic_classification_stats': {
+            'processing_stats': {
                 'total_derivations': self.metrics['derivations'],
                 'total_multiple_queries': self.metrics['multiple_queries'],
-                'total_ambiguous': self.metrics['ambiguous_queries']
+                'total_ambiguous': self.metrics['ambiguous_queries'],
+                'total_greetings': self.metrics['greetings'],
+                'total_emergencies': self.metrics['emergencies']
             }
         }
 
@@ -597,15 +810,25 @@ rag_engine = RAGEngine()
 
 
 def get_ai_response(user_message: str, context: list = None) -> Dict:
-    """🎯 VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE DE CONSULTAS"""
+    """🎯 VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE"""
     import time
     start_time = time.time()
 
-    # 🆕 1. PROCESAMIENTO INTELIGENTE DE LA CONSULTA
     processing_info = rag_engine.process_user_query(user_message)
     strategy = processing_info['processing_strategy']
 
-    # 🆕 2. ESTRATEGIAS DIFERENCIADAS
+    # 🆕 ESTRATEGIAS PRIORITARIAS
+    if strategy == 'greeting' or processing_info.get('is_greeting', False):
+        response_data = rag_engine.generate_greeting_response(processing_info)
+        response_data['response_time'] = time.time() - start_time
+        return response_data
+
+    if strategy == 'emergency' or processing_info.get('is_emergency', False):
+        response_data = rag_engine.generate_emergency_response(processing_info)
+        response_data['response_time'] = time.time() - start_time
+        return response_data
+
+    # 🆕 ESTRATEGIAS DIFERENCIADAS
     if strategy == 'derivation':
         response_data = rag_engine.generate_derivation_response(processing_info)
         response_data['response_time'] = time.time() - start_time
@@ -621,11 +844,10 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         response_data['response_time'] = time.time() - start_time
         return response_data
 
-    # 🆕 3. ESTRATEGIA ESTÁNDAR RAG
+    # 🆕 ESTRATEGIA ESTÁNDAR RAG MEJORADA
     normalized_message = rag_engine.enhanced_normalize_text(user_message)
     cache_key = f"rag_{hashlib.md5(user_message.encode()).hexdigest()}"
 
-    # Cache textual rápido
     if cache_key in rag_engine.text_cache:
         cached_response = rag_engine.text_cache[cache_key]
         rag_engine.metrics['text_cache_hits'] += 1
@@ -635,9 +857,8 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
 
     logger.info(f"🔍 RAG Cache MISS para: '{user_message}'")
 
-    # ⚡ PROCESAR CON OLLAMA
     try:
-        sources = rag_engine.hybrid_search(user_message, n_results=4)
+        sources = rag_engine.hybrid_search(user_message, n_results=3)
         
         final_sources = []
         seen_hashes = set()
@@ -652,10 +873,9 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
             if len(final_sources) < 2:
                 final_sources.append(source)
 
-        # SYSTEM MESSAGE MEJORADO
         system_message = (
             "Eres InA, asistente del Punto Estudiantil Duoc UC Plaza Norte. "
-            "Responde SOLO con la información de las fuentes proporcionadas.\n\n"
+            "Responde SOLO con la información proporcionada.\n\n"
         )
 
         if final_sources:
@@ -663,15 +883,17 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
             for i, source in enumerate(final_sources):
                 content = source['document']
                 category = source['metadata'].get('category', 'general')
-                system_message += f"--- Fuente {i+1} [Categoría: {category}] ---\n{content}\n\n"
+                short_content = content[:200] + "..." if len(content) > 200 else content
+                system_message += f"--- Fuente {i+1} ({category}) ---\n{short_content}\n\n"
             
             system_message += (
-                "💡 Responde ÚNICAMENTE con la información de arriba. "
-                "NO inventes información. Si no hay datos suficientes, di 'No hay información específica sobre esto'.\n"
-                "📍 Incluye información de contacto específica cuando sea relevante.\n"
+                "💡 Responde ÚNICAMENTE con la información de arriba.\n"
+                "📍 Sé específico y breve (máximo 3 líneas).\n"
+                "❌ NO inventes información.\n"
+                "✅ Si la información no es suficiente, di 'Consulta en Punto Estudiantil'."
             )
         else:
-            system_message += "⚠️ No hay información específica disponible sobre este tema.\n"
+            system_message += "⚠️ No hay información específica disponible.\n"
 
         response = ollama.chat(
             model='mistral:7b',
@@ -679,19 +901,16 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
                 {'role': 'system', 'content': system_message},
                 {'role': 'user', 'content': user_message}
             ],
-            options={'temperature': 0.1, 'num_predict': 200}
+            options={'temperature': 0.1, 'num_predict': 100}
         )
 
         respuesta = response['message']['content'].strip()
-        
-        # Optimización de respuesta
         respuesta = _optimize_response(respuesta, user_message)
 
-        # Formatear fuentes
         formatted_sources = []
         for source in final_sources:
             formatted_sources.append({
-                'content': source['document'][:120] + '...',
+                'content': source['document'][:80] + '...',
                 'category': source['metadata'].get('category', 'general'),
                 'similarity': round(source.get('similarity', 0.5), 3)
             })
@@ -699,14 +918,13 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         response_data = {
             'response': respuesta,
             'sources': formatted_sources,
-            'category': processing_info['topic_classification']['topic'],
+            'category': processing_info['topic_classification'].get('category', 'general'),
             'timestamp': time.time(),
             'response_time': time.time() - start_time,
             'cache_type': 'ollama_generated',
             'processing_info': processing_info
         }
 
-        # Guardar en cache
         rag_engine.text_cache[cache_key] = response_data
         rag_engine.metrics['successful_responses'] += 1
 
@@ -715,7 +933,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
     except Exception as e:
         logger.error(f"❌ Error en RAG estándar: {str(e)}")
         return {
-            "response": "🔧 Error técnico al procesar tu consulta. Intenta nuevamente.",
+            "response": "🔧 Error técnico. Intenta nuevamente.",
             "sources": [],
             "category": "error",
             "response_time": time.time() - start_time,
@@ -724,13 +942,12 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
 
 
 def _optimize_response(respuesta: str, pregunta: str) -> str:
-    """OPTIMIZACIÓN DE RESPUESTA"""
-    if respuesta.startswith(("¡Hola! Soy InA", "Hola, soy el asistente")):
-        respuesta = respuesta.replace("¡Hola! Soy InA, ", "").replace(
-            "Hola, soy el asistente, ", "")
-
+    """🆕 OPTIMIZACIÓN DE RESPUESTA MEJORADA"""
+    if respuesta.startswith(("¡Hola! Soy InA", "Hola, soy el asistente", "Hola, soy InA")):
+        respuesta = re.sub(r'^¡?Hola!?\s*(soy|me llamo)\s*(InA|el asistente)[^.!?]*[.!?]\s*', '', respuesta)
+    
     optimizations = {
-        "soy el asistente virtual del Punto Estudiantil": "Punto Estudiantil:",
+        "soy el asistente virtual del Punto Estudiantil": "",
         "estoy aquí para ayudarte con": "Puedo informarte sobre",
         "te recomiendo que te dirijas": "recomiendo dirigirte",
         "debes saber que el proceso": "el proceso",
@@ -743,6 +960,7 @@ def _optimize_response(respuesta: str, pregunta: str) -> str:
         "puedo proporcionarte información": "Información:",
         "hola, soy ina, el asistente virtual": "",
         "soy ina, el asistente virtual": "",
+        "duoc uc": "Duoc UC",
     }
 
     for largo, corto in optimizations.items():
@@ -750,7 +968,12 @@ def _optimize_response(respuesta: str, pregunta: str) -> str:
 
     respuesta = re.sub(r'\s+', ' ', respuesta)
     respuesta = respuesta.strip()
-
+    
+    if len(respuesta) > 500:
+        sentences = respuesta.split('.')
+        if len(sentences) > 2:
+            respuesta = '. '.join(sentences[:2]) + '.'
+    
     return respuesta
 
 
