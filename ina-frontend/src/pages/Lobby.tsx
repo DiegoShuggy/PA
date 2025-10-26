@@ -159,31 +159,19 @@ function Lobby() {
     };
 
     return (
+        
         <div className="lobby-container">
             {/* Botón de accesibilidad para leer la página */}
-            <div className="accessibility-controls" style={{
-                position: 'fixed',
-                top: '20px',
-                right: '20px',
-                zIndex: 1000
-            }}>
+            
+            <h2>{t('Lobby.title')}</h2>
+            <div className="accessibility-controls">
                 <button 
                     onClick={isSpeaking ? stopReading : readPageContent}
-                    style={{
-                        padding: '10px 15px',
-                        backgroundColor: isSpeaking ? '#ff4444' : '#4CAF50',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        fontSize: '16px'
-                    }}
                     aria-label={isSpeaking ? t('Lobby.stopReading') : t('Lobby.readPage')}
                 >
                     {isSpeaking ? '⏹️' : '🔊'}
                 </button>
             </div>
-            <h2>{t('Lobby.title')}</h2>
             <h3>{t('Lobby.Descripcion')}</h3>
             <div className="lobby-grid">
                 {/* Tus elementos FAQ existentes - Modificados para usar onClick */}
