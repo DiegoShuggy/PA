@@ -1,4 +1,3 @@
-# rag.py - VERSIÓN COMPLETA CON SISTEMA DE TEMPLATES
 import chromadb
 import ollama
 from typing import List, Dict, Optional
@@ -383,7 +382,7 @@ class RAGEngine:
         return response_info
 
     def generate_template_response(self, processing_info: Dict) -> Dict:
-        """🆕 GENERAR RESPUESTA DESDE TEMPLATE (ULTRA RÁPIDO)"""
+        """🆕 GENERAR RESPUESTA DESDE TEMPLATE CON QR CODES"""
         import time
         start_time = time.time()
         
@@ -404,11 +403,17 @@ class RAGEngine:
                     break
             
             if template_response:
+                # 🔥 AGREGAR GENERACIÓN DE QR CODES PARA TEMPLATES
+                original_query = processing_info['original_query']
+                qr_processed_response = qr_generator.process_response(template_response, original_query)
+                
                 response_time = time.time() - start_time
                 self.metrics['template_responses'] += 1
                 self.metrics['categories_used'][template_category] += 1
                 
                 logger.info(f"⚡ TEMPLATE RESPONSE: {template_id} en {response_time:.3f}s")
+                if qr_processed_response['has_qr']:
+                    logger.info(f"📱 QR generados desde template: {qr_processed_response['total_qr_generated']} códigos")
                 
                 return {
                     'response': template_response.strip(),
@@ -417,7 +422,9 @@ class RAGEngine:
                     'response_time': response_time,
                     'cache_type': 'template',
                     'processing_info': processing_info,
-                    'template_used': template_id
+                    'template_used': template_id,
+                    'qr_codes': qr_processed_response['qr_codes'],  # 👈 NUEVO
+                    'has_qr': qr_processed_response['has_qr']       # 👈 NUEVO
                 }
             else:
                 logger.warning(f"⚠️ Template no encontrado: {template_id}")
@@ -459,13 +466,18 @@ class RAGEngine:
         
         response = greeting + suggestions
         
+        # 🔥 AGREGAR QR CODES PARA GREETING
+        qr_processed_response = qr_generator.process_response(response, processing_info['original_query'])
+        
         return {
             'response': response.strip(),
             'sources': [],
             'category': 'greeting',
             'response_time': time.time() - start_time,
             'cache_type': 'greeting',
-            'processing_info': processing_info
+            'processing_info': processing_info,
+            'qr_codes': qr_processed_response['qr_codes'],  # 👈 NUEVO
+            'has_qr': qr_processed_response['has_qr']       # 👈 NUEVO
         }
 
     def generate_emergency_response(self, processing_info: Dict) -> Dict:
@@ -490,13 +502,18 @@ class RAGEngine:
 ⚠️ *Si es emergencia médica vital, llama al 131*
 """
         
+        # 🔥 AGREGAR QR CODES PARA EMERGENCIA
+        qr_processed_response = qr_generator.process_response(response, processing_info['original_query'])
+        
         return {
             'response': response.strip(),
             'sources': [],
             'category': 'emergency',
             'response_time': time.time() - start_time,
             'cache_type': 'emergency',
-            'processing_info': processing_info
+            'processing_info': processing_info,
+            'qr_codes': qr_processed_response['qr_codes'],  # 👈 NUEVO
+            'has_qr': qr_processed_response['has_qr']       # 👈 NUEVO
         }
 
     def generate_derivation_response(self, processing_info: Dict) -> Dict:
@@ -518,13 +535,18 @@ class RAGEngine:
 💡 *¿Puedo ayudarte con TNE, bienestar, deportes o desarrollo laboral?*
 """
         
+        # 🔥 AGREGAR QR CODES PARA DERIVACIÓN
+        qr_processed_response = qr_generator.process_response(response, processing_info['original_query'])
+        
         return {
             'response': response.strip(),
             'sources': [],
             'category': 'derivation',
             'response_time': time.time() - start_time,
             'cache_type': 'derivation',
-            'processing_info': processing_info
+            'processing_info': processing_info,
+            'qr_codes': qr_processed_response['qr_codes'],  # 👈 NUEVO
+            'has_qr': qr_processed_response['has_qr']       # 👈 NUEVO
         }
 
     def generate_multiple_queries_response(self, processing_info: Dict) -> Dict:
@@ -576,13 +598,18 @@ class RAGEngine:
         processing_time = time.time() - start_time
         logger.info(f"✅ Consultas múltiples procesadas en {processing_time:.2f}s")
         
+        # 🔥 AGREGAR QR CODES PARA MÚLTIPLES CONSULTAS
+        qr_processed_response = qr_generator.process_response(response, original_query)
+        
         return {
             'response': response,
             'sources': all_sources[:3],
             'category': 'multiple_queries',
             'response_time': processing_time,
             'cache_type': 'multiple_queries',
-            'processing_info': processing_info
+            'processing_info': processing_info,
+            'qr_codes': qr_processed_response['qr_codes'],  # 👈 NUEVO
+            'has_qr': qr_processed_response['has_qr']       # 👈 NUEVO
         }
 
     def _expand_query_with_context(self, partial_query: str, full_query: str) -> str:
@@ -695,13 +722,18 @@ class RAGEngine:
 *Ejemplo: "¿Cómo saco mi TNE?"*
 """
         
+        # 🔥 AGREGAR QR CODES PARA CLARIFICATION
+        qr_processed_response = qr_generator.process_response(response, original_query)
+        
         return {
             'response': response.strip(),
             'sources': [],
             'category': 'clarification',
             'response_time': time.time() - start_time,
             'cache_type': 'clarification',
-            'processing_info': processing_info
+            'processing_info': processing_info,
+            'qr_codes': qr_processed_response['qr_codes'],  # 👈 NUEVO
+            'has_qr': qr_processed_response['has_qr']       # 👈 NUEVO
         }
 
     def add_document(self, document: str, metadata: Dict = None) -> bool:
@@ -884,7 +916,7 @@ rag_engine = RAGEngine()
 
 
 def get_ai_response(user_message: str, context: list = None) -> Dict:
-    """🎯 VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES"""
+    """🎯 VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES Y QR"""
     import time
     start_time = time.time()
 
@@ -994,6 +1026,9 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
                 'similarity': round(source.get('similarity', 0.5), 3)
             })
 
+        # 🔥 AGREGAR GENERACIÓN DE QR CODES PARA RESPUESTAS RAG
+        qr_processed_response = qr_generator.process_response(respuesta, user_message)
+
         response_data = {
             'response': respuesta,
             'sources': formatted_sources,
@@ -1001,7 +1036,9 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
             'timestamp': time.time(),
             'response_time': time.time() - start_time,
             'cache_type': 'ollama_generated',
-            'processing_info': processing_info
+            'processing_info': processing_info,
+            'qr_codes': qr_processed_response['qr_codes'],  # 👈 NUEVO
+            'has_qr': qr_processed_response['has_qr']       # 👈 NUEVO
         }
 
         rag_engine.text_cache[cache_key] = response_data

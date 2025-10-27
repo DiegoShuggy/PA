@@ -1,10 +1,10 @@
-# app/qr_generator.py
 import qrcode
 import base64
 import io
 import logging
 import re
 from typing import Optional, Dict, List
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,11 @@ class DuocURLManager:
             "practicas": "https://practicas.duoc.cl/",
             "beneficios": "https://beneficios.duoc.cl/",
             "plaza_norte": "https://www.duoc.cl/sede/plaza-norte/",
-            "contacto": "https://www.duoc.cl/admision/contacto/"
+            "contacto": "https://www.duoc.cl/admision/contacto/",
+            "duoclaboral": "https://duoclaboral.cl/",
+            "cva": "https://cva.duoc.cl/",
+            "eventos_psicologico": "https://eventos.duoc.cl/psicologico",
+            "formulario_emergencia": "https://forms.gle/ejemplo-emergencia"
         }
         
         # Mapeo de palabras clave a URLs
@@ -49,7 +53,20 @@ class DuocURLManager:
             "campus": "plaza_norte",
             "contacto": "contacto",
             "direccion": "contacto",
-            "telefono": "contacto"
+            "telefono": "contacto",
+            "empleo": "duoclaboral",
+            "trabajo": "duoclaboral",
+            "laboral": "duoclaboral",
+            "bolsa": "duoclaboral",
+            "cva": "cva",
+            "virtual": "cva",
+            "aprendizaje": "cva",
+            "psicologico": "eventos_psicologico",
+            "psicologo": "eventos_psicologico",
+            "cita": "eventos_psicologico",
+            "emergencia": "formulario_emergencia",
+            "socioeconomico": "formulario_emergencia",
+            "ayuda economica": "formulario_emergencia"
         }
     
     def get_relevant_urls(self, text: str) -> List[str]:
@@ -75,30 +92,50 @@ class DuocURLManager:
 
 class QRGenerator:
     def __init__(self):
+        # Patrón mejorado para detectar URLs
         self.url_pattern = re.compile(
-            r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+            r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[/\w\.-]*\??[/\w\.-=&%]*'
         )
         self.duoc_manager = DuocURLManager()
         self.generated_qrs = {}  # Cache de QRs generados
+        
+        # Dominios soportados para generación automática
+        self.supported_domains = [
+            'duoc.cl', 'duoclaboral.cl', 'eventos.duoc.cl', 
+            'cva.duoc.cl', 'portal.duoc.cl', 'biblioteca.duoc.cl',
+            'forms.gle', 'docs.google.com'
+        ]
+        
+        logger.info("✅ QR Generator inicializado con detección mejorada de URLs")
     
     def extract_urls_from_text(self, text: str) -> List[str]:
-        """Extraer todas las URLs de un texto"""
+        """Extraer todas las URLs de un texto - MEJORADO"""
         try:
+            logger.info(f"🔍 Buscando URLs en texto: {text[:100]}...")
+            
             urls = self.url_pattern.findall(text)
             # Filtrar URLs válidas y eliminar duplicados
             unique_urls = []
             for url in urls:
                 clean_url = url.rstrip('.,;!?')  # Limpiar puntuación al final
-                if clean_url not in unique_urls and len(clean_url) > 10:
+                # Verificar que sea un dominio soportado
+                if (clean_url not in unique_urls and 
+                    len(clean_url) > 10 and
+                    any(domain in clean_url for domain in self.supported_domains)):
                     unique_urls.append(clean_url)
+                    logger.info(f"📎 URL detectada: {clean_url}")
+            
+            logger.info(f"📊 Total URLs encontradas: {len(unique_urls)}")
             return unique_urls
         except Exception as e:
-            logger.error(f"Error extrayendo URLs: {e}")
+            logger.error(f"❌ Error extrayendo URLs: {e}")
             return []
     
     def generate_qr_code(self, url: str, size: int = 200) -> Optional[str]:
-        """Generar código QR en base64 para incluir en JSON"""
+        """Generar código QR en base64 para incluir en JSON - MEJORADO"""
         try:
+            logger.info(f"📱 Generando QR para: {url}")
+            
             # Crear código QR
             qr = qrcode.QRCode(
                 version=1,
@@ -120,21 +157,24 @@ class QRGenerator:
             # Codificar en base64
             img_str = base64.b64encode(buffer.getvalue()).decode()
             
-            logger.info(f"✅ QR generado para: {url}")
-            return f"data:image/png;base64,{img_str}"
+            qr_data = f"data:image/png;base64,{img_str}"
+            logger.info(f"✅ QR generado exitosamente para: {url}")
+            return qr_data
             
         except Exception as e:
-            logger.error(f"❌ Error generando QR: {e}")
+            logger.error(f"❌ Error generando QR para {url}: {e}")
             return None
 
     def generate_duoc_qr(self, url_key: str, size: int = 200) -> Optional[str]:
         """Generar QR específico para URL de Duoc"""
         url = self.duoc_manager.duoc_urls.get(url_key)
         if not url:
+            logger.warning(f"❌ Clave de URL no encontrada: {url_key}")
             return None
         
         # Usar cache si existe
         if url_key in self.generated_qrs:
+            logger.info(f"🔄 Usando QR en cache para: {url_key}")
             return self.generated_qrs[url_key]
         
         qr_code = self.generate_qr_code(url, size)
@@ -144,61 +184,105 @@ class QRGenerator:
         return qr_code
     
     def process_response(self, response_text: str, user_question: str = "") -> Dict:
-        """Procesar respuesta y generar QRs para URLs encontradas - CORREGIDO"""
+        """Procesar respuesta y generar QRs para URLs encontradas - COMPLETAMENTE REESCRITO"""
+        logger.info(f"🎯 Procesando respuesta para generación de QR")
+        logger.info(f"📝 Longitud respuesta: {len(response_text)} caracteres")
+        logger.info(f"❓ Pregunta original: {user_question}")
+        
+        qr_codes = {}
+        
         # 1. Extraer URLs del texto de respuesta
         urls_from_text = self.extract_urls_from_text(response_text)
-        qr_codes = {}
         
         # 2. Generar QRs para URLs encontradas en texto
         for url in urls_from_text:
             qr_code = self.generate_qr_code(url)
             if qr_code:
-                qr_codes[url] = qr_code
+                qr_codes[url] = {
+                    "qr_image": qr_code,
+                    "original_url": url,
+                    "source": "response_text"
+                }
+                logger.info(f"✅ QR agregado desde texto: {url}")
         
-        # 3. 👇 CORREGIDO: Agregar URLs relevantes de Duoc basado en la pregunta
+        # 3. Agregar URLs relevantes de Duoc basado en la pregunta
         if user_question:
-            relevant_url_keys = self.duoc_manager.get_relevant_urls(user_question)  # 👈 Ahora son claves
+            relevant_url_keys = self.duoc_manager.get_relevant_urls(user_question)
+            logger.info(f"🔑 Claves relevantes detectadas: {relevant_url_keys}")
+            
             for url_key in relevant_url_keys:
-                url = self.duoc_manager.get_url_by_key(url_key)  # 👈 Obtener URL de la clave
+                url = self.duoc_manager.get_url_by_key(url_key)
                 if url and url not in qr_codes:  # No duplicar
                     qr_code = self.generate_duoc_qr(url_key)
                     if qr_code:
-                        qr_codes[url] = qr_code
+                        qr_codes[url] = {
+                            "qr_image": qr_code,
+                            "original_url": url,
+                            "source": "question_context"
+                        }
+                        logger.info(f"✅ QR agregado desde contexto: {url}")
         
         # 4. Si no hay URLs en texto pero la pregunta sugiere necesidad, agregar URLs por defecto
         if not qr_codes and user_question:
             default_urls = self.get_default_duoc_urls(user_question)
+            logger.info(f"🔄 Usando URLs por defecto: {default_urls}")
+            
             for url in default_urls:
                 if url not in qr_codes:
                     qr_code = self.generate_qr_code(url)
                     if qr_code:
-                        qr_codes[url] = qr_code
+                        qr_codes[url] = {
+                            "qr_image": qr_code,
+                            "original_url": url,
+                            "source": "default_suggestion"
+                        }
+                        logger.info(f"✅ QR agregado por defecto: {url}")
+        
+        # Log final
+        if qr_codes:
+            logger.info(f"🎊 Generación de QR completada: {len(qr_codes)} códigos creados")
+            for url, data in qr_codes.items():
+                logger.info(f"   📱 QR: {url} ({data['source']})")
+        else:
+            logger.warning("❌ No se generaron códigos QR")
         
         return {
-            "text": response_text,
             "qr_codes": qr_codes,
             "has_qr": len(qr_codes) > 0,
-            "suggested_urls": list(qr_codes.keys())
+            "total_qr_generated": len(qr_codes)
         }
     
     def get_default_duoc_urls(self, question: str) -> List[str]:
-        """Obtener URLs por defecto basado en el tipo de pregunta"""
+        """Obtener URLs por defecto basado en el tipo de pregunta - MEJORADO"""
         question_lower = question.lower()
         
-        if any(word in question_lower for word in ['certificado', 'documento', 'alumno regular']):
+        # Mapeo más específico de preguntas a URLs
+        if any(word in question_lower for word in ['certificado', 'documento', 'alumno regular', 'constancia']):
             return [self.duoc_manager.duoc_urls['certificados']]
         
-        elif any(word in question_lower for word in ['practica', 'profesional', 'empresa']):
+        elif any(word in question_lower for word in ['practica', 'profesional', 'empresa', 'practicas']):
             return [self.duoc_manager.duoc_urls['practicas']]
         
-        elif any(word in question_lower for word in ['biblioteca', 'libro', 'estudio']):
+        elif any(word in question_lower for word in ['biblioteca', 'libro', 'estudio', 'recursos']):
             return [self.duoc_manager.duoc_urls['biblioteca']]
         
-        elif any(word in question_lower for word in ['beneficio', 'beca', 'descuento']):
+        elif any(word in question_lower for word in ['beneficio', 'beca', 'descuento', 'ayuda economica']):
             return [self.duoc_manager.duoc_urls['beneficios']]
         
-        elif any(word in question_lower for word in ['inscripcion', 'matricula']):
+        elif any(word in question_lower for word in ['inscripcion', 'matricula', 'postulacion']):
             return [self.duoc_manager.duoc_urls['inscripciones']]
+        
+        elif any(word in question_lower for word in ['empleo', 'trabajo', 'laboral', 'bolsa']):
+            return [self.duoc_manager.duoc_urls['duoclaboral']]
+        
+        elif any(word in question_lower for word in ['cva', 'virtual', 'aprendizaje', 'online']):
+            return [self.duoc_manager.duoc_urls['cva']]
+        
+        elif any(word in question_lower for word in ['psicologico', 'psicologo', 'cita', 'salud mental']):
+            return [self.duoc_manager.duoc_urls['eventos_psicologico']]
+        
+        elif any(word in question_lower for word in ['emergencia', 'socioeconomico', 'ayuda urgente']):
+            return [self.duoc_manager.duoc_urls['formulario_emergencia']]
         
         # Por defecto, ofrecer portal de alumnos y ayuda
         return [

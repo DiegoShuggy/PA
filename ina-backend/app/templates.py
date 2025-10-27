@@ -1,4 +1,4 @@
-# templates.py - TEMPLATES COMPLETOS PARA TODAS LAS PREGUNTAS FRECUENTES
+# templates.py - TEMPLATES COMPLETOS CON URLs COMPLETAS PARA GENERACIÓN DE QR
 
 TEMPLATES = {
     "asuntos_estudiantiles": {
@@ -15,6 +15,9 @@ TEMPLATES = {
 ⏰ **Horario:** Lunes a Viernes 8:30-19:00
 📞 **Contacto:** +56 2 2360 6400
 
+🔗 **Seguimiento TNE:** https://www.tne.cl
+🔗 **Portal Duoc:** https://portal.duoc.cl
+
 💡 *Trae todos los documentos originales para agilizar el trámite*
 """,
 
@@ -26,7 +29,7 @@ TEMPLATES = {
 • **Proceso Junaeb:** 15-20 días hábiles
 • **Retiro TNE:** Notificación por correo electrónico
 
-📧 **Seguimiento:** [tne.cl](http://www.tne.cl)
+📧 **Seguimiento:** https://www.tne.cl
 💡 **Recomendación:** Solicitar con 1 mes de anticipación
 """,
 
@@ -39,6 +42,7 @@ TEMPLATES = {
 • **Actualización de datos** automática
 • **Instrucciones** para revalidación enviadas por email
 
+🔗 **Portal de pagos:** https://portal.duoc.cl
 📅 **Proceso anual** - debe revalidarse cada año
 """,
 
@@ -49,11 +53,12 @@ TEMPLATES = {
 📋 **Documentos requeridos:**
 • Cédula de identidad por ambos lados
 • Certificado de alumno regular del año en curso
-• Constancia de pérdida en [comisariavirtual.cl](https://www.comisariavirtual.cl/)
+• Constancia de pérdida en https://www.comisariavirtual.cl/
 • **Depósito:** $3.600 en cuenta JUNAEB Banco Estado
 
 🏦 **Pago exclusivo** en sucursales Banco Estado, Serviestado o Caja Vecina
 
+🔗 **Comisaría Virtual:** https://www.comisariavirtual.cl
 📍 **Autogestión:** Cualquier sucursal JUNAEB Región Metropolitana
 """,
 
@@ -70,6 +75,7 @@ TEMPLATES = {
 2. Coordina tu atención médica  
 3. Presenta tu cédula de identidad
 
+🔗 **Centro de ayuda:** https://centroayuda.duoc.cl
 💡 *El seguro es un BENEFICIO que te cubre frente a cualquier accidente*
 """,
 
@@ -90,7 +96,8 @@ TEMPLATES = {
 • 1er semestre: 28 abril - 31 julio
 • 2do semestre: 1 septiembre - 22 diciembre
 
-🔗 **Postular:** [Centro de Ayuda Duoc](https://centroayuda.duoc.cl)
+🔗 **Postular:** https://centroayuda.duoc.cl
+🔗 **Beneficios:** https://beneficios.duoc.cl
 """,
 
         # 🎯 PROGRAMA TRANSPORTE
@@ -110,6 +117,7 @@ TEMPLATES = {
 • Cuenta RUT activa
 • Registro Social de Hogares (6 meses)
 
+🔗 **Portal beneficios:** https://beneficios.duoc.cl
 🔄 **Renovación:** Encuesta enviada 15-17 septiembre
 """,
 
@@ -127,7 +135,8 @@ TEMPLATES = {
 • Cuenta RUT activa
 
 📅 **Postulaciones 2025:** 23-24 de junio
-🔗 **Postular:** [Plataforma de Beneficios](https://beneficios.duoc.cl)
+🔗 **Postular:** https://beneficios.duoc.cl
+🔗 **Portal alumnos:** https://portal.duoc.cl
 """,
 
         # 🎯 CERTIFICADO ALUMNO REGULAR
@@ -140,6 +149,7 @@ TEMPLATES = {
 • **Presencial:** Punto Estudiantil con cédula de identidad
 • **Online:** Portal Mi Duoc UC
 
+🔗 **Portal Mi Duoc:** https://portal.duoc.cl
 ⏰ **Tiempo de emisión:**
 • Presencial: Inmediato
 • Online: Descarga instantánea
@@ -155,13 +165,14 @@ TEMPLATES = {
 
 ✅ **Para todos los estudiantes regulares**
 💻 **Sesiones online** según tu disponibilidad
-📅 **Agendar:** [eventos.duoc.cl](http://eventos.duoc.cl/)
+📅 **Agendar:** https://eventos.duoc.cl
 
 **Proceso:**
 1. Agenda entrevista inicial
 2. Acuerda cantidad de sesiones necesarias
 3. Trabaja de manera personalizada
 
+🔗 **Agendar cita:** https://eventos.duoc.cl
 💡 *Mejora tu rendimiento académico con técnicas comprobadas*
 """,
 
@@ -179,7 +190,8 @@ TEMPLATES = {
 
 📹 **Videos interactivos** breves + actividades + infografías
 
-🔗 **Acceso:** [cva.duoc.cl](https://cva.duoc.cl)
+🔗 **Acceso:** https://cva.duoc.cl
+🔗 **Portal alumnos:** https://portal.duoc.cl
 ✅ **Para todos los estudiantes** con cuenta @duocuc.cl
 """
     },
@@ -194,9 +206,10 @@ TEMPLATES = {
 • **Profesionales especializados** en salud mental estudiantil
 • **Confidencialidad** garantizada
 
-📅 **Agendar:** [eventos.duoc.cl](https://eventos.duoc.cl)
+📅 **Agendar:** https://eventos.duoc.cl
 👩‍💼 **Coordinadora:** Adriana Vásquez - avasquezm@duoc.cl
 
+🔗 **Agendar cita:** https://eventos.duoc.cl
 🚨 **Urgencias 24/7:** Línea OPS +56 2 2820 3450
 """,
 
@@ -204,11 +217,12 @@ TEMPLATES = {
         "agendar_atencion_psicologica": """
 📱 **Agendar Atención Psicológica:**
 
-1. Ingresa a **[eventos.duoc.cl](https://eventos.duoc.cl)**
+1. Ingresa a **https://eventos.duoc.cl**
 2. Usa tu **correo institucional** (@duocuc.cl)
 3. Selecciona pestaña **"Apoyo Psicológico"**
 4. Elige fecha y hora disponible
 
+🔗 **Plataforma citas:** https://eventos.duoc.cl
 🆘 **Si no hay horas disponibles:**
 • Contacta a Adriana Vásquez: avasquezm@duoc.cl
 • O agenda cita directa por **Agenda Norte**
@@ -231,6 +245,7 @@ TEMPLATES = {
 • Acompañamiento personalizado
 • Accesibilidad en instalaciones
 
+🔗 **Centro ayuda:** https://centroayuda.duoc.cl
 💡 *Contacta para conocer requisitos específicos y beneficios disponibles*
 """,
 
@@ -250,6 +265,7 @@ TEMPLATES = {
 • **Sala primeros auxilios:** Primer piso, junto a caja
 • **Teléfono interno:** +56 2 2999 3005
 
+🔗 **Salud Responde:** https://saludresponde.gob.cl
 💙 *No estás solo/a - hay ayuda disponible siempre*
 """,
 
@@ -265,6 +281,7 @@ TEMPLATES = {
 • Misma calidad profesional
 • Confidencialidad garantizada
 
+🔗 **Agendar virtual:** https://eventos.duoc.cl
 📞 **Para apoyo inmediato en sede:**
 • **Sala primeros auxilios:** Primer piso, junto a caja
 • **Teléfono:** +56 2 2999 3005
@@ -283,7 +300,8 @@ TEMPLATES = {
 • Sin tareas ni compromisos posteriores
 • Enfoque en herramientas de apoyo
 
-🔗 **Acceder al curso:** [embajadores.duoc.cl](https://embajadores.duoc.cl)
+🔗 **Acceder al curso:** https://embajadores.duoc.cl
+🔗 **Portal CVA:** https://cva.duoc.cl
 
 📋 **Para avanzar:** 85%+ de respuestas correctas en cada módulo
 🎓 **Al finalizar:** Mensaje "Eres un embajador" confirma completación
@@ -312,6 +330,7 @@ TEMPLATES = {
 • Piscina Acquatiempo (Ejército Libertador 346)
 • CAF (piso -1 Duoc)
 
+🔗 **Información deportes:** https://www.duoc.cl/alumnos/
 📅 **Horarios:** Consulta programación semestral específica
 """,
 
@@ -360,6 +379,8 @@ Miércoles: 11:30-12:50
 🏓 **Tenis de mesa mixto:**
 Viernes: 11:30-12:50, 13:00-14:20
 Sábado: 13:00-14:20, 14:30-15:50
+
+🔗 **Portal alumnos:** https://portal.duoc.cl
 """,
 
         # 🎯 GIMNASIO CAF
@@ -378,6 +399,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 3. Realiza evaluación correspondiente
 4. ¡Listo para usar!
 
+🔗 **Información sede:** https://www.duoc.cl/sede/plaza-norte/
 📋 **Normas:**
 • Uso máximo 2 veces/semana
 • Solo en horarios establecidos
@@ -398,6 +420,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 • Mismo reglamento académico que asignatura regular
 • Plazos de inscripción/desinscripción según calendario académico
 
+🔗 **Portal académico:** https://portal.duoc.cl
 💡 **Desinscripción:** Revisa fechas del calendario académico (máximo hasta tercera semana)
 """,
 
@@ -418,6 +441,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 📧 **Proceso:** Información enviada por correo a inicios de cada semestre
 🎯 **Reclutamiento** de nuevos seleccionados cada semestre
 
+🔗 **Portal deportes:** https://www.duoc.cl/alumnos/
 💪 **¡Representa a Duoc UC en competencias!**
 """,
 
@@ -433,6 +457,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 📋 **Requisitos** compartidos a inicios de cada semestre
 📧 **Información** enviada por correo institucional
 
+🔗 **Portal beneficios:** https://beneficios.duoc.cl
 🏅 **Reconocimiento** al esfuerzo y talento deportivo
 """
     },
@@ -444,7 +469,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 
 **Plataforma oficial** para estudiantes y titulados.
 
-🌐 **Acceso:** [duoclaboral.cl](http://www.duoclaboral.cl)
+🌐 **Acceso:** https://duoclaboral.cl
 ✅ **Beneficios:**
 • Ofertas laborales exclusivas
 • Prácticas profesionales
@@ -457,6 +482,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 3. Completa tus datos
 4. Sistema genera CV automáticamente
 
+🔗 **DuoLaboral:** https://duoclaboral.cl
 👩‍💼 **Coordinadora:** Claudia Cortés - ccortesn@duoc.cl
 """,
 
@@ -476,6 +502,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 • Derivación a ofertas relevantes
 • Publicación de prácticas en duoclaboral.cl
 
+🔗 **DuoLaboral:** https://duoclaboral.cl
 💡 *Comienza tu búsqueda con anticipación*
 """,
 
@@ -492,6 +519,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 • Enseñanza de técnicas de optimización
 
 👩‍💼 **Contacto:** Claudia Cortés - ccortesn@duoc.cl
+🔗 **DuoLaboral:** https://duoclaboral.cl
 
 💡 *Un CV bien estructurado aumenta tus oportunidades laborales*
 """,
@@ -510,6 +538,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 
 👩‍💼 **Coordina tu simulación** con Claudia Cortés
 📧 **Email:** ccortesn@duoc.cl
+🔗 **DuoLaboral:** https://duoclaboral.cl
 
 💼 *La práctica hace al maestro - prepárate para el éxito*
 """,
@@ -529,6 +558,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 
 📍 **Información:** Punto Estudiantil o Desarrollo Laboral
 👩‍💼 **Contacto:** Claudia Cortés - ccortesn@duoc.cl
+🔗 **DuoLaboral:** https://duoclaboral.cl
 
 🚀 *Desarrolla competencias clave para tu éxito profesional*
 """,
@@ -546,7 +576,8 @@ Sábado: 13:00-14:20, 14:30-15:50
 • Asesorías personalizadas sin costo
 • Oportunidades de desarrollo continuo
 
-🌐 **Plataforma:** [duoclaboral.cl](http://www.duoclaboral.cl)
+🌐 **Plataforma:** https://duoclaboral.cl
+🔗 **Portal titulados:** https://www.duoc.cl/alumnos/
 
 💼 *Tu relación con Duoc UC continúa después de titularse*
 """
@@ -565,6 +596,9 @@ Sábado: 13:00-14:20, 14:30-15:50
 • 💼 **CV, prácticas, empleabilidad**
 • 📞 **Información de contacto y horarios**
 
+🔗 **Portal alumnos:** https://portal.duoc.cl
+🔗 **Centro ayuda:** https://centroayuda.duoc.cl
+
 *¿En qué puedo ayudarte hoy?* 🙂
 """,
 
@@ -578,10 +612,12 @@ Sábado: 13:00-14:20, 14:30-15:50
 **Horario:** Lunes a Viernes 8:30-19:00
 
 🌐 **Plataformas:**
-• Mi Duoc: [portal.duoc.cl](https://portal.duoc.cl)
-• Centro Ayuda: [centroayuda.duoc.cl](https://centroayuda.duoc.cl)
-• Duoc Laboral: [duoclaboral.cl](http://www.duoclaboral.cl)
+• Mi Duoc: https://portal.duoc.cl
+• Centro Ayuda: https://centroayuda.duoc.cl
+• Duoc Laboral: https://duoclaboral.cl
+• Biblioteca: https://biblioteca.duoc.cl
 
+🔗 **Sede Plaza Norte:** https://www.duoc.cl/sede/plaza-norte/
 💬 *¿En qué más puedo ayudarte?*
 """
     }

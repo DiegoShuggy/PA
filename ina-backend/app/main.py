@@ -14,14 +14,15 @@ from pydantic import BaseModel as BaseModelOriginal
 from typing import Optional
 from app.quality_monitor import quality_monitor
 
-
 # 👇 NUEVAS IMPORTACIONES PARA FILTROS DE CONTENIDO
 from app.content_filter import ContentFilter
 from app.topic_classifier import TopicClassifier
 from app.advanced_analytics import advanced_analytics
 from sqlalchemy import text
 from app.training_data_loader import training_loader
-from app.qr_generator import qr_generator, duoc_url_manager
+
+# 👇 ✅ IMPORTACIÓN ACTUALIZADA PARA QR
+from app.qr_generator import QRGenerator, DuocURLManager
 
 # 👇 NUEVAS IMPORTACIONES PARA SISTEMA DE REPORTES
 from app.report_generator import report_generator
@@ -57,6 +58,10 @@ app.add_middleware(
 # 👇 INICIALIZAR SISTEMA DE FILTROS (GLOBAL)
 content_filter = ContentFilter()
 topic_classifier = TopicClassifier()
+
+# 👇 ✅ INICIALIZAR GENERADOR DE QR (GLOBAL)
+qr_generator = QRGenerator()
+duoc_url_manager = DuocURLManager()
 
 # Importar funciones y objetos de cache_manager después de definir app
 from app.cache_manager import get_cache_stats, rag_cache, classification_cache
@@ -156,6 +161,7 @@ def on_startup():
     logger.info("✅ Base de datos y conocimiento histórico cargados")
     logger.info("✅ Sistema de filtros de contenido inicializado")
     logger.info("✅ Sistema de emails Gmail configurado y listo")
+    logger.info("✅ Generador de QR inicializado y listo")
 
 class Message(BaseModel):
     text: str
@@ -242,7 +248,27 @@ async def chat(message: Message, request: Request):
         try:
             # get_ai_response es síncrona, NO usar await
             response_data = get_ai_response(question, context_results)
-            # 🆕 AGREGAR LOGGING MEJORADO
+            
+            # ✅ AGREGAR GENERACIÓN DE QR AQUÍ MISMO
+            if 'response' in response_data or 'text' in response_data:
+                response_text = response_data.get('response') or response_data.get('text')
+                
+                # 🔥 GENERAR QR CODES PARA LA RESPUESTA
+                qr_processed_response = qr_generator.process_response(response_text, question)
+                
+                # Combinar datos existentes con QR codes
+                response_data.update({
+                    'qr_codes': qr_processed_response['qr_codes'],
+                    'has_qr': qr_processed_response['has_qr']
+                })
+                
+                # Log de QR generados
+                if qr_processed_response['has_qr']:
+                    logger.info(f"📱 QR generados: {len(qr_processed_response['qr_codes'])} códigos")
+                    for url in qr_processed_response['qr_codes'].keys():
+                        logger.info(f"   🔗 QR para: {url}")
+                else:
+                    logger.info("❌ No se generaron QR - ningún link detectado")
             
             strategy = response_data.get('processing_info', {}).get('processing_strategy', 'N/A')
             response_time = response_data.get('response_time', 0)
@@ -318,8 +344,8 @@ async def chat(message: Message, request: Request):
         return {
             "response": response_data.get("text") or response_data.get("response"),
             "has_context": has_context,
-            "qr_codes": response_data.get("qr_codes"),
-            "has_qr": response_data.get("has_qr"),
+            "qr_codes": response_data.get("qr_codes", {}),
+            "has_qr": response_data.get("has_qr", False),
             "feedback_session_id": feedback_session_id,  # 👈 NUEVO
             "chatlog_id": chatlog_id,  # 👈 PARA COMPATIBILIDAD
             "allowed": True,
@@ -362,7 +388,8 @@ async def health_check():
             "content_filter": "active",
             "topic_classifier": "active",
             "email_system": email_status,
-            "metrics_tracker": "active"
+            "metrics_tracker": "active",
+            "qr_generator": "active"  # 👈 NUEVO
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
@@ -394,10 +421,11 @@ async def root():
             "unanswered_tracking": True,
             "qr_codes": True,
             "feedback_system": True,
-            "content_filter": True,  # 👈 NUEVA FUNCIONALIDAD
-            "topic_classifier": True,  # 👈 NUEVA FUNCIONALIDAD
-            "email_reports": True,  # 👈 NUEVA FUNCIONALIDAD
-            "advanced_metrics": True  # 👈 NUEVA FUNCIONALIDAD
+            "content_filter": True,
+            "topic_classifier": True,
+            "email_reports": True,
+            "advanced_metrics": True,
+            "qr_generation": True  # 👈 NUEVO
         }
     }
 
@@ -625,9 +653,9 @@ async def generate_specific_qr(url: str):
 # 👇 NUEVOS ENDPOINTS PARA EL SISTEMA DE FEEDBACK MEJORADO
 
 @app.post("/feedback/response")
-async def submit_response_feedback(request: dict):  # 👈 Acepta cualquier dict
+async def submit_response_feedback(request: dict):
     """
-    Endpoint DEBUG para ver qué está enviando exactmente el frontend
+    Endpoint DEBUG para ver qué está enviando exactamente el frontend
     """
     
     try:
