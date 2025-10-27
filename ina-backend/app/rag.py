@@ -1,4 +1,4 @@
-# rag.py - VERSIÓN COMPLETA OPTIMIZADA PARA EQUIPO FINAL
+# rag.py - VERSIÓN COMPLETA CON SISTEMA DE TEMPLATES
 import chromadb
 import ollama
 from typing import List, Dict, Optional
@@ -16,6 +16,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # 👈 IMPORTACIONES EXISTENTES
 from app.cache_manager import rag_cache, response_cache, normalize_question
 from app.topic_classifier import TopicClassifier
+from app.classifier import classifier  # 🆕 IMPORTAR CLASIFICADOR
 
 logger = logging.getLogger(__name__)
 
@@ -228,7 +229,8 @@ class RAGEngine:
             'multiple_queries': 0,
             'ambiguous_queries': 0,
             'greetings': 0,
-            'emergencies': 0
+            'emergencies': 0,
+            'template_responses': 0  # 🆕 MÉTRICA PARA TEMPLATES
         }
 
     def enhanced_normalize_text(self, text: str) -> str:
@@ -279,12 +281,23 @@ class RAGEngine:
         return text.strip()
 
     def process_user_query(self, user_message: str) -> Dict:
-        """🆕 PROCESAMIENTO INTELIGENTE MEJORADO"""
+        """🆕 PROCESAMIENTO INTELIGENTE MEJORADO CON TEMPLATES"""
         self.metrics['total_queries'] += 1
         
         query_lower = user_message.lower().strip()
         
-        # 🆕 DETECCIÓN PRIORITARIA DE SALUDOS
+        # 🆕 1. PRIMERO VERIFICAR TEMPLATES (MÁS RÁPIDO)
+        template_match = classifier.detect_template_match(user_message)
+        if template_match:
+            logger.info(f"🚀 TEMPLATE DETECTADO: '{user_message}' -> {template_match}")
+            return {
+                'processing_strategy': 'template',
+                'original_query': user_message,
+                'template_id': template_match,
+                'query_parts': [user_message]
+            }
+        
+        # 🆕 2. DETECCIÓN PRIORITARIA DE SALUDOS
         greeting_keywords = [
             'hola', 'holi', 'holis', 'holaa', 'buenos días', 'buenas tardes', 
             'buenas noches', 'saludos', 'quién eres', 'presentate', 'presentación',
@@ -302,7 +315,7 @@ class RAGEngine:
                 'query_parts': [user_message]
             }
         
-        # 🆕 DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
+        # 🆕 3. DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
         emergency_keywords = [
             'crisis', 'urgencia', 'emergencia', 'línea ops', 
             'me siento mal', 'ayuda urgente', 'necesito ayuda ahora',
@@ -325,7 +338,7 @@ class RAGEngine:
                 'query_parts': [user_message]
             }
         
-        # 🆕 1. PRIMERO VERIFICAR SI ES DERIVACIÓN
+        # 🆕 4. VERIFICAR SI ES DERIVACIÓN
         if self.topic_classifier.should_derive(user_message):
             topic_info = self.topic_classifier.classify_topic(user_message)
             logger.info(f"🎯 DERIVACIÓN DETECTADA: {user_message} -> {topic_info.get('category', 'unknown')}")
@@ -339,10 +352,10 @@ class RAGEngine:
                 'query_parts': [user_message]
             }
         
-        # 2. Clasificar tema
+        # 5. Clasificar tema
         topic_info = self.topic_classifier.classify_topic(user_message)
         
-        # 3. Detectar consultas múltiples SOLO para temas institucionales
+        # 6. Detectar consultas múltiples SOLO para temas institucionales
         query_parts = self.topic_classifier.detect_multiple_queries(user_message)
         
         response_info = {
@@ -369,9 +382,60 @@ class RAGEngine:
         
         return response_info
 
+    def generate_template_response(self, processing_info: Dict) -> Dict:
+        """🆕 GENERAR RESPUESTA DESDE TEMPLATE (ULTRA RÁPIDO)"""
+        import time
+        start_time = time.time()
+        
+        template_id = processing_info['template_id']
+        
+        # 🎯 CARGAR TEMPLATES
+        try:
+            from app.templates import TEMPLATES
+            
+            # Buscar template en todas las categorías
+            template_response = None
+            template_category = None
+            
+            for category, templates in TEMPLATES.items():
+                if template_id in templates:
+                    template_response = templates[template_id]
+                    template_category = category
+                    break
+            
+            if template_response:
+                response_time = time.time() - start_time
+                self.metrics['template_responses'] += 1
+                self.metrics['categories_used'][template_category] += 1
+                
+                logger.info(f"⚡ TEMPLATE RESPONSE: {template_id} en {response_time:.3f}s")
+                
+                return {
+                    'response': template_response.strip(),
+                    'sources': [],
+                    'category': template_category,
+                    'response_time': response_time,
+                    'cache_type': 'template',
+                    'processing_info': processing_info,
+                    'template_used': template_id
+                }
+            else:
+                logger.warning(f"⚠️ Template no encontrado: {template_id}")
+                
+        except ImportError:
+            logger.error("❌ No se pudo importar templates.py")
+        except Exception as e:
+            logger.error(f"❌ Error cargando template: {e}")
+        
+        # Fallback si no se encuentra el template
+        return self.generate_clarification_response(processing_info)
+
     def generate_greeting_response(self, processing_info: Dict) -> Dict:
         """🆕 RESPUESTA CORTA Y AMIGABLE PARA SALUDOS"""
         import random
+        import time
+        start_time = time.time()
+        
         greeting_options = [
             "¡Hola! 👋 Soy InA, tu asistente del Punto Estudiantil Duoc UC. ¿En qué puedo ayudarte hoy?",
             "¡Hola! 😊 Soy InA, estoy aquí para ayudarte con información del Punto Estudiantil.",
@@ -399,13 +463,16 @@ class RAGEngine:
             'response': response.strip(),
             'sources': [],
             'category': 'greeting',
-            'response_time': 0.05,
+            'response_time': time.time() - start_time,
             'cache_type': 'greeting',
             'processing_info': processing_info
         }
 
     def generate_emergency_response(self, processing_info: Dict) -> Dict:
         """🆕 RESPUESTA DE EMERGENCIA PRIORITARIA"""
+        import time
+        start_time = time.time()
+        
         response = """
 🚨 **URGENCIA - APOYO INMEDIATO DISPONIBLE**
 
@@ -427,13 +494,16 @@ class RAGEngine:
             'response': response.strip(),
             'sources': [],
             'category': 'emergency',
-            'response_time': 0.05,
+            'response_time': time.time() - start_time,
             'cache_type': 'emergency',
             'processing_info': processing_info
         }
 
     def generate_derivation_response(self, processing_info: Dict) -> Dict:
         """🆕 DERIVACIÓN MEJORADA CON INFORMACIÓN ESPECÍFICA"""
+        import time
+        start_time = time.time()
+        
         suggestion = processing_info.get('derivation_suggestion', 
             "🔍 **Consulta especializada**\n\n"
             "Te recomiendo acercarte a Punto Estudiantil para derivación al área correspondiente.\n\n"
@@ -452,7 +522,7 @@ class RAGEngine:
             'response': response.strip(),
             'sources': [],
             'category': 'derivation',
-            'response_time': 0.1,
+            'response_time': time.time() - start_time,
             'cache_type': 'derivation',
             'processing_info': processing_info
         }
@@ -606,6 +676,9 @@ class RAGEngine:
 
     def generate_clarification_response(self, processing_info: Dict) -> Dict:
         """GENERAR RESPUESTA PARA CONSULTAS AMBIGUAS"""
+        import time
+        start_time = time.time()
+        
         original_query = processing_info['original_query']
         
         response = f"""
@@ -626,7 +699,7 @@ class RAGEngine:
             'response': response.strip(),
             'sources': [],
             'category': 'clarification',
-            'response_time': 0.1,
+            'response_time': time.time() - start_time,
             'cache_type': 'clarification',
             'processing_info': processing_info
         }
@@ -792,7 +865,8 @@ class RAGEngine:
                 'total_multiple_queries': self.metrics['multiple_queries'],
                 'total_ambiguous': self.metrics['ambiguous_queries'],
                 'total_greetings': self.metrics['greetings'],
-                'total_emergencies': self.metrics['emergencies']
+                'total_emergencies': self.metrics['emergencies'],
+                'total_templates': self.metrics['template_responses']  # 🆕
             }
         }
 
@@ -810,14 +884,19 @@ rag_engine = RAGEngine()
 
 
 def get_ai_response(user_message: str, context: list = None) -> Dict:
-    """🎯 VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE"""
+    """🎯 VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES"""
     import time
     start_time = time.time()
 
     processing_info = rag_engine.process_user_query(user_message)
     strategy = processing_info['processing_strategy']
 
-    # 🆕 ESTRATEGIAS PRIORITARIAS
+    # 🆕 ESTRATEGIAS PRIORITARIAS - TEMPLATES PRIMERO
+    if strategy == 'template':
+        response_data = rag_engine.generate_template_response(processing_info)
+        response_data['response_time'] = time.time() - start_time
+        return response_data
+
     if strategy == 'greeting' or processing_info.get('is_greeting', False):
         response_data = rag_engine.generate_greeting_response(processing_info)
         response_data['response_time'] = time.time() - start_time

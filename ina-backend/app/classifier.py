@@ -1,6 +1,6 @@
-# classifier.py - VERSIÓN MEJORADA CON PATRONES ESPECÍFICOS
+# classifier.py - VERSIÓN COMPLETA CON DETECCIÓN EXPANDIDA
 import ollama
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 import logging
 import re
 from sqlmodel import Session
@@ -22,35 +22,39 @@ class QuestionClassifier:
             "otros"
         ]
         
-        # ✅ PATRONES MEJORADOS BASADOS EN LOS LOGS DE PRUEBA
+        # ✅ PATRONES MEJORADOS Y EXPANDIDOS
         self.keyword_patterns = {
             "asuntos_estudiantiles": [
-                # TNE y certificados
+                # TNE y certificados - EXPANDIDO
                 r'\b(tne|tarjeta nacional estudiantil|pase escolar)\b',
-                r'\b(validar tne|renovar tne|revalidar tne|sacar tne)\b',
+                r'\b(validar tne|renovar tne|revalidar tne|sacar tne|obtener tne)\b',
+                r'\b(primera tne|nueva tne|tne por primera vez)\b',
                 r'\b(certificado.*alumno|constancia.*alumno|certificado.*regular)\b',
                 r'\b(certificado de notas|record académico|concentración de notas)\b',
                 r'\b(certificado|constancia|record|concentración)\b',
                 
-                # Programas de apoyo - MÁS ESPECÍFICOS
+                # Programas de apoyo - EXPANDIDO
                 r'\b(programa emergencia|programa transporte|programa materiales)\b',
-                r'\b(ayuda económica|subsidio|apoyo económico)\b',
-                r'\b(beca|beneficio estudiantil|financiamiento|crédito estudiantil)\b',
+                r'\b(ayuda económica|subsidio|apoyo económico|beneficio estudiantil)\b',
+                r'\b(beca|financiamiento|crédito estudiantil)\b',
+                r'\b(postular beneficio|solicitar beneficio|requisitos beneficio)\b',
                 
-                # Seguro estudiantil
+                # Seguro estudiantil - EXPANDIDO
                 r'\b(seguro.*estudiantil|seguro.*accidente|doc duoc)\b',
-                r'\b(accidente estudiantil|atención médica|seguro)\b',
+                r'\b(accidente estudiantil|atención médica|seguro|cobertura seguro)\b',
                 
-                # 🆕 DETECCIÓN MEJORADA DE MATRÍCULA/ARANCEL (para derivación)
-                r'\b(matrícula|arancel|pago|deuda)\b',
+                # Técnicas de estudio - NUEVO
+                r'\b(técnicas de estudio|apoyo psicopedagógico|estrategias estudio)\b',
+                r'\b(centro virtual aprendizaje|cva|eventos\.duoc\.cl)\b',
+                
+                # Matrícula y trámites
+                r'\b(matrícula|arancel|pago|deuda|trámite estudiantil)\b',
             ],
             
             "bienestar_estudiantil": [
-                # PATRONES EXISTENTES...
+                # Salud mental y apoyo psicológico - EXPANDIDO
                 r'\b(psicológico|psicólogo|salud mental|bienestar|apoyo psicológico)\b',
                 r'\b(consejería|consejero|atención psicológica|urgencia psicológica)\b',
-                
-                # 🆕 PATRONES MEJORADOS - BASADO EN LOGS DE PRUEBA
                 r'\b(crisis|urgencia|emergencia|linea ops|línea ops)\b',
                 r'\b(necesito ayuda|me siento mal|estoy mal|angustia|pánico|ansiedad)\b',
                 r'\b(apoyo inmediato|ayuda urgente|situación crítica|estoy desesperado)\b',
@@ -58,104 +62,124 @@ class QuestionClassifier:
                 r'\b(no puedo más|estoy estresado|deprimido|tristeza profunda)\b',
                 r'\b(adriana vásquez|avasquezm|bienestar estudiantil)\b',
                 
-                # 🆕 DETECCIÓN MÁS FUERTE PARA "sesiones psicológicas"
+                # Sesiones psicológicas - EXPANDIDO
                 r'\b(sesiones psicológicas|sesión psicológica|8 sesiones)\b',
                 r'\b(cuántas sesiones|máximo de sesiones|sesiones disponibles)\b',
                 
-                # Talleres y programas
+                # Talleres y programas - EXPANDIDO
                 r'\b(taller.*bienestar|charla.*bienestar|micro webinar)\b',
                 r'\b(taller.*salud mental|embajadores.*salud mental)\b',
                 r'\b(curso.*embajadores|apoyo emocional|bienestar)\b',
                 
-                # Crisis y urgencias
+                # Crisis y urgencias - EXPANDIDO
                 r'\b(crisis.*pánico|angustia|sala.*primeros auxilios)\b',
                 r'\b(apoyo.*crisis|me siento mal|urgencia psicológica)\b',
                 r'\b(atención inmediata|emergencia emocional)\b',
                 
-                # Inclusión y discapacidad
+                # Inclusión y discapacidad - EXPANDIDO
                 r'\b(discapacidad|paedis|programa.*acompañamiento)\b',
                 r'\b(estudiantes.*discapacidad|inclusión|elizabeth domínguez)\b',
-                r'\b(edominguezs|apoyo.*inclusión|accesibilidad)\b'
+                r'\b(edominguezs|apoyo.*inclusión|accesibilidad)\b',
+                
+                # Atención presencial - NUEVO
+                r'\b(atención presencial|psicólogo presencial|consultorio)\b',
+                
+                # Curso embajadores - NUEVO
+                r'\b(curso embajadores|embajadores salud mental|herramientas apoyo)\b',
             ],
             
             "deportes": [
-                # Talleres deportivos
+                # Talleres deportivos - EXPANDIDO
                 r'\b(taller.*deportivo|actividad.*deportiva|deporte)\b',
                 r'\b(fútbol.*masculino|futbolito.*damas|voleibol.*mixto)\b',
                 r'\b(basquetbol.*mixto|natación.*mixta|tenis.*mesa.*mixto)\b',
                 r'\b(ajedrez.*mixto|entrenamiento.*funcional|boxeo.*mixto)\b',
                 r'\b(powerlifting.*mixto|deportes|actividad.*física)\b',
                 
-                # 🆕 MEJORAR DETECCIÓN DE BECAS DEPORTIVAS
-                r'\b(beca.*deportiva|beca deportes|postular.*beca.*deporte)\b',
-                
-                # Instalaciones y ubicaciones
+                # Instalaciones y ubicaciones - EXPANDIDO
                 r'\b(complejo.*maiclub|gimnasio.*entretiempo|piscina.*acquatiempo)\b',
                 r'\b(caf|centro.*bienestar|acondicionamiento.*físico)\b',
                 r'\b(ubicación.*deportes|lugar.*taller|instalación.*deportiva)\b',
                 
-                # Horarios deportivos
+                # Horarios deportivos - EXPANDIDO
                 r'\b(horario.*taller|horario.*deporte|cuándo.*taller)\b',
                 r'\b(día.*entrenamiento|cuándo.*entrenar|horario.*clase)\b',
+                r'\b(qué días|qué horarios|calendarización)\b',
                 
-                # Selecciones y becas
+                # Inscripción y optativos - NUEVO
+                r'\b(inscribir.*deportivo|optativo.*deporte|tomar.*taller)\b',
+                r'\b(inscripción.*deportes|solicitud.*en línea|vivo duoc)\b',
+                
+                # Selecciones y becas - EXPANDIDO
                 r'\b(selección.*deportiva|equipo.*deportivo|futsal|rugby)\b',
                 r'\b(beca.*deportiva|postular.*beca|reclutamiento.*deportivo)\b',
-                r'\b(competencia.*deportiva|campeonato|torneo)\b'
+                r'\b(competencia.*deportiva|campeonato|torneo)\b',
+                
+                # Gimnasio CAF - NUEVO
+                r'\b(gimnasio|caf|centro.*acondicionamiento|preparador físico)\b',
+                r'\b(evaluación física|uso gimnasio|horario gimnasio)\b',
             ],
             
             "desarrollo_profesional": [
-                # Prácticas y empleo
-                r'\b(práctica profesional|práctica|practica)\b',
-                r'\b(bolsa.*trabajo|empleo|trabajo|duoclaboral)\b',
+                # Prácticas y empleo - EXPANDIDO
+                r'\b(práctica profesional|práctica|practica|practicas profesionales)\b',
+                r'\b(bolsa.*trabajo|empleo|trabajo|duoclaboral|duoclaboral\.cl)\b',
                 r'\b(oferta laboral|empleador|convenio.*empresa)\b',
+                r'\b(buscar.*práctica|encontrar.*práctica|proceso.*práctica)\b',
                 
-                # CV y entrevistas
-                r'\b(curriculum|cv|hoja.*vida|currículum)\b',
+                # CV y entrevistas - EXPANDIDO
+                r'\b(curriculum|cv|hoja.*vida|currículum vitae)\b',
                 r'\b(entrevista.*laboral|simulación.*entrevista)\b',
                 r'\b(mejorar.*curriculum|asesoría.*curricular)\b',
                 r'\b(preparación.*entrevista|consejos.*entrevista)\b',
+                r'\b(modelo curriculum|formato cv|cv duoc|curriculum duoc)\b',
                 
-                # Talleres y habilidades
+                # Talleres y habilidades - EXPANDIDO
                 r'\b(taller.*empleabilidad|taller.*cv|taller.*entrevista)\b',
                 r'\b(marca personal|comunicación efectiva|liderazgo)\b',
                 r'\b(habilidades blandas|habilidades laborales|soft skills)\b',
                 r'\b(desarrollo laboral|claudia cortés|ccortesn)\b',
+                r'\b(coordinadora desarrollo laboral)\b',
                 
-                # Titulación y egresados
+                # Titulación y egresados - EXPANDIDO
                 r'\b(titulación|egresados|titulados|beneficios.*titulados)\b',
-                r'\b(ceremonia.*titulación|diploma|certificado.*titulación)\b'
+                r'\b(ceremonia.*titulación|diploma|certificado.*titulación)\b',
+                r'\b(proceso.*titulación|fecha.*titulación|egresar|graduación)\b',
             ],
             
             "institucionales": [
-                # 🆕 MEJORAR DETECCIÓN DE SERVICIOS DIGITALES
+                # Servicios digitales - EXPANDIDO
                 r'\b(mi duoc|midooc|plataforma|correo institucional|contraseña)\b',
                 r'\b(acceso|login|portal|clave|bloqueado|no puedo entrar)\b',
                 r'\b(olvidé mi contraseña|recuperar contraseña|problema.*acceso)\b',
                 r'\b(wifi|conexión|internet|sistema.*online)\b',
                 
-                # Información general Duoc UC
+                # Información general Duoc UC - EXPANDIDO
                 r'\b(horario.*atención|horario|atiende|abre|cierra)\b',
                 r'\b(ubicación|dirección|sede|cómo.*llegar|dónde.*está)\b',
                 r'\b(contacto|teléfono|email|información.*general)\b',
                 r'\b(servicio.*duoc|sedes|directorio|duoc.*uc)\b',
+                r'\b(plaza norte|santa elena|huechuraba)\b',
                 
-                # Saludos y conversación
+                # Saludos y conversación - EXPANDIDO
                 r'\b(ina|hola|buenos.*días|buenas.*tardes|buenas.*noches)\b',
                 r'\b(saludos|quién.*eres|qué.*puedes.*hacer|funciones)\b',
-                r'\b(capacidades|ayuda|asistente|virtual)\b'
+                r'\b(capacidades|ayuda|asistente|virtual)\b',
                 r'\b(hola|holi|holis|holaa|holaaa|buenos|días|tardes|noches|saludos|buenas)\b',
                 r'\b(hola ina|hola iná|hola inaa|ina hola|hola asistente)\b',
                 r'\b(quién eres|qué eres|presentate|presentación|tu nombre)\b',
+                r'\b(identidad|propósito|objetivo)\b',
             ],
             
             "pastoral": [
-                # Voluntariado y actividades solidarias
+                # Voluntariado y actividades solidarias - EXPANDIDO
                 r'\b(pastoral|voluntariado|voluntario|actividad.*solidaria)\b',
                 r'\b(retiro|espiritualidad|valor|actividad.*pastoral)\b',
                 r'\b(solidaridad|ayuda.*social|comunidad|fe)\b',
                 r'\b(religión.*católica|servicio.*social|ayuda.*comunitaria)\b',
-                r'\b(actividad.*voluntariado|servicio.*voluntario)\b'
+                r'\b(actividad.*voluntariado|servicio.*voluntario)\b',
+                r'\b(misión solidaria|trabajo comunitario|ayuda a otros)\b',
+                r'\b(servicio a la comunidad|acción solidaria)\b',
             ]
         }
         
@@ -170,12 +194,192 @@ class QuestionClassifier:
             'keyword_matches': 0,
             'cache_hits': 0,
             'semantic_cache_hits': 0,
-            'category_counts': {category: 0 for category in self.categories}
+            'category_counts': {category: 0 for category in self.categories},
+            'template_matches': 0
         }
     
     def _clean_question(self, question: str) -> str:
         """Limpia y normaliza la pregunta"""
         return question.lower().strip()
+    
+    def detect_template_match(self, question: str) -> Optional[str]:
+        """🎯 DETECCIÓN INTELIGENTE DE TEMPLATES EXPANDIDA"""
+        question_lower = self._clean_question(question)
+        
+        # 🎯 PATRONES ESPECÍFICOS PARA TEMPLATES - COMPLETAMENTE EXPANDIDOS
+        template_patterns = {
+            # ASUNTOS ESTUDIANTILES - EXPANDIDO
+            "tne_documentos_primera_vez": [
+                r'documentos.*tne', r'qué.*necesito.*tne', r'requisitos.*tne',
+                r'qué.*llevar.*tne', r'primera.*vez.*tne', r'sacar.*tne.*primera',
+                r'qué.*papeles.*tne', r'requisitos.*para.*tne', r'qué.*documentación.*tne'
+            ],
+            "tne_tiempos_emision": [
+                r'cuánto.*demora.*tne', r'tiempo.*tne', r'cuándo.*estará.*tne',
+                r'demora.*tne', r'plazo.*tne', r'cuánto.*tarda.*tne',
+                r'en.*cuánto.*tiempo.*tne', r'cuándo.*sale.*tne'
+            ],
+            "tne_revalidacion": [
+                r'revalidar.*tne', r'renovar.*tne', r'validar.*tne',
+                r'tne.*anterior', r'tne.*previa', r'pago.*1100', r'1\.100'
+            ],
+            "tne_reposicion": [
+                r'reposición.*tne', r'perdí.*tne', r'dañ.*tne', r'robaron.*tne',
+                r'hurtaron.*tne', r'nueva.*tne.*perdida', r'tne.*extraviada',
+                r'pago.*3600', r'3\.600', r'comisariavirtual'
+            ],
+            "seguro_cobertura": [
+                r'seguro.*estudiantil', r'cómo.*funciona.*seguro', r'cobertura.*seguro',
+                r'doc.*duoc', r'accidente.*estudiantil', r'para.*qué.*sirve.*seguro',
+                r'qué.*cubre.*seguro', r'beneficio.*seguro', r'atención.*médica.*duoc'
+            ],
+            "programa_emergencia": [
+                r'programa.*emergencia', r'requisitos.*emergencia', r'postular.*emergencia',
+                r'ayuda.*económica.*emergencia', r'beneficio.*emergencia',
+                r'cómo.*postular.*emergencia', r'qué.*necesito.*emergencia',
+                r'monto.*emergencia', r'200\.000', r'subvención.*emergencia'
+            ],
+            "programa_transporte": [
+                r'programa.*transporte', r'beneficio.*transporte', r'ayuda.*transporte',
+                r'subsidio.*transporte', r'100\.000', r'beca.*transporte',
+                r'requisitos.*transporte', r'postular.*transporte'
+            ],
+            "programa_materiales": [
+                r'programa.*materiales', r'materiales.*estudio', r'subsidio.*materiales',
+                r'beneficio.*materiales', r'200\.000.*materiales', r'útiles.*estudio',
+                r'postular.*materiales', r'requisitos.*materiales'
+            ],
+            "certificado_alumno_regular": [
+                r'certificado.*alumno', r'constancia.*alumno', r'certificado.*regular',
+                r'documento.*alumno', r'acreditar.*alumno', r'certificado.*estudiante',
+                r'cómo.*saco.*certificado', r'obtener.*certificado'
+            ],
+            "tecnicas_estudio": [
+                r'técnicas.*estudio', r'apoyo.*psicopedagógico', r'estrategias.*estudio',
+                r'cómo.*estudiar', r'mejorar.*rendimiento', r'psicopedagogo',
+                r'eventos\.duoc\.cl', r'agendar.*técnicas'
+            ],
+            "centro_virtual_aprendizaje": [
+                r'centro.*virtual.*aprendizaje', r'cva', r'recursos.*online',
+                r'videos.*interactivos', r'técnicas.*estudio.*online',
+                r'cva\.duoc\.cl', r'aprendizaje.*virtual'
+            ],
+            
+            # BIENESTAR ESTUDIANTIL - EXPANDIDO
+            "sesiones_psicologicas": [
+                r'cuántas.*sesiones', r'sesiones.*psicológicas', r'máximo.*sesiones',
+                r'8.*sesiones', r'sesiones.*incluye', r'límite.*sesiones',
+                r'cuántas.*veces.*psicólogo', r'número.*sesiones'
+            ],
+            "agendar_atencion_psicologica": [
+                r'cómo.*agendar.*psicológico', r'agendar.*atención', r'pedir.*hora.*psicológico',
+                r'conseguir.*sesión', r'eventos\.duoc\.cl', r'solicitar.*psicólogo',
+                r'cómo.*saco.*hora.*psicólogo', r'reservar.*sesión'
+            ],
+            "apoyo_discapacidad": [
+                r'discapacidad', r'paedis', r'elizabeth.*domínguez', r'estudiantes.*discapacidad',
+                r'inclusión', r'edominguezs', r'coordinadora.*inclusión', r'accesibilidad',
+                r'necesidades.*especiales', r'apoyo.*discapacidad'
+            ],
+            "linea_ops_emergencia": [
+                r'línea.*ops', r'urgencia.*psicológica', r'crisis.*psicológica',
+                r'emergencia.*emocional', r'2820.*3450', r'ops.*duoc',
+                r'atención.*inmediata', r'crisis.*salud.*mental'
+            ],
+            "atencion_presencial_psicologica": [
+                r'atención.*presencial', r'psicólogo.*presencial', r'consultorio',
+                r'sesión.*presencial', r'cara.*a.*cara', r'presencial.*psicólogo'
+            ],
+            "curso_embajadores_salud_mental": [
+                r'curso.*embajadores', r'embajadores.*salud.*mental', r'herramientas.*apoyo',
+                r'apoyar.*compañeros', r'comunidad.*empática', r'embajadores\.duoc\.cl',
+                r'85%.*correctas', r'módulo.*embajadores'
+            ],
+            
+            # DEPORTES - EXPANDIDO
+            "talleres_deportivos": [
+                r'qué.*talleres.*deport', r'talleres.*deportivos', r'actividades.*deportivas',
+                r'deportes.*disponibles', r'qué.*deportes.*hay', r'lista.*talleres',
+                r'qué.*actividades.*deportivas', r'oferta.*deportiva'
+            ],
+            "horarios_talleres": [
+                r'horario.*taller', r'horario.*deporte', r'cuándo.*taller',
+                r'día.*entrenamiento', r'qué.*horarios', r'calendarización.*deportes',
+                r'programación.*talleres', r'cuándo.*son.*los.*talleres'
+            ],
+            "gimnasio_caf": [
+                r'gimnasio', r'caf', r'centro.*bienestar', r'acondicionamiento.*físico',
+                r'preparador.*físico', r'evaluación.*física', r'uso.*gimnasio',
+                r'horario.*gimnasio', r'cómo.*entrenar', r'centro.*deportivo'
+            ],
+            "inscripcion_optativos_deportivos": [
+                r'inscribir.*deportivo', r'optativo.*deporte', r'tomar.*taller',
+                r'inscripción.*deportes', r'solicitud.*en.*línea', r'vivo.*duoc',
+                r'cómo.*me.*inscribo', r'proceso.*inscripción'
+            ],
+            "selecciones_deportivas": [
+                r'selección.*deportiva', r'equipo.*deportivo', r'futsal', r'rugby',
+                r'representar.*duoc', r'competir.*duoc', r'deporte.*competitivo',
+                r'reclutamiento', r'probar.*selección'
+            ],
+            "becas_deportivas": [
+                r'beca.*deportiva', r'postular.*beca.*deporte', r'beneficio.*deportivo',
+                r'apoyo.*deportivo', r'financiamiento.*deporte', r'requisitos.*beca.*deporte'
+            ],
+            
+            # DESARROLLO PROFESIONAL - EXPANDIDO
+            "bolsa_empleo": [
+                r'bolsa.*empleo', r'duoclaboral', r'empleo.*estudiantil', r'ofertas.*trabajo',
+                r'duoclaboral\.cl', r'plataforma.*empleo', r'buscar.*trabajo',
+                r'ofertas.*laborales', r'trabajo.*estudiante'
+            ],
+            "practicas_profesionales": [
+                r'práctica.*profesional', r'practica', r'claudia.*cortés',
+                r'ccortesn', r'buscar.*práctica', r'encontrar.*práctica',
+                r'proceso.*práctica', r'requisitos.*práctica', r'practicas.*profesionales'
+            ],
+            "mejorar_curriculum": [
+                r'mejorar.*curriculum', r'mejorar.*cv', r'asesoría.*curricular',
+                r'revisar.*cv', r'optimizar.*curriculum', r'cv.*mejor',
+                r'consejos.*curriculum', r'cómo.*hacer.*cv'
+            ],
+            "simulaciones_entrevistas": [
+                r'simulación.*entrevista', r'entrevista.*laboral', r'practicar.*entrevista',
+                r'preparación.*entrevista', r'feedback.*entrevista', r'ensayo.*entrevista',
+                r'cómo.*enfrentar.*entrevista'
+            ],
+            "talleres_empleabilidad": [
+                r'taller.*empleabilidad', r'taller.*cv', r'taller.*entrevista',
+                r'desarrollo.*laboral', r'charla.*empleo', r'taller.*habilidades',
+                r'formación.*laboral', r'capacitación.*empleo'
+            ],
+            "beneficios_titulados": [
+                r'beneficios.*titulados', r'egresados', r'titulados', r'después.*titular',
+                r'ventajas.*titulado', r'servicios.*egresados', r'duoc.*después.*estudiar'
+            ],
+            
+            # INSTITUCIONALES
+            "saludo_inicial": [
+                r'^hola$', r'^buenos.*días$', r'^buenas.*tardes$', r'^buenas.*noches$',
+                r'^quién.*eres$', r'^presentate$', r'^qué.*puedes.*hacer$',
+                r'^hola ina$', r'^hola iná$', r'^ina hola$', r'^hola asistente$'
+            ],
+            "informacion_contacto": [
+                r'contacto', r'teléfono', r'dirección', r'ubicación', r'horario.*atención',
+                r'dónde.*están', r'cómo.*llegar', r'datos.*contacto',
+                r'qué.*horario', r'cuándo.*abren', r'número.*teléfono',
+                r'dirección.*plaza.*norte', r'santa.*elena', r'huechuraba'
+            ]
+        }
+        
+        for template_id, patterns in template_patterns.items():
+            for pattern in patterns:
+                if re.search(pattern, question_lower):
+                    logger.info(f"🎯 TEMPLATE MATCH: '{question}' -> {template_id}")
+                    self.stats['template_matches'] += 1
+                    return template_id
+        
+        return None
     
     def _keyword_classification(self, question: str) -> Tuple[str, float]:
         """
@@ -314,15 +518,18 @@ class QuestionClassifier:
         """Obtener estadísticas de clasificación"""
         total = self.stats['total_classifications']
         
-        return {
+        stats = {
             'total_classifications': total,
             'cache_hit_rate': self.stats['cache_hits'] / max(1, total),
             'semantic_cache_hit_rate': self.stats['semantic_cache_hits'] / max(1, total),
             'keyword_match_rate': self.stats['keyword_matches'] / max(1, total),
             'ollama_call_rate': self.stats['ollama_calls'] / max(1, total),
+            'template_match_rate': self.stats['template_matches'] / max(1, total),
             'category_distribution': self.stats['category_counts'],
             'semantic_cache_size': len(self._semantic_cache)
         }
+        
+        return stats
     
     def clear_cache(self):
         """Limpiar el cache de clasificaciones"""
