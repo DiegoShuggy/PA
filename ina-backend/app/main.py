@@ -250,11 +250,11 @@ async def chat(message: Message, request: Request):
             response_data = get_ai_response(question, context_results)
             
             # ✅ AGREGAR GENERACIÓN DE QR AQUÍ MISMO
-            if 'response' in response_data or 'text' in response_data:
+            if 'qr_codes' not in response_data or not response_data.get('qr_codes'):
+                # 🔥 GENERAR QR CODES PARA LA RESPUESTA si no los tiene
                 response_text = response_data.get('response') or response_data.get('text')
-                
-                # 🔥 GENERAR QR CODES PARA LA RESPUESTA
-                qr_processed_response = qr_generator.process_response(response_text, question)
+                if response_text:
+                    qr_processed_response = qr_generator.process_response(response_text, question)
                 
                 # Combinar datos existentes con QR codes
                 response_data.update({
