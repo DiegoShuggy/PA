@@ -1,31 +1,271 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import '../css/Coordinadores.css';
-import Profile from '../img/InA1.png';
+import Profile from '../img/Bienestar.jpg';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
 
 export function Bienestar() {
     console.log('Bienestar component is rendering');
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+
+    // Estados y refs para el lector de texto
+    const [isReading, setIsReading] = useState(false);
+    const [isTtsSupported, setIsTtsSupported] = useState(false);
+    const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
+    const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+    const isManualStopRef = useRef(false);
 
     // Estado y refs para el temporizador de inactividad
     const [inactivityTime, setInactivityTime] = useState(0);
     const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const inactivityCounterRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    // Configuración del temporizador de inactividad (en milisegundos)
     const INACTIVITY_TIMEOUT = 300000; // 5 minutos
 
-    // Función para manejar el clic en las preguntas y enviar automáticamente
+    // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO ADAPTADA
+
+    // Función para detener la lectura actual
+    const stopReading = useCallback((isManual = false) => {
+        if (isManual) {
+            isManualStopRef.current = true;
+        }
+
+        if (speechSynthesisRef.current) {
+            speechSynthesisRef.current.cancel();
+            currentUtteranceRef.current = null;
+            setIsReading(false);
+        }
+    }, []);
+
+    // Verificar soporte del lector de texto
+    useEffect(() => {
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+            speechSynthesisRef.current = window.speechSynthesis;
+            setIsTtsSupported(true);
+
+            // Función para cargar voces
+            const loadVoices = () => {
+                if (speechSynthesisRef.current) {
+                    try {
+                        const voices = speechSynthesisRef.current.getVoices();
+                        if (voices.length > 0) {
+                            console.log(`✅ ${voices.length} voces cargadas`);
+                        }
+                    } catch (error) {
+                        console.error('Error cargando voces:', error);
+                    }
+                }
+            };
+
+            speechSynthesisRef.current.onvoiceschanged = loadVoices;
+            loadVoices();
+
+        } else {
+            setIsTtsSupported(false);
+            console.warn('El lector de texto no es compatible con este navegador');
+        }
+
+        // Cleanup al desmontar el componente
+        return () => {
+            stopReading();
+        };
+    }, [stopReading]);
+
+    // Función para leer texto en voz alta
+    const readText = useCallback((text: string, isAutoRead = false) => {
+        // Si es lectura automática y hubo detención manual, no leer
+        if (isAutoRead && isManualStopRef.current) {
+            console.log('🚫 Lectura automática bloqueada por detención manual');
+            return;
+        }
+
+        if (!speechSynthesisRef.current || !isTtsSupported) {
+            alert(t('Asuntos.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+            return;
+        }
+
+        // Resetear el flag de detención manual si es lectura manual
+        if (!isAutoRead) {
+            isManualStopRef.current = false;
+        }
+
+        // Detener cualquier lectura en curso
+        stopReading();
+
+        // Pequeña pausa antes de empezar nueva lectura
+        setTimeout(() => {
+            try {
+                // Configurar idioma
+                const ttsLang = i18n.language === 'es' ? 'es-ES' :
+                    i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = ttsLang;
+                utterance.rate = 0.8;
+                utterance.pitch = 1.2;
+                utterance.volume = 1;
+
+                // Seleccionar voz adecuada
+                const voices = speechSynthesisRef.current?.getVoices() || [];
+                let preferredVoice = null;
+
+                // Buscar voces femeninas
+                const femaleVoiceNames = [
+                    'google español', 'español', 'spanish', 'mujer', 'female', 'femenina',
+                    'mexico', 'colombia', 'argentina', 'latina', 'españa'
+                ];
+
+                const maleVoiceNames = [
+                    'raul', 'pablo', 'carlos', 'diego', 'male', 'masculino'
+                ];
+
+                // Buscar voz femenina del idioma correcto
+                for (let voice of voices) {
+                    const voiceName = voice.name.toLowerCase();
+                    const voiceLang = voice.lang.toLowerCase();
+
+                    if (!voiceLang.startsWith(ttsLang.substring(0, 2))) continue;
+
+                    const isFemale = femaleVoiceNames.some(femaleName =>
+                        voiceName.includes(femaleName.toLowerCase())
+                    );
+
+                    const isMale = maleVoiceNames.some(maleName =>
+                        voiceName.includes(maleName.toLowerCase())
+                    );
+
+                    if (isFemale && !isMale) {
+                        preferredVoice = voice;
+                        break;
+                    }
+                }
+
+                // Si no encuentra voz femenina, usar cualquier voz no masculina
+                if (!preferredVoice) {
+                    for (let voice of voices) {
+                        const voiceName = voice.name.toLowerCase();
+                        const voiceLang = voice.lang.toLowerCase();
+
+                        if (!voiceLang.startsWith(ttsLang.substring(0, 2))) continue;
+
+                        const isMale = maleVoiceNames.some(maleName =>
+                            voiceName.includes(maleName.toLowerCase())
+                        );
+
+                        if (!isMale) {
+                            preferredVoice = voice;
+                            break;
+                        }
+                    }
+                }
+
+                // Si todavía no hay voz, usar la primera disponible del idioma
+                if (!preferredVoice) {
+                    preferredVoice = voices.find(voice =>
+                        voice.lang.startsWith(ttsLang.substring(0, 2))
+                    );
+                }
+
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+
+                utterance.onstart = () => {
+                    setIsReading(true);
+                    console.log(`🔊 Lectura iniciada con voz:`, utterance.voice?.name);
+                    // Reiniciar temporizador de inactividad cuando empieza la lectura
+                    resetInactivityTimer();
+                };
+
+                utterance.onend = () => {
+                    console.log('✅ Lectura finalizada');
+                    setIsReading(false);
+                    currentUtteranceRef.current = null;
+
+                    // Resetear flag de detención manual cuando termina naturalmente
+                    if (!isAutoRead) {
+                        isManualStopRef.current = false;
+                    }
+                };
+
+                utterance.onerror = (event) => {
+                    console.error('❌ Error en la lectura:', event.error);
+                    setIsReading(false);
+                    currentUtteranceRef.current = null;
+
+                    // Resetear flag de detención manual en caso de error
+                    if (!isAutoRead) {
+                        isManualStopRef.current = false;
+                    }
+                };
+
+                currentUtteranceRef.current = utterance;
+
+                // Pequeño delay antes de empezar
+                setTimeout(() => {
+                    if (speechSynthesisRef.current && currentUtteranceRef.current === utterance) {
+                        speechSynthesisRef.current.speak(utterance);
+                    }
+                }, 100);
+
+            } catch (error) {
+                console.error('💥 Error al configurar la lectura:', error);
+                setIsReading(false);
+            }
+        }, 50);
+    }, [i18n.language, t, isTtsSupported, stopReading]);
+
+    // Función para leer todo el contenido de la página
+    const readPageContent = () => {
+        // Obtener todo el texto relevante de la página
+        const pageTitle = document.querySelector('.tiutlo')?.textContent || '';
+        const cargoTitle = document.querySelector('.titulo-extra')?.textContent || '';
+        const correo = `Correo electrónico: ${document.querySelector('.correo')?.textContent || ''}`;
+        const descripcion = document.querySelector('.desc')?.textContent || '';
+        const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
+            .map(span => span.textContent)
+            .filter(Boolean)
+            .join('. ');
+
+        const fullText = `${pageTitle}. ${cargoTitle}. ${correo}. ${descripcion}. ${questions}`;
+
+        if (!fullText.trim()) {
+            console.warn('No hay texto para leer');
+            return;
+        }
+
+        readText(fullText, false);
+    };
+    
+    // Función para alternar lectura
+    const toggleReading = () => {
+        if (isReading) {
+            stopReading(true);
+        } else {
+            readPageContent();
+        }
+    };
+
+    // FIN - FUNCIONALIDAD DEL LECTOR DE TEXTO
+
+    // Función para manejar el clic en las preguntas
     const handleQuestionClick = (questionText: string) => {
-        // Navegar al chat y pasar la pregunta como estado con un flag de autoSend
+        // Detener lectura si está activa
+        if (isReading) {
+            stopReading(true);
+        }
+
+        // Navegar al chat
         navigate('/InA', {
             state: {
                 predefinedQuestion: questionText,
-                autoSend: true // Flag para indicar envío automático
+                autoSend: true
             }
         });
     };
+
+    // FUNCIONALIDAD DEL TEMPORIZADOR DE INACTIVIDAD
+
     // Función para reiniciar el temporizador de inactividad
     const resetInactivityTimer = useCallback(() => {
         setInactivityTime(0);
@@ -41,6 +281,8 @@ export function Bienestar() {
         // Crear nuevo temporizador
         inactivityTimerRef.current = setTimeout(() => {
             console.log('Tiempo de inactividad agotado - redirigiendo...');
+            // Detener lectura antes de redirigir
+            stopReading(true);
             navigate('/'); // Redirige a la página principal
         }, INACTIVITY_TIMEOUT);
 
@@ -48,7 +290,7 @@ export function Bienestar() {
         inactivityCounterRef.current = setInterval(() => {
             setInactivityTime(prev => prev + 1000);
         }, 1000);
-    }, [navigate]);
+    }, [navigate, stopReading]);
 
     // Función para manejar eventos de actividad
     const handleActivity = useCallback(() => {
@@ -83,8 +325,11 @@ export function Bienestar() {
             if (inactivityCounterRef.current) {
                 clearInterval(inactivityCounterRef.current);
             }
+
+            // Detener lectura al desmontar
+            stopReading();
         };
-    }, [handleActivity, resetInactivityTimer]);
+    }, [handleActivity, resetInactivityTimer, stopReading]);
 
     // Efecto opcional para mostrar el tiempo de inactividad en consola (debug)
     useEffect(() => {
@@ -95,8 +340,10 @@ export function Bienestar() {
 
     // Función para volver a la página anterior
     const handleGoBack = useCallback(() => {
-        navigate(-1); // -1 significa ir a la página anterior en el historial
-    }, [navigate]);
+        // Detener lectura antes de navegar
+        stopReading(true);
+        navigate(-1);
+    }, [navigate, stopReading]);
 
     // Scroll to top when component mounts
     useEffect(() => {
@@ -113,11 +360,25 @@ export function Bienestar() {
                 <span className="back-arrow">←</span>
                 {t('Bienestar.back', 'Volver')}
             </button>
-            <div className='Perfil-container'>
-                {/* Contenedor para imagen y título */}
+            {/* Botón de accesibilidad para leer la página */}
+            <div className="accessibility-controls">
+                <button
+                    onClick={toggleReading}
+                    aria-label={isReading ? t('Asuntos.stopReading') : t('Asuntos.readPage')}
+                    className={isReading ? 'reading-active' : ''}
+                >
+                    {isReading ? '⏹️' : '🔊'}
+                </button>
+            </div>
+           <div className='Perfil-container'>
+                {/* Contenedor para imagen, título y correo */}
                 <div className='imagen-titulo-container'>
                     <img src={Profile} alt="Profile" className="Perfil-imagen3" />
                     <h2 className='tiutlo'>{t('Bienestar.title')}</h2>
+                    {/* Mover el correo aquí */}
+                    <p className='correo'>
+                        {t('Bienestar.correo')}
+                    </p>
                 </div>
 
                 {/* Contenedor para la descripción con título extra */}
@@ -128,12 +389,17 @@ export function Bienestar() {
                     {/* Descripción */}
                     <p className='desc'>
                         {t('Bienestar.Descripcion')} <br />
+                        <h2 className='tiutlo'>{t('Bienestar.Desctitle')}</h2>
                         <br />{t('Bienestar.Descripcion2')}
                         <br />{t('Bienestar.Descripcion3')}
+                        <br />{t('Bienestar.Descripcion4')}
+                        <br />{t('Bienestar.Descripcion5')}
+                        <br />{t('Bienestar.Descripcion6')}
                     </p>
                 </div>
             </div>
-            <h3 className='titulo-extra'>{t('app.FAQ')}</h3>
+
+            <h2 className='tiutlo'>{t('Bienestar.FAQTiltle')}</h2>
             <div className="Coordinador-grid">
                 
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}

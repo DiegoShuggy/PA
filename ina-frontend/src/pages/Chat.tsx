@@ -125,7 +125,7 @@ const cleanTextForTTS = (text: string): string => {
     .replace(/~~(.*?)~~/g, '$1')     // ~~tachado~~ → tachado
     
     // ELIMINAR EMOJIS COMPLETAMENTE (no convertirlos a texto)
-    .replace(/[💼🌐✅📝🔗👩‍💼📋❓🎓💰⏰📍📱👋🙏♥️✨🌟🎉💫🤖🫂🔥🎯📚🔄🎊🤝💡🚀❤️⭐]/gu, ' ')
+    .replace(/[🎯 📋 📍 ⏰ 📞 🔗 💡🔄 🆕 🏦 🛡️ 🚑 🆘 💰✅ 📅 🚌 🖌️ 📄 🎯 💻📹 🧠 📱 👩‍💼 🚨 🏥 ♿ 🌟 📋 🎓 🏀 ⚽ 👟 🏐🏊 🏓 ♟️ 💪 🥊 🏋️ ⏰ 🏆 📧 💼 🌐 📝 🎤 📊🎓 👋 📍 🌐 💬]/gu, ' ')
     
     // Eliminar cualquier otro emoji (rango Unicode completo)
     .replace(/[\u{1F600}-\u{1F64F}]/gu, ' ')  // Emoticones
@@ -1331,24 +1331,32 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
     if (isManualStopRef.current) {
       return;
     }
-
+    // Obtener solo los mensajes de la IA
+  const aiMessages = messages.filter(msg => !msg.isUser);
+  
+  // Si no hay mensajes de IA, salir
+  if (aiMessages.length === 0) {
+    return;
+  }
+const lastAIMessage = aiMessages[aiMessages.length - 1];
     // Buscar el último mensaje de la AI que no se haya leído
-    const lastAIMessageIndex = messages.findIndex((msg, index) => 
-      !msg.isUser && 
-      index > (currentReadingIndex ?? -1)
-    );
+    const lastAIMessageIndex = messages.findIndex(msg => 
+    msg === lastAIMessage
+  );
 
-    // Si hay un nuevo mensaje de AI y no estamos leyendo actualmente
-    if (lastAIMessageIndex !== -1 && !isReading && isTtsSupported) {
-      const lastAIMessage = messages[lastAIMessageIndex];
-      
-      // Pequeño delay para que el usuario pueda ver el mensaje primero
-      const autoReadTimer = setTimeout(() => {
-        console.log('🔊 Lectura automática del mensaje:', lastAIMessageIndex);
-        readMessage(lastAIMessage.text, lastAIMessageIndex, true); // <-- Agregar true para indicar que es automática
-      }, 1000); // 1 segundo de delay
+  // Verificar si este mensaje específico ya fue leído
+  const hasBeenRead = hasBeenReadRef.current.has(lastAIMessageIndex);
+  
+  // Si hay un nuevo mensaje de IA, no estamos leyendo actualmente y el mensaje no ha sido leído
+  if (lastAIMessageIndex !== -1 && !isReading && !hasBeenRead && isTtsSupported) {
+    
+    // Pequeño delay para que el usuario pueda ver el mensaje primero
+    const autoReadTimer = setTimeout(() => {
+      console.log('🔊 Lectura automática del mensaje MÁS NUEVO:', lastAIMessageIndex);
+      readMessage(lastAIMessage.text, lastAIMessageIndex, true);
+    }, 1000); // 1 segundo de delay
 
-      return () => clearTimeout(autoReadTimer);
+    return () => clearTimeout(autoReadTimer);
     }
   }, [messages, isReading, currentReadingIndex, isTtsSupported, readMessage]);
 
