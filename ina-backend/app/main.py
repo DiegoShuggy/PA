@@ -46,6 +46,7 @@ logger = logging.getLogger(__name__)
 # Instanciar la app ANTES de cualquier uso de @app
 app = FastAPI(title="InA API", version="1.0.0")
 
+
 # Configurar CORS para permitir frontend
 app.add_middleware(
     CORSMiddleware,

@@ -813,14 +813,15 @@ class RAGEngine:
 
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
             
-            if not filtered_docs and len(processed_query.split()) > 2:
-                broader_terms = ' '.join(processed_query.split()[:2])
-                return self.query_optimized(broader_terms, n_results, score_threshold)
+            if not filtered_docs:
+                logger.info(f"🔍 No se encontraron documentos para: {query_text}")
+                return []
             
             return filtered_docs[:n_results]
 
         except Exception as e:
             logger.error(f"❌ Error en query optimizada: {e}")
+            # En caso de error, retornar resultados simples sin recursión
             simple_results = self.query(query_text, n_results)
             return [{'document': doc, 'metadata': {}, 'similarity': 0.7} for doc in simple_results]
 

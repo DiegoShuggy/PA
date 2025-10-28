@@ -203,7 +203,7 @@ class QuestionClassifier:
         return question.lower().strip()
     
     def detect_template_match(self, question: str) -> Optional[str]:
-        """🎯 DETECCIÓN INTELIGENTE DE TEMPLATES EXPANDIDA"""
+        """🎯 DETECCIÓN INTELIGENTE DE TEMPLATES EXPANDIDA CON TODOS LOS NUEVOS"""
         question_lower = self._clean_question(question)
         
         # 🎯 PATRONES ESPECÍFICOS PARA TEMPLATES - COMPLETAMENTE EXPANDIDOS
@@ -227,6 +227,11 @@ class QuestionClassifier:
                 r'reposición.*tne', r'perdí.*tne', r'dañ.*tne', r'robaron.*tne',
                 r'hurtaron.*tne', r'nueva.*tne.*perdida', r'tne.*extraviada',
                 r'pago.*3600', r'3\.600', r'comisariavirtual'
+            ],
+            "tne_seguimiento": [
+                r'tne.*seguimiento', r'estado.*tne', r'seguimiento.*tne',
+                r'consultar.*tne', r'ver.*estado.*tne', r'cómo.*va.*tne',
+                r'dónde.*está.*tne', r'proceso.*tne', r'tne.*móvil'
             ],
             "seguro_cobertura": [
                 r'seguro.*estudiantil', r'cómo.*funciona.*seguro', r'cobertura.*seguro',
@@ -254,6 +259,11 @@ class QuestionClassifier:
                 r'documento.*alumno', r'acreditar.*alumno', r'certificado.*estudiante',
                 r'cómo.*saco.*certificado', r'obtener.*certificado'
             ],
+            "certificado_notas": [
+                r'certificado.*notas', r'concentración.*notas', r'record.*académico',
+                r'notas.*académicas', r'historial.*notas', r'promedio.*notas',
+                r'cómo.*obtener.*notas', r'descargar.*notas'
+            ],
             "tecnicas_estudio": [
                 r'técnicas.*estudio', r'apoyo.*psicopedagógico', r'estrategias.*estudio',
                 r'cómo.*estudiar', r'mejorar.*rendimiento', r'psicopedagogo',
@@ -264,6 +274,25 @@ class QuestionClassifier:
                 r'videos.*interactivos', r'técnicas.*estudio.*online',
                 r'cva\.duoc\.cl', r'aprendizaje.*virtual'
             ],
+            "beca_alimentacion": [
+                r'beca.*alimentación', r'alimentación.*estudiante', r'comida.*estudiante',
+                r'beneficio.*alimenticio', r'ayuda.*alimentaria', r'60\.000',
+                r'postular.*alimentación', r'requisitos.*alimentación'
+            ],
+            "convenios_internos": [
+                r'convenios.*internos', r'descuentos.*estudiantiles', r'beneficios.*comercios',
+                r'farmacias.*descuento', r'ópticas.*descuento', r'librerías.*descuento',
+                r'descuento.*estudiante', r'convenio.*duoc'
+            ],
+            "credencial_estudiantil": [
+                r'credencial.*estudiantil', r'carnet.*estudiante', r'identificación.*estudiantil',
+                r'cómo.*saco.*credencial', r'obtener.*credencial', r'carnet.*duoc'
+            ],
+            "boletas_pagos": [
+                r'boletas.*pago', r'pagos.*duoc', r'arancel.*pago',
+                r'cómo.*pagar', r'portal.*pagos', r'webpay.*duoc',
+                r'financiamiento.*estudiantil', r'deuda.*estudiantil'
+            ],
             
             # BIENESTAR ESTUDIANTIL - EXPANDIDO
             "sesiones_psicologicas": [
@@ -271,10 +300,14 @@ class QuestionClassifier:
                 r'8.*sesiones', r'sesiones.*incluye', r'límite.*sesiones',
                 r'cuántas.*veces.*psicólogo', r'número.*sesiones'
             ],
-            "agendar_atencion_psicologica": [
+            "agendar_psicologico": [
                 r'cómo.*agendar.*psicológico', r'agendar.*atención', r'pedir.*hora.*psicológico',
                 r'conseguir.*sesión', r'eventos\.duoc\.cl', r'solicitar.*psicólogo',
-                r'cómo.*saco.*hora.*psicólogo', r'reservar.*sesión'
+                r'cómo.*saco.*hora.*psicólogo', r'reservar.*sesión', r'agendar.*psicologo'
+            ],
+            "agendar_atencion_psicologica": [
+                r'agendar.*atención.*psicológica', r'cómo.*pedir.*hora', r'proceso.*agendar',
+                r'cita.*psicológica', r'reserva.*sesión', r'eventos\.duoc\.cl'
             ],
             "apoyo_discapacidad": [
                 r'discapacidad', r'paedis', r'elizabeth.*domínguez', r'estudiantes.*discapacidad',
@@ -294,6 +327,26 @@ class QuestionClassifier:
                 r'curso.*embajadores', r'embajadores.*salud.*mental', r'herramientas.*apoyo',
                 r'apoyar.*compañeros', r'comunidad.*empática', r'embajadores\.duoc\.cl',
                 r'85%.*correctas', r'módulo.*embajadores'
+            ],
+            "talleres_bienestar": [
+                r'talleres.*bienestar', r'taller.*bienestar', r'actividades.*bienestar',
+                r'grupos.*bienestar', r'talleres.*emocionales', r'charlas.*bienestar',
+                r'webinar.*bienestar', r'actividad.*grupal'
+            ],
+            "grupos_apoyo": [
+                r'grupos.*apoyo', r'grupo.*apoyo', r'apoyo.*grupal',
+                r'terapia.*grupal', r'comunidad.*apoyo', r'grupo.*terapéutico',
+                r'encuentros.*grupales', r'sesión.*grupal'
+            ],
+            "apoyo_crisis": [
+                r'apoyo.*crisis', r'protocolo.*crisis', r'emergencia.*emocional',
+                r'crisis.*psicológica', r'urgencia.*salud.*mental', r'atención.*inmediata',
+                r'situación.*crítica', r'protocolo.*emergencia'
+            ],
+            "recursos_digitales_bienestar": [
+                r'recursos.*digitales', r'contenidos.*online', r'material.*digital',
+                r'recursos.*online', r'guías.*digitales', r'videos.*bienestar',
+                r'audios.*relajación', r'infografías.*bienestar'
             ],
             
             # DEPORTES - EXPANDIDO
@@ -326,6 +379,21 @@ class QuestionClassifier:
                 r'beca.*deportiva', r'postular.*beca.*deporte', r'beneficio.*deportivo',
                 r'apoyo.*deportivo', r'financiamiento.*deporte', r'requisitos.*beca.*deporte'
             ],
+            "torneos_internos": [
+                r'torneos.*internos', r'competencia.*interna', r'torneo.*deportivo',
+                r'competencia.*estudiantes', r'torneo.*duoc', r'campeonato.*interno',
+                r'competencia.*carreras', r'torneo.*intercarreras'
+            ],
+            "evaluacion_fisica": [
+                r'evaluación.*física', r'test.*físico', r'condición.*física',
+                r'diagnóstico.*físico', r'evaluacion.*fisica', r'test.*condición',
+                r'análisis.*físico', r'diagnóstico.*corporal'
+            ],
+            "actividades_recreativas": [
+                r'actividades.*recreativas', r'deporte.*recreativo', r'competencia.*recreativa',
+                r'evento.*deportivo', r'juego.*recreativo', r'actividad.*lúdica',
+                r'competencia.*express', r'deporte.*divertido'
+            ],
             
             # DESARROLLO PROFESIONAL - EXPANDIDO
             "bolsa_empleo": [
@@ -357,6 +425,21 @@ class QuestionClassifier:
                 r'beneficios.*titulados', r'egresados', r'titulados', r'después.*titular',
                 r'ventajas.*titulado', r'servicios.*egresados', r'duoc.*después.*estudiar'
             ],
+            "ferias_laborales": [
+                r'ferias.*laborales', r'feria.*empleo', r'encuentro.*empresas',
+                r'feria.*trabajo', r'empresas.*reclutando', r'feria.*laboral.*duoc',
+                r'evento.*empleadores', r'feria.*profesional'
+            ],
+            "mentoria_profesional": [
+                r'mentoría.*profesional', r'mentor.*profesional', r'programa.*mentores',
+                r'acompañamiento.*profesional', r'guía.*carrera', r'mentoria.*profesional',
+                r'consejero.*profesional', r'orientación.*carrera'
+            ],
+            "linkedin_optimizacion": [
+                r'optimizar.*linkedin', r'perfil.*linkedin', r'linkedin.*profesional',
+                r'mejorar.*linkedin', r'linkedin.*optimización', r'perfil.*linkedin.*mejorar',
+                r'consejos.*linkedin', r'linkedin.*cv'
+            ],
             
             # INSTITUCIONALES
             "saludo_inicial": [
@@ -369,6 +452,41 @@ class QuestionClassifier:
                 r'dónde.*están', r'cómo.*llegar', r'datos.*contacto',
                 r'qué.*horario', r'cuándo.*abren', r'número.*teléfono',
                 r'dirección.*plaza.*norte', r'santa.*elena', r'huechuraba'
+            ],
+            "horarios_atencion": [
+                r'horarios.*atención', r'horario.*atención', r'cuándo.*abren',
+                r'horario.*punto.*estudiantil', r'horario.*biblioteca', r'horario.*gimnasio',
+                r'horario.*cafetería', r'horario.*casino', r'cuándo.*cierran'
+            ],
+            "becas_beneficios": [
+                r'becas.*beneficios', r'todos.*beneficios', r'beneficios.*duoc',
+                r'ayudas.*estudiantiles', r'becas.*internas', r'programas.*apoyo',
+                r'qué.*beneficios.*hay', r'beneficios.*disponibles'
+            ],
+            "calendario_academico": [
+                r'calendario.*académico', r'fechas.*importantes', r'cuándo.*empiezan.*clases',
+                r'cuándo.*terminan.*clases', r'exámenes.*cuándo', r'vacaciones.*cuándo',
+                r'cronograma.*académico', r'fechas.*claves'
+            ],
+            "biblioteca_recursos": [
+                r'biblioteca', r'recursos.*biblioteca', r'servicios.*biblioteca',
+                r'préstamo.*libros', r'salas.*estudio', r'computadores.*biblioteca',
+                r'bases.*datos', r'biblioteca\.duoc\.cl'
+            ],
+            "plataformas_digitales": [
+                r'plataformas.*digitales', r'sistemas.*duoc', r'plataformas.*online',
+                r'sistemas.*digitales', r'plataforma.*virtual', r'portal.*duoc',
+                r'centro.*ayuda', r'mi.*duoc'
+            ],
+            "contingencias_emergencias": [
+                r'contingencias', r'emergencias', r'protocolo.*emergencia',
+                r'situación.*emergencia', r'cómo.*actuar.*emergencia', r'números.*emergencia',
+                r'protocolo.*seguridad', r'emergencia.*sede'
+            ],
+            "contacto_areas": [
+                r'contacto.*áreas', r'teléfonos.*específicos', r'contacto.*especializado',
+                r'áreas.*contacto', r'departamentos.*contacto', r'contacto.*directo',
+                r'números.*directos', r'email.*específico'
             ]
         }
         
