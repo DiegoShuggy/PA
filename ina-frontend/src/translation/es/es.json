@@ -98,6 +98,7 @@
   "Lobby": {
     "title": "Bienvenido, soy InA",
     "Descripcion": "Tu asistente virtual para consultas sobre Duoc UC. ¿En qué puedo ayudarte hoy?",
+    "voicetitle": "Búsqueda por Voz",
     "Preguntas": {
       "FAQ1": "Conoce al Punto",
       "FAQ2": "¿Cómo puedo inscribirme en un programa académico en Duoc UC?",
@@ -111,6 +112,7 @@
       "FAQ10": "Placeholder",
       "FAQ11": "Placeholder",
       "FAQ12": "Placeholder"
+      
     }
   },
   "Accesibilidad": {
@@ -128,9 +130,11 @@
     "cargo": "Asuntos Estudiantiles",
     "title": "Natalia Varela Muñoz",
     "correo": "nvarelam@duoc.cl",
-    "Descripcion": " El área de Asuntos Estudiantiles tiene como propósito acompañar, orientar y apoyar a los estudiantes durante su proceso formativo, promoviendo su desarrollo integral tanto en el ámbito académico como personal. Entre sus principales labores se destacan la planificación y ejecución de actividades extracurriculares orientadas al fortalecimiento del liderazgo estudiantil, el desarrollo de habilidades de comunicación y la adquisición de estrategias de estudio que favorezcan un desempeño académico exitoso.",
+    "Descripcion": " El área de Asuntos Estudiantiles tiene como propósito acompañar, orientar y apoyar a los estudiantes durante su proceso formativo, promoviendo su desarrollo integral tanto en el ámbito académico como personal. Entre sus principales labores se destacan la planificación y ejecución de actividades extracurriculares orientadas al fortalecimiento del liderazgo estudiantil, el desarrollo de habilidades de comunicación y la adquisición de estrategias de estudio que favorezcan un desempeño académico exitoso. ",
     "Descripcion2": "Asimismo, el área coordina diversas Estrategias de Apoyo a los Estudiantes, tales como la entrega de información y orientación sobre beneficios institucionales, el Seguro Escolar de Accidentes, y las gestiones vinculadas a la Tarjeta Nacional Estudiantil (TNE).",
     "Descripcion3": "Otro ámbito relevante es la vinculación con los Consejeros de Carrera, promoviendo la participación activa, la representación estudiantil y el trabajo colaborativo.",
+    "email": "Correo electrónico: {{email}}",
+    "FAQTiltle": "Preguntas Frecuentes - Asuntos Estudiantiles",
     "FAQ1": "¿Cómo saco mi TNE?",
     "FAQ2": "¿Cómo Revalido mi TNE?",
     "FAQ3": "¿Cómo saco mi TNE si se pierde o esta dañada?",
@@ -209,5 +213,15 @@
   },
   "Reporte": {
     "title": "reportes"
+  },
+  "VoiceSearch": {
+    "notSupported": "El reconocimiento de voz no es compatible con tu navegador",
+    "startListening": "Iniciar escucha por voz",
+    "stopListening": "Detener escucha",
+    "listening": "Escuchando...",
+    "talk": "Habla ahora",
+    "recognized": "Reconocido",
+    "results": "Resultados",
+    "noResults": "No se encontraron resultados"
   }
 }

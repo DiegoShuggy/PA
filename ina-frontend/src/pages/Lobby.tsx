@@ -1,6 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import VoiceSearch from '../components/VoiceSearch';
 import '../css/Lobby.css';
 
 function Lobby() {
@@ -8,97 +9,211 @@ function Lobby() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const [isSpeaking, setIsSpeaking] = useState(false);
-    const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null);
-    const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+    
+    // Estados y refs para el lector de texto
+    const [isReading, setIsReading] = useState(false);
+    const [isTtsSupported, setIsTtsSupported] = useState(false);
+    const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
+    const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+    const isManualStopRef = useRef(false);
 
-    // Obtener las voces disponibles y configurar según el idioma
-    useEffect(() => {
-        const loadVoices = () => {
-            const voices = window.speechSynthesis.getVoices();
-            setAvailableVoices(voices);
-            configureSpeechForLanguage(voices, i18n.language);
-        };
+    // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO ADAPTADA
 
-        // Cargar voces cuando estén disponibles
-        if ('speechSynthesis' in window) {
-            // Las voces se cargan asíncronamente, así que necesitamos esperar
-            if (speechSynthesis.getVoices().length > 0) {
-                loadVoices();
-            } else {
-                speechSynthesis.addEventListener('voiceschanged', loadVoices);
-            }
-
-            const utterance = new SpeechSynthesisUtterance();
-            setSpeech(utterance);
-
-            return () => {
-                speechSynthesis.removeEventListener('voiceschanged', loadVoices);
-                speechSynthesis.cancel();
-            };
-        } else {
-            console.warn('Tu navegador no soporta la Web Speech API');
+    // Función para detener la lectura actual
+    const stopReading = useCallback((isManual = false) => {
+        if (isManual) {
+            isManualStopRef.current = true;
         }
-    }, [i18n.language]);
-
-    // Configurar la voz según el idioma actual
-    const configureSpeechForLanguage = (voices: SpeechSynthesisVoice[], language: string) => {
-        if (!speech) return;
-
-        // Mapeo de idiomas a códigos de voz
-        const languageMap: { [key: string]: string } = {
-            'es': 'es-ES',
-            'en': 'en-US',
-            'fr': 'fr-FR'
-        };
-
-        const targetLang = languageMap[language] || language;
         
-        // Buscar una voz que coincida con el idioma
-        const preferredVoice = voices.find(voice => 
-            voice.lang.includes(targetLang)
-        );
-
-        // Si no encuentra una voz exacta, buscar una voz similar
-        const fallbackVoice = voices.find(voice => 
-            voice.lang.startsWith(language)
-        );
-
-        const selectedVoice = preferredVoice || fallbackVoice;
-
-        if (selectedVoice) {
-            speech.voice = selectedVoice;
-            speech.lang = selectedVoice.lang;
-            console.log(`Voz seleccionada: ${selectedVoice.name} para idioma: ${language}`);
-        } else {
-            console.warn(`No se encontró voz para el idioma: ${language}`);
-            // Usar la voz por defecto del navegador
-            speech.lang = targetLang;
+        if (speechSynthesisRef.current) {
+            speechSynthesisRef.current.cancel();
+            currentUtteranceRef.current = null;
+            setIsReading(false);
         }
+    }, []);
 
-        // Configurar propiedades del speech
-        speech.rate = 0.9;
-        speech.pitch = 1;
-        speech.volume = 1;
-    };
-
-    // Actualizar la configuración cuando cambia el idioma
+    // Verificar soporte del lector de texto
     useEffect(() => {
-        if (speech && availableVoices.length > 0) {
-            configureSpeechForLanguage(availableVoices, i18n.language);
-        }
-    }, [i18n.language, speech, availableVoices]);
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+            speechSynthesisRef.current = window.speechSynthesis;
+            setIsTtsSupported(true);
 
-    // Función para leer todo el contenido de la página
-    const readPageContent = () => {
-        if (!speech) {
-            console.error('Speech no está inicializado');
+            // Función para cargar voces
+            const loadVoices = () => {
+                if (speechSynthesisRef.current) {
+                    try {
+                        const voices = speechSynthesisRef.current.getVoices();
+                        if (voices.length > 0) {
+                            console.log(`✅ ${voices.length} voces cargadas`);
+                        }
+                    } catch (error) {
+                        console.error('Error cargando voces:', error);
+                    }
+                }
+            };
+
+            speechSynthesisRef.current.onvoiceschanged = loadVoices;
+            loadVoices();
+
+        } else {
+            setIsTtsSupported(false);
+            console.warn('El lector de texto no es compatible con este navegador');
+        }
+
+        // Cleanup al desmontar el componente
+        return () => {
+            stopReading();
+        };
+    }, [stopReading]);
+ // Función para manejar búsquedas por voz (opcional)
+    const handleVoiceSearch = (query: string) => {
+        console.log('Búsqueda por voz:', query);
+        // Puedes agregar lógica adicional aquí si necesitas
+    };
+    // Función para leer texto en voz alta
+    const readText = useCallback((text: string, isAutoRead = false) => {
+        // Si es lectura automática y hubo detención manual, no leer
+        if (isAutoRead && isManualStopRef.current) {
+            console.log('🚫 Lectura automática bloqueada por detención manual');
             return;
         }
 
-        // Cancelar cualquier speech en curso
-        speechSynthesis.cancel();
+        if (!speechSynthesisRef.current || !isTtsSupported) {
+            alert(t('Lobby.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+            return;
+        }
 
+        // Resetear el flag de detención manual si es lectura manual
+        if (!isAutoRead) {
+            isManualStopRef.current = false;
+        }
+
+        // Detener cualquier lectura en curso
+        stopReading();
+
+        // Pequeña pausa antes de empezar nueva lectura
+        setTimeout(() => {
+            try {
+                // Configurar idioma
+                const ttsLang = i18n.language === 'es' ? 'es-ES' :
+                    i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = ttsLang;
+                utterance.rate = 0.8;
+                utterance.pitch = 1.2;
+                utterance.volume = 1;
+
+                // Seleccionar voz adecuada
+                const voices = speechSynthesisRef.current?.getVoices() || [];
+                let preferredVoice = null;
+
+                // Buscar voces femeninas
+                const femaleVoiceNames = [
+                    'google español', 'español', 'spanish', 'mujer', 'female', 'femenina',
+                    'mexico', 'colombia', 'argentina', 'latina', 'españa'
+                ];
+
+                const maleVoiceNames = [
+                    'raul', 'pablo', 'carlos', 'diego', 'male', 'masculino'
+                ];
+
+                // Buscar voz femenina del idioma correcto
+                for (let voice of voices) {
+                    const voiceName = voice.name.toLowerCase();
+                    const voiceLang = voice.lang.toLowerCase();
+
+                    if (!voiceLang.startsWith(ttsLang.substring(0, 2))) continue;
+
+                    const isFemale = femaleVoiceNames.some(femaleName =>
+                        voiceName.includes(femaleName.toLowerCase())
+                    );
+
+                    const isMale = maleVoiceNames.some(maleName =>
+                        voiceName.includes(maleName.toLowerCase())
+                    );
+
+                    if (isFemale && !isMale) {
+                        preferredVoice = voice;
+                        break;
+                    }
+                }
+
+                // Si no encuentra voz femenina, usar cualquier voz no masculina
+                if (!preferredVoice) {
+                    for (let voice of voices) {
+                        const voiceName = voice.name.toLowerCase();
+                        const voiceLang = voice.lang.toLowerCase();
+
+                        if (!voiceLang.startsWith(ttsLang.substring(0, 2))) continue;
+
+                        const isMale = maleVoiceNames.some(maleName =>
+                            voiceName.includes(maleName.toLowerCase())
+                        );
+
+                        if (!isMale) {
+                            preferredVoice = voice;
+                            break;
+                        }
+                    }
+                }
+
+                // Si todavía no hay voz, usar la primera disponible del idioma
+                if (!preferredVoice) {
+                    preferredVoice = voices.find(voice =>
+                        voice.lang.startsWith(ttsLang.substring(0, 2))
+                    );
+                }
+
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+
+                utterance.onstart = () => {
+                    setIsReading(true);
+                    console.log(`🔊 Lectura iniciada con voz:`, utterance.voice?.name);
+                };
+
+                utterance.onend = () => {
+                    console.log('✅ Lectura finalizada');
+                    setIsReading(false);
+                    currentUtteranceRef.current = null;
+                    
+                    // Resetear flag de detención manual cuando termina naturalmente
+                    if (!isAutoRead) {
+                        isManualStopRef.current = false;
+                    }
+                };
+
+                utterance.onerror = (event) => {
+                    console.error('❌ Error en la lectura:', event.error);
+                    setIsReading(false);
+                    currentUtteranceRef.current = null;
+
+                    // Resetear flag de detención manual en caso de error
+                    if (!isAutoRead) {
+                        isManualStopRef.current = false;
+                    }
+                };
+
+                currentUtteranceRef.current = utterance;
+
+                // Pequeño delay antes de empezar
+                setTimeout(() => {
+                    if (speechSynthesisRef.current && currentUtteranceRef.current === utterance) {
+                        speechSynthesisRef.current.speak(utterance);
+                    }
+                }, 100);
+
+            } catch (error) {
+                console.error('💥 Error al configurar la lectura:', error);
+                setIsReading(false);
+            }
+        }, 50);
+    }, [i18n.language, t, isTtsSupported, stopReading]);
+
+    // Función para leer todo el contenido de la página
+    const readPageContent = () => {
         // Obtener todo el texto relevante de la página
         const pageTitle = document.querySelector('h2')?.textContent || '';
         const pageDescription = document.querySelector('h3')?.textContent || '';
@@ -114,39 +229,19 @@ function Lobby() {
             return;
         }
 
-        // Configurar y ejecutar el speech
-        speech.text = fullText;
-        
-        speech.onstart = () => {
-            setIsSpeaking(true);
-            console.log('Iniciando lectura con idioma:', speech.lang);
-        };
-        
-        speech.onend = () => {
-            setIsSpeaking(false);
-            console.log('Lectura finalizada');
-        };
-        
-        speech.onerror = (event) => {
-            setIsSpeaking(false);
-            console.error('Error en speech synthesis:', event);
-        };
+        readText(fullText, false);
+    };
 
-        try {
-            speechSynthesis.speak(speech);
-        } catch (error) {
-            console.error('Error al iniciar speech synthesis:', error);
-            setIsSpeaking(false);
+    // Función para alternar lectura
+    const toggleReading = () => {
+        if (isReading) {
+            stopReading(true);
+        } else {
+            readPageContent();
         }
     };
 
-    // Función para detener la lectura
-    const stopReading = () => {
-        speechSynthesis.cancel();
-        setIsSpeaking(false);
-    };
-
-
+    // FIN - FUNCIONALIDAD DEL LECTOR DE TEXTO
   // Función para manejar el clic en las preguntas y enviar automáticamente
     const handleQuestionClick = (questionText: string) => {
         // Navegar al chat y pasar la pregunta como estado con un flag de autoSend
@@ -164,13 +259,20 @@ function Lobby() {
             {/* Botón de accesibilidad para leer la página */}
             
             <h2>{t('Lobby.title')}</h2>
+             {/* Botón de accesibilidad mejorado */}
             <div className="accessibility-controls">
                 <button 
-                    onClick={isSpeaking ? stopReading : readPageContent}
-                    aria-label={isSpeaking ? t('Lobby.stopReading') : t('Lobby.readPage')}
+                    onClick={toggleReading}
+                    aria-label={isReading ? t('Lobby.stopReading') : t('Lobby.readPage')}
+                    className={isReading ? 'reading-active' : ''}
                 >
-                    {isSpeaking ? '⏹️' : '🔊'}
+                    {isReading ? '⏹️' : '🔊'}
                 </button>
+            </div>
+            {/* Buscador por voz */}
+            <div className="voice-search-section">
+                <h4>{t('Lobby.voicetitle')}</h4>
+                <VoiceSearch onSearch={handleVoiceSearch} />
             </div>
             <h3>{t('Lobby.Descripcion')}</h3>
             <div className="lobby-grid">
