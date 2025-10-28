@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import '../css/Reporte.css';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
 import ina from '../img/InA6.png';
+// Importa tu archivo MP3 - ajusta la ruta según donde lo coloques
+import soundEffect from '../assets/audio/ina-wah-echo.mp3'; // Ajusta esta ruta
 
 const Reporte = () => {
     const { t } = useTranslation();
@@ -17,6 +19,10 @@ const Reporte = () => {
     const [success, setSuccess] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [showEmailForm, setShowEmailForm] = useState<boolean>(false);
+    
+    // Estados para el contador de clics y el audio
+    const [clickCount, setClickCount] = useState<number>(0);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     // Opciones de período
     const periodOptions = [
@@ -26,6 +32,59 @@ const Reporte = () => {
         { value: 21, label: '3 Semanas' },
         { value: 30, label: '1 Mes' }
     ];
+
+    // Función para manejar el clic en la imagen
+    const handleImageClick = () => {
+        const newCount = clickCount + 1;
+        setClickCount(newCount);
+        
+        console.log(`Clic número: ${newCount}`); // Para debugging
+        
+        // Si llega a 5 clics, reproducir sonido y resetear contador
+        if (newCount === 5) {
+            playSound();
+            setClickCount(0);
+            
+            // Opcional: Mostrar mensaje de éxito
+            setSuccess('🎉 ¡Easter egg activado! Sonido reproducido.');
+            
+            // Limpiar mensaje después de 3 segundos
+            setTimeout(() => {
+                setSuccess('');
+            }, 3000);
+        }
+        
+        // Resetear contador después de 2 segundos si no se completan los 5 clics
+        if (newCount === 1) {
+            setTimeout(() => {
+                if (clickCount + 1 === newCount) { // Verificar que no haya más clics
+                    setClickCount(0);
+                    console.log('Contador reseteado por tiempo'); // Para debugging
+                }
+            }, 2000);
+        }
+    };
+
+    // Función para reproducir el sonido
+    const playSound = () => {
+        try {
+            if (audioRef.current) {
+                audioRef.current.currentTime = 0; // Reiniciar el audio
+                audioRef.current.play().catch(error => {
+                    console.error('Error reproduciendo audio:', error);
+                });
+            } else {
+                // Crear elemento audio dinámicamente si no existe
+                const audio = new Audio(soundEffect);
+                audioRef.current = audio;
+                audio.play().catch(error => {
+                    console.error('Error reproduciendo audio:', error);
+                });
+            }
+        } catch (error) {
+            console.error('Error con el audio:', error);
+        }
+    };
 
     // Función para generar reporte
     const generateReport = async () => {
@@ -68,58 +127,57 @@ const Reporte = () => {
     };
 
     // Función para enviar reporte por email
-    // Función para enviar reporte por email
-const sendReportByEmail = async () => {
-    if (!email) {
-        setError('❌ Por favor ingresa un correo electrónico');
-        return;
-    }
-
-    // Validación básica de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        setError('❌ Por favor ingresa un correo electrónico válido');
-        return;
-    }
-
-    setIsSendingEmail(true);
-    setError('');
-    
-    try {
-        const response = await fetch('http://localhost:8000/reports/send-email', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                period_days: selectedPeriod,
-                report_type: "basic"
-            })
-        });
-
-        const data = await response.json();
-        
-        if (data.status === 'success') {
-            setSuccess(`✅ Reporte enviado exitosamente a: ${email}`);
-            setShowEmailForm(false);
-            setEmail('');
-        } else {
-            // Mostrar mensaje de error más específico
-            const errorMessage = data.message || 'Error desconocido';
-            if (errorMessage.includes('SMTP') || errorMessage.includes('configuración')) {
-                setError('❌ Error de configuración del servidor de correo. Contacta al administrador.');
-            } else {
-                setError(`❌ Error enviando email: ${errorMessage}`);
-            }
+    const sendReportByEmail = async () => {
+        if (!email) {
+            setError('❌ Por favor ingresa un correo electrónico');
+            return;
         }
-    } catch (err) {
-        setError('❌ Error de conexión con el servidor');
-        console.error('Error:', err);
-    } finally {
-        setIsSendingEmail(false);
-    }
-};
+
+        // Validación básica de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setError('❌ Por favor ingresa un correo electrónico válido');
+            return;
+        }
+
+        setIsSendingEmail(true);
+        setError('');
+        
+        try {
+            const response = await fetch('http://localhost:8000/reports/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    period_days: selectedPeriod,
+                    report_type: "basic"
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                setSuccess(`✅ Reporte enviado exitosamente a: ${email}`);
+                setShowEmailForm(false);
+                setEmail('');
+            } else {
+                // Mostrar mensaje de error más específico
+                const errorMessage = data.message || 'Error desconocido';
+                if (errorMessage.includes('SMTP') || errorMessage.includes('configuración')) {
+                    setError('❌ Error de configuración del servidor de correo. Contacta al administrador.');
+                } else {
+                    setError(`❌ Error enviando email: ${errorMessage}`);
+                }
+            }
+        } catch (err) {
+            setError('❌ Error de conexión con el servidor');
+            console.error('Error:', err);
+        } finally {
+            setIsSendingEmail(false);
+        }
+    };
 
     // Función para volver
     const handleGoBack = () => {
@@ -128,6 +186,16 @@ const sendReportByEmail = async () => {
 
     return (
         <div className="reporte-container">
+            {/* Elemento de audio oculto */}
+            <audio 
+                ref={audioRef} 
+                preload="auto"
+                style={{ display: 'none' }}
+            >
+                <source src={soundEffect} type="audio/mp3" />
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+
             {/* Header con botones de navegación */}
             <div className="reporte-header">
                 <button className="back-button" onClick={handleGoBack}>
@@ -136,7 +204,14 @@ const sendReportByEmail = async () => {
                 </button>
                 
                 <div className="navbar-brand">
-                    <img src={ina} alt="Logo InA" className="navbar-logo" />
+                    <img 
+                        src={ina} 
+                        alt="Logo InA" 
+                        className="navbar-logo"
+                        onClick={handleImageClick}
+                        style={{ cursor: 'pointer' }}
+                        title="Haz clic 5 veces para un easter egg"
+                    />
                 </div>
             </div>
 

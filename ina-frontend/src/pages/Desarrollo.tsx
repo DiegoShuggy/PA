@@ -378,7 +378,7 @@ export function Desarrollo() {
                     <h2 className='tiutlo'>{t('Desarrollo.title')}</h2>
                     {/* Mover el correo aquí */}
                     <p className='correo'>
-                        {t('Bienestar.correo')}
+                        {t('Desarrollo.correo')}
                     </p>
                 </div>
 
@@ -389,13 +389,13 @@ export function Desarrollo() {
 
                     {/* Descripción */}
                     <p className='desc'>
-                        {t('Bienestar.Descripcion')} <br />
-                        <h2 className='tiutlo'>{t('Bienestar.Desctitle')}</h2>
-                        <br />{t('Bienestar.Descripcion2')}
-                        <br />{t('Bienestar.Descripcion3')}
-                        <br />{t('Bienestar.Descripcion4')}
-                        <br />{t('Bienestar.Descripcion5')}
-                        <br />{t('Bienestar.Descripcion6')}
+                        {t('Desarrollo.Descripcion')} <br />
+                        <h2 className='tiutlo'>{t('Desarrollo.Desctitle')}</h2>
+                        <br />{t('Desarrollo.Descripcion2')}
+                        <br />{t('Desarrollo.Descripcion3')}
+                        <br />{t('Desarrollo.Descripcion4')}
+                        <br />{t('Desarrollo.Descripcion5')}
+                        <br />{t('Desarrollo.Descripcion6')}
                     </p>
                 </div>
             </div>
