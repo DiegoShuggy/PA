@@ -17,6 +17,35 @@ function Lobby() {
     const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const isManualStopRef = useRef(false);
 
+    // Efecto para el sonido al cargar/refrescar la página
+    useEffect(() => {
+        const playRefreshSound = async () => {
+            try {
+                const refreshSound = new Audio('/sounds/kronii-gwakk.mp3');
+                refreshSound.volume = 0.3; // Volumen al 30%
+                
+                // Reproducir el sonido
+                await refreshSound.play();
+                console.log('🔊 Sonido de refresh reproducido');
+            } catch (error) {
+                console.log('❌ No se pudo reproducir el sonido:', error);
+                // Esto es normal en algunos navegadores por políticas de autoplay
+            }
+        };
+
+        playRefreshSound();
+
+        // Cleanup si el componente se desmonta rápidamente
+        return () => {
+            // Opcional: detener el sonido si el componente se desmonta
+            const audioElements = document.querySelectorAll('audio');
+            audioElements.forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        };
+    }, []); // Se ejecuta solo al montar el componente
+
     // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO ADAPTADA
 
     // Función para detener la lectura actual
@@ -65,11 +94,13 @@ function Lobby() {
             stopReading();
         };
     }, [stopReading]);
- // Función para manejar búsquedas por voz (opcional)
+
+    // Función para manejar búsquedas por voz (opcional)
     const handleVoiceSearch = (query: string) => {
         console.log('Búsqueda por voz:', query);
         // Puedes agregar lógica adicional aquí si necesitas
     };
+
     // Función para leer texto en voz alta
     const readText = useCallback((text: string, isAutoRead = false) => {
         // Si es lectura automática y hubo detención manual, no leer
@@ -100,7 +131,7 @@ function Lobby() {
 
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.8;
+                utterance.rate = 0.7;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 
@@ -242,7 +273,8 @@ function Lobby() {
     };
 
     // FIN - FUNCIONALIDAD DEL LECTOR DE TEXTO
-  // Función para manejar el clic en las preguntas y enviar automáticamente
+
+    // Función para manejar el clic en las preguntas y enviar automáticamente
     const handleQuestionClick = (questionText: string) => {
         // Navegar al chat y pasar la pregunta como estado con un flag de autoSend
         navigate('/InA', { 
@@ -254,12 +286,11 @@ function Lobby() {
     };
 
     return (
-        
         <div className="lobby-container">
             {/* Botón de accesibilidad para leer la página */}
             
             <h2>{t('Lobby.title')}</h2>
-             {/* Botón de accesibilidad mejorado */}
+            {/* Botón de accesibilidad mejorado */}
             <div className="accessibility-controls">
                 <button 
                     onClick={toggleReading}

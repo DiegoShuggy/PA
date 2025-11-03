@@ -3,8 +3,8 @@ import '../css/Reporte.css';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
 import ina from '../img/InA6.png';
-// Importa tu archivo MP3 - ajusta la ruta según donde lo coloques
-import soundEffect from '../assets/audio/ina-wah-echo.mp3'; // Ajusta esta ruta
+// Importa tu archivo MP4 - ajusta la ruta según donde lo coloques
+import videoEffect from '../assets/videos/wah.mp4'; // Ajusta esta ruta
 
 const Reporte = () => {
     const { t } = useTranslation();
@@ -20,9 +20,10 @@ const Reporte = () => {
     const [email, setEmail] = useState<string>('');
     const [showEmailForm, setShowEmailForm] = useState<boolean>(false);
     
-    // Estados para el contador de clics y el audio
+    // Estados para el contador de clics y el video
     const [clickCount, setClickCount] = useState<number>(0);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [showVideo, setShowVideo] = useState<boolean>(false);
+    const videoRef = useRef<HTMLVideoElement | null>(null);
 
     // Opciones de período
     const periodOptions = [
@@ -40,13 +41,13 @@ const Reporte = () => {
         
         console.log(`Clic número: ${newCount}`); // Para debugging
         
-        // Si llega a 5 clics, reproducir sonido y resetear contador
+        // Si llega a 5 clics, mostrar video y resetear contador
         if (newCount === 5) {
-            playSound();
+            playVideo();
             setClickCount(0);
             
             // Opcional: Mostrar mensaje de éxito
-            setSuccess('🎉 ¡Easter egg activado! Sonido reproducido.');
+            setSuccess('🎉 ¡Easter egg activado! Video reproducido.');
             
             // Limpiar mensaje después de 3 segundos
             setTimeout(() => {
@@ -65,25 +66,33 @@ const Reporte = () => {
         }
     };
 
-    // Función para reproducir el sonido
-    const playSound = () => {
-        try {
-            if (audioRef.current) {
-                audioRef.current.currentTime = 0; // Reiniciar el audio
-                audioRef.current.play().catch(error => {
-                    console.error('Error reproduciendo audio:', error);
-                });
-            } else {
-                // Crear elemento audio dinámicamente si no existe
-                const audio = new Audio(soundEffect);
-                audioRef.current = audio;
-                audio.play().catch(error => {
-                    console.error('Error reproduciendo audio:', error);
+    // Función para reproducir el video
+    const playVideo = () => {
+        setShowVideo(true);
+        
+        // Reproducir el video después de un pequeño delay para asegurar que se montó
+        setTimeout(() => {
+            if (videoRef.current) {
+                videoRef.current.currentTime = 0; // Reiniciar el video
+                videoRef.current.play().catch(error => {
+                    console.error('Error reproduciendo video:', error);
                 });
             }
-        } catch (error) {
-            console.error('Error con el audio:', error);
+        }, 100);
+    };
+
+    // Función para cerrar el video
+    const closeVideo = () => {
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.currentTime = 0;
         }
+        setShowVideo(false);
+    };
+
+    // Función cuando el video termina
+    const handleVideoEnd = () => {
+        setShowVideo(false);
     };
 
     // Función para generar reporte
@@ -186,15 +195,27 @@ const Reporte = () => {
 
     return (
         <div className="reporte-container">
-            {/* Elemento de audio oculto */}
-            <audio 
-                ref={audioRef} 
-                preload="auto"
-                style={{ display: 'none' }}
-            >
-                <source src={soundEffect} type="audio/mp3" />
-                Tu navegador no soporta el elemento de audio.
-            </audio>
+            {/* Modal de video */}
+            {showVideo && (
+                <div className="video-modal-overlay" onClick={closeVideo}>
+                    <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
+                        <button className="video-close-button" onClick={closeVideo}>
+                            ×
+                        </button>
+                        <video
+                            ref={videoRef}
+                            controls
+                            autoPlay
+                            onEnded={handleVideoEnd}
+                            className="easter-egg-video"
+                        >
+                            <source src={videoEffect} type="video/mp4" />
+                            Tu navegador no soporta el elemento de video.
+                        </video>
+                        <p className="video-caption">🎉 ¡Easter egg desbloqueado!</p>
+                    </div>
+                </div>
+            )}
 
             {/* Header con botones de navegación */}
             <div className="reporte-header">

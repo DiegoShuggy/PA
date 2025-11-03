@@ -107,7 +107,7 @@ function ConsultasR() {
 
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.8;
+                utterance.rate = 0.7;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 

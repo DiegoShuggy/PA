@@ -101,7 +101,7 @@ export function Asuntos() {
 
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.8;
+                utterance.rate = 0.75;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 
@@ -218,8 +218,8 @@ export function Asuntos() {
     // Función para leer todo el contenido de la página
     const readPageContent = () => {
         // Obtener todo el texto relevante de la página
-        const pageTitle = document.querySelector('.tiutlo')?.textContent || '';
-        const cargoTitle = document.querySelector('.titulo-extra')?.textContent || '';
+        const pageTitle = ` Coordinadora: ${document.querySelector('.titulo')?.textContent || ''}`;
+        const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
         const correo = `Correo electrónico: ${document.querySelector('.correo')?.textContent || ''}`;
         const descripcion = document.querySelector('.desc')?.textContent || '';
         const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
@@ -227,7 +227,7 @@ export function Asuntos() {
             .filter(Boolean)
             .join('. ');
 
-        const fullText = `${pageTitle}. ${cargoTitle}. ${correo}. ${descripcion}. ${questions}`;
+        const fullText = `${AreaTitle}. ${pageTitle}. ${correo}. ${descripcion}. ${questions}`;
 
         if (!fullText.trim()) {
             console.warn('No hay texto para leer');
@@ -377,7 +377,7 @@ export function Asuntos() {
                 {/* Contenedor para imagen, título y correo */}
                 <div className='imagen-titulo-container'>
                     <img src={Profile} alt="Profile" className="Perfil-imagen" />
-                    <h2 className='tiutlo'>{t('Asuntos.title')}</h2>
+                    <h2 className='titulo'>{t('Asuntos.title')}</h2>
                     {/* Mover el correo aquí */}
                     <p className='correo'>
                         {t('Asuntos.correo')}
@@ -397,7 +397,7 @@ export function Asuntos() {
                     </p>
                 </div>
             </div>
-            <h2 className='tiutlo'>{t('Asuntos.FAQTiltle')}</h2>
+            <h2 className='titulo'>{t('Asuntos.FAQTiltle')}</h2>
             <div className="Coordinador-grid">
                 <div className="CFAQ">
                     {/* Renderizar preguntas dinámicamente */}

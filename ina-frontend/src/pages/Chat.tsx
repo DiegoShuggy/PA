@@ -325,7 +325,7 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
       // Usar el texto LIMPIO para TTS
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = ttsLang;
-      utterance.rate = 0.8;
+      utterance.rate = 0.7;
       utterance.pitch = 1.4;
       utterance.volume = 1;
 

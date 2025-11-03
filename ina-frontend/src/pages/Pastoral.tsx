@@ -101,7 +101,7 @@ export function Pastoral() {
 
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.8;
+                utterance.rate = 0.7;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 
@@ -218,8 +218,8 @@ export function Pastoral() {
     // Función para leer todo el contenido de la página
     const readPageContent = () => {
         // Obtener todo el texto relevante de la página
-        const pageTitle = document.querySelector('.tiutlo')?.textContent || '';
-        const cargoTitle = document.querySelector('.titulo-extra')?.textContent || '';
+        const pageTitle = document.querySelector('.titulo')?.textContent || '';
+        const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
         const correo = `Correo electrónico: ${document.querySelector('.correo')?.textContent || ''}`;
         const descripcion = document.querySelector('.desc')?.textContent || '';
         const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
@@ -227,7 +227,7 @@ export function Pastoral() {
             .filter(Boolean)
             .join('. ');
 
-        const fullText = `${pageTitle}. ${cargoTitle}. ${correo}. ${descripcion}. ${questions}`;
+        const fullText = `${AreaTitle}. ${pageTitle}. ${correo}. ${descripcion}. ${questions}`;
 
         if (!fullText.trim()) {
             console.warn('No hay texto para leer');
@@ -364,7 +364,7 @@ export function Pastoral() {
                 {/* Contenedor para imagen y título */}
                 <div className='imagen-titulo-container'>
                     <img src={Profile} alt="Profile" className="Perfil-imagen5" />
-                    <h2 className='tiutlo'>{t('Pastoral.title')}</h2>
+                    <h2 className='titulo'>{t('Pastoral.title')}</h2>
                 </div>
 
                 {/* Contenedor para la descripción con título extra */}

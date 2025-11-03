@@ -13,9 +13,12 @@ import { useTranslation } from 'react-i18next';
 import './App.css'; // Solo estilos globales
 import './translation/i18n'; // Importa la configuración de i18n
 import NavBar from './components/NavBar';
+import ojoAbierto from './img/ojo_abierto.jpg';
+import ojoCerrado from './img/ojo_cerrado.jpg';
 
 function App() {
     const { i18n, t } = useTranslation();
+     const [isHovering, setIsHovering] = useState(false);
     const [fontSize, setFontSize] = useState<'small' | 'normal' | 'large'>('normal');
     const [lineHeight, setLineHeight] = useState<'normal' | 'large' | 'x-large'>('normal');
     const [textSpacing, setTextSpacing] = useState<'normal' | 'large' | 'x-large'>('normal');
@@ -205,14 +208,20 @@ function App() {
                 {/* Botón flotante de accesibilidad */}
             <div className="accessibility-floating-button">
                 <button
-                    className="accessibility-toggle"
-                    onClick={() => setShowAccessibilityMenu(!showAccessibilityMenu)}
-                    title={t('accessibility.menu', 'Menú de accesibilidad')}
-                    type="button"
-                    aria-expanded={showAccessibilityMenu}
-                >
-                    <span className="accessibility-icon">♿</span>
-                </button>
+                        className="accessibility-toggle"
+                        onClick={() => setShowAccessibilityMenu(!showAccessibilityMenu)}
+                        onMouseEnter={() => setIsHovering(true)}
+                        onMouseLeave={() => setIsHovering(false)}
+                        title={t('accessibility.menu', 'Menú de accesibilidad')}
+                        type="button"
+                        aria-expanded={showAccessibilityMenu}
+                    >
+                        <img 
+                            src={isHovering || showAccessibilityMenu ? ojoCerrado : ojoAbierto} 
+                            alt="Menú de accesibilidad" 
+                            className="accessibility-icon-img"
+                        />
+                    </button>
 
                 {/* Menú desplegable de accesibilidad */}
                 {showAccessibilityMenu && (

@@ -101,7 +101,7 @@ export function Desarrollo() {
 
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.8;
+                utterance.rate = 0.7;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 
@@ -218,8 +218,8 @@ export function Desarrollo() {
     // Función para leer todo el contenido de la página
     const readPageContent = () => {
         // Obtener todo el texto relevante de la página
-        const pageTitle = document.querySelector('.tiutlo')?.textContent || '';
-        const cargoTitle = document.querySelector('.titulo-extra')?.textContent || '';
+        const pageTitle = `Coordinadora: ${document.querySelector('.titulo')?.textContent || ''}`;
+        const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
         const correo = `Correo electrónico: ${document.querySelector('.correo')?.textContent || ''}`;
         const descripcion = document.querySelector('.desc')?.textContent || '';
         const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
@@ -227,7 +227,7 @@ export function Desarrollo() {
             .filter(Boolean)
             .join('. ');
 
-        const fullText = `${pageTitle}. ${cargoTitle}. ${correo}. ${descripcion}. ${questions}`;
+        const fullText = `${AreaTitle}. ${pageTitle}. ${correo}. ${descripcion}. ${questions}`;
 
         if (!fullText.trim()) {
             console.warn('No hay texto para leer');
@@ -375,7 +375,7 @@ export function Desarrollo() {
                 {/* Contenedor para imagen y título */}
                 <div className='imagen-titulo-container'>
                     <img src={Profile} alt="Profile" className="Perfil-imagen2" />
-                    <h2 className='tiutlo'>{t('Desarrollo.title')}</h2>
+                    <h2 className='titulo'>{t('Desarrollo.title')}</h2>
                     {/* Mover el correo aquí */}
                     <p className='correo'>
                         {t('Desarrollo.correo')}
@@ -390,7 +390,7 @@ export function Desarrollo() {
                     {/* Descripción */}
                     <p className='desc'>
                         {t('Desarrollo.Descripcion')} <br />
-                        <h2 className='tiutlo'>{t('Desarrollo.Desctitle')}</h2>
+                        <h2 className='titulo'>{t('Desarrollo.Desctitle')}</h2>
                         <br />{t('Desarrollo.Descripcion2')}
                         <br />{t('Desarrollo.Descripcion3')}
                         <br />{t('Desarrollo.Descripcion4')}
@@ -399,7 +399,7 @@ export function Desarrollo() {
                     </p>
                 </div>
             </div>
-            <h2 className='tiutlo'>{t('Bienestar.FAQTiltle')}</h2>
+            <h2 className='titulo'>{t('Bienestar.FAQTiltle')}</h2>
             <div className="Coordinador-grid">
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
                 <div className="CFAQ">
