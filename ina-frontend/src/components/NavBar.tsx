@@ -76,7 +76,7 @@ function NavBar() {
                     <div className="navbar-links">
                         <Link to="/">Lobby</Link>
                         <Link to="/InA">Chat</Link>
-                        <Link to="/ConsultasR">Punto Estudiantil</Link>
+                        <Link to="/Punto">Punto Estudiantil</Link>
                         <Link to="/Reporte">Reporte</Link>
                     </div>
                 </div>

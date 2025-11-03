@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../css/ConsultasR.css';
+import '../css/Punto.css';
 import ina1 from '../img/asuntos.png';
 import ina2 from '../img/faq.png';
 import ina3 from '../img/desarrollo.png';
@@ -9,8 +9,8 @@ import ina4 from '../img/bienestar.png';
 import ina5 from '../img/deportes.png';
 import ina6 from '../img/pastoral.png';
 
-function ConsultasR() {
-    console.log('ConsultasR component is rendering');
+function Punto() {
+    console.log('Punto component is rendering');
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -509,4 +509,4 @@ function ConsultasR() {
     );
 }
 
-export default ConsultasR;
+export default Punto;

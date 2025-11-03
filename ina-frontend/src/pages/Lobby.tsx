@@ -309,7 +309,7 @@ function Lobby() {
             <div className="lobby-grid">
                 {/* Tus elementos FAQ existentes - Modificados para usar onClick */}
                 <div className="FAQ">
-                    <Link to="/ConsultasR" className="FAQ-link">
+                    <Link to="/Punto" className="FAQ-link">
                         <div className="lobby-item uno">
                             <span>{t('Lobby.Preguntas.FAQ1')}</span>
                         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Chat from './pages/Chat';
-import ConsultasR from './pages/ConsultasR';
+import Punto from './pages/Punto';
 import Lobby from './pages/Lobby';
 import Asuntos from './pages/Asuntos';
 import Deportes from './pages/Deportes';
@@ -458,7 +458,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Lobby />} />
                         <Route path="/InA" element={<Chat />} />
-                        <Route path="/ConsultasR" element={<ConsultasR />} />
+                        <Route path="/Punto" element={<Punto />} />
                         <Route path="/Asuntos" element={<Asuntos />} />
                         <Route path="/Deportes" element={<Deportes />} />
                         <Route path="/Bienestar" element={<Bienestar />} />
