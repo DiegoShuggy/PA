@@ -1,8 +1,8 @@
-# templates.py - TEMPLATES COMPLETOS ACTUALIZADOS Y MEJORADOS
+# templates.py - TEMPLATES COMPLETOS FUSIONADOS (Original + Documentos)
 
 TEMPLATES = {
     "asuntos_estudiantiles": {
-        # 🎯 TNE - DOCUMENTOS PRIMERA VEZ
+        # 🎯 TNE - DOCUMENTOS PRIMERA VEZ (ORIGINAL)
         "tne_documentos_primera_vez": """
 📋 **Documentos para TNE por primera vez:**
 
@@ -22,7 +22,7 @@ TEMPLATES = {
 💡 *Trae todos los documentos originales para agilizar el trámite*
 """,
 
-        # 🎯 TNE - TIEMPOS DE EMISIÓN
+        # 🎯 TNE - TIEMPOS DE EMISIÓN (ORIGINAL)
         "tne_tiempos_emision": """
 ⏱️ **Tiempos de emisión TNE:**
 
@@ -39,7 +39,7 @@ TEMPLATES = {
 🔗 **Portal alumnos:** https://portal.duoc.cl
 """,
 
-        # 🎯 TNE - REVALIDACIÓN
+        # 🎯 TNE - REVALIDACIÓN (ORIGINAL + ACTUALIZADO)
         "tne_revalidacion": """
 🔄 **Revalidar TNE (estudiantes con TNE previa):**
 
@@ -56,7 +56,7 @@ TEMPLATES = {
 📅 **Proceso anual** - debe revalidarse cada año académico
 """,
 
-        # 🎯 TNE - REPOSICIÓN POR PÉRDIDA
+        # 🎯 TNE - REPOSICIÓN POR PÉRDIDA (ORIGINAL + ACTUALIZADO)
         "tne_reposicion": """
 🆕 **Reposición de TNE (pérdida o daño):**
 
@@ -66,17 +66,21 @@ TEMPLATES = {
 • **Constancia de pérdida:** https://www.comisariavirtual.cl/
 • **Depósito:** $3.600 en cuenta JUNAEB Banco Estado
 
-🏦 **Pago exclusivo:**
+🏦 **Pago exclusivo en:**
 • Sucursales Banco Estado
 • Serviestado o Caja Vecina
+• **Cuenta:** N° 9000097 Banco Estado
 • No se aceptan transferencias
+
+📍 **Autogestión:** Cualquier sucursal JUNAEB Región Metropolitana
+📧 **Contacto sede:** Puntoestudiantil_pnorte@duoc.cl
 
 🔗 **Comisaría Virtual:** https://www.comisariavirtual.cl
 🔗 **Certificados:** https://certificados.duoc.cl
-📍 **Autogestión:** Cualquier sucursal JUNAEB Región Metropolitana
+💡 *También aplica si retomas estudios y tu TNE es anterior al 2015*
 """,
 
-        # 🎯 TNE - SEGUIMIENTO ESTADO
+        # 🎯 TNE - SEGUIMIENTO ESTADO (ORIGINAL)
         "tne_seguimiento": """
 📊 **Seguimiento de Estado TNE:**
 
@@ -97,14 +101,13 @@ TEMPLATES = {
 💡 *Recibirás notificación por email cuando esté lista*
 """,
 
-        # 🎯 SEGURO ESTUDIANTIL
-        "seguro_cobertura": """
-🛡️ **Seguro de Accidentes Duoc UC:**
+        # 🎯 SEGURO ESTUDIANTIL - ACTUALIZADO DESDE DOCUMENTOS
+        "seguro_funcionamiento": """
+🛡️ **¿Cómo funciona el seguro de Accidentes?**
 
-• **Cobertura completa:** 365 días/año, 24/7, dentro y fuera de la sede
-• **Atención médica:** DOC DUOC 600 362 3862
-• **Beneficio gratuito** para todos los estudiantes regulares
-• **Ambulatorio y hospitalario** según necesidad
+**Cobertura completa:** 365 días/año, 24/7, dentro y fuera de la sede
+**Atención médica:** DOC DUOC 600 362 3862
+**Beneficio gratuito** para todos los estudiantes regulares
 
 🚑 **En caso de accidente:**
 1. Llama inmediatamente a DOC DUOC: 600 362 3862
@@ -112,12 +115,49 @@ TEMPLATES = {
 3. Presenta tu cédula de identidad
 4. Sigue instrucciones del personal médico
 
-🔗 **Centro de ayuda:** https://centroayuda.duoc.cl
-📞 **Emergencias sede:** +56 2 2999 3005
 💡 *El seguro es un BENEFICIO que te cubre frente a cualquier accidente*
+🔗 **Centro de ayuda:** https://centroayuda.duoc.cl
 """,
 
-        # 🎯 PROGRAMA EMERGENCIA
+        # 🎯 TNE - INFORMACIÓN GENERAL DESDE DOCUMENTOS
+        "tne_informacion_general": """
+🎫 **TNE - Información General:**
+
+**Proceso externo** gestionado por JUNAEB ([tne.cl](http://www.tne.cl))
+**Duoc UC** actúa como intermediario para ayudarte
+
+📋 **Aspectos importantes:**
+• Tiempos de entrega los define JUNAEB
+• Toma de foto según protocolo JUNAEB  
+• Montos a cancelar establecidos por JUNAEB
+• Toda información se envía vía correo institucional
+
+🔗 **Seguimiento TNE:** https://www.tne.cl
+📧 **Información:** Por correo institucional @duocuc.cl
+💡 *Duoc UC te ayuda a gestionar pero el proceso es de JUNAEB*
+""",
+
+        # 🎯 TNE - PRIMERA VEZ DESDE DOCUMENTOS
+        "tne_primera_vez": """
+🆕 **¿Cómo saco mi TNE por primera vez?**
+
+**Para estudiantes que ingresan por primera vez a la Educación Superior**
+
+📋 **Pasos a seguir:**
+1. **Realizar pago:** $2.700 en caja de sede o portal de pago
+2. **Enviar comprobante** a: Puntoestudiantil_pnorte@duoc.cl
+3. **Actualización de datos** en sistema
+4. **Recibir instrucciones** para captura de fotografías
+
+💳 **Pagos online:** https://portal.duoc.cl
+📧 **Email envío:** Puntoestudiantil_pnorte@duoc.cl
+📞 **Confirmación:** +56 2 2360 6400
+
+🔗 **Portal TNE:** https://www.tne.cl
+💡 *Proceso exclusivo para primer ingreso a educación superior*
+""",
+
+        # 🎯 PROGRAMA EMERGENCIA (ORIGINAL + ACTUALIZADO)
         "programa_emergencia": """
 🆘 **Programa de Emergencia Duoc UC:**
 
@@ -146,7 +186,32 @@ TEMPLATES = {
 💡 *Postula dentro de los plazos establecidos - la documentación debe ser actual*
 """,
 
-        # 🎯 PROGRAMA TRANSPORTE
+        # 🎯 CATEGORÍAS PROGRAMA EMERGENCIA DESDE DOCUMENTOS
+        "programa_emergencia_categorias": """
+🗂️ **Categorías de Postulación - Programa Emergencia**
+
+1. **🩺 Gastos médicos en tratamientos/medicamentos:**
+   • Registro Social de Hogares (6 meses)
+   • Antecedentes médicos y/o tratamiento con receta
+
+2. **✝️ Gastos por fallecimiento familiar:**
+   • Registro Social de Hogares (6 meses)
+   • Certificado de nacimiento/matrimonio/AUC
+   • Certificado de defunción del Registro Civil
+
+3. **🚪 Gastos por daños a la vivienda:**
+   • Registro Social de Hogares (6 meses)
+   • Certificado de Bomberos y/o Ficha Básica de Emergencia
+
+4. **🙏 Apoyo excepcional:**
+   • Registro Social de Hogares (6 meses)
+   • Informe de asistente social
+   • *Solo una vez durante la carrera*
+
+💡 *Documentación debe ser consistente con el motivo de postulación*
+""",
+
+        # 🎯 PROGRAMA TRANSPORTE (ORIGINAL + ACTUALIZADO)
         "programa_transporte": """
 🚌 **Programa de Transporte:**
 
@@ -172,7 +237,7 @@ TEMPLATES = {
 🔄 **Renovación:** Encuesta enviada 15-17 septiembre
 """,
 
-        # 🎯 PROGRAMA MATERIALES
+        # 🎯 PROGRAMA MATERIALES (ORIGINAL + ACTUALIZADO)
         "programa_materiales": """
 🖌️ **Programa de Materiales:**
 
@@ -200,7 +265,7 @@ TEMPLATES = {
 💡 *Verifica los materiales específicos de tu carrera*
 """,
 
-        # 🎯 CERTIFICADO ALUMNO REGULAR
+        # 🎯 CERTIFICADO ALUMNO REGULAR (ORIGINAL)
         "certificado_alumno_regular": """
 📄 **Certificado de Alumno Regular:**
 
@@ -226,7 +291,7 @@ TEMPLATES = {
 💡 *Necesario para trámites como TNE, beneficios estudiantiles, etc.*
 """,
 
-        # 🎯 CERTIFICADO DE NOTAS
+        # 🎯 CERTIFICADO DE NOTAS (ORIGINAL)
         "certificado_notas": """
 📊 **Certificado de Notas/Concentración:**
 
@@ -248,7 +313,7 @@ TEMPLATES = {
 💡 *Ideal para postulaciones laborales, continuidad de estudios, etc.*
 """,
 
-        # 🎯 TÉCNICAS DE ESTUDIO
+        # 🎯 TÉCNICAS DE ESTUDIO (ORIGINAL + ACTUALIZADO)
         "tecnicas_estudio": """
 🎯 **Apoyo Personalizado para Técnicas de Estudio:**
 
@@ -275,7 +340,7 @@ TEMPLATES = {
 💡 *Mejora tu rendimiento académico con técnicas comprobadas*
 """,
 
-        # 🎯 CENTRO VIRTUAL DE APRENDIZAJE
+        # 🎯 CENTRO VIRTUAL DE APRENDIZAJE (ORIGINAL + ACTUALIZADO)
         "centro_virtual_aprendizaje": """
 💻 **Centro Virtual de Aprendizaje (CVA):**
 
@@ -300,13 +365,13 @@ TEMPLATES = {
 💡 *Recursos disponibles 24/7 desde cualquier dispositivo*
 """,
 
-        # 🆕 BECA ALIMENTACIÓN
+        # 🆕 BECA ALIMENTACIÓN (ORIGINAL)
         "beca_alimentacion": """
 🍽️ **Beca de Alimentación Duoc UC:**
 
 **Apoyo económico** para garantizar una alimentación adecuada durante tu periodo de estudios.
 
-💰 **Monto:** $60.000 mensuales
+💰 **Monto:** $55.000 mensuales
 ✅ **Requisitos:**
 • Pertenecer a deciles 1-4 del Registro Social de Hogares
 • Tener carga académica regular
@@ -323,7 +388,7 @@ TEMPLATES = {
 💡 *El pago se realiza mensualmente en tu cuenta RUT*
 """,
 
-        # 🆕 CONVENIOS INTERNOS
+        # 🆕 CONVENIOS INTERNOS (ORIGINAL)
         "convenios_internos": """
 🤝 **Convenios Internos Duoc UC:**
 
@@ -345,7 +410,7 @@ TEMPLATES = {
 💡 *Siempre lleva tu credencial para acceder a los descuentos*
 """,
 
-        # 🆕 CREDENCIAL ESTUDIANTIL
+        # 🆕 CREDENCIAL ESTUDIANTIL (ORIGINAL)
         "credencial_estudiantil": """
 🎫 **Credencial Estudiantil Duoc UC:**
 
@@ -371,7 +436,7 @@ TEMPLATES = {
 💡 *Es diferente a la TNE - esta es para identificación institucional*
 """,
 
-        # 🆕 BOLETAS Y PAGOS
+        # 🆕 BOLETAS Y PAGOS (ORIGINAL)
         "boletas_pagos": """
 💰 **Boletas y Pagos Duoc UC:**
 
@@ -395,12 +460,134 @@ TEMPLATES = {
 
 🔗 **Portal pagos:** https://portal.duoc.cl
 🔗 **Centro ayuda:** https://centroayuda.duoc.cl
-💡 *Configura recordatorios para no vencer plazos*
-"""
-    },
+💡 *Configura recordatorios para no vencer plazos*""",
 
+# Agregar en "asuntos_estudiantiles"
+
+# 🆕 AGREGAR EN "asuntos_estudiantiles" - TEMPLATES CRÍTICOS FALTANTES
+
+"tne_reposicion_perdida_danada": """
+🆕 **¿Cómo saco mi TNE si se pierde o está dañada?**
+
+**Reposición por pérdida, deterioro, hurto o deterioro:**
+
+📋 **Documentos requeridos:**
+• Cédula de identidad por ambos lados
+• Certificado de alumno regular del año en curso  
+• **Constancia de pérdida:** https://www.comisariavirtual.cl/
+• **Depósito:** $3.600 en cuenta JUNAEB Banco Estado
+
+🏦 **Pago exclusivo en:**
+• Sucursales Banco Estado
+• Serviestado o Caja Vecina
+• **Cuenta:** N° 9000097 Banco Estado
+• No se aceptan transferencias
+
+📍 **Autogestión:** Cualquier sucursal JUNAEB Región Metropolitana
+📧 **Contacto sede:** Puntoestudiantil_pnorte@duoc.cl
+
+🔗 **Comisaría Virtual:** https://www.comisariavirtual.cl
+🔗 **Certificados:** https://certificados.duoc.cl
+💡 *También aplica si retomas estudios y tu TNE es anterior al 2015*
+""",
+
+"programa_emergencia_que_es": """
+🆘 **¿Qué es el Programa de Emergencia?**
+
+**Ayuda financiera inmediata** para situaciones imprevistas que afecten tu estabilidad económica personal o familiar.
+
+💰 **Monto máximo:** $200.000
+🎯 **Objetivo:** Aliviar impacto económico de emergencias
+✅ **Destinado a:** Estudiantes que enfrentan situaciones críticas
+
+📋 **Categorías cubiertas:**
+• 🩺 Gastos médicos en tratamientos/medicamentos de alto costo
+• ✝️ Gastos por fallecimiento de familiar cercano  
+• 🚪 Gastos por daños a la vivienda del estudiante
+• 🙏 Apoyo excepcional (una vez durante la carrera)
+
+📅 **Postulaciones 2025:**
+• **1er semestre:** 28 abril - 31 julio
+• **2do semestre:** 1 septiembre - 22 diciembre
+
+🔗 **Postular:** https://centroayuda.duoc.cl
+📞 **Consultas:** +56 2 2360 6400
+💡 *Beneficio disponible para alumnos regulares con carga académica*
+""",
+
+"programa_emergencia_requisitos": """
+✅ **Requisitos para postular al Programa de Emergencia:**
+
+**Requisitos generales:**
+• Ser alumno regular de Duoc UC
+• Tener carga académica asignada
+• Sin solicitud activa de suspensión o renuncia
+• Registro Social de Hogares (máximo 6 meses vigencia)
+• Cuenta RUT activa del Banco Estado
+
+📋 **Documentación por categoría:**
+
+🩺 **Gastos médicos:**
+• Registro Social de Hogares vigente
+• Antecedentes médicos y/o tratamiento con receta médica
+
+✝️ **Fallecimiento familiar:**
+• Registro Social de Hogares vigente  
+• Certificado de nacimiento/matrimonio/AUC
+• Certificado de defunción del Registro Civil
+
+🚪 **Daños vivienda:**
+• Registro Social de Hogares vigente
+• Certificado de Bomberos y/o Ficha Básica de Emergencia
+
+🙏 **Apoyo excepcional:**
+• Registro Social de Hogares vigente
+• Informe de asistente social
+
+🔗 **Postular:** https://centroayuda.duoc.cl
+🚫 **Exclusión:** Estudiantes con Beca Colaborador Duoc UC
+""",
+
+# 🆕 AGREGAR EN "institucionales" - TEMPLATE MEJORADO
+"contacto_plaza_norte_especifico": """
+📍 **Contacto específico - Sede Plaza Norte:**
+
+**Punto Estudiantil (General):**
+• **Teléfono:** +56 2 2360 6400
+• **Email:** Puntoestudiantil_pnorte@duoc.cl
+• **Horario:** Lunes a Viernes 8:30-19:00
+
+💼 **Desarrollo Laboral:**
+• **Coordinadora:** Claudia Cortés Nuñez
+• **Email:** ccortesn@duoc.cl
+• **Teléfono:** +56 2 2360 6445
+
+🧠 **Bienestar Estudiantil:**
+• **Psicología:** Adriana Vásquez - avasquezm@duoc.cl
+• **Discapacidad:** Elizabeth Domínguez - edominguezs@duoc.cl
+• **Teléfono:** +56 2 2360 6430
+
+🏀 **Departamento de Deportes:**
+• **Ubicación:** Piso -1 (Gimnasio CAF)
+• **Email:** deportes_pnorte@duoc.cl
+• **Teléfono:** +56 2 2360 6460
+
+📚 **Biblioteca:**
+• **Teléfono:** +56 2 2360 6450
+• **Email:** biblioteca_pnorte@duoc.cl
+
+💰 **Área Financiera:**
+• **Teléfono:** +56 2 2360 6420
+• **Email:** financiero_pnorte@duoc.cl
+
+🔗 **Portal sede:** https://www.duoc.cl/sede/plaza-norte/
+🔗 **Centro ayuda:** https://centroayuda.duoc.cl
+💡 *Para consultas específicas, contacta directamente al área correspondiente*
+""",
+    },
+#-----------------------------------------------------------------------------------------------------------------------------------------------------#
     "bienestar_estudiantil": {
-        # 🎯 SESIONES PSICOLÓGICAS
+        # 🎯 SESIONES PSICOLÓGICAS (ORIGINAL)
         "sesiones_psicologicas": """
 🧠 **Sesiones de Apoyo Psicológico:**
 
@@ -419,7 +606,7 @@ TEMPLATES = {
 💡 *Espacio seguro para trabajar en tu bienestar emocional*
 """,
 
-        # 🎯 AGENDAR ATENCIÓN PSICOLÓGICA
+        # 🎯 AGENDAR ATENCIÓN PSICOLÓGICA (ORIGINAL)
         "agendar_psicologico": """
 📱 **Agendar Atención Psicológica - Paso a Paso:**
 
@@ -446,7 +633,125 @@ TEMPLATES = {
 💡 *Disponible incluso fines de semana y festivos*
 """,
 
-        # 🎯 APOYO DISCAPACIDAD
+        # 🎯 APOYOS SALUD MENTAL DESDE DOCUMENTOS
+        "apoyos_salud_mental": """
+🧠 **¿Qué apoyos en salud mental existen en Duoc UC?**
+
+**1. 🚨 Acompañamiento psicológico urgente:**
+• **Línea OPS 24/7:** +56 2 2820 3450
+• Gratuito y confidencial
+• Urgencias psicológicas
+
+**2. 💻 Acompañamiento psicológico virtual:**
+• **Plataforma:** https://eventos.duoc.cl
+• Sesiones online gratuitas
+• Usuario institucional @duocuc.cl
+
+**3. 🏥 Apoyo en crisis dentro de la sede:**
+• **Sala primeros auxilios:** Primer piso, junto a caja
+• **Teléfono:** +56 2 2999 3005
+
+🔗 **Charlas y talleres:** Disponibles en eventos.duoc.cl
+💡 *Servicios gratuitos para todos los estudiantes regulares*
+""",
+
+        # 🎯 ATENCIÓN PSICOLÓGICA PRESENCIAL DESDE DOCUMENTOS
+        "atencion_presencial_psicologica": """
+🏥 **¿Existe atención psicológica presencial?**
+
+**No.** Actualmente Duoc UC ofrece exclusivamente **atención psicológica virtual**
+
+✅ **Disponible:**
+• Fines de semana
+• Días festivos
+• Horarios flexibles
+
+🔗 **Agendar virtual:** https://eventos.duoc.cl
+📞 **Apoyo en sede:** +56 2 2999 3005 (Primeros auxilios)
+💡 *La atención virtual mantiene la misma calidad y confidencialidad*
+""",
+
+        # 🎯 CRISIS EN SEDE DESDE DOCUMENTOS
+        "crisis_en_sede": """
+🚨 **¿Qué debo hacer si tengo una crisis o me siento mal estando en la sede?**
+
+**Procedimiento inmediato:**
+1. **Acude a Primeros Auxilios:** Primer piso, junto a caja
+2. **O llama al:** +56 2 2999 3005
+3. **Personal capacitado** te brindará apoyo
+
+📍 **Ubicación:** Primer piso, junto a la caja
+⏰ **Disponible:** Horario de atención de la sede
+💙 *No dudes en pedir ayuda cuando lo necesites*
+""",
+
+        # 🎯 FALTA DE HORAS PSICOLÓGICAS DESDE DOCUMENTOS
+        "falta_horas_psicologicas": """
+⏰ **Intenté agendar atención psicológica, pero no encuentro horas disponibles**
+
+**Solución:**
+• **Contacta a:** Adriana Vásquez, Coordinadora de Bienestar Estudiantil
+• **Email:** avasquezm@duoc.cl
+• **O agenda directamente** con ella a través de Agenda Norte
+
+✅ **Ella podrá:**
+• Revisar disponibilidad
+• Derivar tu caso al área correspondiente
+• Brindarte alternativas de atención
+
+🔗 **Plataforma citas:** https://eventos.duoc.cl
+💡 *No te quedes sin atención - existen alternativas disponibles*
+""",
+
+        # 🎯 SESIONES PSICOLÓGICAS ANUALES DESDE DOCUMENTOS
+        "sesiones_psicologicas_anuales": """
+📊 **¿Cuántas sesiones psicológicas puedo tener al año?**
+
+**8 sesiones de atención psicológica por año**
+
+✅ **Características:**
+• Gratuitas para todos los estudiantes regulares
+• Virtuales por plataforma institucional
+• Con profesionales especializados
+• Confidencialidad garantizada
+
+🔗 **Agendar:** https://eventos.duoc.cl
+💡 *Aprovecha este beneficio para tu bienestar emocional*
+""",
+
+        # 🎯 LICENCIAS MÉDICAS PSICOLÓGICAS DESDE DOCUMENTOS
+        "licencias_medicas_psicologicas": """
+🏥 **¿El psicólogo virtual puede otorgar licencia médica?**
+
+**No.** Los psicólogos no están facultados para emitir licencias médicas.
+
+✅ **Alternativas:**
+• **Médico general:** Para licencias médicas
+• **Psiquiatra:** Para condiciones de salud mental que requieran licencia
+• **Centros de salud:** Consultorios y hospitales
+
+🔗 **Salud Responde:** 600 360 7777
+💡 *Los psicógicos brindan apoyo terapéutico, no licencias médicas*
+""",
+
+        # 🎯 APOYO A COMPAÑEROS DESDE DOCUMENTOS
+        "apoyo_companeros": """
+🤝 **¿Qué puedo hacer si sé que un/a compañero/a está pasando por un mal momento pero no quiere pedir ayuda?**
+
+**Acciones recomendadas:**
+1. **Motivarle** a solicitar atención psicológica virtual
+2. **Recordarle** que es confidencial y gratuito
+3. **Ofrecer acompañamiento** en el proceso
+
+🎓 **Curso "Embajadores en Salud Mental":**
+• **Acceso:** https://embajadores.duoc.cl
+• **Aprendes:** Estrategias para acompañar adecuadamente
+• **Sin compromisos** posteriores
+
+💙 *Tu apoyo puede marcar la diferencia en la vida de un compañero*
+""",
+
+        # 🎯 APOYO DISCAPACIDAD (ORIGINAL + ACTUALIZADO)
         "apoyo_discapacidad": """
 ♿ **Programa de Acompañamiento a Estudiantes con Discapacidad (PAEDIS):**
 
@@ -468,7 +773,7 @@ TEMPLATES = {
 💡 *Contacta para conocer requisitos específicos y beneficios disponibles*
 """,
 
-        # 🎯 LÍNEA OPS EMERGENCIA
+        # 🎯 LÍNEA OPS EMERGENCIA (ORIGINAL)
         "linea_ops_emergencia": """
 🚨 **Línea OPS - Apoyo Psicológico Urgente:**
 
@@ -491,30 +796,7 @@ TEMPLATES = {
 💙 *No estás solo/a - hay ayuda disponible siempre*
 """,
 
-        # 🎯 ATENCIÓN PRESENCIAL PSICOLÓGICA
-        "atencion_presencial_psicologica": """
-🏥 **Atención Psicológica Presencial:**
-
-ℹ️ **Actualmente Duoc UC ofrece exclusivamente atención psicológica virtual**, disponible incluso fines de semana y días festivos.
-
-💻 **Beneficios de la atención virtual:**
-• Mayor flexibilidad horaria
-• Acceso desde cualquier lugar
-• Misma calidad profesional
-• Confidencialidad garantizada
-• Comodidad de tu espacio
-
-🔗 **Agendar virtual:** https://eventos.duoc.cl
-📞 **Para apoyo inmediato en sede:**
-• **Sala primeros auxilios:** Primer piso, junto a caja
-• **Teléfono:** +56 2 2999 3005
-• **Horario:** L-V 8:30-19:00
-
-🔗 **Recursos online:** https://cva.duoc.cl
-💡 *La atención virtual ha demostrado igual efectividad que la presencial*
-""",
-
-        # 🎯 CURSO EMBAJADORES SALUD MENTAL
+        # 🎯 CURSO EMBAJADORES SALUD MENTAL (ORIGINAL)
         "curso_embajadores_salud_mental": """
 🌟 **Curso "Embajadores en Salud Mental":**
 
@@ -541,7 +823,40 @@ TEMPLATES = {
 🎓 **Al finalizar:** Mensaje "Eres un embajador" confirma completación
 """,
 
-        # 🆕 TALLERES BIENESTAR
+        # 🎯 CURSO EMBAJADORES - AVANCE DESDE DOCUMENTOS
+        "curso_embajadores_avance": """
+🎯 **Comencé el curso de Embajadores, pero no puedo avanzar al siguiente módulo**
+
+**Requisito para avanzar:**
+• **85% o más** de respuestas correctas en cada actividad
+
+✅ **Si no alcanzas el 85%:**
+• La plataforma no te permitirá continuar
+• Revisa las respuestas incorrectas
+• Reintenta el módulo
+
+🔗 **Acceso al curso:** https://embajadores.duoc.cl
+💡 *Asegúrate de comprender bien cada contenido antes de avanzar*
+""",
+
+        # 🎯 CURSO EMBAJADORES - FINALIZACIÓN DESDE DOCUMENTOS
+        "curso_embajadores_finalizacion": """
+🎓 **¿Cómo sé si terminé el curso de Embajadores?**
+
+**Al finalizar exitosamente:**
+• La plataforma mostrará el mensaje: **"Eres un embajador"**
+• Esto confirma que completaste toda la formación
+
+✅ **Sin responsabilidades adicionales:**
+• No implica tareas posteriores
+• Sin compromisos obligatorios
+• Propósito: comunidad empática y solidaria
+
+🔗 **Curso:** https://embajadores.duoc.cl
+💡 *Formación para fortalecer el apoyo mutuo en la comunidad Duoc UC*
+""",
+
+        # 🆕 TALLERES BIENESTAR (ORIGINAL)
         "talleres_bienestar": """
 🌱 **Talleres de Bienestar Integral:**
 
@@ -564,7 +879,7 @@ TEMPLATES = {
 💡 *Espacios seguros para compartir y aprender en comunidad*
 """,
 
-        # 🆕 APOYO CRISIS
+        # 🆕 APOYO CRÍSIS (ORIGINAL)
         "apoyo_crisis": """
 🚨 **Protocolo de Apoyo en Crisis:**
 
@@ -591,7 +906,53 @@ TEMPLATES = {
 💙 *Tu bienestar es lo más importante - no dudes en pedir ayuda*
 """,
 
-        # 🆕 GRUPOS DE APOYO
+        # 🆕 GRUPOS DE APOYO (ORIGINAL)
+        "grupos_apoyo": """
+👥 **Grupos de Apoyo Estudiantil:**
+
+**Espacios grupales** para compartir experiencias y recibir apoyo mutuo.
+
+🎯 **Grupos disponibles:**
+• **Ansiedad Académica:** Manejo del estrés universitario
+• **Habilidades Sociales:** Desarrollo de relaciones interpersonales
+• **Autocuidado:** Estrategias para el bienestar diario
+• **Adaptación Universitaria:** Apoyo para estudiantes nuevos
+
+✅ **Características:**
+• Grupos de 6-10 estudiantes
+• Facilitado por profesionales
+• Conf
+💡 *Espacios seguros para compartir y aprender en comunidad*
+""",
+
+        # 🆕 APOYO CRISIS (ORIGINAL)
+        "apoyo_crisis": """
+🚨 **Protocolo de Apoyo en Crisis:**
+
+**Atención inmediata** para situaciones de crisis emocional o psicológica.
+
+🆘 **Pasos a seguir:**
+1. **Contacta Línea OPS:** +56 2 2820 3450 (24/7)
+2. **Acude a Primeros Auxilios:** Piso 1, junto a caja
+3. **Solicita derivación:** Con profesional de salud en sede
+
+📞 **Líneas de emergencia:**
+• **Salud Responde:** 600 360 7777
+• **Fono Mayor:** 800 4000 35
+• **Emergencias Médicas:** 131
+• **Carabineros:** 133
+
+🏥 **Atención en sede:**
+• **Horario:** L-V 8:30-19:00
+• **Ubicación:** Primer piso, junto a caja
+• **Teléfono interno:** +56 2 2999 3005
+
+🔗 **Recursos online:** https://saludresponde.gob.cl
+🔗 **Apoyo psicológico:** https://eventos.duoc.cl
+💙 *Tu bienestar es lo más importante - no dudes en pedir ayuda*
+""",
+
+        # 🆕 GRUPOS DE APOYO (ORIGINAL)
         "grupos_apoyo": """
 👥 **Grupos de Apoyo Estudiantil:**
 
@@ -618,7 +979,7 @@ TEMPLATES = {
 💡 *Compartir con pares que viven experiencias similares puede ser muy sanador*
 """,
 
-        # 🆕 RECURSOS DIGITALES BIENESTAR
+        # 🆕 RECURSOS DIGITALES BIENESTAR (ORIGINAL)
         "recursos_digitales_bienestar": """
 💻 **Recursos Digitales de Bienestar:**
 
@@ -644,9 +1005,207 @@ TEMPLATES = {
 💡 *Recursos disponibles cuando los necesites, desde cualquier dispositivo*
 """
     },
+#-----------------------------------------------------------------------------------------------------------------------------------------------------#
 
-    "deportes": {
-        # 🎯 TALLERES DEPORTIVOS
+    "deportes_actividad_fisica": {
+        # 🎯 TALLERES DEPORTIVOS DISPONIBLES DESDE DOCUMENTOS
+        "talleres_deportivos_disponibles": """
+🏀 **¿Qué talleres deportivos tienen?**
+
+**Talleres disponibles:**
+• Fútbol masculino ⚽
+• Futbolito damas 👟
+• Voleibol mixto 🏐
+• Basquetbol mixto 🏀
+• Natación mixta 🏊
+• Tenis de mesa mixto 🏓
+• Ajedrez mixto ♟️
+• Entrenamiento funcional mixto 💪
+• Boxeo mixto 🥊
+• Powerlifting mixto 🏋️
+
+📍 **Ubicaciones:**
+• Complejo Maiclub (detrás de Duoc)
+• Gimnasio Entretiempo (Av. Ejército Libertador 341)
+• Piscina Acquatiempo (Av. Ejército Libertador 346)
+• CAF (piso -1 del Duoc)
+
+🔗 **Información:** Departamento de Deportes - Piso -1
+💡 *Variada oferta para todos los intereses y niveles*
+""",
+
+        # 🎯 HORARIOS TALLERES 2025 DESDE DOCUMENTOS
+        "horarios_talleres_2025": """
+⏰ **Horarios Talleres Deportivos 2025:**
+
+**Entrenamiento Funcional mixto:**
+Lunes: 10:00-11:20, 16:00-17:20
+Martes: 10:00-11:20, 16:00-17:20  
+Miércoles: 10:00-11:20, 11:30-12:50, 13:00-14:20, 16:00-17:20, 17:30-18:50
+Jueves: 10:00-11:20, 17:30-18:50
+Viernes: 10:00-11:20, 11:30-12:50
+
+**Boxeo mixto:**
+Lunes: 10:00-11:20, 11:30-12:50
+Martes: 11:30-12:50, 13:00-14:20, 17:30-18:50
+Miércoles: 10:00-11:20
+Jueves: 11:30-12:50, 16:00-17:50
+Viernes: 14:30-15:50
+
+**Powerlifting mixto:**
+Martes: 11:30-12:50
+Miércoles: 13:00-14:20
+Jueves: 11:30-12:50
+
+**Fútbol varones:**
+Lunes, Jueves, Viernes: 13:00-14:20
+
+**Futbolito damas:**
+Miércoles: 13:00-14:20 | Viernes: 11:30-12:50
+
+**Voleibol mixto:**
+Lunes: 16:00-17:20 | Martes, Jueves: 13:00-14:20
+Viernes: 15:11-16:40
+
+**Basquetbol mixto:**
+Jueves: 16:00-17:20
+
+**Natación mixta:**
+Martes, Jueves: 10:00-11:20
+
+**Ajedrez mixto:**
+Miércoles: 11:30-12:50
+
+**Tenis de mesa mixto:**
+Viernes: 11:30-12:50, 13:00-14:20
+Sábado: 13:00-14:20, 14:30-15:50
+""",
+
+        # 🎯 AUSENCIAS TALLERES DESDE DOCUMENTOS
+        "ausencias_talleres": """
+❌ **¿Qué pasa si falto una o más veces a los talleres?**
+
+**Reglamento académico:**
+• **2 inasistencias:** Retiro del taller (puedes volver a inscribirte)
+• **Asistencia <50%:** Estado "No Logrado"
+• **Consecuencia:** No podrás tomar el mismo taller siguiente semestre
+
+📊 **Sistema de evaluación:**
+• **No tienen nota**
+• **Solo:** "Logrado" o "No Logrado"
+• **No Logrado:** Impide repetir el taller próximo semestre
+
+💡 *La asistencia regular es clave para tu participación continua*
+""",
+
+        # 🎯 INSCRIPCIÓN OPTATIVOS DEPORTIVOS DESDE DOCUMENTOS
+        "inscripcion_optativos_deportivos": """
+📝 **¿Cómo inscribo los Optativos Deportivos?**
+
+**Dos modalidades:**
+1. **Toma regular de asignaturas** (mismo proceso que ramos regulares)
+2. **Solicitud en línea** posterior (Vivo Duoc o Vivo Web)
+
+✅ **Características:**
+• Tienen **nota** y **asistencia**
+• Mismo reglamento académico que asignatura regular
+• Contribuyen a tu progresión curricular
+
+🔗 **Portal académico:** https://portal.duoc.cl
+💡 *Ambas instancias aplican mismos procesos que asignaturas regulares*
+""",
+
+        # 🎯 DESINSCRIPCIÓN OPTATIVOS DESDE DOCUMENTOS
+        "desinscripcion_optativos": """
+🗑️ **¿Cómo puedo des inscribirme?**
+
+**Plazos según calendario académico:**
+• **Fecha límite:** No superar la tercera semana en curso
+• **Proceso:** Según calendario académico oficial
+
+📅 **Consultar:** Calendario académico en portal institucional
+🔗 **Portal:** https://portal.duoc.cl
+💡 *Respeta los plazos establecidos para cambios curriculares*
+""",
+
+        # 🎯 GIMNASIO CAF - INSCRIPCIÓN DESDE DOCUMENTOS
+        "gimnasio_caf_inscripcion": """
+💪 **¿Cómo puedo inscribirme al gimnasio (CAF)?**
+
+**Proceso de inscripción:**
+1. **Acércate al CAF** en horario de atención
+2. **Habla con el preparador físico**
+3. **Realiza evaluación física** correspondiente
+4. **Recibe inducción** al equipo y normas
+5. **¡Listo para usar!**
+
+📍 **Ubicación:** Piso -1 del Duoc (CAF)
+✅ **Evaluación:** Personalizada con preparador físico
+💡 *Evaluación obligatoria para uso seguro del gimnasio*
+""",
+
+        # 🎯 GIMNASIO CAF - HORARIOS DESDE DOCUMENTOS
+        "gimnasio_caf_horarios": """
+⏰ **¿Puedo ir en cualquier horario?**
+
+**No.** Solo en horarios establecidos:
+
+**Horarios CAF 2025:**
+• Lunes, Martes, Miércoles: 13:00-20:20
+• Jueves, Viernes: 13:00-19:20
+• Sábado por medio: 09:00-13:20
+
+📋 **Normas:**
+• Uso máximo: **2 veces por semana**
+• **Siempre con profesores presentes**
+• **No se puede usar sin supervisión**
+
+🚫 **Sin profesores = Sin acceso**
+💡 *Planifica tus visitas según la disponibilidad horaria*
+""",
+
+        # 🎯 SELECCIONES DEPORTIVAS DESDE DOCUMENTOS
+        "selecciones_deportivas": """
+🏆 **Selecciones Deportivas**
+
+**Deportes con selección 2025:**
+• Fútbol masculino
+• Futsal varones
+• Futsal sala damas
+• Voleibol varones
+• Voleibol damas
+• Basquetbol varones
+• Tenis de mesa
+• Rugby
+
+📧 **Proceso:**
+• Información enviada por correo a inicios de cada semestre
+• Pruebas de selección según deporte
+• Entrenamientos regulares
+
+🔗 **Contacto:** Departamento de Deportes - Piso -1
+💪 *¡Representa a Duoc UC en competencias!*
+""",
+
+        # 🎯 BECAS DEPORTIVAS DESDE DOCUMENTOS
+        "becas_deportivas": """
+💰 **Becas Deportivas**
+
+**Requisitos para postular:**
+• Haber cursado al menos un semestre en Duoc UC
+• Cumplir requisitos específicos por deporte
+• Mantener rendimiento académico satisfactorio
+
+📋 **Información específica:**
+• Requisitos compartidos a inicios de cada semestre
+• Comunicación vía correo institucional
+• Proceso de postulación semestral
+
+🔗 **Consultas:** Departamento de Deportes
+🏅 *Reconocimiento al talento y esfuerzo deportivo*
+""",
+
+        # 🎯 TALLERES DEPORTIVOS (ORIGINAL)
         "talleres_deportivos": """
 🏀 **Talleres Deportivos Disponibles:**
 
@@ -673,7 +1232,7 @@ TEMPLATES = {
 💡 *Inscripciones abiertas al inicio de cada semestre*
 """,
 
-        # 🎯 HORARIOS TALLERES COMPLETOS
+        # 🎯 HORARIOS TALLERES COMPLETOS (ORIGINAL)
         "horarios_talleres": """
 ⏰ **Horarios Talleres Deportivos 2025:**
 
@@ -724,7 +1283,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Los horarios pueden sufrir ajustes durante el semestre*
 """,
 
-        # 🎯 GIMNASIO CAF
+        # 🎯 GIMNASIO CAF (ORIGINAL)
         "gimnasio_caf": """
 💪 **Gimnasio CAF (Centro de Bienestar y Acondicionamiento Físico):**
 
@@ -758,8 +1317,8 @@ Sábado: 13:00-14:20, 14:30-15:50
 • No se puede usar sin supervisión
 """,
 
-        # 🎯 INSCRIPCIÓN OPTATIVOS DEPORTIVOS
-        "inscripcion_optativos_deportivos": """
+        # 🎯 INSCRIPCIÓN OPTATIVOS DEPORTIVOS (ORIGINAL)
+        "inscripcion_optativos_deportivos_original": """
 📝 **Inscribir Optativos Deportivos:**
 
 **Dos formas de inscripción:**
@@ -783,8 +1342,8 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 **Desinscripción:** Revisa fechas del calendario académico (máximo hasta tercera semana)
 """,
 
-        # 🎯 SELECCIONES DEPORTIVAS
-        "selecciones_deportivas": """
+        # 🎯 SELECCIONES DEPORTIVAS (ORIGINAL)
+        "selecciones_deportivas_original": """
 🏆 **Selecciones Deportivas Duoc UC:**
 
 **Deportes disponibles:**
@@ -814,8 +1373,8 @@ Sábado: 13:00-14:20, 14:30-15:50
 💪 **¡Representa a Duoc UC en competencias interuniversitarias!**
 """,
 
-        # 🎯 BECAS DEPORTIVAS
-        "becas_deportivas": """
+        # 🎯 BECAS DEPORTIVAS (ORIGINAL)
+        "becas_deportivas_original": """
 💰 **Becas Deportivas:**
 
 **Reconocimiento al talento y esfuerzo deportivo.**
@@ -840,7 +1399,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 🏅 **Reconocimiento** al esfuerzo y talento deportivo
 """,
 
-        # 🆕 TORNEOS INTERNOS
+        # 🆕 TORNEOS INTERNOS (ORIGINAL)
         "torneos_internos": """
 🏅 **Torneos Internos Duoc UC:**
 
@@ -872,7 +1431,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *¡Forma tu equipo y representa a tu carrera!*
 """,
 
-        # 🆕 EVALUACIÓN FÍSICA
+        # 🆕 EVALUACIÓN FÍSICA (ORIGINAL)
         "evaluacion_fisica": """
 📊 **Evaluación Física Deportiva:**
 
@@ -902,7 +1461,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Ideal para comenzar cualquier actividad deportiva de manera segura y eficiente*
 """,
 
-        # 🆕 ACTIVIDADES RECREATIVAS
+        # 🆕 ACTIVIDADES RECREATIVAS (ORIGINAL)
         "actividades_recreativas": """
 🎉 **Actividades Recreativas Deportivas:**
 
@@ -932,9 +1491,162 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Perfecto para quienes buscan actividad física sin compromiso competitivo*
 """
     },
+#-----------------------------------------------------------------------------------------------------------------------------------------------------#
 
-    "desarrollo_profesional": {
-        # 🎯 BOLSA DE EMPLEO
+    "desarrollo_laboral": {
+        # 🎯 QUÉ ES DESARROLLO LABORAL DESDE DOCUMENTOS
+        "que_es_desarrollo_laboral": """
+💼 **¿Qué es Desarrollo Laboral en Duoc UC?**
+
+**Área especializada** que te apoya en tu empleabilidad
+
+✅ **Servicios que ofrece:**
+• Asesorías personalizadas de empleabilidad
+• Talleres de desarrollo profesional
+• Herramientas para inserción laboral
+• Seguimiento de tu desarrollo profesional
+
+🔗 **Plataforma:** https://duoclaboral.cl
+👩‍💼 **Coordinadora:** Claudia Cortés Nuñez
+📧 **Contacto:** ccortesn@duoc.cl
+💡 *Te acompañamos desde estudiante hasta titulado*
+""",
+
+        # 🎯 MEJORAR CURRICULUM DESDE DOCUMENTOS
+        "mejorar_curriculum_vitae": """
+📄 **¿Cómo me pueden ayudar a mejorar mi Currículum Vitae?**
+
+**Asesoría personalizada** disponible:
+
+👩‍💼 **Con:** Claudia Cortés Nuñez
+📧 **Contacto:** ccortesn@duoc.cl
+🎯 **Servicios:**
+• Revisión completa de tu CV
+• Recomendaciones específicas
+• Enseñanza para adaptarlo a diferentes ofertas
+• Optimización para reclutadores
+
+🔗 **DuoLaboral:** https://duoclaboral.cl
+💡 *Un CV bien estructurado aumenta tus oportunidades laborales*
+""",
+
+        # 🎯 SIMULACIONES ENTREVISTAS DESDE DOCUMENTOS
+        "simulaciones_entrevistas": """
+🎤 **¿Ofrecen simulaciones de entrevistas laborales?**
+
+**Sí.** Servicio disponible para estudiantes y titulados
+
+✅ **Beneficios:**
+• Práctica realista de entrevistas
+• Retroalimentación sobre tu desempeño
+• Mejora de comunicación verbal y no verbal
+• Preparación para preguntas difíciles
+
+👩‍💼 **Coordinar con:** Claudia Cortés
+📧 **Email:** ccortesn@duoc.cl
+💼 *Prepárate para destacar en tus entrevistas reales*
+""",
+
+        # 🎯 BOLSA DE EMPLEO DESDE DOCUMENTOS
+        "bolsa_empleo_acceso": """
+🌐 **¿Dónde puedo acceder a la Bolsa de Empleo de Duoc UC?**
+
+**Plataforma oficial:** https://duoclaboral.cl
+
+✅ **Características:**
+• Exclusiva para estudiantes y titulados Duoc UC
+• Ofertas laborales de empresas asociadas
+• Prácticas profesionales remuneradas
+• Herramientas de empleabilidad
+
+🔗 **Acceso directo:** https://duoclaboral.cl
+🔐 **Usuario:** Correo institucional @duocuc.cl
+💡 *Mantén tu perfil actualizado para recibir ofertas matching*
+""",
+
+        # 🎯 CREAR CV EN DUOCLABORAL DESDE DOCUMENTOS
+        "crear_cv_duoclaboral": """
+📝 **¿Cómo creo mi CV en duoclaboral.cl?**
+
+**Proceso paso a paso:**
+1. **Ingresar** con usuario y contraseña institucional
+2. Ir a sección **"Mi CV"**
+3. **Completar** tus datos personales, académicos y experiencia
+4. **Sistema genera automáticamente** CV formato Oxford
+5. **Optimizado** para destacar frente a reclutadores
+
+🎯 **Formato Oxford:** Profesional y estandarizado
+🔗 **Plataforma:** https://duoclaboral.cl
+💡 *CV listo en minutos con formato profesional*
+""",
+
+        # 🎯 TALLERES EMPLEABILIDAD DESDE DOCUMENTOS
+        "talleres_empleabilidad": """
+📊 **¿Qué tipo de talleres de empleabilidad ofrece la sede?**
+
+**Talleres disponibles:**
+• CV y hoja de vida efectiva
+• Entrevistas laborales exitosas
+• Marca personal digital
+• Comunicación efectiva
+• Liderazgo y trabajo en equipo
+• Habilidades blandas y laborales
+
+📍 **Modalidades:** Presenciales y virtuales
+📅 **Calendario:** Publicado mensualmente
+🔗 **Información:** https://duoclaboral.cl
+🚀 *Desarrolla competencias clave para el mundo laboral*
+""",
+
+        # 🎯 BENEFICIOS TITULADOS DESDE DOCUMENTOS
+        "beneficios_titulados": """
+🎓 **¿Qué beneficios tienen los titulados en Desarrollo Laboral?**
+
+**Acceso permanente** a servicios:
+
+✅ **Beneficios incluyen:**
+• Acceso ilimitado a Bolsa de Empleo DuoLaboral
+• Talleres y charlas actualizadas
+• Networking con empleadores y ex-alumnos
+• Asesorías personalizadas sin costo
+• Oportunidades de desarrollo continuo
+
+🔗 **Plataforma titulados:** https://duoclaboral.cl
+💼 *Tu relación con Duoc UC continúa después de titularse*
+""",
+
+        # 🎯 CONTACTO PLAZA NORTE DESDE DOCUMENTOS
+        "contacto_plaza_norte": """
+📍 **¿A qué correo o persona me puedo dirigir en la sede Plaza Norte?**
+
+**Desarrollo Laboral Plaza Norte:**
+👩‍💼 **Coordinadora:** Claudia Cortés Nuñez
+📧 **Email:** ccortesn@duoc.cl
+📞 **También puedes:** Consultar directamente en Punto Estudiantil
+
+🔗 **DuoLaboral:** https://duoclaboral.cl
+💡 *Estamos para apoyar tu desarrollo profesional*
+""",
+
+        # 🎯 APOYO PRÁCTICAS PROFESIONALES DESDE DOCUMENTOS
+        "apoyo_practicas_profesionales": """
+🎓 **¿Qué apoyo entregan para buscar prácticas profesionales?**
+
+**Apoyo integral** para tu práctica:
+
+✅ **Servicios:**
+• Orientación en la búsqueda de prácticas
+• Revisión y mejora de CV específico
+• Preparación para entrevistas de práctica
+• Publicación de prácticas en duoclaboral.cl
+• Seguimiento durante el proceso
+
+🔗 **Ofertas prácticas:** https://duoclaboral.cl
+👩‍💼 **Contacto:** Claudia Cortés - ccortesn@duoc.cl
+💡 *Comienza tu búsqueda con 2-3 meses de anticipación*
+""",
+
+        # 🎯 BOLSA DE EMPLEO (ORIGINAL)
         "bolsa_empleo": """
 💼 **Bolsa de Empleo Duoc UC:**
 
@@ -960,7 +1672,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Mantén tu CV actualizado para recibir ofertas matching tu perfil*
 """,
 
-        # 🎯 PRÁCTICAS PROFESIONALES
+        # 🎯 PRÁCTICAS PROFESIONALES (ORIGINAL)
         "practicas_profesionales": """
 🎓 **Prácticas Profesionales:**
 
@@ -990,7 +1702,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Comienza tu búsqueda con 2-3 meses de anticipación*
 """,
 
-        # 🎯 MEJORAR CURRICULUM
+        # 🎯 MEJORAR CURRICULUM (ORIGINAL)
         "mejorar_curriculum": """
 📄 **Mejorar tu Curriculum Vitae:**
 
@@ -1014,8 +1726,8 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Un CV bien estructurado aumenta en 40% tus oportunidades laborales*
 """,
 
-        # 🎯 SIMULACIONES ENTREVISTAS
-        "simulaciones_entrevistas": """
+        # 🎯 SIMULACIONES ENTREVISTAS (ORIGINAL)
+        "simulaciones_entrevistas_original": """
 🎤 **Simulaciones de Entrevistas Laborales:**
 
 **Practica y recibe retroalimentación** sobre tu desempeño.
@@ -1040,8 +1752,8 @@ Sábado: 13:00-14:20, 14:30-15:50
 💼 *La práctica hace al maestro - prepárate para el éxito*
 """,
 
-        # 🎯 TALLERES EMPLEABILIDAD
-        "talleres_empleabilidad": """
+        # 🎯 TALLERES EMPLEABILIDAD (ORIGINAL)
+        "talleres_empleabilidad_original": """
 📊 **Talleres de Desarrollo Laboral:**
 
 **Mejora tus habilidades** para el mundo laboral actual.
@@ -1070,8 +1782,8 @@ Sábado: 13:00-14:20, 14:30-15:50
 🚀 *Desarrolla competencias clave para tu éxito profesional*
 """,
 
-        # 🎯 BENEFICIOS TITULADOS
-        "beneficios_titulados": """
+        # 🎯 BENEFICIOS TITULADOS (ORIGINAL)
+        "beneficios_titulados_original": """
 🎓 **Beneficios para Titulados:**
 
 **Acceso permanente** a servicios de desarrollo profesional.
@@ -1095,7 +1807,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💼 *Tu relación con Duoc UC continúa y se fortalece después de titularse*
 """,
 
-        # 🆕 FERIAS LABORALES
+        # 🆕 FERIAS LABORALES (ORIGINAL)
         "ferias_laborales": """
 🎪 **Ferias Laborales Duoc UC:**
 
@@ -1126,7 +1838,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Oportunidad única para contactar directamente con reclutadores y gerentes*
 """,
 
-        # 🆕 MENTORÍA PROFESIONAL
+        # 🆕 MENTORÍA PROFESIONAL (ORIGINAL)
         "mentoria_profesional": """
 👥 **Programa de Mentoría Profesional:**
 
@@ -1155,7 +1867,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Conecta con quienes ya recorrieron el camino que tú empiezas*
 """,
 
-        # 🆕 LINKEDIN OPTIMIZACIÓN
+        # 🆕 LINKEDIN OPTIMIZACIÓN (ORIGINAL)
         "linkedin_optimizacion": """
 🔗 **Optimización de Perfil LinkedIn:**
 
@@ -1187,8 +1899,10 @@ Sábado: 13:00-14:20, 14:30-15:50
 """
     },
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------------#
+
     "institucionales": {
-        # 🎯 SALUDOS INICIALES
+        # 🎯 SALUDOS INICIALES (ORIGINAL)
         "saludo_inicial": """
 👋 **¡Hola! Soy InA, tu asistente del Punto Estudiantil Duoc UC**
 
@@ -1207,7 +1921,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 *¿En qué puedo ayudarte hoy?* 🙂
 """,
 
-        # 🎯 INFORMACIÓN DE CONTACTO
+        # 🎯 INFORMACIÓN DE CONTACTO (ORIGINAL)
         "informacion_contacto": """
 📍 **Punto Estudiantil - Plaza Norte**
 
@@ -1229,7 +1943,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💬 *¿En qué más puedo ayudarte?*
 """,
 
-        # 🆕 HORARIOS ATENCIÓN COMPLETOS
+        # 🆕 HORARIOS ATENCIÓN COMPLETOS (ORIGINAL)
         "horarios_atencion": """
 ⏰ **Horarios de Atención - Plaza Norte 2025:**
 
@@ -1270,7 +1984,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Horarios sujetos a cambios según calendario académico y feriados*
 """,
 
-        # 🆕 BECAS Y BENEFICIOS COMPLETOS
+        # 🆕 BECAS Y BENEFICIOS COMPLETOS (ORIGINAL)
         "becas_beneficios": """
 💰 **Becas y Beneficios Duoc UC 2025:**
 
@@ -1308,7 +2022,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Revisa fechas específicas de postulación para cada beneficio*
 """,
 
-        # 🆕 CALENDARIO ACADÉMICO
+        # 🆕 CALENDARIO ACADÉMICO (ORIGINAL)
         "calendario_academico": """
 📅 **Calendario Académico 2025 - Plaza Norte:**
 
@@ -1341,7 +2055,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Las fechas pueden sufrir ajustes - consulta siempre el calendario oficial*
 """,
 
-        # 🆕 BIBLIOTECA Y RECURSOS
+        # 🆕 BIBLIOTECA Y RECURSOS (ORIGINAL)
         "biblioteca_recursos": """
 📚 **Biblioteca Duoc UC - Plaza Norte:**
 
@@ -1377,7 +2091,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Accede con tu credencial estudiantil o certificado de alumno regular*
 """,
 
-        # 🆕 PLATAFORMAS DIGITALES
+        # 🆕 PLATAFORMAS DIGITALES (ORIGINAL)
         "plataformas_digitales": """
 💻 **Plataformas Digitales Duoc UC:**
 
@@ -1417,7 +2131,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Mantén tus datos actualizados en el portal para recibir información relevante*
 """,
 
-        # 🆕 CONTINGENCIAS Y EMERGENCIAS
+        # 🆕 CONTINGENCIAS Y EMERGENCIAS (ORIGINAL)
         "contingencias_emergencias": """
 🚨 **Protocolo de Contingencias y Emergencias:**
 
@@ -1449,7 +2163,7 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Mantente informado a través de los canales oficiales durante contingencias*
 """,
 
-        # 🆕 CONTACTO POR ÁREAS
+        # 🆕 CONTACTO POR ÁREAS (ORIGINAL)
         "contacto_areas": """
 📞 **Contacto por Áreas Específicas - Plaza Norte:**
 
@@ -1491,4 +2205,5 @@ Sábado: 13:00-14:20, 14:30-15:50
 💡 *Para consultas específicas, contacta directamente al área correspondiente*
 """
     }
+    #-----------------------------------------------------------------------------------------------------------------------------------------------------#
 }

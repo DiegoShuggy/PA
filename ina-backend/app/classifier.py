@@ -1,4 +1,4 @@
-# classifier.py - VERSIÓN COMPLETA CON DETECCIÓN EXPANDIDA
+# classifier.py - VERSIÓN COMPLETA ACTUALIZADA
 import ollama
 from typing import Dict, List, Tuple, Optional
 import logging
@@ -25,6 +25,21 @@ class QuestionClassifier:
         # ✅ PATRONES MEJORADOS Y EXPANDIDOS
         self.keyword_patterns = {
             "asuntos_estudiantiles": [
+                # 🚨 PATRONES CRÍTICOS MEJORADOS - PROGRAMA EMERGENCIA
+                r'\b(programa.*emergencia|emergencia.*duoc|ayuda.*emergencia|200\.000)\b',
+                r'\b(requisitos.*emergencia|postular.*emergencia|solicitar.*emergencia)\b',
+                r'\b(qué.*es.*programa.*emergencia|información.*emergencia|definición.*emergencia)\b',
+                r'\b(situación.*imprevista|estabilidad.*económica|problema.*económico.*grave)\b',
+                r'\b(gastos.*médicos|fallecimiento|daños.*vivienda|apoyo.*excepcional)\b',
+                
+                # 🚨 TNE PÉRDIDA/DAÑO - MÁS ESPECÍFICOS
+                r'\b(tne.*perdí|perdí.*tne|tne.*extravi|extravié.*tne|tne.*desapareció)\b',
+                r'\b(tne.*dañad|dañé.*tne|tne.*robaron|hurtaron.*tne|tne.*malograda)\b',
+                r'\b(tne.*mal.*estado|tne.*rota|tne.*deteriorad|tne.*inservible)\b',
+                r'\b(reposición.*tne|nueva.*tne.*perdida|duplicado.*tne|segunda.*tne)\b',
+                r'\b(3600|3\.600|tres.*mil.*seiscientos|pago.*reposición)\b',
+                r'\b(comisariavirtual|constancia.*pérdida|certificado.*pérdida|denuncia.*pérdida)\b',
+
                 # TNE y certificados - EXPANDIDO
                 r'\b(tne|tarjeta nacional estudiantil|pase escolar)\b',
                 r'\b(validar tne|renovar tne|revalidar tne|sacar tne|obtener tne)\b',
@@ -148,6 +163,13 @@ class QuestionClassifier:
             ],
             
             "institucionales": [
+                # 🆕 CONTACTO ESPECÍFICO PLAZA NORTE
+                r'\b(correo.*plaza.*norte|email.*plaza.*norte|contacto.*plaza.*norte)\b',
+                r'\b(persona.*plaza.*norte|quién.*plaza.*norte|directamente.*plaza.*norte)\b',
+                r'\b(claudia.*cortés|ccortesn|adriana.*vásquez|avasquezm)\b',
+                r'\b(elizabeth.*domínguez|edominguezs|coordinadora.*plaza.*norte)\b',
+                r'\b(departamento.*plaza.*norte|área.*plaza.*norte|oficina.*plaza.*norte)\b',
+                
                 # Servicios digitales - EXPANDIDO
                 r'\b(mi duoc|midooc|plataforma|correo institucional|contraseña)\b',
                 r'\b(acceso|login|portal|clave|bloqueado|no puedo entrar)\b',
@@ -206,8 +228,58 @@ class QuestionClassifier:
         """🎯 DETECCIÓN INTELIGENTE DE TEMPLATES EXPANDIDA CON TODOS LOS NUEVOS"""
         question_lower = self._clean_question(question)
         
+        # 🆕 DETECCIÓN PRIORITARIA PARA TEMPLATES CRÍTICOS
+        priority_templates = {
+            "tne_primera_vez": [r'cómo.*saco.*tne', r'obtener.*tne', r'sacar.*tne'],
+            "tne_reposicion_perdida_danada": [r'tne.*pierde', r'tne.*pérdida', r'tne.*dañada'],
+            "programa_emergencia_que_es": [r'qué.*es.*programa.*emergencia'],
+            "programa_emergencia_requisitos": [r'requisitos.*programa.*emergencia'],
+        }
+
+        for template_id, patterns in priority_templates.items():
+            for pattern in patterns:
+                if re.search(pattern, question_lower):
+                    logger.info(f"🎯 PRIORITY TEMPLATE: '{question}' -> {template_id}")
+                    return template_id
+        
         # 🎯 PATRONES ESPECÍFICOS PARA TEMPLATES - COMPLETAMENTE EXPANDIDOS
         template_patterns = {
+            # 🆕 NUEVOS TEMPLATES CRÍTICOS
+            "programa_emergencia_que_es": [
+                r'qué.*es.*programa.*emergencia', r'programa.*emergencia.*qué.*es',
+                r'información.*programa.*emergencia', r'explicación.*emergencia',
+                r'para.*qué.*sirve.*emergencia', r'qué.*ofrece.*programa.*emergencia'
+            ],
+
+            "programa_emergencia_requisitos": [
+                r'requisitos.*programa.*emergencia', r'qué.*necesito.*emergencia',
+                r'documentación.*emergencia', r'postular.*emergencia.*requisitos',
+                r'qué.*papeles.*emergencia', r'requisitos.*para.*emergencia'
+            ],
+
+            "tne_reposicion_perdida_danada": [
+                r'tne.*perdí', r'perdí.*tne', r'tne.*extravié', r'extravié.*tne',
+                r'tne.*dañad', r'dañé.*tne', r'tne.*robaron', r'robaron.*tne',
+                r'tne.*mal.*estado', r'tne.*rota', r'tne.*deteriorad',
+                r'reposición.*tne.*perdida', r'nueva.*tne.*perdida',
+                r'3600.*tne', r'3\.600.*tne', r'comisariavirtual.*tne',
+                r'constancia.*pérdida.*tne'
+            ],
+
+            "contacto_plaza_norte_especifico": [
+                r'correo.*plaza.*norte', r'email.*plaza.*norte', 
+                r'persona.*plaza.*norte', r'quién.*plaza.*norte',
+                r'contacto.*específico.*plaza.*norte', r'directamente.*plaza.*norte',
+                r'claudia.*cortés', r'ccortesn', r'adriana.*vásquez',
+                r'elizabeth.*domínguez', r'coordinadora.*plaza.*norte'
+            ],
+
+            "beneficios_titulados_corregido": [
+                r'beneficios.*titulados', r'titulados.*beneficios',
+                r'qué.*beneficios.*titulados', r'ventajas.*titulado',
+                r'después.*titular.*beneficios', r'egresados.*beneficios'
+            ],
+            
             # ASUNTOS ESTUDIANTILES - EXPANDIDO
             "tne_documentos_primera_vez": [
                 r'documentos.*tne', r'qué.*necesito.*tne', r'requisitos.*tne',
@@ -512,6 +584,26 @@ class QuestionClassifier:
             logger.warning(f"🚨 URGENCIA DETECTADA en clasificación: {question}")
             return "bienestar_estudiantil", 0.95  # Alta confianza para urgencias
         
+        # 🆕 DETECCIÓN ESPECÍFICA PARA CONSULTAS PROBLEMÁTICAS
+        specific_patterns = {
+            "asuntos_estudiantiles": [
+                r'programa.*emergencia', r'emergencia.*duoc', r'200\.000',
+                r'tne.*perdí', r'perdí.*tne', r'tne.*dañad', r'3600.*tne',
+                r'comisariavirtual', r'reposición.*tne'
+            ],
+            "institucionales": [
+                r'correo.*plaza.*norte', r'email.*plaza.*norte', r'persona.*plaza.*norte',
+                r'claudia.*cortés', r'ccortesn', r'adriana.*vásquez'
+            ]
+        }
+        
+        # 🆕 VERIFICAR PATRONES ESPECÍFICOS PRIMERO
+        for category, patterns in specific_patterns.items():
+            for pattern in patterns:
+                if re.search(pattern, question_lower):
+                    logger.info(f"🎯 PATRÓN ESPECÍFICO detectado: '{question}' -> '{category}'")
+                    return category, 0.8  # Alta confianza para patrones específicos
+    
         best_category = "otros"
         best_score = 0
         
@@ -522,7 +614,9 @@ class QuestionClassifier:
                 if matches:
                     # 🆕 SCORING MEJORADO - patrones específicos tienen más peso
                     if any(keyword in pattern for keyword in ['crisis', 'urgencia', 'emergencia', 'psicológico']):
-                        score += len(matches) * 3  # Bonus por términos críticos
+                        score += len(matches) * 3
+                    elif 'programa.*emergencia' in pattern or 'tne.*perdí' in pattern:
+                        score += len(matches) * 4  # 🆕 BONUS EXTRA para patrones críticos
                     elif '.*' in pattern:  # Patrón complejo
                         score += len(matches) * 2
                     else:  # Patrón simple
@@ -532,22 +626,28 @@ class QuestionClassifier:
                 best_score = score
                 best_category = category
         
-        # 🆕 CONFIANZA MEJORADA
+        # 🆕 CONFIANZA MEJORADA CON BONUS ESPECÍFICOS
         confidence = min(best_score / 4.0, 1.0) if best_score > 0 else 0.0
         
-        # 🆕 BONUS POR COINCIDENCIAS FUERTES ESPECÍFICAS
+        # 🆕 BONUS POR COINCIDENCIAS FUERTES ESPECÍFICAS - ACTUALIZADO
         strong_matches = {
             'bienestar_estudiantil': ['crisis', 'urgencia', 'psicológico', 'línea ops', 'sesiones psicológicas'],
-            'asuntos_estudiantiles': ['tne', 'certificado', 'programa emergencia', 'programa transporte'],
+            'asuntos_estudiantiles': [
+                'tne', 'certificado', 'programa emergencia', 'programa transporte', 
+                'programa materiales', '200.000', '3600', 'comisariavirtual'
+            ],
             'deportes': ['taller deportivo', 'gimnasio', 'beca deportiva', 'entrenamiento'],
             'desarrollo_profesional': ['claudia cortés', 'cv', 'bolsa trabajo', 'práctica profesional'],
-            'institucionales': ['mi duoc', 'contraseña', 'plataforma', 'correo institucional']
+            'institucionales': [
+                'mi duoc', 'contraseña', 'plataforma', 'correo institucional',
+                'plaza norte', 'ccortesn', 'avasquezm'
+            ]
         }
         
         for category, keywords in strong_matches.items():
             if any(keyword in question_lower for keyword in keywords):
                 if category == best_category:
-                    confidence = min(confidence + 0.3, 1.0)  # Bonus por coincidencia exacta
+                    confidence = min(confidence + 0.3, 1.0)
                 elif confidence < 0.6:  # Si no hay categoría clara, priorizar estas
                     best_category = category
                     confidence = 0.7
