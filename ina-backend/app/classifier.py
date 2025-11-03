@@ -249,12 +249,21 @@ class QuestionClassifier:
                 r'qué.*es.*programa.*emergencia', r'programa.*emergencia.*qué.*es',
                 r'información.*programa.*emergencia', r'explicación.*emergencia',
                 r'para.*qué.*sirve.*emergencia', r'qué.*ofrece.*programa.*emergencia'
+                r'definición.*programa.*emergencia', r'qué.*significa.*emergencia'
             ],
 
             "programa_emergencia_requisitos": [
                 r'requisitos.*programa.*emergencia', r'qué.*necesito.*emergencia',
                 r'documentación.*emergencia', r'postular.*emergencia.*requisitos',
                 r'qué.*papeles.*emergencia', r'requisitos.*para.*emergencia'
+                r'qué.*documentos.*emergencia', r'condiciones.*emergencia'
+            ],
+            
+            "apoyo_tecnicas_estudio_que_es": [
+            r'qué.*es.*apoyo.*técnicas.*estudio', r'apoyo.*técnicas.*estudio.*qué.*es',
+            r'qué.*es.*técnicas.*estudio', r'definición.*técnicas.*estudio',
+            r'explicación.*técnicas.*estudio', r'para.*qué.*sirve.*técnicas.*estudio',
+            r'qué.*ofrece.*técnicas.*estudio', r'información.*técnicas.*estudio'
             ],
 
             "tne_reposicion_perdida_danada": [

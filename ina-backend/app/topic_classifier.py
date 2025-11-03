@@ -17,6 +17,17 @@ class TopicClassifier:
                 "concentración de notas", "certificado", "constancia", "record", "concentración",
                 "certificado de alumno regular", "constancia de alumno regular",
                 
+                # 🆕 PATRONES ESPECÍFICOS PARA LAS 3 PREGUNTAS CRÍTICAS
+                "programa de emergencia", "qué es programa emergencia", "información programa emergencia",
+                "requisitos programa emergencia", "postular programa emergencia", "solicitar programa emergencia",
+                "ayuda económica emergencia", "beneficio emergencia", "monto emergencia", "200.000 emergencia",
+                "apoyo técnicas estudio", "técnicas estudio", "apoyo personalizado estudio", 
+                "qué es técnicas estudio", "apoyo psicopedagógico", "estrategias estudio",
+                "mejorar rendimiento académico", "apoyo aprendizaje", "habilidades estudio",
+                "programa emergencia duoc", "emergencia duoc", "ayuda financiera emergencia",
+                "situación imprevista", "estabilidad económica", "problema económico grave",
+                "gastos médicos", "fallecimiento familiar", "daños vivienda", "apoyo excepcional",
+                
                 # Becas y beneficios - EXPANDIDO
                 "becas", "beneficios estudiantiles", "beneficio", "ayuda económica", "programa emergencia",
                 "programa transporte", "programa materiales", "apoyo económico", "subsidio", "financiamiento",
@@ -225,6 +236,26 @@ class TopicClassifier:
                 r"proceso.pr[aá]ctica", r"requisitos.pr[aá]ctica", r"oferta.laboral",
                 r"empleador", r"convenio.*empresa", r"taller.*empleabilidad", r"claudia.*cort[eé]s",
                 r"ccortesn", r"coordinadora.*desarrollo", r"entrevista.*trabajo"
+            ],
+            # 🆕 PATRONES ESPECIALES PARA LAS 3 PREGUNTAS CRÍTICAS
+            "programa_emergencia": [
+                r"programa.*emergencia", r"emergencia.*programa", r"qu[ée].*es.*programa.*emergencia",
+                r"informaci[óo]n.*programa.*emergencia", r"requisitos.*programa.*emergencia", 
+                r"postular.*programa.*emergencia", r"solicitar.*programa.*emergencia",
+                r"ayuda.*econ[óo]mica.*emergencia", r"beneficio.*emergencia", r"monto.*emergencia",
+                r"200\.000", r"doscientos.*mil", r"subsidio.*emergencia", r"qué.*es.*emergencia",
+                r"definición.*emergencia", r"para.*qué.*sirve.*emergencia", r"qué.*ofrece.*emergencia",
+                r"situación.*imprevista", r"estabilidad.*económica", r"problema.*económico.*grave",
+                r"gastos.*médicos", r"fallecimiento", r"daños.*vivienda", r"apoyo.*excepcional"
+            ],
+            "tecnicas_estudio": [
+                r"t[ée]cnicas.*estudio", r"apoyo.*t[ée]cnicas.*estudio", r"qu[ée].*es.*t[ée]cnicas.*estudio",
+                r"apoyo.*personalizado.*estudio", r"estrategias.*estudio", r"mejorar.*rendimiento",
+                r"apoyo.*psicopedag[óo]gico", r"psicopedagog[íi]a", r"habilidades.*estudio",
+                r"m[ée]todos.*estudio", r"aprender.*mejor", r"estudio.*efectivo",
+                r"qué.*es.*apoyo.*personalizado", r"definición.*técnicas.*estudio",
+                r"explicación.*técnicas.*estudio", r"para.*qué.*sirve.*técnicas.*estudio",
+                r"qué.*ofrece.*técnicas.*estudio", r"información.*técnicas.*estudio"
             ]
         }
 
@@ -271,7 +302,29 @@ class TopicClassifier:
         }
 
     def _detect_special_patterns(self, question: str) -> Dict:
-        """🆕 DETECCIÓN ESPECIAL EXPANDIDA"""
+        """🆕 DETECCIÓN ESPECIAL EXPANDIDA CON LAS 3 PREGUNTAS CRÍTICAS"""
+        
+        # 👇 DETECCIÓN DE PROGRAMA EMERGENCIA
+        for pattern in self.special_patterns["programa_emergencia"]:
+            if re.search(pattern, question, re.IGNORECASE):
+                return {
+                    "is_institutional": True,
+                    "category": "asuntos_estudiantiles",
+                    "matched_keywords": ["programa emergencia", "ayuda económica"],
+                    "confidence": 0.95,
+                    "message": "Consulta Programa Emergencia detectada - Asuntos Estudiantiles"
+                }
+    
+        # 👇 DETECCIÓN DE TÉCNICAS DE ESTUDIO
+        for pattern in self.special_patterns["tecnicas_estudio"]:
+            if re.search(pattern, question, re.IGNORECASE):
+                return {
+                    "is_institutional": True,
+                    "category": "asuntos_estudiantiles",
+                    "matched_keywords": ["técnicas estudio", "apoyo aprendizaje"],
+                    "confidence": 0.9,
+                    "message": "Consulta Técnicas de Estudio detectada - Asuntos Estudiantiles"
+                }
         
         # 👇 DETECCIÓN DE SALUDOS
         for pattern in self.special_patterns["saludos"]:

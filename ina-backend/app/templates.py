@@ -157,6 +157,90 @@ TEMPLATES = {
 💡 *Proceso exclusivo para primer ingreso a educación superior*
 """,
 
+# 🆕 TEMPLATES PARA LAS 3 PREGUNTAS ESPECÍFICAS
+"programa_emergencia_que_es": """
+🆘 **¿Qué es el Programa de Emergencia?**
+
+**Ayuda financiera inmediata** para situaciones imprevistas que afecten tu estabilidad económica personal o familiar.
+
+💰 **Monto máximo:** $200.000
+🎯 **Objetivo:** Aliviar impacto económico de emergencias
+✅ **Destinado a:** Estudiantes que enfrentan situaciones críticas
+
+📋 **Categorías cubiertas:**
+• 🩺 Gastos médicos en tratamientos/medicamentos de alto costo
+• ✝️ Gastos por fallecimiento de familiar cercano  
+• 🚪 Gastos por daños a la vivienda del estudiante
+• 🙏 Apoyo excepcional (una vez durante la carrera)
+
+📅 **Postulaciones 2025:**
+• **1er semestre:** 28 abril - 31 julio
+• **2do semestre:** 1 septiembre - 22 diciembre
+
+🔗 **Postular:** https://centroayuda.duoc.cl
+📞 **Consultas:** +56 2 2360 6400
+💡 *Beneficio disponible para alumnos regulares con carga académica*
+""",
+
+"programa_emergencia_requisitos": """
+✅ **Requisitos para postular al Programa de Emergencia:**
+
+**Requisitos generales:**
+• Ser alumno regular de Duoc UC
+• Tener carga académica asignada
+• Sin solicitud activa de suspensión o renuncia
+• Registro Social de Hogares (máximo 6 meses vigencia)
+• Cuenta RUT activa del Banco Estado
+
+📋 **Documentación por categoría:**
+
+🩺 **Gastos médicos:**
+• Registro Social de Hogares vigente
+• Antecedentes médicos y/o tratamiento con receta médica
+
+✝️ **Fallecimiento familiar:**
+• Registro Social de Hogares vigente  
+• Certificado de nacimiento/matrimonio/AUC
+• Certificado de defunción del Registro Civil
+
+🚪 **Daños vivienda:**
+• Registro Social de Hogares vigente
+• Certificado de Bomberos y/o Ficha Básica de Emergencia
+
+🙏 **Apoyo excepcional:**
+• Registro Social de Hogares vigente
+• Informe de asistente social
+
+🔗 **Postular:** https://centroayuda.duoc.cl
+🚫 **Exclusión:** Estudiantes con Beca Colaborador Duoc UC
+""",
+
+"apoyo_tecnicas_estudio_que_es": """
+🎯 **¿Qué es el Apoyo Personalizado para Técnicas de Estudio?**
+
+**Programa especializado** para desarrollar habilidades y estrategias de estudio más efectivas con psicopedagogos.
+
+✅ **Para quién:** Todos los estudiantes regulares de Duoc UC
+💻 **Modalidad:** Sesiones online personalizadas
+📅 **Duración:** Según necesidades del estudiante
+
+🎯 **Qué incluye:**
+• Diagnóstico inicial de tus hábitos de estudio
+• Estrategias personalizadas de aprendizaje
+• Técnicas de organización del tiempo
+• Métodos para mejorar concentración y memoria
+• Manejo de ansiedad académica
+
+📋 **Cómo funciona:**
+1. **Agendar entrevista inicial** en eventos.duoc.cl
+2. **Evaluación** de tus necesidades específicas
+3. **Sesiones personalizadas** según tu disponibilidad
+4. **Seguimiento** de tu progreso
+
+🔗 **Agendar:** https://eventos.duoc.cl
+🔗 **Recursos adicionales:** https://cva.duoc.cl
+💡 *Mejora tu rendimiento académico con técnicas comprobadas*
+""",
         # 🎯 PROGRAMA EMERGENCIA (ORIGINAL + ACTUALIZADO)
         "programa_emergencia": """
 🆘 **Programa de Emergencia Duoc UC:**

@@ -1,3 +1,4 @@
+# filter_config.py
 """
 Configuración de los filtros de contenido
 """
