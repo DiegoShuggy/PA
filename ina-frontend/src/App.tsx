@@ -13,8 +13,8 @@ import { useTranslation } from 'react-i18next';
 import './App.css'; // Solo estilos globales
 import './translation/i18n'; // Importa la configuración de i18n
 import NavBar from './components/NavBar';
-import ojoAbierto from './img/ojo_abierto.jpg';
-import ojoCerrado from './img/ojo_cerrado.jpg';
+import ojoAbierto from './img/ojo-abierto.png';
+import ojoCerrado from './img/ojo-cerrado.png';
 
 function App() {
     const { i18n, t } = useTranslation();
