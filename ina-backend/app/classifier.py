@@ -115,6 +115,7 @@ class QuestionClassifier:
                 r'\b(complejo.*maiclub|gimnasio.*entretiempo|piscina.*acquatiempo)\b',
                 r'\b(caf|centro.*bienestar|acondicionamiento.*físico)\b',
                 r'\b(ubicación.*deportes|lugar.*taller|instalación.*deportiva)\b',
+                r'\b(en.*qué.*lugar|dónde.*están|dónde.*se.*hacen)\b',  # 🆕 NUEVO
                 
                 # Horarios deportivos - EXPANDIDO
                 r'\b(horario.*taller|horario.*deporte|cuándo.*taller)\b',
@@ -234,6 +235,13 @@ class QuestionClassifier:
             "tne_reposicion_perdida_danada": [r'tne.*pierde', r'tne.*pérdida', r'tne.*dañada'],
             "programa_emergencia_que_es": [r'qué.*es.*programa.*emergencia'],
             "programa_emergencia_requisitos": [r'requisitos.*programa.*emergencia'],
+            "ubicaciones_deportivas": [r'en.*qué.*lugar.*ubicados', r'dónde.*están.*talleres'],
+            "talleres_tienen_nota": [r'talleres.*tienen.*nota', r'nota.*taller'],
+            "talleres_tienen_asistencia": [r'tienen.*asistencia'],
+            "desinscripcion_talleres": [r'cómo.*puedo.*des.*inscribirme'],
+            "ubicaciones_deportivas": [r'en.*qué.*lugar.*ubicados', r'dónde.*están.*talleres',r'ubicación.*deportes', r'lugar.*taller'],
+            "desinscripcion_talleres": [r'cómo.*puedo.*des.*inscribirme', r'retirarme.*taller',r'cancelar.*inscripción', r'dejar.*taller'],
+            "inscripcion_optativos_deportivos": [r'cómo.*inscribo.*optativos', r'inscripción.*deportivos',r'tomar.*taller.*deporte', r'proceso.*inscripción.*deportes'],
         }
 
         for template_id, patterns in priority_templates.items():
@@ -481,6 +489,14 @@ class QuestionClassifier:
                 r'deportes.*disponibles', r'qué.*deportes.*hay', r'lista.*talleres',
                 r'qué.*actividades.*deportivas', r'oferta.*deportiva'
             ],
+            "horarios_talleres_2025": [
+                r'horarios.*talleres', r'horario.*deportes', r'cuándo.*son.*talleres',
+                r'horario.*entrenamiento', r'qué.*horarios.*taller', r'calendarización.*deportes'
+            ],
+            "ausencias_talleres": [
+                r'qué.*pasa.*si.*falto', r'inasistencias.*taller', r'faltar.*taller',
+                r'consecuencias.*falta', r'reglamento.*asistencia', r'no.*puedo.*ir.*taller'
+            ],
             "horarios_talleres": [
                 r'horario.*taller', r'horario.*deporte', r'cuándo.*taller',
                 r'día.*entrenamiento', r'qué.*horarios', r'calendarización.*deportes',
@@ -489,7 +505,14 @@ class QuestionClassifier:
             "gimnasio_caf": [
                 r'gimnasio', r'caf', r'centro.*bienestar', r'acondicionamiento.*físico',
                 r'preparador.*físico', r'evaluación.*física', r'uso.*gimnasio',
-                r'horario.*gimnasio', r'cómo.*entrenar', r'centro.*deportivo'
+                r'horario.*gimnasio', r'cómo.*entrenar', r'centro.*deportivo',
+                r'tomar.*taller.*deporte', r'cómo.*me.*inscribo.*deporte',
+                r'cómo.*inscribo.*optativos', r'inscripción.*deportivos',
+                r'proceso.*inscripción.*deportes'
+            ],
+            "gimnasio_caf_inscripcion": [
+                r'cómo.*inscribirme.*gimnasio', r'gimnasio.*caf', 
+                r'acceder.*gimnasio', r'uso.*gimnasio', r'preparador.*físico'
             ],
             "inscripcion_optativos_deportivos": [
                 r'inscribir.*deportivo', r'optativo.*deporte', r'tomar.*taller',
@@ -499,11 +522,22 @@ class QuestionClassifier:
             "selecciones_deportivas": [
                 r'selección.*deportiva', r'equipo.*deportivo', r'futsal', r'rugby',
                 r'representar.*duoc', r'competir.*duoc', r'deporte.*competitivo',
+                r'selecciones.*deportivas', r'equipos.*representativos',
+                r'deporte.*competitivo', r'representar.*duoc', r'probar.*selección',
                 r'reclutamiento', r'probar.*selección'
+            ],
+            "desinscripcion_optativos": [
+                r'cómo.*puedo.*des.*inscribirme', r'retirarme.*taller',
+                r'cancelar.*inscripción', r'dejar.*taller', r'abandonar.*optativo'
+            ],
+            "gimnasio_caf_horarios": [
+                r'horario.*gimnasio', r'cuándo.*abre.*caf', r'puedo.*ir.*cualquier.*horario',
+                r'disponibilidad.*gimnasio', r'horarios.*caf'
             ],
             "becas_deportivas": [
                 r'beca.*deportiva', r'postular.*beca.*deporte', r'beneficio.*deportivo',
-                r'apoyo.*deportivo', r'financiamiento.*deporte', r'requisitos.*beca.*deporte'
+                r'apoyo.*deportivo', r'financiamiento.*deporte', r'requisitos.*beca.*deporte',
+                r'beneficio.*deportivo', r'apoyo.*económico.*deporte'
             ],
             "torneos_internos": [
                 r'torneos.*internos', r'competencia.*interna', r'torneo.*deportivo',
@@ -519,6 +553,20 @@ class QuestionClassifier:
                 r'actividades.*recreativas', r'deporte.*recreativo', r'competencia.*recreativa',
                 r'evento.*deportivo', r'juego.*recreativo', r'actividad.*lúdica',
                 r'competencia.*express', r'deporte.*divertido'
+            ],
+            "ubicaciones_deportivas": [
+                r'dónde.*están.*talleres', r'ubicación.*deportes', r'en.*qué.*lugar',
+                r'lugar.*taller', r'dónde.*se.*hacen', r'complejo.*maiclub',
+                r'gimnasio.*entretiempo', r'piscina.*acquatiempo', r'en.*qué.*lugar.*ubicados'
+            ],
+            "talleres_tienen_asistencia": [
+                r'tienen.*asistencia', r'asistencia.*taller', r'control.*asistencia',
+                r'registro.*asistencia', r'presentismo'
+            ],
+            "desinscripcion_talleres": [
+                r'cómo.*puedo.*des.*inscribirme', r'retirarme.*taller',
+                r'cancelar.*inscripción', r'dejar.*taller', r'abandonar.*optativo',
+                r'cómo.*me.*doy.*de.*baja'
             ],
             
             # DESARROLLO PROFESIONAL - EXPANDIDO

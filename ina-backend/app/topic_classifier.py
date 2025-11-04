@@ -108,6 +108,13 @@ class TopicClassifier:
                 "apoyo discapacidad", "recursos inclusión", "adaptaciones académicas"
             ],
             "deportes": [
+                
+                # 🆕 PALABRAS CLAVE CRÍTICAS
+                "ubicados", "lugar", "ubicación", "des inscribirme", "cancelar", "retirarme",
+                "en qué lugar están ubicados", "dónde están ubicados", "ubicación", 
+                "cómo puedo des inscribirme", "des inscribirme", "retirarme",
+                "cancelar inscripción", "darme de baja",
+                
                 # Talleres deportivos - EXPANDIDO
                 "talleres deportivos", "taller deportivo", "actividades deportivas", "deportes",
                 "fútbol masculino", "futbolito damas", "voleibol mixto", "basquetbol mixto",
@@ -126,11 +133,26 @@ class TopicClassifier:
                 "horario entrenamiento", "cuándo entrenar", "horario clase deportiva",
                 "días y horarios deportes", "calendarización deportiva", "programación talleres",
                 
+                # Inscripción y reglamento - 🆕 NUEVO
+                "inscripción deportes", "cómo inscribo optativos", "optativos deportivos",
+                "talleres tienen nota", "tienen asistencia", "cómo des inscribirme",
+                "qué pasa si falto", "inasistencias taller", "retirarme del taller",
+                
                 # Selecciones y becas - EXPANDIDO
                 "selecciones deportivas", "equipos deportivos", "futsal", "rugby", "becas deportivas",
                 "postular beca deportiva", "reclutamiento deportivo", "competencia deportiva",
                 "campeonato", "torneo", "equipo representativo", "deporte competitivo",
                 "selección duoc", "representación deportiva", "competir por duoc"
+                
+                # Gimnasio CAF - MEJORADO
+                "gimnasio caf", "centro acondicionamiento físico", "preparador físico",
+                "evaluación física", "uso gimnasio", "horario gimnasio", "puedo ir en cualquier horario",
+                "profesores gimnasio", "si tengo horario disponible"
+                # 🆕 AGREGAR ESTOS PATRONES ESPECÍFICOS
+                "en qué lugar están ubicados", "dónde están ubicados", "ubicación de los talleres",
+                "cómo puedo des inscribirme", "des inscribirme", "retirarme del taller",
+                "cancelar inscripción deportes", "darme de baja taller",
+                
             ],
             "pastoral": [
                 # 🆕 CATEGORÍA PASTORAL EXPANDIDA
@@ -211,6 +233,31 @@ class TopicClassifier:
 
         # 🆕 PATRONES ESPECIALES EXPANDIDOS Y MEJORADOS
         self.special_patterns = {
+            
+            "deportes_ubicaciones": [
+                r"en.qué.lugar.están.ubicados", r"dónde.están.ubicados",
+                r"en.qué.lugar.están.ubicados", r"dónde.están.los.talleres", 
+                r"ubicación.de.los.talleres", r"lugar.de.los.talleres",
+                r"dónde.se.hacen.los.talleres", r"complejo.maiclub",
+                r"gimnasio.entretiempo", r"piscina.acquatiempo"
+                r"ubicación.de.los.talleres", r"lugar.de.los.talleres"
+            ],
+            
+            "deportes_inscripcion": [
+                r"cómo.inscribo.optativos", r"inscripción.deportivos", 
+                r"tomar.taller.deporte", r"proceso.inscripción.deportes"
+            ],
+            
+            "deportes_desinscripcion": [
+                r"cómo.puedo.des.inscribirme", r"des.inscribirme", 
+                r"retirarme.del.taller", r"cancelar.inscripción"
+            ],
+            
+            "deportes_reglamento": [
+                r"qué.pasa.si.falto", r"talleres.tienen.nota", r"tienen.asistencia",
+                r"cómo.puedo.des.inscribirme", r"retirarme.taller", r"cancelar.inscripción"
+            ],
+            
             "licencias_psicologicas": [
                 r"psicólogo.*licencia.*médica",r"licencia.*médica.*psicólogo", r"psicólogo.*puede.*otorgar.*licencia",
                 r"psicólogo.*virtual.*licencia",r"permiso.*médico.*psicólogo"
@@ -243,6 +290,7 @@ class TopicClassifier:
                 r"beca.*deport", r"complejo.*maiclub", r"gimnasio.*entretiempo", r"piscina.*acquatiempo",
                 r"caf", r"actividad.*f[ií]sica", r"ejercicio", r"deporte.*recreativo", r"clase.*deporte",
                 r"pr[aá]ctica.*deporte", r"entrenamiento.*deportivo", r"equipo.*deportivo"
+                
             ],
             "bienestar": [
                 r"psicol[oó]g", r"salud.mental", r"bienestar", r"crisis", r"angustia",

@@ -1202,8 +1202,12 @@ TEMPLATES = {
 #-----------------------------------------------------------------------------------------------------------------------------------------------------#
 
     "deportes_actividad_fisica": {
+            
         # 🎯 TALLERES DEPORTIVOS DISPONIBLES DESDE DOCUMENTOS
         "talleres_deportivos_disponibles": """
+    
+    
+ 
 🏀 **¿Qué talleres deportivos tienen?**
 
 **Talleres disponibles:**
@@ -1218,7 +1222,35 @@ TEMPLATES = {
 • Boxeo mixto 🥊
 • Powerlifting mixto 🏋️
 
+
+"ubicaciones_deportivas": 
+📍 **Ubicaciones de Talleres Deportivos:**
+
+**🏟️ Complejo Maiclub:**
+• Detrás del Duoc UC
+• **Talleres:** Fútbol, Futbolito, Voleibol
+
+**🏢 Gimnasio Entretiempo:**
+• Av. Ejército Libertador 341, Santiago Centro
+• Metro Los Héroes
+• **Talleres:** Voleibol, Basquetbol mixtos
+
+**🏊 Piscina Acquatiempo:**
+• Av. Ejército Libertador 346, Santiago Centro  
+• Metro Los Héroes
+• **Talleres:** Natación mixta
+
+**💪 CAF (Centro de Bienestar):**
+• Piso -1 del Duoc UC
+• **Talleres:** Entrenamiento funcional, Boxeo, Powerlifting
+• **Servicios:** Gimnasio sede
+
+🔗 **Mapa sede:** https://www.duoc.cl/sede/plaza-norte/
+💡 *Todas las ubicaciones son de fácil acceso desde la sede*
+
+
 📍 **Ubicaciones:**
+
 • Complejo Maiclub (detrás de Duoc)
 • Gimnasio Entretiempo (Av. Ejército Libertador 341)
 • Piscina Acquatiempo (Av. Ejército Libertador 346)
@@ -1226,6 +1258,72 @@ TEMPLATES = {
 
 🔗 **Información:** Departamento de Deportes - Piso -1
 💡 *Variada oferta para todos los intereses y niveles*
+""",
+
+"inscripcion_optativos_deportivos": """
+📝 **¿Cómo inscribo los Optativos Deportivos?**
+
+**Dos modalidades:**
+1. **Toma regular de asignaturas** (mismo proceso que ramos regulares)
+2. **Solicitud en línea** posterior (Vivo Duoc o Vivo Web)
+
+✅ **Características:**
+• Tienen **nota** y **asistencia**
+• Mismo reglamento académico que asignatura regular
+• Contribuyen a tu progresión curricular
+
+🔗 **Portal académico:** https://portal.duoc.cl
+💡 *Ambas instancias aplican mismos procesos que asignaturas regulares*
+""",
+# AGREGAR ESTOS TEMPLATES EN templates.py
+
+"talleres_tienen_nota": """
+📊 **¿Los talleres tienen nota?**
+
+**Sistema de evaluación:**
+• **No tienen nota numérica**
+• **Solo finalizan como:** "Logrado" o "No Logrado"
+• **Estado "No Logrado":** No te permitirá tomar el mismo taller próximo semestre
+
+✅ **Requisito para aprobar:**
+• Cumplir con **asistencia mínima requerida**
+• Participar activamente en las sesiones
+
+💡 *El enfoque es en participación y desarrollo deportivo, no en calificación numérica*
+""",
+
+"talleres_tienen_asistencia": """
+📋 **¿Tienen asistencia?**
+
+**Sí.** Los talleres deportivos tienen control de asistencia.
+
+**Reglamento académico:**
+• Mismo sistema que asignatura regular
+• **2 inasistencias:** Retiro del taller
+• **Asistencia <50%:** Estado "No Logrado"
+
+📊 **Control:**
+• Registro sistemático de participación
+• Seguimiento de asistencia obligatorio
+
+💡 *La asistencia regular es fundamental para el logro deportivo*
+""",
+
+"desinscripcion_talleres": """
+🗑️ **¿Cómo puedo des inscribirme?**
+
+**Plazos establecidos:**
+• Según **calendario académico oficial**
+• **Fecha límite:** No superar la tercera semana en curso
+
+**Proceso:**
+1. Durante **toma regular de asignaturas**
+2. Mediante **solicitud en línea** posterior (Vivo Duoc o Vivo Web)
+
+📅 **Consultar:** Calendario académico en portal institucional
+🔗 **Portal:** https://portal.duoc.cl
+
+💡 *Respeta los plazos establecidos para cambios curriculares*
 """,
 
         # 🎯 HORARIOS TALLERES 2025 DESDE DOCUMENTOS
