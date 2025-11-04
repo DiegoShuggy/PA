@@ -63,10 +63,10 @@ declare global {
 // FUNCIÓN MEJORADA DE LIMPIEZA - SOLO INTERVIENE CUANDO HAY PATRONES CLARAMENTE PROBLEMÁTICOS
 const cleanRepeatedCharacters = (text: string): string => {
   if (!text) return text;
-  
+
   // DEBUG: Mostrar el texto original para diagnóstico
   console.log('🔍 Texto original recibido:', text.substring(0, 100) + '...');
-  
+
   // Buscar patrones específicamente problemáticos
   const problematicPatterns = [
     /(.)\1{5,}/g, // Cualquier carácter repetido 6+ veces
@@ -75,7 +75,7 @@ const cleanRepeatedCharacters = (text: string): string => {
     /(\.{4,})/g, // Puntos suspensivos excesivos
     /(,{4,})/g, // Comas excesivas
   ];
-  
+
   let hasProblems = false;
   problematicPatterns.forEach(pattern => {
     if (pattern.test(text)) {
@@ -83,39 +83,39 @@ const cleanRepeatedCharacters = (text: string): string => {
       console.log('🚨 Patrón problemático detectado:', text.match(pattern));
     }
   });
-  
+
   // Si no hay problemas claros, devolver el texto original
   if (!hasProblems) {
     return text;
   }
-  
+
   console.log('🔧 Aplicando limpieza a respuesta con patrones problemáticos');
-  
+
   // Aplicar limpieza específica solo a los patrones problemáticos
   let cleanedText = text;
-  
+
   // Limpiar caracteres especiales repetidos excesivamente
   cleanedText = cleanedText.replace(/([!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¿¡])\1{4,}/g, '$1$1');
-  
+
   // Limpiar emojis repetidos excesivamente (más de 3 veces)
   cleanedText = cleanedText.replace(/([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}])\1{3,}/gu, '$1$1');
-  
+
   // Limpiar espacios excesivos
   cleanedText = cleanedText.replace(/\s{6,}/g, '   ');
-  
+
   // Limpiar saltos de línea excesivos
   cleanedText = cleanedText.replace(/\n{4,}/g, '\n\n');
-  
+
   console.log('✅ Texto después de limpieza:', cleanedText.substring(0, 100) + '...');
-  
+
   return cleanedText;
 };
 // Función específica para limpiar texto para TTS (Text-to-Speech)
 const cleanTextForTTS = (text: string): string => {
   if (!text) return text;
-  
+
   console.log('🔊 Limpiando texto para TTS:', text.substring(0, 100) + '...');
-  
+
   let cleanText = text
     // Eliminar markdown y formato
     .replace(/\*\*(.*?)\*\*/g, '$1') // **negrita** → negrita
@@ -123,27 +123,27 @@ const cleanTextForTTS = (text: string): string => {
     .replace(/_(.*?)_/g, '$1')       // _subrayado_ → subrayado
     .replace(/`(.*?)`/g, '$1')       // `código` → código
     .replace(/~~(.*?)~~/g, '$1')     // ~~tachado~~ → tachado
-    
+
     // ELIMINAR EMOJIS COMPLETAMENTE (no convertirlos a texto)
     .replace(/[🎯 📋 📍 ⏰ 📞 🔗 💡🔄 🆕 🏦 🛡️ 🚑 🆘 💰✅ 📅 🚌 🖌️ 📄 🎯 💻📹 🧠 📱 👩‍💼 🚨 🏥 ♿ 🌟 📋 🎓 🏀 ⚽ 👟 🏐🏊 🏓 ♟️ 💪 🥊 🏋️ ⏰ 🏆 📧 💼 🌐 📝 🎤 📊🎓 👋 📍 🌐 💬]/gu, ' ')
-    
+
     // Eliminar cualquier otro emoji (rango Unicode completo)
     .replace(/[\u{1F600}-\u{1F64F}]/gu, ' ')  // Emoticones
     .replace(/[\u{1F300}-\u{1F5FF}]/gu, ' ')  // Símbolos y pictogramas
     .replace(/[\u{1F680}-\u{1F6FF}]/gu, ' ')  // Transporte y símbolos
     .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, ' ')  // Banderas
-    
+
     // Limpiar URLs y formatos técnicos
     .replace(/https?:\/\/[^\s]+/g, ' ') // URLs → espacio
     .replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' ') // Emails → espacio
-    
+
     // Limpiar caracteres especiales repetidos
     .replace(/([!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¿¡])\1{2,}/g, '$1')
-    
+
     // Normalizar espacios (múltiples espacios → un solo espacio)
     .replace(/\s+/g, ' ')
     .trim();
-  
+
   console.log('✅ Texto limpio para TTS:', cleanText.substring(0, 100) + '...');
   return cleanText;
 };
@@ -159,8 +159,9 @@ const Chat: React.FC = () => {
   const [isSpeechSupported, setIsSpeechSupported] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
+  // Agrega esta referencia para el textarea
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  
   // Estados para el lector de texto (TTS)
   const [isReading, setIsReading] = useState(false);
   const [currentReadingIndex, setCurrentReadingIndex] = useState<number | null>(null);
@@ -170,6 +171,8 @@ const Chat: React.FC = () => {
   const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inactivityCounterRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Agrega esta referencia con las otras refs
+  const chatMessagesRef = useRef<HTMLDivElement>(null);
   // Configuración del temporizador de inactividad (en milisegundos)
   const INACTIVITY_TIMEOUT = 300000;
   const FEEDBACK_AUTO_PRESS_TIMEOUT = 299999; // 4.59 minutos para feedback automático
@@ -183,7 +186,7 @@ const Chat: React.FC = () => {
   const [showFollowup, setShowFollowup] = useState(false);
   const [currentRating, setCurrentRating] = useState<number>(0);
   const [userComments, setUserComments] = useState('');
-
+  const lastUserMessageRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const finalTranscriptRef = useRef('');
@@ -194,17 +197,54 @@ const Chat: React.FC = () => {
   const silenceTimerRef = useRef<number | null>(null);
   const restartTimerRef = useRef<number | null>(null);
 
+
   // Referencias para el lector de texto
   const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
   const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   // Obtener la pregunta predefinida del estado de navegación
   const abortControllerRef = useRef<AbortController | null>(null);
-  
+
+
   // Función para volver a la página anterior
   const handleGoBack = () => {
     navigate(-1);
   };
+
+
+  // Efecto para manejar scroll global
+  useEffect(() => {
+    const handleGlobalScroll = (e: WheelEvent) => {
+      // Si el chat está visible y el scroll no es en el contenedor del chat
+      if (chatMessagesRef.current &&
+        !chatMessagesRef.current.contains(e.target as Node) &&
+        isElementInViewport(chatMessagesRef.current)) {
+
+        e.preventDefault();
+
+        // Aplicar el scroll al contenedor de mensajes
+        const scrollAmount = e.deltaY;
+        chatMessagesRef.current.scrollTop += scrollAmount;
+      }
+    };
+
+    // Función helper para verificar si el elemento está en viewport
+    const isElementInViewport = (el: HTMLElement) => {
+      const rect = el.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
+    };
+
+    document.addEventListener('wheel', handleGlobalScroll, { passive: false });
+
+    return () => {
+      document.removeEventListener('wheel', handleGlobalScroll);
+    };
+  }, []);
 
   // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO (TEXT-TO-SPEECH)
   // Agregar un ref para controlar si la detención fue manual
@@ -212,12 +252,21 @@ const Chat: React.FC = () => {
   // Ref para controlar si ya se leyó un mensaje
   const hasBeenReadRef = useRef<Set<number>>(new Set());
 
+  // Efecto para hacer scroll al último mensaje del usuario cuando se agregan nuevos mensajes
+  useEffect(() => {
+    if (lastUserMessageRef.current) {
+      lastUserMessageRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, [messages]);
   // Función para detener la lectura actual
   const stopReading = useCallback((isManual = false) => {
     if (isManual) {
       isManualStopRef.current = true;
     }
-    
+
     if (speechSynthesisRef.current) {
       // Cancelar inmediatamente
       speechSynthesisRef.current.cancel();
@@ -285,52 +334,55 @@ const Chat: React.FC = () => {
   }, [stopReading]);
 
   // Función para leer un mensaje en voz alta
-// Función para leer un mensaje en voz alta
-const readMessage = useCallback((text: string, messageIndex: number, isAutoRead = false) => {
-  // Limpiar el texto específicamente para TTS
-  const cleanText = cleanTextForTTS(text);
-  
-  // Si es lectura automática y hubo una detención manual, no leer
-  if (isAutoRead && isManualStopRef.current) {
-    console.log('🚫 Lectura automática bloqueada por detención manual');
-    return;
-  }
+  const readMessage = useCallback((text: string, messageIndex: number, isAutoRead = false) => {
+    // Limpiar el texto específicamente para TTS
+    const cleanText = cleanTextForTTS(text);
 
-  // Si el mensaje ya fue leído y es lectura automática, no repetir
-  if (isAutoRead && hasBeenReadRef.current.has(messageIndex)) {
-    console.log('🚫 Mensaje ya fue leído anteriormente, no repetir');
-    return;
-  }
+    // Si es lectura automática y hubo una detención manual, no leer
+    if (isAutoRead && isManualStopRef.current) {
+      console.log('🚫 Lectura automática bloqueada por detención manual');
+      return;
+    }
 
-  if (!speechSynthesisRef.current || !isTtsSupported) {
-    alert(t('chat.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
-    return;
-  }
+    // SIEMPRE detener cualquier lectura en curso antes de empezar una nueva
+    // Esto asegura que el mensaje más nuevo tenga prioridad
+    stopReading();
 
-  // Resetear el flag de detención manual si es una lectura manual
-  if (!isAutoRead) {
-    isManualStopRef.current = false;
-  }
+    // Si el mensaje ya fue leído y es lectura automática, no repetir
+    if (isAutoRead && hasBeenReadRef.current.has(messageIndex)) {
+      console.log('🚫 Mensaje ya fue leído anteriormente, no repetir');
+      return;
+    }
 
-  // Detener cualquier lectura en curso ANTES de crear el nuevo utterance
-  stopReading();
+    if (!speechSynthesisRef.current || !isTtsSupported) {
+      alert(t('chat.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+      return;
+    }
 
-  // Pequeña pausa para asegurar que se detuvo completamente
-  setTimeout(() => {
-    try {
-      // Configurar el idioma para la síntesis de voz
-      const ttsLang = i18n.language === 'es' ? 'es-ES' :
-        i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+    // Resetear el flag de detención manual si es una lectura manual
+    if (!isAutoRead) {
+      isManualStopRef.current = false;
+    }
+
+    // Detener cualquier lectura en curso ANTES de crear el nuevo utterance
+    stopReading();
+
+    // Pequeña pausa para asegurar que se detuvo completamente
+    setTimeout(() => {
+      try {
+        // Configurar el idioma para la síntesis de voz
+        const ttsLang = i18n.language === 'es' ? 'es-ES' :
+          i18n.language === 'fr' ? 'fr-FR' : 'en-US';
 
         // Reemplazar "/" por espacios antes de crear el utterance
-                const processedText = cleanText.replace(/\//g, ' ');
+        const processedText = cleanText.replace(/\//g, ' ');
 
-      // Usar el texto LIMPIO para TTS
-      const utterance = new SpeechSynthesisUtterance(processedText);
-      utterance.lang = ttsLang;
-      utterance.rate = 0.75;
-      utterance.pitch = 1.4;
-      utterance.volume = 1;
+        // Usar el texto LIMPIO para TTS
+        const utterance = new SpeechSynthesisUtterance(processedText);
+        utterance.lang = ttsLang;
+        utterance.rate = 0.75;
+        utterance.pitch = 1.4;
+        utterance.volume = 1;
 
         // BUSCAR Y SELECCIONAR UNA VOZ FEMENINA ESPECÍFICA
         const voices = speechSynthesisRef.current?.getVoices() || [];
@@ -425,12 +477,12 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
           setIsReading(false);
           setCurrentReadingIndex(null);
           currentUtteranceRef.current = null;
-          
+
           // Marcar el mensaje como leído
           if (isAutoRead) {
             hasBeenReadRef.current.add(messageIndex);
           }
-          
+
           // Resetear el flag de detención manual cuando termina naturalmente
           if (!isAutoRead) {
             isManualStopRef.current = false;
@@ -446,7 +498,7 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
           if (event.error !== 'interrupted') {
             console.warn('Error de TTS:', event.error);
           }
-          
+
           // Resetear el flag de detención manual en caso de error
           if (!isAutoRead) {
             isManualStopRef.current = false;
@@ -628,7 +680,7 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
       setInactivityTime(prev => prev + 1000);
     }, 1000);
   }, [navigate, showFeedback, feedbackSubmitted, currentFeedbackSession, autoPressFeedbackButton]); // AGREGAR DEPENDENCIAS FALTANTES
-  
+
   // Función para manejar eventos de actividad
   const handleActivity = useCallback(() => {
     resetInactivityTimer();
@@ -667,7 +719,7 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
       }
     };
   }, [handleActivity, resetInactivityTimer]);
-  
+
   useEffect(() => {
     return () => {
       if (inactivityTimerRef.current) {
@@ -863,7 +915,7 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
       }
     }, 30000); // 30 segundos de silencio antes de detenerse
   };
-  
+
   // Efecto para manejar el timer automático cuando cambia el estado del feedback
   useEffect(() => {
     // Cuando el feedback se muestra, iniciar el timer automático si no existe
@@ -1303,11 +1355,42 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  // Función para auto-ajustar la altura del textarea
+ // Función mejorada para auto-ajustar altura
+const adjustTextareaHeight = useCallback(() => {
+  const textarea = textareaRef.current;
+  if (textarea) {
+    // Reset height
+    textarea.style.height = 'auto';
+    
+    // Calcular nueva altura
+    const newHeight = Math.min(textarea.scrollHeight, 120);
+    textarea.style.height = newHeight + 'px';
+    
+    // Scroll suave al final si está enfocado
+    if (document.activeElement === textarea) {
+      setTimeout(() => {
+        textarea.scrollTop = textarea.scrollHeight;
+      }, 0);
+    }
+  }
+}, []);
+  // Efecto para ajustar la altura cuando el mensaje cambia
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [inputMessage, adjustTextareaHeight]);
+
+  // Modifica la función handleKeyPress para textarea
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  // Modifica el onChange para el textarea
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputMessage(e.target.value);
   };
 
   // Función para renderizar códigos QR
@@ -1327,7 +1410,7 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
       </div>
     ));
   };
-  
+
   // Agrega este useEffect para lectura automática
   useEffect(() => {
     // Si hubo una detención manual, no activar lectura automática
@@ -1335,33 +1418,33 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
       return;
     }
     // Obtener solo los mensajes de la IA
-  const aiMessages = messages.filter(msg => !msg.isUser);
-  
-  // Si no hay mensajes de IA, salir
-  if (aiMessages.length === 0) {
-    return;
-  }
-const lastAIMessage = aiMessages[aiMessages.length - 1];
-    // Buscar el último mensaje de la AI que no se haya leído
-    const lastAIMessageIndex = messages.findIndex(msg => 
-    msg === lastAIMessage
-  );
+    const aiMessages = messages.filter(msg => !msg.isUser);
 
-  // Verificar si este mensaje específico ya fue leído
-  const hasBeenRead = hasBeenReadRef.current.has(lastAIMessageIndex);
-  
-  // Si hay un nuevo mensaje de IA, no estamos leyendo actualmente y el mensaje no ha sido leído
-  if (lastAIMessageIndex !== -1 && !isReading && !hasBeenRead && isTtsSupported) {
-    
-    // Pequeño delay para que el usuario pueda ver el mensaje primero
-    const autoReadTimer = setTimeout(() => {
-      console.log('🔊 Lectura automática del mensaje MÁS NUEVO:', lastAIMessageIndex);
-      readMessage(lastAIMessage.text, lastAIMessageIndex, true);
-    }, 1000); // 1 segundo de delay
-
-    return () => clearTimeout(autoReadTimer);
+    // Si no hay mensajes de IA, salir
+    if (aiMessages.length === 0) {
+      return;
     }
-  }, [messages, isReading, currentReadingIndex, isTtsSupported, readMessage]);
+    const lastAIMessage = aiMessages[aiMessages.length - 1];
+    // Buscar el último mensaje de la AI que no se haya leído
+    const lastAIMessageIndex = messages.findIndex(msg => msg === lastAIMessage);
+
+    // VERIFICACIÓN MODIFICADA: Permitir re-lectura si el mensaje es nuevo
+    // Solo considerar como "ya leído" si fue leído completamente en esta sesión
+    const hasBeenRead = hasBeenReadRef.current.has(lastAIMessageIndex);
+
+    // Si hay un nuevo mensaje de IA y no ha sido leído
+    if (lastAIMessageIndex !== -1 && !hasBeenRead && isTtsSupported) {
+
+      // Pequeño delay para que el usuario pueda ver el mensaje primero
+      const autoReadTimer = setTimeout(() => {
+        console.log('🔊 Lectura automática del mensaje MÁS NUEVO (cancelando lectura anterior si existe):', lastAIMessageIndex);
+        readMessage(lastAIMessage.text, lastAIMessageIndex, true);
+      }, 1000); // 1 segundo de delay
+
+
+      return () => clearTimeout(autoReadTimer);
+    }
+  }, [messages, isTtsSupported, readMessage]);
 
   // Componente de Feedback
   const renderFeedbackWidget = () => {
@@ -1608,8 +1691,49 @@ const lastAIMessage = aiMessages[aiMessages.length - 1];
           )}
         </div>
 
-        <div className="chat-messages">
-          {messages.map((msg, index) => renderMessage(msg, index))}
+        <div className="chat-messages" ref={chatMessagesRef}>
+          {messages.map((msg, index) => {
+            const isLastUserMessage = msg.isUser &&
+              (index === messages.length - 1 || !messages.slice(index + 1).some(m => m.isUser));
+
+            return (
+              <div
+                key={index}
+                className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}
+                ref={isLastUserMessage ? lastUserMessageRef : null}
+              >
+                <div className="message-content">
+                  <div className="message-text">{msg.text}</div>
+
+                  {!msg.isUser && isTtsSupported && (
+                    <button
+                      className={`tts-button ${isReading && currentReadingIndex === index ? 'reading' : ''}`}
+                      onClick={() => toggleReading(msg, index)}
+                      type="button"
+                      title={isReading && currentReadingIndex === index ?
+                        (t('chat.stopReading') || 'Detener lectura') :
+                        (t('chat.readAloud') || 'Leer en voz alta')}
+                    >
+                      {isReading && currentReadingIndex === index ? '⏹️' : '🔊'}
+                    </button>
+                  )}
+                </div>
+
+                {msg.qr_codes && Object.keys(msg.qr_codes).length > 0 && (
+                  <div className="qr-codes-section">
+                    <div className="qr-section-title">{t('chat.qrSectionTitle')}</div>
+                    <div className="qr-codes-container">
+                      {renderQRCodes(msg.qr_codes)}
+                    </div>
+                  </div>
+                )}
+
+                <div className="message-time">
+                  {msg.timestamp.toLocaleTimeString()}
+                </div>
+              </div>
+            );
+          })}
 
           {renderFeedbackWidget()}
 
@@ -1630,15 +1754,18 @@ const lastAIMessage = aiMessages[aiMessages.length - 1];
           className="chat-input"
           onSubmit={handleSendMessage}
         >
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder={isListening ? t('chat.listeningPlaceholder') : t('chat.inputPlaceholder')}
-            disabled={isLoading}
-          />
+          <div className="textarea-container">
+            <textarea
+              ref={textareaRef}
+              value={inputMessage}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              placeholder={isListening ? t('chat.listeningPlaceholder') : t('chat.inputPlaceholder')}
+              disabled={isLoading}
+              rows={1}
+              className="chat-textarea"
+            />
+          </div>
           <button
             className={`mic-button ${isListening ? 'listening' : ''}`}
             onClick={toggleListening}
