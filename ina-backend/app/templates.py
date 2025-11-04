@@ -962,7 +962,61 @@ TEMPLATES = {
 📋 **Para avanzar:** 85%+ de respuestas correctas en cada módulo
 🎓 **Al finalizar:** Mensaje "Eres un embajador" confirma completación
 """,
+"curso_embajadores_avance": """
+🎯 **Comencé el curso de Embajadores, pero no puedo avanzar al siguiente módulo**
 
+**Requisito para avanzar:**
+• **85% o más** de respuestas correctas en cada actividad
+
+✅ **Si no alcanzas el 85%:**
+• La plataforma no te permitirá continuar
+• Revisa las respuestas incorrectas  
+• Reintenta el módulo
+
+🔗 **Acceso al curso:** https://embajadores.duoc.cl
+💡 *Asegúrate de comprender bien cada contenido antes de avanzar*
+""",
+
+"curso_embajadores_finalizacion": """
+🎓 **¿Cómo sé si terminé el curso de Embajadores?**
+
+**Al finalizar exitosamente:**
+• La plataforma mostrará el mensaje: **"Eres un embajador"**
+• Esto confirma que completaste toda la formación
+
+✅ **Sin responsabilidades adicionales:**
+• No implica tareas posteriores
+• Sin compromisos obligatorios  
+• Propósito: comunidad empática y solidaria
+
+🔗 **Curso:** https://embajadores.duoc.cl
+💡 *Formación para fortalecer el apoyo mutuo en la comunidad Duoc UC*
+""",
+
+"curso_embajadores_salud_mental": """
+🌟 **Curso "Embajadores en Salud Mental":**
+
+**Aprende estrategias** para acompañar a compañeros que estén atravesando momentos difíciles.
+
+🎯 **Objetivo:** Fortalecer una comunidad empática, solidaria y preparada
+
+✅ **Características:**
+• Sin responsabilidades adicionales
+• Sin tareas ni compromisos posteriores
+• Enfoque en herramientas de apoyo práctico  
+• Certificación al completar
+
+📋 **Contenidos:**
+• Detección temprana de problemas
+• Escucha activa y empática  
+• Derivación adecuada a profesionales
+• Autocuidado del acompañante
+
+🔗 **Acceder al curso:** https://embajadores.duoc.cl
+🔗 **Portal CVA:** https://cva.duoc.cl
+
+💡 *Tu participación contribuye a un ambiente universitario más solidario*
+""",
         # 🎯 CURSO EMBAJADORES - AVANCE DESDE DOCUMENTOS
         "curso_embajadores_avance": """
 🎯 **Comencé el curso de Embajadores, pero no puedo avanzar al siguiente módulo**

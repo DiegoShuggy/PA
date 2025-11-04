@@ -79,6 +79,12 @@ class TopicClassifier:
                 "línea ops", "acompañamiento psicológico", "sesiones psicológicas", "terapia",
                 "consultar psicólogo", "hablar con psicólogo", "apoyo emocional", "estrés académico",
                 "ansiedad estudios", "depresión universidad", "problemas emocionales",
+                "embajadores salud mental", "curso embajadores", "embajadores duoc",
+                "no puedo avanzar embajadores", "módulo embajadores", "85% embajadores",
+                "terminé embajadores", "finalizar embajadores", "soy embajador",
+                "responsabilidad embajadores", "compromiso embajadores", "tareas embajadores",
+                "curso de embajadores", "embajadores en salud mental", "avanzar en embajadores",
+                "siguiente módulo embajadores", "bloqueado embajadores", "no avanzo embajadores",
                 
                 # Talleres y programas - EXPANDIDO
                 "talleres bienestar", "charlas bienestar", "micro webinars", "taller salud mental",
@@ -207,6 +213,11 @@ class TopicClassifier:
                 r"qu[eé].*puedes.*hacer", r"funciones.*ina", r"presentaci[oó]n.*ina",
                 r"hola.*asistente", r"buen(os|as).*ina", r"saludo.*ina", r"qui[ée]n.*eres.*t[uú]"
             ],
+            "embajadores": [
+                r"embajadores.*no.*puedo.*avanzar",r"no.*puedo.*avanzar.*embajadores", r"curso.*embajadores.*no.*avanzo",r"módulo.*embajadores.*bloqueado",
+                r"85%.*embajadores",r"avanzar.*curso.*embajadores",r"cómo.*sé.*si.*terminé.*embajadores",r"terminé.*curso.*embajadores",
+                r"soy.*embajador.*confirmación",r"responsabilidad.*adicional.*embajadores",r"compromiso.*embajadores",r"tareas.*embajadores"
+            ],
             "tne": [
                 r"tne", r"tarjeta.nacional.estudiantil", r"pase.escolar", r"beneficio.*tne",
                 r"solicitar.*tne", r"renovar.*tne", r"validar.*tne", r"revalidar.*tne",
@@ -303,6 +314,18 @@ class TopicClassifier:
 
     def _detect_special_patterns(self, question: str) -> Dict:
         """🆕 DETECCIÓN ESPECIAL EXPANDIDA CON LAS 3 PREGUNTAS CRÍTICAS"""
+        
+        
+        # 👇 DETECCIÓN DE CURSO EMBAJADORES - AGREGAR ESTO
+        for pattern in self.special_patterns["embajadores"]:
+            if re.search(pattern, question, re.IGNORECASE):
+                return {
+            "is_institutional": True,
+            "category": "bienestar_estudiantil",
+            "matched_keywords": ["embajadores", "curso embajadores"],
+            "confidence": 0.95,
+            "message": "Consulta Curso Embajadores detectada - Bienestar Estudiantil"
+                }
         
         # 👇 DETECCIÓN DE PROGRAMA EMERGENCIA
         for pattern in self.special_patterns["programa_emergencia"]:
