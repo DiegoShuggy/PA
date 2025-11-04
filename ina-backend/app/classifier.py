@@ -376,10 +376,42 @@ class QuestionClassifier:
             ],
             
             # BIENESTAR ESTUDIANTIL - EXPANDIDO
+            "curso_embajadores_avance": [
+                r'comencé.*curso.*embajadores.*no.*puedo.*avanzar',
+                r'no.*puedo.*avanzar.*siguiente.*módulo.*embajadores',
+                r'curso.*embajadores.*no.*avanzo', r'módulo.*embajadores.*bloqueado',
+                r'85%.*embajadores', r'avanzar.*curso.*embajadores',
+                r'embajadores.*siguiente.*módulo', r'no.*puedo.*pasar.*embajadores',
+                r'bloqueado.*embajadores', r'no.*avanza.*embajadores'
+            ],
+            "curso_embajadores_finalizacion": [
+                r'cómo.*sé.*si.*terminé.*curso.*embajadores',
+                r'cómo.*saber.*si.*terminé.*embajadores',
+                r'finalizar.*curso.*embajadores', r'soy.*embajador.*confirmación',
+                r'mensaje.*eres.*embajador', r'completé.*curso.*embajadores',
+                r'cómo.*sé.*que.*terminé', r'confirmación.*finalización.*embajadores',
+                r'certificación.*embajadores', r'terminé.*embajadores.*qué.*sigue'
+            ],
+            "curso_embajadores_salud_mental": [
+                r'tengo.*alguna.*responsabilidad.*adicional.*embajadores',
+                r'responsabilidad.*embajadores', r'compromiso.*embajadores',
+                r'tareas.*embajadores', r'obligaciones.*embajadores',
+                r'curso.*embajadores.*responsabilidad', r'embajadores.*tareas.*posteriores',
+                r'compromisos.*embajadores', r'qué.*debo.*hacer.*después.*embajadores'
+            ],
             "sesiones_psicologicas": [
                 r'cuántas.*sesiones', r'sesiones.*psicológicas', r'máximo.*sesiones',
                 r'8.*sesiones', r'sesiones.*incluye', r'límite.*sesiones',
                 r'cuántas.*veces.*psicólogo', r'número.*sesiones'
+            ],
+            # 🎯 MEJORAR DETECCIÓN DE APOYO A COMPAÑEROS
+            "apoyo_companeros": [
+                r'qué.*puedo.*hacer.*si.*sé.*que.*compañero.*pasando.*mal.*momento',
+                r'compañero.*mal.*momento.*no.*quiere.*ayuda',
+                r'ayudar.*compañero.*problemas.*emocionales',
+                r'amigo.*no.*quiere.*pedir.*ayuda', r'qué.*hacer.*compañero.*triste',
+                r'compañero.*deprimido.*qué.*hacer', r'persona.*mal.*momento.*ayudar',
+                r'cómo.*apoyar.*compañero.*problemas', r'ayudar.*amigo.*emocional'
             ],
             "agendar_psicologico": [
                 r'cómo.*agendar.*psicológico', r'agendar.*atención', r'pedir.*hora.*psicológico',
@@ -595,6 +627,13 @@ class QuestionClassifier:
         
         # 🆕 DETECCIÓN ESPECÍFICA PARA CONSULTAS PROBLEMÁTICAS
         specific_patterns = {
+            "bienestar_estudiantil": [  # 🎯 AÑADIR MÁS PATRONES AQUÍ
+                r'compañero.*mal.*momento', r'amigo.*no.*quiere.*ayuda',
+                r'ayudar.*compañero.*problemas', r'persona.*deprimida.*qué.*hacer',
+                r'embajadores.*no.*puedo.*avanzar', r'curso.*embajadores.*terminé',
+                r'responsabilidad.*embajadores', r'módulo.*embajadores.*bloqueado'
+            ],
+
             "asuntos_estudiantiles": [
                 r'programa.*emergencia', r'emergencia.*duoc', r'200\.000',
                 r'tne.*perdí', r'perdí.*tne', r'tne.*dañad', r'3600.*tne',
@@ -640,7 +679,8 @@ class QuestionClassifier:
         
         # 🆕 BONUS POR COINCIDENCIAS FUERTES ESPECÍFICAS - ACTUALIZADO
         strong_matches = {
-            'bienestar_estudiantil': ['crisis', 'urgencia', 'psicológico', 'línea ops', 'sesiones psicológicas'],
+            'bienestar_estudiantil': ['crisis', 'urgencia', 'psicológico', 'línea ops', 'sesiones psicológicas','compañero','amigo','mal momento','embajadores'
+                                      ,'modulo embajadores','responsabilidad embajadores','85% embajadores','terminé embajadores'],
             'asuntos_estudiantiles': [
                 'tne', 'certificado', 'programa emergencia', 'programa transporte', 
                 'programa materiales', '200.000', '3600', 'comisariavirtual'
