@@ -169,6 +169,10 @@ body {
   background-color: #e9ecef;
   margin: 5px 0;
 }
+/* Prevenir scroll en el body cuando el chat está activo */
+body.no-scroll {
+  overflow: hidden;
+}
 
 /* Resto de estilos del chat */
 .chat-container::before {
@@ -277,6 +281,37 @@ body {
     transform: translateY(0);
   }
 }
+.textarea-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.chat-textarea {
+  width: 100%;
+  min-height: 40px;
+  max-height: 120px;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  resize: none;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+  transition: border-color 0.2s, height 0.2s;
+  overflow-y: auto;
+}
+
+.chat-textarea:focus {
+  border-color: #007bff;
+}
+
+.chat-textarea:disabled {
+  background-color: #e9ecef;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 
 .chat-input {
   display: flex;
@@ -384,7 +419,7 @@ body {
 }
 
 .mic-button.listening {
-  /*background: linear-gradient(135deg, #ff4b4b 0%, #d74141 100%);*/
+  background: #dc3545;
   animation: pulse 1.5s infinite;
 }
 
@@ -778,10 +813,6 @@ body {
 
   .message {
     max-width: 85%;
-  }
-
-  .chat-input {
-    padding: 15px;
   }
 
   .chat-input button {
