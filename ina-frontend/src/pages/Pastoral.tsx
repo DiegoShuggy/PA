@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
 import '../css/Coordinadores.css';
-import Profile from '../img/InA5.png';
+import Profile from '../img/pastoralcoord.jpg';
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -98,10 +98,11 @@ export function Pastoral() {
                 // Configurar idioma
                 const ttsLang = i18n.language === 'es' ? 'es-ES' :
                     i18n.language === 'fr' ? 'fr-FR' : 'en-US';
-
-                const utterance = new SpeechSynthesisUtterance(text);
+                // Reemplazar "/" por espacios antes de crear el utterance
+                const processedText = text.replace(/\//g, ' ');
+                const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.7;
+                utterance.rate = 0.75;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 
@@ -218,16 +219,18 @@ export function Pastoral() {
     // Función para leer todo el contenido de la página
     const readPageContent = () => {
         // Obtener todo el texto relevante de la página
-        const pageTitle = document.querySelector('.titulo')?.textContent || '';
+        const pageTitle = `Coordinadora: ${document.querySelector('.titulo')?.textContent || ''}`;
         const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
-        const correo = `Correo electrónico: ${document.querySelector('.correo')?.textContent || ''}`;
+
+        // Usar los elementos ocultos para pronunciación
+        const correoPronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
         const descripcion = document.querySelector('.desc')?.textContent || '';
         const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
             .map(span => span.textContent)
             .filter(Boolean)
             .join('. ');
 
-        const fullText = `${AreaTitle}. ${pageTitle}. ${correo}. ${descripcion}. ${questions}`;
+        const fullText = `${AreaTitle}. ${pageTitle}. ${correoPronunciacion}. ${descripcion}. ${questions}`;
 
         if (!fullText.trim()) {
             console.warn('No hay texto para leer');
@@ -236,7 +239,7 @@ export function Pastoral() {
 
         readText(fullText, false);
     };
-    
+
     // Función para alternar lectura
     const toggleReading = () => {
         if (isReading) {
@@ -365,6 +368,11 @@ export function Pastoral() {
                 <div className='imagen-titulo-container'>
                     <img src={Profile} alt="Profile" className="Perfil-imagen5" />
                     <h2 className='titulo'>{t('Pastoral.title')}</h2>
+                    {/* Mover el correo aquí */}
+                    <p className='correo'>
+                        {t('Pastoral.correo')}
+                    </p>
+                    <span className="sr-only">{t('Pastoral.correo_pronunciacion')}</span>
                 </div>
 
                 {/* Contenedor para la descripción con título extra */}
@@ -377,6 +385,13 @@ export function Pastoral() {
                         {t('Pastoral.Descripcion')} <br />
                         <br />{t('Pastoral.Descripcion2')}
                         <br />{t('Pastoral.Descripcion3')}
+                        <br />{t('Pastoral.Descripcion4')}
+                        <br />{t('Pastoral.Descripcion5')}
+                        <br />{t('Pastoral.Descripcion6')}
+                        <br />{t('Pastoral.Descripcion7')}
+                        <br />{t('Pastoral.Descripcion8')}
+                        <br />{t('Pastoral.Descripcion9')}
+                        <br />{t('Pastoral.Descripcion10')}
                     </p>
                 </div>
             </div>

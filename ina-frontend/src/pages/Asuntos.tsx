@@ -98,8 +98,9 @@ export function Asuntos() {
                 // Configurar idioma
                 const ttsLang = i18n.language === 'es' ? 'es-ES' :
                     i18n.language === 'fr' ? 'fr-FR' : 'en-US';
-
-                const utterance = new SpeechSynthesisUtterance(text);
+                // Reemplazar "/" por espacios antes de crear el utterance
+                const processedText = text.replace(/\//g, ' ');
+                const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
                 utterance.rate = 0.75;
                 utterance.pitch = 1.2;
@@ -218,16 +219,18 @@ export function Asuntos() {
     // Función para leer todo el contenido de la página
     const readPageContent = () => {
         // Obtener todo el texto relevante de la página
-        const pageTitle = ` Coordinadora: ${document.querySelector('.titulo')?.textContent || ''}`;
+        const pageTitle = `Coordinadora: ${document.querySelector('.titulo')?.textContent || ''}`;
         const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
-        const correo = `Correo electrónico: ${document.querySelector('.correo')?.textContent || ''}`;
+
+        // Usar los elementos ocultos para pronunciación
+        const correoPronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
         const descripcion = document.querySelector('.desc')?.textContent || '';
         const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
             .map(span => span.textContent)
             .filter(Boolean)
             .join('. ');
 
-        const fullText = `${AreaTitle}. ${pageTitle}. ${correo}. ${descripcion}. ${questions}`;
+        const fullText = `${AreaTitle}. ${pageTitle}. ${correoPronunciacion}. ${descripcion}. ${questions}`;
 
         if (!fullText.trim()) {
             console.warn('No hay texto para leer');
@@ -236,7 +239,7 @@ export function Asuntos() {
 
         readText(fullText, false);
     };
-    
+
     // Función para alternar lectura
     const toggleReading = () => {
         if (isReading) {
@@ -366,7 +369,7 @@ export function Asuntos() {
             <div className="accessibility-controls">
                 <button
                     onClick={toggleReading}
-                    aria-label={isReading ? t('Asuntos.stopReading') : t('Asuntos.readPage')}
+                    aria-label={isReading ? t('app.stopReading') : t('app.readPage')}
                     className={isReading ? 'reading-active' : ''}
                 >
                     {isReading ? '⏹️' : '🔊'}
@@ -382,6 +385,7 @@ export function Asuntos() {
                     <p className='correo'>
                         {t('Asuntos.correo')}
                     </p>
+                    <span className="sr-only">{t('Asuntos.correo_pronunciacion')}</span>
                 </div>
 
                 {/* Contenedor para la descripción con título extra */}

@@ -322,10 +322,13 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
       const ttsLang = i18n.language === 'es' ? 'es-ES' :
         i18n.language === 'fr' ? 'fr-FR' : 'en-US';
 
+        // Reemplazar "/" por espacios antes de crear el utterance
+                const processedText = text.replace(/\//g, ' ');
+
       // Usar el texto LIMPIO para TTS
-      const utterance = new SpeechSynthesisUtterance(cleanText);
+      const utterance = new SpeechSynthesisUtterance(processedText);
       utterance.lang = ttsLang;
-      utterance.rate = 0.7;
+      utterance.rate = 0.75;
       utterance.pitch = 1.4;
       utterance.volume = 1;
 

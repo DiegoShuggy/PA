@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback} from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VoiceSearch from '../components/VoiceSearch';
@@ -9,7 +9,7 @@ function Lobby() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    
+
     // Estados y refs para el lector de texto
     const [isReading, setIsReading] = useState(false);
     const [isTtsSupported, setIsTtsSupported] = useState(false);
@@ -23,7 +23,7 @@ function Lobby() {
             try {
                 const refreshSound = new Audio('/sounds/kronii-gwakk.mp3');
                 refreshSound.volume = 0.3; // Volumen al 30%
-                
+
                 // Reproducir el sonido
                 await refreshSound.play();
                 console.log('🔊 Sonido de refresh reproducido');
@@ -53,7 +53,7 @@ function Lobby() {
         if (isManual) {
             isManualStopRef.current = true;
         }
-        
+
         if (speechSynthesisRef.current) {
             speechSynthesisRef.current.cancel();
             currentUtteranceRef.current = null;
@@ -128,10 +128,11 @@ function Lobby() {
                 // Configurar idioma
                 const ttsLang = i18n.language === 'es' ? 'es-ES' :
                     i18n.language === 'fr' ? 'fr-FR' : 'en-US';
-
-                const utterance = new SpeechSynthesisUtterance(text);
+                // Reemplazar "/" por espacios antes de crear el utterance
+                const processedText = text.replace(/\//g, ' ');
+                const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.7;
+                utterance.rate = 0.75;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 
@@ -209,7 +210,7 @@ function Lobby() {
                     console.log('✅ Lectura finalizada');
                     setIsReading(false);
                     currentUtteranceRef.current = null;
-                    
+
                     // Resetear flag de detención manual cuando termina naturalmente
                     if (!isAutoRead) {
                         isManualStopRef.current = false;
@@ -277,22 +278,22 @@ function Lobby() {
     // Función para manejar el clic en las preguntas y enviar automáticamente
     const handleQuestionClick = (questionText: string) => {
         // Navegar al chat y pasar la pregunta como estado con un flag de autoSend
-        navigate('/InA', { 
-            state: { 
+        navigate('/InA', {
+            state: {
                 predefinedQuestion: questionText,
                 autoSend: true // Flag para indicar envío automático
-            } 
+            }
         });
     };
 
     return (
         <div className="lobby-container">
             {/* Botón de accesibilidad para leer la página */}
-            
+
             <h2>{t('Lobby.title')}</h2>
             {/* Botón de accesibilidad mejorado */}
             <div className="accessibility-controls">
-                <button 
+                <button
                     onClick={toggleReading}
                     aria-label={isReading ? t('Lobby.stopReading') : t('Lobby.readPage')}
                     className={isReading ? 'reading-active' : ''}
@@ -317,7 +318,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ2'))}
                     >
@@ -328,7 +329,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ3'))}
                     >
@@ -339,7 +340,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ4'))}
                     >
@@ -350,7 +351,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ5'))}
                     >
@@ -361,7 +362,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ6'))}
                     >
@@ -372,7 +373,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ7'))}
                     >
@@ -383,7 +384,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ8'))}
                     >
@@ -394,7 +395,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ9'))}
                     >
@@ -405,7 +406,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ10'))}
                     >
@@ -416,7 +417,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ11'))}
                     >
@@ -427,7 +428,7 @@ function Lobby() {
                 </div>
 
                 <div className="FAQ">
-                    <div 
+                    <div
                         className="FAQ-link"
                         onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ12'))}
                     >

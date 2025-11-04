@@ -100,9 +100,9 @@ export function Deportes() {
                 const ttsLang = i18n.language === 'es' ? 'es-ES' :
                     i18n.language === 'fr' ? 'fr-FR' : 'en-US';
 
-                const utterance = new SpeechSynthesisUtterance(text);
+                const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.7;
+                utterance.rate = 0.75;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 

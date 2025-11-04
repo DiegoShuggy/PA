@@ -99,9 +99,12 @@ export function Bienestar() {
                 const ttsLang = i18n.language === 'es' ? 'es-ES' :
                     i18n.language === 'fr' ? 'fr-FR' : 'en-US';
 
-                const utterance = new SpeechSynthesisUtterance(text);
+                // Reemplazar "/" por espacios antes de crear el utterance
+                const processedText = text.replace(/\//g, ' ');
+
+                const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.7;
+                utterance.rate = 0.75;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 
@@ -218,25 +221,30 @@ export function Bienestar() {
     // Función para leer todo el contenido de la página
     const readPageContent = () => {
         // Obtener todo el texto relevante de la página
-        const pageTitle = ` Coordinadora: ${document.querySelector('.titulo')?.textContent || ''}`;
+        const pageTitle = `Coordinadora: ${document.querySelector('.titulo')?.textContent || ''}`;
         const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
-        const correo = `Correo electrónico: ${document.querySelector('.correo')?.textContent || ''}`;
+
+        // Usar los elementos ocultos para pronunciación
+        const correoPronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
         const descripcion = document.querySelector('.desc')?.textContent || '';
         const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
             .map(span => span.textContent)
             .filter(Boolean)
             .join('. ');
 
-        const fullText = `${AreaTitle}. ${pageTitle}. ${correo}. ${descripcion}. ${questions}`;
+        const fullText = `${AreaTitle}. ${pageTitle}. ${correoPronunciacion}.  ${descripcion}. ${questions}`;
 
         if (!fullText.trim()) {
             console.warn('No hay texto para leer');
             return;
         }
 
+        // Reemplazar "/" por espacios antes de leer
+        const textWithSpaces = fullText.replace(/\//g, ' ');
+        readText(textWithSpaces, false);
         readText(fullText, false);
     };
-    
+
     // Función para alternar lectura
     const toggleReading = () => {
         if (isReading) {
@@ -364,13 +372,13 @@ export function Bienestar() {
             <div className="accessibility-controls">
                 <button
                     onClick={toggleReading}
-                    aria-label={isReading ? t('Asuntos.stopReading') : t('Asuntos.readPage')}
+                    aria-label={isReading ? t('app.stopReading') : t('app.readPage')}
                     className={isReading ? 'reading-active' : ''}
                 >
                     {isReading ? '⏹️' : '🔊'}
                 </button>
             </div>
-           <div className='Perfil-container'>
+            <div className='Perfil-container'>
                 {/* Contenedor para imagen, título y correo */}
                 <div className='imagen-titulo-container'>
                     <img src={Profile} alt="Profile" className="Perfil-imagen3" />
@@ -379,6 +387,7 @@ export function Bienestar() {
                     <p className='correo'>
                         {t('Bienestar.correo')}
                     </p>
+                    <span className="sr-only">{t('Bienestar.correo_pronunciacion')}</span>
                 </div>
 
                 {/* Contenedor para la descripción con título extra */}
@@ -401,119 +410,119 @@ export function Bienestar() {
 
             <h2 className='titulo'>{t('Bienestar.FAQTiltle')}</h2>
             <div className="Coordinador-grid">
-                
+
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
                 <div className="CFAQ">
                     <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ1'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ1')}</span>
-                                </div>
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ1'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ1')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ2'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ2')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ2'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ2')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ3'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ3')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ3'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ3')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ4'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ4')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ4'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ4')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ5'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ5')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ5'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ5')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ6'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ6')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ6'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ6')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ7'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ7')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ7'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ7')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ8'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ8')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ8'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ8')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ9'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ9')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ9'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ9')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ10'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ10')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ10'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ10')}</span>
                             </div>
                         </div>
-                        <div className="FAQ">
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t('Bienestar.FAQ11'))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t('Bienestar.FAQ11')}</span>
-                                </div>
+                    </div>
+                    <div className="FAQ">
+                        <div
+                            className="FAQ-link"
+                            onClick={() => handleQuestionClick(t('Bienestar.FAQ11'))}
+                        >
+                            <div className="Coordinador-item cuatro">
+                                <span>{t('Bienestar.FAQ11')}</span>
                             </div>
                         </div>
+                    </div>
 
                 </div>
             </div>
