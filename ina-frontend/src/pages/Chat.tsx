@@ -323,7 +323,7 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
         i18n.language === 'fr' ? 'fr-FR' : 'en-US';
 
         // Reemplazar "/" por espacios antes de crear el utterance
-                const processedText = text.replace(/\//g, ' ');
+                const processedText = cleanText.replace(/\//g, ' ');
 
       // Usar el texto LIMPIO para TTS
       const utterance = new SpeechSynthesisUtterance(processedText);
