@@ -245,6 +245,19 @@ class QuestionClassifier:
         # 🎯 PATRONES ESPECÍFICOS PARA TEMPLATES - COMPLETAMENTE EXPANDIDOS
         template_patterns = {
             # 🆕 NUEVOS TEMPLATES CRÍTICOS
+            "licencias_medicas_psicologicas": [
+                r'psicólogo.*virtual.*licencia.*médica',r'psicólogo.*puede.*otorgar.*licencia',
+                r'licencia.*médica.*psicólogo',r'psicólogo.*da.*licencia',
+                r'permiso.*médico.*psicólogo',r'incapacidad.*psicológico',
+                r'psicólogo.*virtual.*puede.*dar.*licencia',r'otorga.*licencia.*psicólogo'
+            ],
+            
+            "apoyos_salud_mental": [
+                r'qué.*apoyos.*salud.*mental',r'apoyos.*salud.*mental.*existen',
+                r'servicios.*salud.*mental.*duoc',r'qué.*servicios.*salud.*mental',
+                r'recursos.*salud.*mental.*duoc',r'qué.*ofrece.*duoc.*salud.*mental',r'qué.*ofrece.*duoc.*salud.*mental',
+                r'apoyo.*psicológico.*disponible',r'qué.*hay.*para.*salud.*mental'
+            ],
             "programa_emergencia_que_es": [
                 r'qué.*es.*programa.*emergencia', r'programa.*emergencia.*qué.*es',
                 r'información.*programa.*emergencia', r'explicación.*emergencia',

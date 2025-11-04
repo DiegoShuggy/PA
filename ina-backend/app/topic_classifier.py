@@ -85,6 +85,10 @@ class TopicClassifier:
                 "responsabilidad embajadores", "compromiso embajadores", "tareas embajadores",
                 "curso de embajadores", "embajadores en salud mental", "avanzar en embajadores",
                 "siguiente módulo embajadores", "bloqueado embajadores", "no avanzo embajadores",
+                "apoyos salud mental", "qué apoyos salud mental", "servicios salud mental",
+                "licencia médica psicológico", "psicólogo licencia", "permiso médico psicológico",
+                "psicólogo virtual licencia", "otorgar licencia psicológico",
+
                 
                 # Talleres y programas - EXPANDIDO
                 "talleres bienestar", "charlas bienestar", "micro webinars", "taller salud mental",
@@ -207,6 +211,14 @@ class TopicClassifier:
 
         # 🆕 PATRONES ESPECIALES EXPANDIDOS Y MEJORADOS
         self.special_patterns = {
+            "licencias_psicologicas": [
+                r"psicólogo.*licencia.*médica",r"licencia.*médica.*psicólogo", r"psicólogo.*puede.*otorgar.*licencia",
+                r"psicólogo.*virtual.*licencia",r"permiso.*médico.*psicólogo"
+            ],
+            "apoyos_salud_mental": [
+                r"qué.*apoyos.*salud.*mental",r"apoyos.*salud.*mental.*existen", r"servicios.*salud.*mental.*duoc",
+                r"qué.*servicios.*salud.*mental",r"recursos.*salud.*mental.*duoc"
+            ],
             "saludos": [
                 r"hola.*ina", r"buen(os|as).*(d[ií]as|tardes|noches)", r"saludos.*ina",
                 r"^hola$", r"^buen(os|as).*(d[ií]as|tardes|noches)$", r"qu[ié]e?n.*eres",
@@ -315,7 +327,28 @@ class TopicClassifier:
     def _detect_special_patterns(self, question: str) -> Dict:
         """🆕 DETECCIÓN ESPECIAL EXPANDIDA CON LAS 3 PREGUNTAS CRÍTICAS"""
         
+        # 👇 DETECCIÓN DE LICENCIAS PSICOLÓGICAS
+        for pattern in self.special_patterns["licencias_psicologicas"]:
+            if re.search(pattern, question, re.IGNORECASE):
+                return {
+            "is_institutional": True,
+            "category": "bienestar_estudiantil", 
+            "matched_keywords": ["licencia médica", "psicólogo"],
+            "confidence": 0.95,
+            "message": "Consulta Licencias Psicológicas detectada - Bienestar Estudiantil"
+                }
         
+        # 👇 DETECCIÓN DE APOYOS SALUD MENTAL
+        for pattern in self.special_patterns["apoyos_salud_mental"]:
+            if re.search(pattern, question, re.IGNORECASE):
+                return {
+            "is_institutional": True,
+            "category": "bienestar_estudiantil",
+            "matched_keywords": ["apoyos salud mental", "servicios psicológicos"],
+            "confidence": 0.95,
+            "message": "Consulta Apoyos Salud Mental detectada - Bienestar Estudiantil"
+                }
+                
         # 👇 DETECCIÓN DE CURSO EMBAJADORES - AGREGAR ESTO
         for pattern in self.special_patterns["embajadores"]:
             if re.search(pattern, question, re.IGNORECASE):
