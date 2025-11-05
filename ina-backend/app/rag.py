@@ -1135,3 +1135,21 @@ def clear_caches():
     rag_engine.text_cache.clear()
     rag_engine.semantic_cache.cache.clear()
     logger.info("🧹 Todos los caches limpiados")
+    
+def get_standard_rag_response(self, question: str, context: List[str]) -> Dict:
+    try:
+        normalized_question = self.enhanced_normalize_text(question)
+        sources = self.hybrid_search(normalized_question)
+        return self._process_with_ollama_optimized(question, sources)
+    except Exception as e:
+        logger.error(f"❌ Error RAG para '{question}': {e}")
+        
+        # FALLBACK INTELIGENTE POR CATEGORÍA
+        if "deportes" in question.lower():
+            return self.templates.get("informacion_general_deportes", 
+                                   "🔧 Información sobre deportes no disponible temporalmente")
+        elif "desarrollo laboral" in question.lower():
+            return self.templates.get("que_es_desarrollo_laboral",
+                                   "🔧 Información sobre desarrollo laboral no disponible")
+        else:
+            return "🔧 Error técnico. Intenta nuevamente o consulta información específica."

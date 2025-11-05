@@ -1,4 +1,4 @@
-# classifier.py - VERSIÓN COMPLETA ACTUALIZADA
+# classifier.py - VERSIÓN MEJORADA MANTENIENDO TODO EL CÓDIGO ORIGINAL
 import ollama
 from typing import Dict, List, Tuple, Optional
 import logging
@@ -22,7 +22,7 @@ class QuestionClassifier:
             "otros"
         ]
         
-        # ✅ PATRONES MEJORADOS Y EXPANDIDOS
+        # ✅ PATRONES MEJORADOS Y EXPANDIDOS - MANTENIENDO TODOS LOS ORIGINALES
         self.keyword_patterns = {
             "asuntos_estudiantiles": [
                 # 🚨 PATRONES CRÍTICOS MEJORADOS - PROGRAMA EMERGENCIA
@@ -239,13 +239,40 @@ class QuestionClassifier:
             "talleres_tienen_nota": [r'talleres.*tienen.*nota', r'nota.*taller'],
             "talleres_tienen_asistencia": [r'tienen.*asistencia'],
             "desinscripcion_talleres": [r'cómo.*puedo.*des.*inscribirme'],
-            "ubicaciones_deportivas": [r'en.*qué.*lugar.*ubicados', r'dónde.*están.*talleres',r'ubicación.*deportes', r'lugar.*taller'],
+            "ubicaciones_deportivas": [r'en.*qué.*lugar.*ubicados', r'dónde.*están.*talleres',r'ubicación.*deportes', r'lugar.*taller'
+                                       r'dónde.*están.*las.*canchas', r'ubicación.*canchas',r'dónde.*están.*los.*campos', r'lugar.*de.*entrenamiento',
+                                       r'dónde.*entrenan', r'dónde.*se.*hacen.*deportes',r'dónde.*están.*las.*canchas', r'ubicación.*canchas',
+                                        r'dónde.*están.*los.*campos', r'lugar.*de.*entrenamiento',
+                                        r'dónde.*entrenan', r'dónde.*se.*hacen.*deportes',
+                                        r'ubicación.*deportiva', r'dónde.*practicar'],
             "desinscripcion_talleres": [r'cómo.*puedo.*des.*inscribirme', r'retirarme.*taller',r'cancelar.*inscripción', r'dejar.*taller'],
-            "inscripcion_optativos_deportivos": [r'cómo.*inscribo.*optativos', r'inscripción.*deportivos',r'tomar.*taller.*deporte', r'proceso.*inscripción.*deportes'],
-            "que_es_desarrollo_laboral": [r'qué.*es.*desarrollo.*laboral', r'definición.*desarrollo.*laboral',r'qué.*significa.*desarrollo.*laboral', r'para.*qué.*sirve.*desarrollo.*laboral'],
-            "mejorar_curriculum": [r'cómo.*me.*pueden.*ayudar.*mejorar.*currículum', r'mejorar.*cv',r'asesoría.*curriculum', r'revisión.*cv', r'ayuda.*con.*mi.*currículum'],
-            "beneficios_titulados_desarrollo_laboral": [r'beneficios.*titulados.*desarrollo.*laboral', r'qué.*beneficios.*titulados', r'ventajas.*titulados.*empleo', r'beneficios.*egresados.*laboral'],
+            "inscripcion_optativos_deportivos": [r'cómo.*inscribo.*optativos', r'inscripción.*deportivos',
+                                                 r'tomar.*taller.*deporte', r'proceso.*inscripción.*deportes'],
+            "que_es_desarrollo_laboral": [r'qué.*es.*desarrollo.*laboral', r'definición.*desarrollo.*laboral',
+                                          r'qué.*significa.*desarrollo.*laboral', r'para.*qué.*sirve.*desarrollo.*laboral'],
+            "mejorar_curriculum": [r'cómo.*me.*pueden.*ayudar.*mejorar.*currículum', r'mejorar.*cv',
+                                   r'asesoría.*curriculum', r'revisión.*cv', r'ayuda.*con.*mi.*currículum'],
+            "beneficios_titulados_desarrollo_laboral": [r'beneficios.*titulados.*desarrollo.*laboral', 
+                                                        r'qué.*beneficios.*titulados', r'ventajas.*titulados.*empleo', r'beneficios.*egresados.*laboral'],
             "crear_cv_duoclaboral": [r'cómo.*creo.*mi.*cv.*duoclaboral', r'crear.*cv.*duoclaboral',r'hacer.*cv.*duoclaboral', r'formato.*cv.*duoclaboral'],
+            "talleres_deportivos": [r'qué.*deportes.*puedo.*practicar', r'qué.*deportes.*hay',r'hay.*fútbol', r'hay.*basquetbol', r'hay.*voleibol', r'hay.*natación',
+                                    r'qué.*actividades.*deportivas', r'qué.*puedo.*practicar',r'deportes.*disponibles', r'oferta.*deportiva'],
+            "horarios_talleres": [r'a.*qué.*hora.*son.*entrenamientos', r'horario.*entrenamientos',
+                                  r'cuándo.*son.*prácticas', r'horario.*de.*deportes',r'a.*qué.*hora.*practicar', r'cuándo.*son.*clases'],
+            "gimnasio_caf": [r'puedo.*usar.*el.*gimnasio', r'acceder.*gimnasio',r'uso.*del.*gimnasio', r'entrar.*al.*gimnasio',
+                            r'gimnasio.*disponible', r'caf.*abierto',r'instalaciones.*deportivas', r'acceso.*gimnasio'],
+            "selecciones_deportivas": [r'cómo.*entro.*al.*equipo', r'equipo.*de.*básquetbol',r'selección.*deportiva', r'equipo.*representativo',r'probar.*para.*equipo', r'entrar.*al.*equipo',
+                                        r'formar.*parte.*del.*equipo', r'pruebas.*deportivas'],
+            "deportes_colectivos": [r'qué.*deportes.*colectivos.*hay', r'oferta.*deportes.*colectivos', r'practicar.*deportes.*colectivos'],
+            "practicas_profesionales": [r'prácticas.*profesionales', r'practica.*profesional',r'experiencia.*laboral', 
+                                        r'inserción.*laboral',r'practicar(?!.*deporte)',
+                                       r'trabajo.*graduado', r'empleo.*egresado'],
+            # 🧠 BIENESTAR - PATRONES MEJORADOS
+            "apoyo_psicologico": [r'ansiedad.*académica', r'estrés.*universitario',r'apoyo.*psicológico', 
+                                  r'necesito.*ayuda.*psicológica',r'dónde.*busco.*ayuda', r'apoyo.*emocional',r'crisis.*emocional', r'salud.*mental'],
+
+            
+            
         }
 
         for template_id, patterns in priority_templates.items():
@@ -257,6 +284,7 @@ class QuestionClassifier:
         # 🎯 PATRONES ESPECÍFICOS PARA TEMPLATES - COMPLETAMENTE EXPANDIDOS
         template_patterns = {
             # 🆕 NUEVOS TEMPLATES CRÍTICOS
+            
             "licencias_medicas_psicologicas": [
                 r'psicólogo.*virtual.*licencia.*médica',r'psicólogo.*puede.*otorgar.*licencia',
                 r'licencia.*médica.*psicólogo',r'psicólogo.*da.*licencia',
@@ -491,7 +519,11 @@ class QuestionClassifier:
             "talleres_deportivos": [
                 r'qué.*talleres.*deport', r'talleres.*deportivos', r'actividades.*deportivas',
                 r'deportes.*disponibles', r'qué.*deportes.*hay', r'lista.*talleres',
-                r'qué.*actividades.*deportivas', r'oferta.*deportiva'
+                r'necesito.*información.*talleres.*deportes',
+                r'info.*sobre.*deportes', r'qué.*hay.*de.*deportes',
+                r'qué.*actividades.*deportivas', r'oferta.*deportiva',
+                r'actividades.*deportivas.*disponibles'
+                
             ],
             "horarios_talleres_2025": [
                 r'horarios.*talleres', r'horario.*deportes', r'cuándo.*son.*talleres',
@@ -503,8 +535,10 @@ class QuestionClassifier:
             ],
             "horarios_talleres": [
                 r'horario.*taller', r'horario.*deporte', r'cuándo.*taller',
+                r'horario.*entrenamientos', r'cuándo.*entrenan',
                 r'día.*entrenamiento', r'qué.*horarios', r'calendarización.*deportes',
-                r'programación.*talleres', r'cuándo.*son.*los.*talleres'
+                r'programación.*talleres', r'cuándo.*son.*los.*talleres',
+                r'qué.*días.*deporte', r'horas.*de.*práctica'
             ],
             "gimnasio_caf": [
                 r'gimnasio', r'caf', r'centro.*bienestar', r'acondicionamiento.*físico',

@@ -912,7 +912,130 @@ TEMPLATES = {
 🔗 **Portal CVA:** https://cva.duoc.cl
 💡 *Contacta para conocer requisitos específicos y beneficios disponibles*
 """,
+# 🏋️ AGREGAR EN templates.py:
 
+"gimnasio_caf": """
+🏋️ **Uso del Gimnasio y CAF**
+
+**¿Puedo usar el gimnasio?** ✅ **Sí, todos los estudiantes pueden**
+
+📍 **Ubicación:** Piso -1 de Duoc UC
+⏰ **Horario:** Lunes a Viernes 8:00 - 21:00
+
+**Requisitos:**
+• Ser estudiante regular de Duoc UC
+• Presentar credencial estudiantil vigente
+• Ropa deportiva adecuada
+
+**Instalaciones disponibles:**
+• Máquinas de cardio y pesas
+• Sala de entrenamiento funcional
+• Espacios para calentamiento
+
+🔐 **Acceso:** Presenta tu credencial en recepción
+📞 **Contacto:** Departamento de Deportes - Piso -1
+""",
+# 🏀 AGREGAR EN "deportes_actividad_fisica":
+
+"gimnasio_caf": """
+🏋️ **Uso del Gimnasio y CAF**
+
+**¿Puedo usar el gimnasio?** ✅ **Sí, todos los estudiantes pueden**
+
+📍 **Ubicación:** Piso -1 de Duoc UC
+⏰ **Horario:** Lunes a Viernes 8:00 - 21:00
+
+**Requisitos:**
+• Ser estudiante regular de Duoc UC
+• Presentar credencial estudiantil vigente
+• Ropa deportiva adecuada
+
+**Instalaciones disponibles:**
+• Máquinas de cardio y pesas
+• Sala de entrenamiento funcional
+• Espacios para calentamiento
+
+🔐 **Acceso:** Presenta tu credencial en recepción
+📞 **Contacto:** Departamento de Deportes - Piso -1
+""",
+
+"selecciones_deportivas": """
+🏀 **Selecciones Deportivas Duoc UC**
+
+**¿Cómo entrar a los equipos representativos?**
+
+**Proceso de selección:**
+1. **Pruebas técnicas:** Evaluación de habilidades específicas
+2. **Condición física:** Test de resistencia y capacidad
+3. **Entrevista:** Compromiso y disponibilidad
+
+**Deportes con selecciones:**
+• Fútbol masculino ⚽
+• Basquetbol masculino/damas 🏀  
+• Voleibol mixto 🏐
+• Atletismo 🏃‍♂️
+
+**Requisitos:**
+• Estar en top 30% académico
+• Disponibilidad para entrenamientos y competencias
+• Compromiso por todo el semestre
+
+📅 **Pruebas:** Inicio de cada semestre
+📍 **Información:** Departamento de Deportes - Piso -1
+📞 **Contacto:** coordinador.deportes@duoc.cl
+""",
+
+# 🧠 AGREGAR EN "bienestar_estudiantil":
+
+"apoyo_psicologico": """
+🧠 **Apoyo Psicológico para Ansiedad y Estrés Académico**
+
+**¿Sientes ansiedad o estrés por tus estudios?** Tenemos ayuda para ti.
+
+✅ **Servicios disponibles:**
+• **8 sesiones gratuitas** anuales con psicólogos especializados
+• **Atención virtual** disponible fines de semana y festivos
+• **Talleres grupales** de manejo de ansiedad académica
+• **Recursos online** en Centro Virtual de Aprendizaje
+
+📅 **Agendar cita:** https://eventos.duoc.cl
+🚨 **Urgencias 24/7:** Línea OPS +56 2 2820 3450
+
+**Técnicas que aprenderás:**
+• Manejo del estrés académico
+• Técnicas de respiración y relajación
+• Organización del tiempo efectiva
+• Manejo de pensamientos ansiosos
+
+🔗 **Agendar:** https://eventos.duoc.cl
+🔗 **Recursos CVA:** https://cva.duoc.cl
+💡 *Tu bienestar mental es fundamental para tu éxito académico*
+""",
+"selecciones_deportivas": """
+🏀 **Selecciones Deportivas Duoc UC**
+
+**¿Cómo entrar a los equipos representativos?**
+
+**Proceso de selección:**
+1. **Pruebas técnicas:** Evaluación de habilidades específicas
+2. **Condición física:** Test de resistencia y capacidad
+3. **Entrevista:** Compromiso y disponibilidad
+
+**Deportes con selecciones:**
+• Fútbol masculino ⚽
+• Basquetbol masculino/damas 🏀  
+• Voleibol mixto 🏐
+• Atletismo 🏃‍♂️
+
+**Requisitos:**
+• Estar en top 30% académico
+• Disponibilidad para entrenamientos y competencias
+• Compromiso por todo el semestre
+
+📅 **Pruebas:** Inicio de cada semestre
+📍 **Información:** Departamento de Deportes - Piso -1
+📞 **Contacto:** coordinador.deportes@duoc.cl
+""",
         # 🎯 LÍNEA OPS EMERGENCIA (ORIGINAL)
         "linea_ops_emergencia": """
 🚨 **Línea OPS - Apoyo Psicológico Urgente:**
@@ -1053,6 +1176,32 @@ TEMPLATES = {
         # 🆕 TALLERES BIENESTAR (ORIGINAL)
         "talleres_bienestar": """
 🌱 **Talleres de Bienestar Integral:**
+# 🧠 AGREGAR EN "bienestar_estudiantil":
+
+
+🧠 **Apoyo Psicológico para Ansiedad y Estrés Académico**
+
+**¿Sientes ansiedad o estrés por tus estudios?** Tenemos ayuda para ti.
+
+✅ **Servicios disponibles:**
+• **8 sesiones gratuitas** anuales con psicólogos especializados
+• **Atención virtual** disponible fines de semana y festivos
+• **Talleres grupales** de manejo de ansiedad académica
+• **Recursos online** en Centro Virtual de Aprendizaje
+
+📅 **Agendar cita:** https://eventos.duoc.cl
+🚨 **Urgencias 24/7:** Línea OPS +56 2 2820 3450
+
+**Técnicas que aprenderás:**
+• Manejo del estrés académico
+• Técnicas de respiración y relajación
+• Organización del tiempo efectiva
+• Manejo de pensamientos ansiosos
+
+🔗 **Agendar:** https://eventos.duoc.cl
+🔗 **Recursos CVA:** https://cva.duoc.cl
+💡 *Tu bienestar mental es fundamental para tu éxito académico*
+
 
 **Actividades grupales** para desarrollar habilidades de autocuidado y manejo del estrés.
 
@@ -1206,7 +1355,54 @@ TEMPLATES = {
     "horarios_talleres_2025": """...""",
     "ubicaciones_deportivas": """
     
+   
+📍 **Ubicaciones de Talleres Deportivos:**
+
+**🏟️ Complejo Maiclub:**
+• Detrás del Duoc UC
+• **Talleres:** Fútbol, Futbolito, Voleibol
+
+**🏢 Gimnasio Entretiempo:**
+• Av. Ejército Libertador 341, Santiago Centro
+• Metro Los Héroes
+• **Talleres:** Voleibol, Basquetbol mixtos
+
+**🏊 Piscina Acquatiempo:**
+• Av. Ejército Libertador 346, Santiago Centro  
+• Metro Los Héroes
+• **Talleres:** Natación mixta
+
+**💪 CAF (Centro de Bienestar):**
+• Piso -1 del Duoc UC
+• **Talleres:** Entrenamiento funcional, Boxeo, Powerlifting
+• **Servicios:** Gimnasio sede
+
+🔗 **Mapa sede:** https://www.duoc.cl/sede/plaza-norte/
+💡 *Todas las ubicaciones son de fácil acceso desde la sede*
+
     
+ "informacion_general_deportes": ""
+🏀 **Información General - Deportes Duoc UC**
+
+**¿Qué necesitas saber sobre deportes?**
+
+📍 **Ubicaciones:**
+• Complejo Maiclub (detrás de Duoc)
+• Gimnasio Entretiempo (Av. Ejército Libertador 341)
+• Piscina Acquatiempo (Av. Ejército Libertador 346)
+• CAF (Piso -1 Duoc)
+
+⏰ **Horarios:**
+Consulta los horarios específicos de cada taller
+
+🎯 **Talleres Disponibles:**
+• Fútbol, Futbolito, Voleibol, Basquetbol
+• Natación, Tenis de mesa, Ajedrez
+• Entrenamiento funcional, Boxeo, Powerlifting
+
+🔗 **Más información:** Departamento de Deportes - Piso -1
+💡 *Consulta por el taller específico que te interesa*
+""
  
 🏀 **¿Qué talleres deportivos tienen?**
 
