@@ -1356,25 +1356,25 @@ const Chat: React.FC = () => {
   };
 
   // Función para auto-ajustar la altura del textarea
- // Función mejorada para auto-ajustar altura
-const adjustTextareaHeight = useCallback(() => {
-  const textarea = textareaRef.current;
-  if (textarea) {
-    // Reset height
-    textarea.style.height = 'auto';
-    
-    // Calcular nueva altura
-    const newHeight = Math.min(textarea.scrollHeight, 120);
-    textarea.style.height = newHeight + 'px';
-    
-    // Scroll suave al final si está enfocado
-    if (document.activeElement === textarea) {
-      setTimeout(() => {
-        textarea.scrollTop = textarea.scrollHeight;
-      }, 0);
+  // Función mejorada para auto-ajustar altura
+  const adjustTextareaHeight = useCallback(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      // Reset height
+      textarea.style.height = 'auto';
+
+      // Calcular nueva altura
+      const newHeight = Math.min(textarea.scrollHeight, 120);
+      textarea.style.height = newHeight + 'px';
+
+      // Scroll suave al final si está enfocado
+      if (document.activeElement === textarea) {
+        setTimeout(() => {
+          textarea.scrollTop = textarea.scrollHeight;
+        }, 0);
+      }
     }
-  }
-}, []);
+  }, []);
   // Efecto para ajustar la altura cuando el mensaje cambia
   useEffect(() => {
     adjustTextareaHeight();
@@ -1446,8 +1446,8 @@ const adjustTextareaHeight = useCallback(() => {
     }
   }, [messages, isTtsSupported, readMessage]);
 
-  // Componente de Feedback
-  const renderFeedbackWidget = () => {
+  // Componente de Feedback MODIFICADO
+  const renderFeedbackWidget = (messageIndex?: number) => {
     if (!showFeedback) return null;
 
     return (
@@ -1696,46 +1696,52 @@ const adjustTextareaHeight = useCallback(() => {
             const isLastUserMessage = msg.isUser &&
               (index === messages.length - 1 || !messages.slice(index + 1).some(m => m.isUser));
 
+            const isLastAIMessage = !msg.isUser &&
+              (index === messages.length - 1 || !messages.slice(index + 1).some(m => !m.isUser));
+
             return (
-              <div
-                key={index}
-                className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}
-                ref={isLastUserMessage ? lastUserMessageRef : null}
-              >
-                <div className="message-content">
-                  <div className="message-text">{msg.text}</div>
+              <React.Fragment key={index}>
+                {/* Renderizar el mensaje */}
+                <div
+                  className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}
+                  ref={isLastUserMessage ? lastUserMessageRef : null}
+                >
+                  <div className="message-content">
+                    <div className="message-text">{msg.text}</div>
 
-                  {!msg.isUser && isTtsSupported && (
-                    <button
-                      className={`tts-button ${isReading && currentReadingIndex === index ? 'reading' : ''}`}
-                      onClick={() => toggleReading(msg, index)}
-                      type="button"
-                      title={isReading && currentReadingIndex === index ?
-                        (t('chat.stopReading') || 'Detener lectura') :
-                        (t('chat.readAloud') || 'Leer en voz alta')}
-                    >
-                      {isReading && currentReadingIndex === index ? '⏹️' : '🔊'}
-                    </button>
-                  )}
-                </div>
-
-                {msg.qr_codes && Object.keys(msg.qr_codes).length > 0 && (
-                  <div className="qr-codes-section">
-                    <div className="qr-section-title">{t('chat.qrSectionTitle')}</div>
-                    <div className="qr-codes-container">
-                      {renderQRCodes(msg.qr_codes)}
-                    </div>
+                    {!msg.isUser && isTtsSupported && (
+                      <button
+                        className={`tts-button ${isReading && currentReadingIndex === index ? 'reading' : ''}`}
+                        onClick={() => toggleReading(msg, index)}
+                        type="button"
+                        title={isReading && currentReadingIndex === index ?
+                          (t('chat.stopReading') || 'Detener lectura') :
+                          (t('chat.readAloud') || 'Leer en voz alta')}
+                      >
+                        {isReading && currentReadingIndex === index ? '⏹️' : '🔊'}
+                      </button>
+                    )}
                   </div>
-                )}
 
-                <div className="message-time">
-                  {msg.timestamp.toLocaleTimeString()}
+                  {msg.qr_codes && Object.keys(msg.qr_codes).length > 0 && (
+                    <div className="qr-codes-section">
+                      <div className="qr-section-title">{t('chat.qrSectionTitle')}</div>
+                      <div className="qr-codes-container">
+                        {renderQRCodes(msg.qr_codes)}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="message-time">
+                    {msg.timestamp.toLocaleTimeString()}
+                  </div>
                 </div>
-              </div>
+
+                {/* Renderizar feedback DESPUÉS del último mensaje de IA */}
+                {isLastAIMessage && showFeedback && renderFeedbackWidget(index)}
+              </React.Fragment>
             );
           })}
-
-          {renderFeedbackWidget()}
 
           {isLoading && (
             <div className="message ai-message">

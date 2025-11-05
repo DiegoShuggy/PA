@@ -363,6 +363,16 @@ export function Pastoral() {
                 <span className="back-arrow">←</span>
                 {t('Pastoral.back', 'Volver')}
             </button>
+            {/* Botón de accesibilidad para leer la página */}
+            <div className="accessibility-controls">
+                <button
+                    onClick={toggleReading}
+                    aria-label={isReading ? t('app.stopReading') : t('app.readPage')}
+                    className={isReading ? 'reading-active' : ''}
+                >
+                    {isReading ? '⏹️' : '🔊'}
+                </button>
+            </div>
             <div className='Perfil-container'>
                 {/* Contenedor para imagen y título */}
                 <div className='imagen-titulo-container'>

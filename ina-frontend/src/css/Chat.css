@@ -182,7 +182,7 @@ body.no-scroll {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('../img/InA3.png');
+  background-image: url('../img/pto-icon.png');
   z-index: -1;
 }
 
@@ -196,6 +196,7 @@ body.no-scroll {
   flex-direction: column;
   min-height: 0;
   /* Permite el scroll */
+  pointer-events: auto;
 }
 
 .message {
@@ -808,6 +809,7 @@ body.no-scroll {
   .chat-container {
     height: 95vh;
     border-radius: 12px;
+    pointer-events: auto;
     /*background: linear-gradient(135deg, #BF0249 0%, #9521B2 100%);*/
   }
 
@@ -844,10 +846,6 @@ body.no-scroll {
     display: flex;
   }
 
-  .feedback-widget {
-    max-width: 300px;
-    padding: 15px;
-  }
 
   .feedback-buttons {
     flex-direction: column;
@@ -876,12 +874,4 @@ body.no-scroll {
     pointer-events: auto !important;
   }
 
-  /* Áreas que SÍ pueden cerrar el feedback */
-  .chat-messages {
-    pointer-events: auto;
-  }
-
-  .chat-container {
-    pointer-events: auto;
-  }
 }

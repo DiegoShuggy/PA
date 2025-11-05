@@ -104,7 +104,9 @@ function Punto() {
                 // Configurar idioma
                 const ttsLang = i18n.language === 'es' ? 'es-ES' :
                     i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+                    
 
+                const processedText = text.replace(/\//g, ' ');
                 const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
                 utterance.rate = 0.75;

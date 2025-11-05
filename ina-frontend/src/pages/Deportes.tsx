@@ -99,7 +99,7 @@ export function Deportes() {
                 // Configurar idioma
                 const ttsLang = i18n.language === 'es' ? 'es-ES' :
                     i18n.language === 'fr' ? 'fr-FR' : 'en-US';
-
+                const processedText = text.replace(/\//g, ' ');
                 const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
                 utterance.rate = 0.75;
@@ -218,30 +218,30 @@ export function Deportes() {
 
     // Función para leer todo el contenido de la página
     const readPageContent = () => {
-    // Obtener todo el texto relevante de la página
-    const pageTitle = `Coordinador: ${document.querySelector('.titulo')?.textContent || ''}`;
-    const pageTitle2 = `Coordinador: ${document.querySelector('.titulo2')?.textContent || ''}`;
-    const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
+        // Obtener todo el texto relevante de la página
+        const pageTitle = `Coordinador: ${document.querySelector('.titulo')?.textContent || ''}`;
+        const pageTitle2 = `Coordinador: ${document.querySelector('.titulo2')?.textContent || ''}`;
+        const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
 
-    // Usar los elementos ocultos para pronunciación
-    const correoPronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
-    const correo2Pronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(2)')?.textContent || ''}`;
+        // Usar los elementos ocultos para pronunciación
+        const correoPronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
+        const correo2Pronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(2)')?.textContent || ''}`;
 
-    const descripcion = document.querySelector('.desc')?.textContent || '';
-    const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
-        .map(span => span.textContent)
-        .filter(Boolean)
-        .join('. ');
+        const descripcion = document.querySelector('.desc')?.textContent || '';
+        const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
+            .map(span => span.textContent)
+            .filter(Boolean)
+            .join('. ');
 
-    const fullText = `${AreaTitle}. ${pageTitle}. ${correoPronunciacion}.  ${pageTitle2}.  ${correo2Pronunciacion}. ${descripcion}. ${questions}`;
+        const fullText = `${AreaTitle}. ${pageTitle}. ${correoPronunciacion}.  ${pageTitle2}.  ${correo2Pronunciacion}. ${descripcion}. ${questions}`;
 
-    if (!fullText.trim()) {
-        console.warn('No hay texto para leer');
-        return;
-    }
+        if (!fullText.trim()) {
+            console.warn('No hay texto para leer');
+            return;
+        }
 
-    readText(fullText, false);
-};
+        readText(fullText, false);
+    };
 
     // Función para alternar lectura
     const toggleReading = () => {
@@ -382,22 +382,22 @@ export function Deportes() {
                 {/* Contenedor para imagen, título y correo */}
                 <div className='imagen-titulo-container'>
                     {/* Primer perfil */}
-        <img src={Profile} alt="Profile" className="Perfil-imagen4" />
-        <h2 className='titulo'>{t('Deportes.title')}</h2>
-        <p className='correo'>
-            {t('Deportes.correo')}
-        </p>
-        {/* Elemento oculto para pronunciación */}
-        <span className="sr-only">{t('Deportes.correo_pronunciacion')}</span>
+                    <img src={Profile} alt="Profile" className="Perfil-imagen4" />
+                    <h2 className='titulo'>{t('Deportes.title')}</h2>
+                    <p className='correo'>
+                        {t('Deportes.correo')}
+                    </p>
+                    {/* Elemento oculto para pronunciación */}
+                    <span className="sr-only">{t('Deportes.correo_pronunciacion')}</span>
 
-        {/* Segundo perfil */}
-        <img src={Profile2} alt="Profile" className="Perfil-imagen4" />
-        <h2 className='titulo2'>{t('Deportes.title2')}</h2>
-        <p className='correo2'>
-            {t('Deportes.correo2')}
-        </p>
-        {/* Elemento oculto para pronunciación */}
-        <span className="sr-only">{t('Deportes.correo2_pronunciacion')}</span>
+                    {/* Segundo perfil */}
+                    <img src={Profile2} alt="Profile" className="Perfil-imagen4" />
+                    <h2 className='titulo2'>{t('Deportes.title2')}</h2>
+                    <p className='correo2'>
+                        {t('Deportes.correo2')}
+                    </p>
+                    {/* Elemento oculto para pronunciación */}
+                    <span className="sr-only">{t('Deportes.correo2_pronunciacion')}</span>
                 </div>
 
                 {/* Contenedor para la descripción con título extra */}
