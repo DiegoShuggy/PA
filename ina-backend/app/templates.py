@@ -1202,9 +1202,9 @@ TEMPLATES = {
 #-----------------------------------------------------------------------------------------------------------------------------------------------------#
 
     "deportes_actividad_fisica": {
-            
-        # 🎯 TALLERES DEPORTIVOS DISPONIBLES DESDE DOCUMENTOS
-        "talleres_deportivos_disponibles": """
+    "talleres_deportivos_disponibles": """...""",
+    "horarios_talleres_2025": """...""",
+    "ubicaciones_deportivas": """
     
     
  
@@ -1223,7 +1223,7 @@ TEMPLATES = {
 • Powerlifting mixto 🏋️
 
 
-"ubicaciones_deportivas": 
+
 📍 **Ubicaciones de Talleres Deportivos:**
 
 **🏟️ Complejo Maiclub:**
@@ -1788,6 +1788,114 @@ Sábado: 13:00-14:20, 14:30-15:50
     "desarrollo_laboral": {
         # 🎯 QUÉ ES DESARROLLO LABORAL DESDE DOCUMENTOS
         "que_es_desarrollo_laboral": """
+        
+🎯 **¿Qué es Desarrollo Laboral en Duoc UC?**
+
+**Definición:**
+Es el área que te apoya en tu **empleabilidad**, ofreciéndote asesorías, talleres y herramientas para tu **inserción laboral** y **desarrollo profesional**.
+
+**Servicios principales:**
+• Asesorías personalizadas de CV
+• Simulaciones de entrevistas laborales  
+• Talleres de empleabilidad
+• Acceso a Bolsa de Empleo Duoc UC
+• Apoyo en búsqueda de prácticas profesionales
+
+**Contacto:**
+👤 **Claudia Cortés Nuñez**
+📧 ccortesn@duoc.cl
+🏢 Coordinadora Desarrollo Laboral
+
+🔗 **Portal:** https://duoclaboral.cl
+💡 *Tu aliado en el camino profesional*
+""",
+
+"mejorar_curriculum": """
+📝 **¿Cómo me pueden ayudar a mejorar mi Currículum Vitae?**
+
+**Asesoría personalizada disponible:**
+
+✅ **Revisión de CV:**
+- Análisis de estructura y contenido
+- Recomendaciones específicas para tu área
+- Adaptación a diferentes ofertas de trabajo
+
+✅ **Servicios incluidos:**
+- Corrección de formato y ortografía
+- Optimización para ATS (sistemas de tracking)
+- Consejos para destacar habilidades clave
+
+**Proceso:**
+1. Solicita asesoría en Desarrollo Laboral
+2. Revisión personalizada 1 a 1
+3. Retroalimentación detallada
+4. Versión optimizada de tu CV
+
+**Contacto:**
+👤 **Claudia Cortés Nuñez**
+📧 ccortesn@duoc.cl
+🏢 Coordinadora Desarrollo Laboral
+
+💡 *Un CV bien estructurado aumenta tus oportunidades laborales*
+""",
+
+"beneficios_titulados_desarrollo_laboral": """
+🎓 **¿Qué beneficios tienen los titulados en Desarrollo Laboral?**
+
+**Beneficios permanentes para titulados:**
+
+✅ **Acceso a Bolsa de Empleo:**
+- Plataforma duoclaboral.cl activa permanentemente
+- Ofertas laborales exclusivas para titulados Duoc UC
+
+✅ **Talleres y Charlas:**
+- Capacitación continua en empleabilidad
+- Actualización de habilidades laborales
+- Networking con empleadores
+
+✅ **Asesorías Personalizadas:**
+- Revisión de CV sin costo
+- Preparación para entrevistas
+- Orientación laboral especializada
+
+✅ **Networking:**
+- Conexión con red de egresados
+- Eventos de vinculación con empresas
+- Oportunidades de desarrollo profesional
+
+🔗 **Portal titulados:** https://duoclaboral.cl
+💡 *Tu vínculo con Duoc UC continúa después de titularse*
+""",
+
+"crear_cv_duoclaboral": """
+💻 **¿Cómo creo mi CV en duoclaboral.cl?**
+
+**Proceso paso a paso:**
+
+1. **Acceso:**
+   - Ingresa a **www.duoclaboral.cl**
+   - Usa tu **usuario y contraseña institucional**
+
+2. **Completar sección "Mi CV":**
+   - Datos personales y de contacto
+   - Formación académica
+   - Experiencia laboral
+   - Habilidades y competencias
+   - Idiomas y certificaciones
+
+3. **Formato Oxford:**
+   - El sistema genera automáticamente tu CV en formato **Oxford**
+   - Optimizado para destacar frente a reclutadores
+   - Estructura profesional estándar
+
+**Ventajas:**
+• CV siempre actualizado para empleadores
+• Fácil aplicación a ofertas laborales
+• Formato profesional reconocido
+
+🔗 **Acceso:** https://duoclaboral.cl
+💡 *Mantén tu CV actualizado para más oportunidades*
+""
 💼 **¿Qué es Desarrollo Laboral en Duoc UC?**
 
 **Área especializada** que te apoya en tu empleabilidad

@@ -242,6 +242,10 @@ class QuestionClassifier:
             "ubicaciones_deportivas": [r'en.*qué.*lugar.*ubicados', r'dónde.*están.*talleres',r'ubicación.*deportes', r'lugar.*taller'],
             "desinscripcion_talleres": [r'cómo.*puedo.*des.*inscribirme', r'retirarme.*taller',r'cancelar.*inscripción', r'dejar.*taller'],
             "inscripcion_optativos_deportivos": [r'cómo.*inscribo.*optativos', r'inscripción.*deportivos',r'tomar.*taller.*deporte', r'proceso.*inscripción.*deportes'],
+            "que_es_desarrollo_laboral": [r'qué.*es.*desarrollo.*laboral', r'definición.*desarrollo.*laboral',r'qué.*significa.*desarrollo.*laboral', r'para.*qué.*sirve.*desarrollo.*laboral'],
+            "mejorar_curriculum": [r'cómo.*me.*pueden.*ayudar.*mejorar.*currículum', r'mejorar.*cv',r'asesoría.*curriculum', r'revisión.*cv', r'ayuda.*con.*mi.*currículum'],
+            "beneficios_titulados_desarrollo_laboral": [r'beneficios.*titulados.*desarrollo.*laboral', r'qué.*beneficios.*titulados', r'ventajas.*titulados.*empleo', r'beneficios.*egresados.*laboral'],
+            "crear_cv_duoclaboral": [r'cómo.*creo.*mi.*cv.*duoclaboral', r'crear.*cv.*duoclaboral',r'hacer.*cv.*duoclaboral', r'formato.*cv.*duoclaboral'],
         }
 
         for template_id, patterns in priority_templates.items():
