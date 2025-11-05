@@ -6,71 +6,95 @@ logger = logging.getLogger(__name__)
 
 class ContentFilter:
     def __init__(self):
-        # Palabras clave bloqueadas - contenido inapropiado
+        # 🎯 PALABRAS CLAVE BLOQUEADAS - CONTENIDO EXPLÍCITAMENTE INAPROPIADO
         self.blocked_keywords = [
-            # Contenido explícito o sexual
-            "pornografía", "porno", "sexo", "sexual", "genital", "sensual",
-            "desnudo", "desnuda", "desnudos", "onlyfans", "erótico",
+            # Contenido sexual explícito
+            "pornografía", "porno", "sexo explícito", "genital", "onlyfans", 
+            "erótico explícito", "xxx", "desnudo explícito",
             
-            # Drogas y sustancias
-            "drogas", "marihuana", "cocaína", "alcohol", "embriagado",
-            "fumar", "weed", "porro", "traficar",
+            # Drogas y sustancias ilegales
+            "drogas ilegales", "cocaína", "heroína", "metanfetamina", "traficar",
+            "consumir drogas", "tráfico de drogas",
             
-            # Violencia y acoso
-            "armas", "pistola", "cuchillo", "matar", "asesinar", "violencia",
-            "golpear", "pegar", "acoso", "abusar", "discriminación",
-            "odio", "racismo", "xenofobia",
+            # Violencia extrema y crimen
+            "armas ilegales", "pistola ilegal", "matar", "asesinar", "violar",
+            "acoso sexual", "abuso sexual", "violencia doméstica",
             
-            # Contenido peligroso
-            "suicidio", "suicidarse", "autolesión", "cortarse", "matarse",
-            "depresión", "ansiedad", "trastorno",
-            
-            # Temas políticos/sensibles
-            "política", "gobierno", "presidente", "comunismo", "socialismo",
-            "capitalismo", "izquierda", "derecha", "protesta", "manifestación",
-            "religión", "dios", "iglesia", "ateísmo",
+            # Contenido peligroso y autolesivo
+            "suicidarse", "autolesionarse", "cortarse", "matarse",
+            "instrucciones suicidio", "métodos autolesivos",
             
             # Información personal sensible
-            "contraseña", "clave secreta", "datos bancarios", "tarjeta",
-            "cuenta rut", "contraseña duoc", "clave plataforma"
+            "contraseña duoc", "clave portal", "datos bancarios", 
+            "número tarjeta", "contraseña plataforma"
         ]
         
-        # Patrones regex para detección avanzada
+        # 🎯 PATRONES REGEX PARA DETECCIÓN AVANZADA
         self.suspicious_patterns = [
-            r"\b(mat[ae]r|asesin[ae]r|dañ[ae]r|hackear)\b",
-            r"\b(odio|rabia|venganza|violar)\b",
-            r"\b(morir|suicidar|matarse)\b",
-            r"\b(drog[ae]s|marihuana|cocaína)\b",
-            r"\b(porn|sex|xxx|nude)\b"
+            r"\b(mat[ae]r|asesin[ae]r|violar|dañar gravemente)\b",
+            r"\b(suicidar|autolesionar|matarse)\b",
+            r"\b(drogas duras|cocaína|heroína|metanfetamina)\b",
+            r"\b(porno|xxx|desnudo explícito)\b",
+            r"\b(contraseña|clave secreta|datos bancarios)\b"
         ]
         
-        # Temas completamente off-topic
-        self.off_topic_indicators = [
-            "cómo ganar dinero", "inversiones", "criptomonedas",
-            "consejos de citas", "amor", "novia", "novio",
-            "recetas de cocina", "cocinar", "comida",
-            "noticias del mundo", "actualidad", "periódico",
-            "deportes profesionales", "fútbol", "tenis", "básquetbol",
-            "entretenimiento", "películas", "series", "netflix",
-            "tecnología personal", "celular", "computador", "juegos",
-            "viajes vacaciones", "turismo", "hoteles",
-            "compras online", "amazon", "mercado libre"
+        # 🎯 TÉRMINOS PERMITIDOS EXPLÍCITAMENTE (basado en templates)
+        self.allowed_terms = [
+            # Institucionales y saludos
+            "hola", "buenos días", "buenas tardes", "buenas noches", "saludos",
+            "ina", "duoc", "punto estudiantil", "plaza norte", "sede",
+            
+            # Asuntos Estudiantiles
+            "tne", "tarjeta nacional estudiantil", "certificado", "matrícula",
+            "beca", "alimentación", "transporte", "materiales", "programa emergencia",
+            "seguro estudiantil", "credencial", "boleta", "pago",
+            
+            # Bienestar Estudiantil
+            "psicólogo", "psicológico", "salud mental", "bienestar", "ansiedad",
+            "estrés", "depresión", "crisis", "apoyo psicológico", "embajadores",
+            "discapacidad", "licencia médica", "taller bienestar", "grupo apoyo",
+            
+            # Deportes y Actividad Física
+            "deporte", "taller deportivo", "gimnasio", "caf", "entrenamiento",
+            "fútbol", "basquetbol", "voleibol", "natación", "boxeo", "powerlifting",
+            "selección deportiva", "pruebas deportivas", "horario entrenamiento",
+            "cancha", "instalaciones deportivas", "optativo deportivo",
+            
+            # Desarrollo Laboral
+            "currículum", "cv", "entrevista laboral", "práctica profesional",
+            "empleo", "trabajo", "bolsa de empleo", "duoclaboral", "feria laboral",
+            "desarrollo laboral", "claudia cortés", "entrevista simulada",
+            
+            # Contacto e información general
+            "teléfono", "email", "correo", "horario", "contacto", "ubicación",
+            "biblioteca", "cafetería", "casino", "calendario académico",
+            "beneficios", "convenios", "feriado", "contingencia"
         ]
 
-        # 👇 PALABRAS PERMITIDAS EXPLÍCITAMENTE (para evitar falsos positivos)
-        self.allowed_terms = [
-            "hola", "buenos días", "buenas tardes", "buenas noches", "saludos",
-            "ina", "duoc", "punto estudiantil", "tne", "tarjeta nacional estudiantil",
-            "certificado", "matrícula", "beca", "práctica", "deportes", "bienestar"
-        ]
+        # 🎯 CONTEXTOS PERMITIDOS ESPECÍFICOS (para evitar falsos positivos)
+        self.allowed_contexts = {
+            "salud_mental": [
+                "ansiedad académica", "estrés universitario", "depresión estudiantil",
+                "crisis emocional", "apoyo psicológico", "bienestar mental"
+            ],
+            "deportes": [
+                "equipo de básquetbol", "entrar al equipo", "pruebas deportivas",
+                "selección deportiva", "equipo representativo"
+            ],
+            "académico": [
+                "notas", "certificado", "matrícula", "asignatura", "ramo",
+                "calificación", "promedio", "rendimiento académico"
+            ]
+        }
 
     def validate_question(self, question: str) -> Dict:
         """
         Valida si una pregunta es permitida según el contenido
+        Versión mejorada basada en los templates del Punto Estudiantil
         """
         question_lower = question.lower().strip()
         
-        # 👇 1. Validación de pregunta vacía o muy corta
+        # 🎯 1. Validación de pregunta vacía o muy corta
         if len(question_lower) < 2:
             return {
                 "is_allowed": False,
@@ -78,44 +102,46 @@ class ContentFilter:
                 "block_reason": "question_too_short"
             }
 
-        # 👇 2. VERIFICAR SI CONTIENE TÉRMINOS PERMITIDOS EXPLÍCITAMENTE
+        # 🎯 2. VERIFICAR SI CONTIENE TÉRMINOS PERMITIDOS EXPLÍCITAMENTE
         if self._contains_allowed_terms(question_lower):
+            logger.info(f"✅ Pregunta permitida por términos institucionales: {question}")
             return {
                 "is_allowed": True,
                 "block_reason": None
             }
 
-        # 👇 3. Bloqueo por palabras clave explícitas
-        for keyword in self.blocked_keywords:
-            if keyword in question_lower:
-                logger.warning(f"Pregunta bloqueada por palabra clave: {keyword}")
-                return {
-                    "is_allowed": False,
-                    "rejection_message": "Esta consulta no corresponde al ámbito del Punto Estudiantil. Por favor, realiza preguntas relacionadas con nuestros servicios institucionales de Duoc UC.",
-                    "block_reason": "keyword_blocked",
-                    "blocked_keyword": keyword
-                }
-
-        # 👇 4. Bloqueo por patrones sospechosos (regex)
-        for pattern in self.suspicious_patterns:
-            if re.search(pattern, question_lower):
-                logger.warning(f"Pregunta bloqueada por patrón: {pattern}")
-                return {
-                    "is_allowed": False,
-                    "rejection_message": "No puedo responder a ese tipo de consultas. Estoy aquí para ayudarte con información del Punto Estudiantil y servicios institucionales de Duoc UC.",
-                    "block_reason": "pattern_blocked",
-                    "blocked_pattern": pattern
-                }
-
-        # 👇 5. Detección de preguntas off-topic (más flexible)
-        if self._is_off_topic(question_lower):
+        # 🎯 3. VERIFICAR CONTEXTOS PERMITIDOS ESPECÍFICOS
+        if self._is_in_allowed_context(question_lower):
+            logger.info(f"✅ Pregunta permitida por contexto institucional: {question}")
             return {
-                "is_allowed": False,
-                "rejection_message": "Esta pregunta está fuera del alcance del Punto Estudiantil. Te sugiero contactar directamente con el área correspondiente para ese tipo de consultas.",
-                "block_reason": "off_topic"
+                "is_allowed": True,
+                "block_reason": None
             }
 
-        # 👇 6. Pregunta permitida (más permisivo por defecto)
+        # 🎯 4. Bloqueo por palabras clave explícitas (solo contenido realmente inapropiado)
+        blocked_keyword = self._contains_blocked_keyword(question_lower)
+        if blocked_keyword:
+            logger.warning(f"🚫 Pregunta bloqueada por palabra clave: {blocked_keyword}")
+            return {
+                "is_allowed": False,
+                "rejection_message": "Esta consulta no corresponde al ámbito del Punto Estudiantil. Por favor, realiza preguntas relacionadas con nuestros servicios institucionales de Duoc UC.",
+                "block_reason": "keyword_blocked",
+                "blocked_keyword": blocked_keyword
+            }
+
+        # 🎯 5. Bloqueo por patrones sospechosos (solo patrones peligrosos)
+        blocked_pattern = self._matches_suspicious_pattern(question_lower)
+        if blocked_pattern:
+            logger.warning(f"🚫 Pregunta bloqueada por patrón: {blocked_pattern}")
+            return {
+                "is_allowed": False,
+                "rejection_message": "No puedo responder a ese tipo de consultas. Estoy aquí para ayudarte con información del Punto Estudiantil y servicios institucionales de Duoc UC.",
+                "block_reason": "pattern_blocked",
+                "blocked_pattern": blocked_pattern
+            }
+
+        # 🎯 6. Pregunta permitida (más permisivo para temas institucionales)
+        logger.info(f"✅ Pregunta permitida por defecto: {question}")
         return {
             "is_allowed": True,
             "block_reason": None
@@ -128,20 +154,77 @@ class ContentFilter:
                 return True
         return False
 
-    def _is_off_topic(self, question: str) -> bool:
-        """Detecta preguntas completamente fuera de contexto institucional"""
-        # Si contiene términos de Duoc o institucionales, no es off-topic
-        institutional_terms = ["duoc", "uc", "estudiante", "alumno", "carrera", "sede"]
-        if any(term in question for term in institutional_terms):
-            return False
+    def _is_in_allowed_context(self, question: str) -> bool:
+        """Verifica si la pregunta está en contextos permitidos específicos"""
+        # Contexto de salud mental (permitido pero con términos específicos)
+        if any(context in question for context in self.allowed_contexts["salud_mental"]):
+            return True
             
-        return any(indicator in question for indicator in self.off_topic_indicators)
+        # Contexto deportivo (permitido explícitamente)
+        if any(context in question for context in self.allowed_contexts["deportes"]):
+            return True
+            
+        # Contexto académico (permitido explícitamente)
+        if any(context in question for context in self.allowed_contexts["académico"]):
+            return True
+            
+        # Si contiene términos institucionales, es permitido
+        institutional_terms = ["duoc", "uc", "estudiante", "alumno", "carrera", "sede", "plaza norte"]
+        if any(term in question for term in institutional_terms):
+            return True
+            
+        return False
+
+    def _contains_blocked_keyword(self, question: str) -> str:
+        """Verifica si contiene palabras clave bloqueadas (solo las realmente peligrosas)"""
+        for keyword in self.blocked_keywords:
+            if keyword in question:
+                return keyword
+        return ""
+
+    def _matches_suspicious_pattern(self, question: str) -> str:
+        """Verifica patrones sospechosos (solo los realmente peligrosos)"""
+        for pattern in self.suspicious_patterns:
+            if re.search(pattern, question):
+                return pattern
+        return ""
 
     def get_filter_stats(self) -> Dict:
         """Estadísticas del filtro (para analytics)"""
         return {
             "blocked_keywords_count": len(self.blocked_keywords),
             "suspicious_patterns_count": len(self.suspicious_patterns),
-            "off_topic_indicators_count": len(self.off_topic_indicators),
-            "allowed_terms_count": len(self.allowed_terms)
+            "allowed_terms_count": len(self.allowed_terms),
+            "allowed_contexts_count": sum(len(contexts) for contexts in self.allowed_contexts.values())
         }
+
+    def explain_decision(self, question: str) -> Dict:
+        """
+        Explica la decisión del filtro (para debugging)
+        """
+        result = self.validate_question(question)
+        explanation = {
+            "question": question,
+            "is_allowed": result["is_allowed"],
+            "block_reason": result.get("block_reason"),
+            "allowed_terms_found": [],
+            "blocked_indicators_found": []
+        }
+        
+        question_lower = question.lower()
+        
+        # Buscar términos permitidos encontrados
+        for term in self.allowed_terms:
+            if term in question_lower:
+                explanation["allowed_terms_found"].append(term)
+                
+        # Buscar indicadores bloqueados
+        for keyword in self.blocked_keywords:
+            if keyword in question_lower:
+                explanation["blocked_indicators_found"].append(f"keyword: {keyword}")
+                
+        for pattern in self.suspicious_patterns:
+            if re.search(pattern, question_lower):
+                explanation["blocked_indicators_found"].append(f"pattern: {pattern}")
+                
+        return explanation
