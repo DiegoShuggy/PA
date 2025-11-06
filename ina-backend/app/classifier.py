@@ -110,6 +110,8 @@ class QuestionClassifier:
                 r'\b(basquetbol.*mixto|natación.*mixta|tenis.*mesa.*mixto)\b',
                 r'\b(ajedrez.*mixto|entrenamiento.*funcional|boxeo.*mixto)\b',
                 r'\b(powerlifting.*mixto|deportes|actividad.*física)\b',
+                 r'\b(gimnasio|caf|centro.*acondicionamiento)\b',
+                 r'\b(selección.*deportiva|equipo.*deportivo)\b',
                 
                 # Instalaciones y ubicaciones - EXPANDIDO
                 r'\b(complejo.*maiclub|gimnasio.*entretiempo|piscina.*acquatiempo)\b',
