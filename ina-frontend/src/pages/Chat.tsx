@@ -1079,26 +1079,28 @@ const Chat: React.FC = () => {
 
   // Efecto para manejar la pregunta predefinida y auto-enviar
   useEffect(() => {
-    const locationState = location.state as LocationState;
+  const locationState = location.state as LocationState;
 
-    if (locationState?.predefinedQuestion) {
-      setInputMessage(locationState.predefinedQuestion);
+  if (locationState?.predefinedQuestion) {
+    setInputMessage(locationState.predefinedQuestion);
 
-      // Si autoSend es true, enviar automáticamente después de un breve delay
-      if (locationState.autoSend) {
-        const timer = setTimeout(() => {
-          handleAutoSend(locationState.predefinedQuestion!);
-        }, 500);
+    // Si autoSend es true, enviar automáticamente después de un breve delay
+    if (locationState.autoSend) {
+      const timer = setTimeout(() => {
+        handleAutoSend(locationState.predefinedQuestion!);
+      }, 500);
 
-        return () => clearTimeout(timer); // Cleanup
-      } else {
-        // Solo enfocar el input si no es auto-envío
-        setTimeout(() => {
-          inputRef.current?.focus();
-        }, 100);
-      }
+      return () => clearTimeout(timer);
+    } else {
+      // Solo enfocar el textarea si no es auto-envío
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+        }
+      }, 100);
     }
-  }, [location.state]);
+  }
+}, [location.state]);
 
   // Función para manejar el envío automático
   const handleAutoSend = async (question: string) => {
@@ -1259,6 +1261,36 @@ const Chat: React.FC = () => {
       inputRef.current?.focus();
     }, 100);
   };
+  // Agrega este useEffect específico para enfocar después de recibir respuesta
+useEffect(() => {
+  // Enfocar el input cuando la IA termina de responder y no está cargando
+  if (!isLoading && messages.length > 0) {
+    const lastMessage = messages[messages.length - 1];
+    
+    // Solo enfocar si el último mensaje es de la IA y no es un error
+    if (!lastMessage.isUser && lastMessage.text !== t('chat.serverError')) {
+      // Pequeño delay para asegurar que el DOM se haya actualizado
+      const timer = setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }
+}, [isLoading, messages, t]);
+
+// También puedes agregar este efecto para enfocar cuando se limpia el chat
+useEffect(() => {
+  if (messages.length === 0) {
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }, 100);
+  }
+}, [messages.length]);
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) {
@@ -1352,6 +1384,11 @@ const Chat: React.FC = () => {
     } finally {
       setIsLoading(false);
       abortControllerRef.current = null;
+       setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }, 50);
     }
   };
 
