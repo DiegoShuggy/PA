@@ -193,6 +193,17 @@ class EnhancedTopicClassifier:
 
 class RAGEngine:
     def __init__(self):
+        # En __init__ de RAGEngine, después de self.duoc_context
+        self.synonym_expansions = {
+            "tne": ["tarjeta nacional estudiantil", "pase escolar", "tne duoc", "beneficio tne", "tarjeta estudiante"],
+            "deporte": ["deportes", "actividad física", "taller deportivo", "entrenamiento", "gimnasio", "maiclub", "entretiempo", "acquatiempo"],
+            "certificado": ["certificados", "alumno regular", "constancia", "record académico", "concentración de notas"],
+            "bienestar": ["salud mental", "psicológico", "apoyo emocional", "consejería", "urgencia", "crisis", "línea ops"],
+            "práctica": ["prácticas profesionales", "empleo", "duoclaboral", "bolsa de trabajo", "curriculum", "cv", "entrevista"],
+            "matrícula": ["matricular", "arancel", "pago", "postulación", "admisión"],
+            "beneficio": ["beca", "ayuda económica", "programa emergencia", "subsidio"],
+            "embajadores": ["curso embajadores", "embajadores salud mental", "módulo embajadores", "85% embajadores"]
+        }
         self.client = chromadb.PersistentClient(path="./chroma_db")
         self.collection = self.client.get_or_create_collection(
             name="duoc_knowledge"
@@ -232,8 +243,24 @@ class RAGEngine:
             'emergencies': 0,
             'template_responses': 0  # 🆕 MÉTRICA PARA TEMPLATES
         }
+        
+    def _expand_query(self, query: str) -> str:
+        """Expande consulta con sinónimos clave para mejorar recall"""
+        query_lower = query.lower()
+        expanded_terms = []
+        
+        for base, synonyms in self.synonym_expansions.items():
+            if base in query_lower:
+                expanded_terms.extend(synonyms)
+            
+        if expanded_terms:
+            expanded_query = query + " " + " ".join(expanded_terms)
+            logger.info(f"Query Expansion: '{query}' → '{expanded_query[:100]}...'")
+            return expanded_query
+        return query
 
     def enhanced_normalize_text(self, text: str) -> str:
+        
         """🆕 NORMALIZACIÓN SUPER MEJORADA PARA DUOC UC"""
         text = text.lower().strip()
         
@@ -274,11 +301,21 @@ class RAGEngine:
         for pattern, replacement in duoc_patterns.items():
             text = re.sub(pattern, replacement, text)
         
-        # Limpieza final
+        
+        
+        # Limpieza final - EVITAR DUPLICADOS Y OPTIMIZAR
         text = re.sub(r'[^\w\sáéíóúñü]', ' ', text)
         text = re.sub(r'\s+', ' ', text)
         
-        return text.strip()
+        # Eliminar palabras duplicadas
+        words = text.split()
+        unique_words = []
+        seen = set()
+        for word in words:
+            if word not in seen:
+                seen.add(word)
+                unique_words.append(word)
+        return ' '.join(unique_words)
 
     def process_user_query(self, user_message: str) -> Dict:
         """🆕 PROCESAMIENTO INTELIGENTE MEJORADO CON TEMPLATES"""
@@ -877,7 +914,9 @@ class RAGEngine:
     def hybrid_search(self, query_text: str, n_results: int = 3) -> List[Dict]:
         """🆕 BÚSQUEDA HÍBRIDA MEJORADA"""
         try:
-            results = self.query_optimized(query_text, n_results * 2, score_threshold=0.35)
+            expanded_query = self._expand_query(query_text)
+            processed_query = self.enhanced_normalize_text(expanded_query)
+            results = self.query_optimized(processed_query, n_results * 2, score_threshold=0.35)
 
             filtered_docs = []
             for result in results:
