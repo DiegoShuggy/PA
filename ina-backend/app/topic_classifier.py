@@ -2,6 +2,7 @@
 import logging
 from typing import Dict, List, Tuple
 import re
+import unicodedata
 
 logger = logging.getLogger(__name__)
 
@@ -159,7 +160,7 @@ class TopicClassifier:
                 "pastoral", "voluntariado", "voluntario", "actividades solidarias", "retiros",
                 "espiritualidad", "valores", "actividades pastorales", "solidaridad", "ayuda social",
                 "comunidad", "fe", "religión católica", "actividades voluntariado", "servicio social",
-                "misión solidaria", "trabajo comunitario", "ayuda a otros", "servicio voluntario",
+                "misión solidaria", "trabajo comunitario", "comunidad", "ayuda a otros", "servicio voluntario",
                 "actividad comunitaria", "proyecto social", "caridad", "ayuda humanitaria",
                 "voluntariado social", "servicio a la comunidad", "acción solidaria"
             ],
@@ -181,53 +182,6 @@ class TopicClassifier:
                 "password", "acceso digital", "internet", "sistema online", "plataforma duoc",
                 "mi duoc", "campus virtual", "miclase", "problema técnico plataforma",
                 "acceso portal", "ingreso plataforma", "configuración cuenta", "cuenta duoc"
-            ]
-        }
-
-        # 🆕 TEMAS PARA REDIRIGIR EXPANDIDOS
-        self.redirect_categories = {
-            "biblioteca": [
-                "libros", "préstamos", "préstamo", "recursos bibliográficos", "salas de estudio", 
-                "biblioteca", "estudio", "libro digital", "recursos digitales", "base de datos", 
-                "artículos científicos", "material bibliográfico", "investigación", "consulta bibliográfica",
-                "catálogo biblioteca", "horario biblioteca", "ubicación biblioteca", "servicio biblioteca",
-                "préstamo libros", "devolución libros", "renovación préstamo", "multas biblioteca",
-                "recursos estudio", "espacios estudio", "sala silenciosa", "computadores biblioteca"
-            ],
-            "servicios_digitales": [
-                "plataforma", "portal del estudiante", "correo institucional", "wifi", "contraseñas",
-                "password", "acceso digital", "internet", "sistema online", "plataforma duoc", 
-                "mi duoc", "campus virtual", "miclase", "problema técnico plataforma", "error plataforma",
-                "no puedo ingresar", "acceso denegado", "contraseña olvidada", "recuperar contraseña",
-                "configuración cuenta", "actualizar datos", "problema conexión", "wifi duoc",
-                "correo duoc", "outlook institucional", "problema email", "acceso miclase",
-                "falla plataforma", "soporte técnico", "help desk", "asistencia técnica"
-            ],
-            "financiamiento": [
-                "pagos", "pago", "financiamiento", "aranceles", "deudas", "cuotas", "forma de pago",
-                "transferencia", "webpay", "dinero", "pago matrícula", "finanzas", "cuenta por pagar",
-                "arancel", "deuda estudiantil", "pago cuota", "financiamiento estudiantil",
-                "convenio pago", "plan pagos", "beca arancel", "beneficio arancel", "crédito",
-                "documentación pago", "comprobante pago", "estado cuenta", "situación financiera",
-                "oficina finanzas", "cobranza", "regularización pagos", "mora pagos"
-            ],
-            "coordinacion_academica": [
-                "mallas curriculares", "malla", "ramos", "asignaturas", "cursos", "profesores",
-                "calificaciones", "notas", "exámenes", "pruebas", "jefe de carrera", "coordinador",
-                "plan de estudio", "curriculum", "asistencia", "inasistencia", "evaluaciones",
-                "contenidos ramos", "problema con profesor", "coordinación académica", "jefatura carrera",
-                "planificación académica", "cronograma académico", "fechas evaluación", "convalidación",
-                "cambio carrera", "reasignación ramos", "problema académico", "rendimiento académico",
-                "nivelación", "ramo reprobado", "recuperación", "examen especial", "evaluación diferida"
-            ],
-            "infraestructura": [
-                "salas", "laboratorios", "estacionamiento", "instalaciones", "aulas", "edificio",
-                "campus", "baños", "comedor", "cafetería", "espacios comunes", "sala de computación",
-                "talleres", "infraestructura", "mantenimiento", "equipamiento", "limpieza",
-                "temperatura", "aire acondicionado", "calefacción", "iluminación", "mobiliario",
-                "sillas", "mesas", "pizarras", "proyectores", "equipo audiovisual", "daño infraestructura",
-                "reparación", "reportar problema", "mantenimiento edificio", "condiciones físicas",
-                "acceso discapacitados", "rampas", "ascensores", "estacionamiento discapacitados"
             ]
         }
 
@@ -317,7 +271,7 @@ class TopicClassifier:
                 r"200\.000", r"doscientos.*mil", r"subsidio.*emergencia", r"qué.*es.*emergencia",
                 r"definición.*emergencia", r"para.*qué.*sirve.*emergencia", r"qué.*ofrece.*emergencia",
                 r"situación.*imprevista", r"estabilidad.*económica", r"problema.*económico.*grave",
-                r"gastos.*médicos", r"fallecimiento", r"daños.*vivienda", r"apoyo.*excepcional"
+                r"gastos médicos", r"fallecimiento", r"daños.*vivienda", r"apoyo.*excepcional"
             ],
             "tecnicas_estudio": [
                 r"t[ée]cnicas.*estudio", r"apoyo.*t[ée]cnicas.*estudio", r"qu[ée].*es.*t[ée]cnicas.*estudio",

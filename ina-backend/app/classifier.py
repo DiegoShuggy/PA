@@ -19,6 +19,7 @@ class QuestionClassifier:
             "deportes",
             "pastoral",
             "institucionales",
+            "punto_estudiantil",  # Nueva categoría agregada para contactos y áreas
             "otros"
         ]
         
@@ -205,6 +206,17 @@ class QuestionClassifier:
                 r'\b(actividad.*voluntariado|servicio.*voluntario)\b',
                 r'\b(misión solidaria|trabajo comunitario|ayuda a otros)\b',
                 r'\b(servicio a la comunidad|acción solidaria)\b',
+            ],
+            # Nueva categoría para contactos y áreas
+            "punto_estudiantil": [
+                r'\b(contacto.*asuntos.*estudiantiles|quién.*asuntos.*estudiantiles|natalia.*varela)\b',
+                r'\b(contacto.*desarrollo.*laboral|quién.*desarrollo.*laboral|claudia.*cortes)\b',
+                r'\b(contacto.*caf|quién.*caf|nicolas.*leiva)\b',
+                r'\b(contacto.*deportes|quién.*deportes|cesar.*pino|jefe.*deportes)\b',
+                r'\b(contacto.*bienestar|quién.*bienestar|adriana.*vasquez)\b',
+                r'\b(contacto.*pastoral|quién.*pastoral|camila.*celedon|gestor.*pastoral)\b',
+                r'\b(contacto.*punto.*estudiantil|quién.*punto.*estudiantil|responsable.*área|correo.*área)\b',
+                r'\b(miembros.*áreas|contactos.*áreas|quién.*es.*el.*responsable)\b',
             ]
         }
         
@@ -273,6 +285,14 @@ class QuestionClassifier:
             "apoyo_psicologico": [r'ansiedad.*académica', r'estrés.*universitario',r'apoyo.*psicológico', 
                                   r'necesito.*ayuda.*psicológica',r'dónde.*busco.*ayuda', r'apoyo.*emocional',r'crisis.*emocional', r'salud.*mental'],
 
+            # Nueva categoría punto_estudiantil - Patrones para templates específicos
+            "asuntos_estudiantiles_contacto": [r'contacto.*asuntos.*estudiantiles', r'natalia.*varela', r'nvarelam'],
+            "desarrollo_laboral_contacto": [r'contacto.*desarrollo.*laboral', r'claudia.*cortes', r'ccortesn'],
+            "pf_caf_contacto": [r'contacto.*caf', r'contacto.*pf', r'nicolas.*leiva', r'nleivas'],
+            "deportes_actividad_fisica_contacto": [r'contacto.*deportes', r'cesar.*pino', r'jefe.*deportes'],
+            "bienestar_estudiantil_contacto": [r'contacto.*bienestar.*estudiantil', r'adriana.*vasquez', r'avasquezm'],
+            "pastoral_contacto": [r'contacto.*pastoral', r'camila.*celedon', r'gestor.*pastoral'],
+            "punto_estudiantil_general": [r'contacto.*punto.*estudiantil', r'resumen.*áreas', r'miembros.*punto.*estudiantil'],
             
             
         }
@@ -743,6 +763,15 @@ class QuestionClassifier:
             "institucionales": [
                 r'correo.*plaza.*norte', r'email.*plaza.*norte', r'persona.*plaza.*norte',
                 r'claudia.*cortés', r'ccortesn', r'adriana.*vásquez'
+            ],
+            "punto_estudiantil": [  # Nuevos patrones para la categoría agregada
+                r'contacto.*asuntos.*estudiantiles|natalia.*varela',
+                r'contacto.*desarrollo.*laboral|claudia.*cortes',
+                r'contacto.*caf|nicolas.*leiva',
+                r'contacto.*deportes|cesar.*pino|jefe.*deportes',
+                r'contacto.*bienestar|adriana.*vasquez',
+                r'contacto.*pastoral|camila.*celedon',
+                r'contacto.*punto.*estudiantil|miembros.*áreas|responsable.*área',
             ]
         }
         
@@ -791,6 +820,11 @@ class QuestionClassifier:
             'institucionales': [
                 'mi duoc', 'contraseña', 'plataforma', 'correo institucional',
                 'plaza norte', 'ccortesn', 'avasquezm'
+            ],
+            'punto_estudiantil': [  # Bonus para la nueva categoría
+                'natalia varela', 'claudia cortes', 'nicolas leiva', 'cesar pino',
+                'adriana vasquez', 'camila celedon', 'responsable área', 'correo área',
+                'miembros áreas', 'contacto punto estudiantil'
             ]
         }
         

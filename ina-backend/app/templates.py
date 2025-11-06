@@ -1968,9 +1968,164 @@ Av. Américo Vespucio 1501, Conchalí, Santiago
 🔗 **Información:** https://deportes.duoc.cl/becas
 📞 **Consultas:** becasdeportivas@duoc.cl
 💡 *Combina estudios y deporte con apoyo institucional*
+""",
+    },
+
+    "punto_estudiantil": {
+        "asuntos_estudiantiles_contacto": """
+👩‍💼 **Área: Asuntos Estudiantiles**
+**Responsable:** Natalia Varela Muñoz
+**Correo:** nvarelam@duoc.cl
+
+**Descripción de la labor:**
+El área de Asuntos Estudiantiles tiene como propósito acompañar, orientar y apoyar a los estudiantes durante su proceso formativo, promoviendo su desarrollo integral tanto en el ámbito académico como personal. Entre sus principales labores se destacan la planificación y ejecución de actividades extracurriculares orientadas al fortalecimiento del liderazgo estudiantil, el desarrollo de habilidades de comunicación y la adquisición de estrategias de estudio que favorezcan un desempeño académico exitoso.
+
+Asimismo, el área coordina diversas Estrategias de Apoyo a los Estudiantes, tales como la entrega de información y orientación sobre beneficios institucionales, el Seguro Escolar de Accidentes, y las gestiones vinculadas a la Tarjeta Nacional Estudiantil (TNE).
+
+Otro ámbito relevante es la vinculación con los Consejeros de Carrera, promoviendo la participación activa, la representación estudiantil y el trabajo colaborativo.
+
+**Contacto general:** +56 2 2360 6410 | puntoestudiantil_pnorte@duoc.cl
+🔗 **Portal:** https://portal.duoc.cl
+💡 *Para trámites como TNE o beneficios, agenda cita vía email.*
+""",
+        "desarrollo_laboral_contacto": """
+👩‍💼 **Área: Desarrollo Laboral y Titulados**
+**Responsable:** Claudia Cortés
+**Correo:** ccortesn@duoc.cl
+
+**Descripción de la labor:**
+El área de Desarrollo Laboral y Titulados es el área encargada de potenciar la inserción laboral y el crecimiento profesional continuo de la comunidad. Ofrecemos un apoyo integral y especializado que acompaña a los usuarios desde su etapa de formación hasta su posicionamiento en el mercado laboral.
+
+**Servicios principales:**
+• Asesoría en Currículum Vitae
+• Tips para entrevistas laborales
+• Apoyo en LinkedIn profesional
+• Gestión Alumno Ayudante
+• Gestión Duoc Laboral (estudiantes)
+• Gestión CDP - Centro Desarrollo Profesional
+
+**Contacto general:** +56 2 2360 6400 | duoclaboral@duoc.cl
+🔗 **Portal DuocLaboral:** https://duoclaboral.cl
+💡 *Agenda asesoría para CV o prácticas vía email.*
+""",
+        "pf_caf_contacto": """
+👨‍💼 **Área: PF CAF (Preparador Físico - Centro de Acondicionamiento Físico)**
+**Responsable:** Nicolás Leiva
+**Correo:** nleivas@duoc.cl
+
+**Descripción de la labor:**
+El PF CAF es responsable de la orientación y supervisión en el gimnasio, promoviendo entrenamientos personalizados, evaluaciones físicas y hábitos saludables. Coordina con el área de Deportes para integrar actividades de bienestar integral.
+
+**Servicios:**
+• Evaluaciones físicas iniciales
+• Planes de entrenamiento
+• Clases guiadas (spinning, yoga)
+• Soporte nutricional básico
+
+**Contacto general:** +56 2 2360 6460 | caf_pnorte@duoc.cl
+📍 **Ubicación:** Piso -1, Sede Plaza Norte
+💡 *Requiere certificado médico para acceso. Agenda evaluación vía email.*
+""",
+        "deportes_actividad_fisica_contacto": """
+👨‍💼 **Área: Jefe de Deportes y Actividad Física**
+**Responsable:** César Pino
+**Correo:** [cpinon@duoc.cl - usa deportes_pnorte@duoc.cl para consultas]
+
+**Descripción de la labor:**
+El Área de Deportes y Actividad Física gestiona integralmente talleres y disciplinas deportivas para estudiantes. Su labor abarca la promoción, difusión, inscripción y coordinación de todas las actividades.
+
+Administra el CAF (Centro de Acondicionamiento Físico y Bienestar), un gimnasio que promueve la vida saludable y el entrenamiento personalizado con apoyo de preparadores físicos, accesible tras una evaluación de ingreso.
+
+El área desarrolla Talleres BIM (Bienestar Integral en Movimiento) e intervenciones en espacios comunes para fomentar la participación y convivencia.
+
+Además, brinda orientación personalizada sobre alternativas, becas deportivas y selecciones representativas.
+
+Anualmente, organiza y participa en grandes eventos como los Torneos Intersedes y los Juegos Olímpicos Duoc UC, promoviendo el espíritu deportivo, la sana competencia y el bienestar integral de la comunidad.
+
+**Contacto general:** +56 2 2360 6460 | deportes_pnorte@duoc.cl
+🔗 **Portal:** https://deportes.duoc.cl
+💡 *Para inscripciones en talleres o selecciones, contacta vía email.*
+""",
+        "bienestar_estudiantil_contacto": """
+👩‍💼 **Área: Bienestar Estudiantil**
+**Responsable:** Adriana Vásquez
+**Correo:** avasquezm@duoc.cl
+
+**Descripción de la labor:**
+El Área de Bienestar Estudiantil se enfoca en el desarrollo de actividades y la provisión de apoyos para fortalecer la salud mental y el bienestar integral de los estudiantes.
+
+Sus programas principales cubren: Salud Mental, Nutrición Consciente, Prevención del Consumo de Alcohol y Drogas, Convivencia e Inclusión.
+
+Ofrece Atención Psicológica Virtual Gratuita de hasta ocho sesiones anuales con profesionales especializados.
+
+Dispone de la Línea OPS (228203450), un número gratuito para Emergencias Psicológicas disponible 24/7, que brinda contención inmediata en crisis.
+
+Imparte el Curso de Embajadores en Salud Mental para fortalecer habilidades de apoyo emocional en la comunidad.
+
+Semanalmente, realiza Charlas Virtuales sobre bienestar psicológico y general, promoviendo hábitos saludables.
+
+También desarrolla Talleres y Charlas Presenciales en coordinación con las carreras para impulsar la sana convivencia y la prevención.
+
+En resumen, el área asegura un acompañamiento especializado y oportuno para el equilibrio emocional y físico de sus estudiantes. Su labor es clave para el desarrollo integral dentro del entorno universitario. Así, el área contribuye activamente a una experiencia estudiantil saludable y de apoyo.
+
+**Contacto general:** +56 2 2360 6420 | bienestarpnorte@duoc.cl
+🔗 **Agendar atención:** https://eventos.duoc.cl
+🚨 **Línea OPS:** +56 2 2820 3450 (24/7)
+💡 *Para citas psicológicas o talleres, usa la plataforma de eventos.*
+""",
+        "pastoral_contacto": """
+👩‍💼 **Área: Pastoral**
+**Responsable:** Camila Celedón (Gestora Pastoral)
+**Correo:** [No especificado en el documento - usa pastoral_pnorte@duoc.cl para consultas]
+
+**Descripción de la labor:**
+El Área de Pastoral de Duoc UC busca promover el encuentro personal y comunitario con Jesucristo en toda la comunidad.
+
+Su misión es acompañar la vida de fe de alumnos, docentes y colaboradores, integrando la fe con el quehacer diario.
+
+Camila, Gestora Pastoral, trabaja en conjunto con el Padre Luck Jamb y la Hermana Rut Gallardo.
+
+La Eucaristía se establece como el centro y cumbre de la experiencia pastoral y la vida cristiana.
+
+Ofrece medios para una vida sacramental y espiritual plena, a través de espacios de oración y celebración de sacramentos.
+
+El área se constituye como una comunidad cristiana viva al interior de Duoc UC, buscando ser testimonio de Cristo y transformar la sociedad.
+
+Organiza actividades de servicio y servicio a otros como son las Misiones Solidarias de verano y invierno al igual que nos apostolados mensuales.
+
+Busca acrecentar la fe católica a partir del diálogo entre fe y cultura.
+
+Participa activamente en la formación de personas con un claro sello ético-cristiano.
+
+Su labor impulsa a la comunidad a descubrir el sentido de su vida y a vivir los valores del Evangelio.
+
+En resumen, la Pastoral es el área que anima la vida de fe y acompaña espiritualmente a la comunidad Duoc UC.
+
+**Contacto general:** +56 2 2360 6450 | pastoral_pnorte@duoc.cl
+🔗 **Más información:** https://pastoral.duoc.cl
+💡 *Para retiros o grupos de oración, contacta vía email.*
+""",
+        "punto_estudiantil_general": """
+🏢 **Punto Estudiantil - Resumen General de Áreas y Contactos**
+**Ubicación:** Edificio Principal, Sede Plaza Norte
+**Horario:** L-V 8:30-19:00 | S 9:00-14:00
+**Teléfono Central:** +56 2 2360 6400
+
+**Áreas Principales:**
+• **Asuntos Estudiantiles:** Natalia Varela (nvarelam@duoc.cl) - Trámites, TNE, beneficios
+• **Desarrollo Laboral:** Claudia Cortés (ccortesn@duoc.cl) - Prácticas, CV, empleo
+• **PF CAF:** Nicolás Leiva (nleivas@duoc.cl) - Gimnasio y entrenamiento
+• **Deportes y Actividad Física:** César Pino (deportes_pnorte@duoc.cl) - Talleres y eventos
+• **Bienestar Estudiantil:** Adriana Vásquez (avasquezm@duoc.cl) - Salud mental, talleres
+• **Pastoral:** Camila Celedón (pastoral_pnorte@duoc.cl) - Actividades espirituales
+
+**Email General:** puntoestudiantil_pnorte@duoc.cl
+🔗 **Portal:** https://portal.duoc.cl
+💡 *Para atención personalizada, envía email con tu consulta específica.*
 """
+    },
     }
-}
+
 def get_template(category: str, template_id: str) -> Optional[str]:
     """
     Obtiene un template específico por categoría e ID
