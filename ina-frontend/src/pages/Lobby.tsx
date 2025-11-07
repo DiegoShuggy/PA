@@ -10,6 +10,9 @@ function Lobby() {
     const navigate = useNavigate();
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
+    // Estado para controlar qué área está activa
+    const [areaActiva, setAreaActiva] = useState('general'); // 'general', 'asuntos', 'desarrollo', 'bienestar', 'deportes', 'pastoral'
+
     // Estados y refs para el lector de texto
     const [isReading, setIsReading] = useState(false);
     const [isTtsSupported, setIsTtsSupported] = useState(false);
@@ -22,29 +25,44 @@ function Lobby() {
         const playRefreshSound = async () => {
             try {
                 const refreshSound = new Audio('/sounds/kronii-gwakk.mp3');
-                refreshSound.volume = 0.3; // Volumen al 30%
-
-                // Reproducir el sonido
+                refreshSound.volume = 0.3;
                 await refreshSound.play();
                 console.log('🔊 Sonido de refresh reproducido');
             } catch (error) {
                 console.log('❌ No se pudo reproducir el sonido:', error);
-                // Esto es normal en algunos navegadores por políticas de autoplay
             }
         };
-
         playRefreshSound();
-
-        // Cleanup si el componente se desmonta rápidamente
         return () => {
-            // Opcional: detener el sonido si el componente se desmonta
             const audioElements = document.querySelectorAll('audio');
             audioElements.forEach(audio => {
                 audio.pause();
                 audio.currentTime = 0;
             });
         };
-    }, []); // Se ejecuta solo al montar el componente
+    }, []);
+
+    // Función para cambiar entre áreas
+    const cambiarArea = (area: string) => {
+        setAreaActiva(area);
+        // Reproducir sonido al cambiar de área
+        const playAreaChangeSound = async () => {
+            try {
+                const changeSound = new Audio('/sounds/kronii-gwakk.mp3');
+                changeSound.volume = 0.2;
+                await changeSound.play();
+                console.log('🔊 Sonido de cambio de área reproducido');
+            } catch (error) {
+                console.log('❌ No se pudo reproducir el sonido de cambio de área:', error);
+            }
+        };
+        playAreaChangeSound();
+    };
+
+    // Función para volver al área general
+    const volverAGeneral = () => {
+        setAreaActiva('general');
+    };
 
     // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO ADAPTADA
 
@@ -275,23 +293,269 @@ function Lobby() {
 
     // FIN - FUNCIONALIDAD DEL LECTOR DE TEXTO
 
-    // Función para manejar el clic en las preguntas y enviar automáticamente
+   // Función para manejar el clic en las preguntas
     const handleQuestionClick = (questionText: string) => {
-        // Navegar al chat y pasar la pregunta como estado con un flag de autoSend
         navigate('/InA', {
             state: {
                 predefinedQuestion: questionText,
-                autoSend: true // Flag para indicar envío automático
+                autoSend: true
             }
         });
     };
 
+    // Renderizar contenido según el área activa
+    const renderizarContenido = () => {
+        switch (areaActiva) {
+            case 'asuntos':
+                return renderAsuntosEstudiantiles();
+            case 'desarrollo':
+                return renderDesarrolloProfesional();
+            case 'bienestar':
+                return renderBienestarEstudiantil();
+            case 'deportes':
+                return renderDeportes();
+            case 'pastoral':
+                return renderPastoral();
+            default:
+                return renderFAQGeneral();
+        }
+    };
+
+    // Renderizar FAQ general (contenido original)
+    const renderFAQGeneral = () => (
+        <div className="lobby-grid">
+            <div className="FAQ">
+                <Link to="/Punto" className="FAQ-link">
+                    <div className="lobby-item uno">
+                        <span>{t('Lobby.Preguntas.FAQ1')}</span>
+                    </div>
+                </Link>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ2'))}
+                >
+                    <div className="lobby-item dos">
+                        <span>{t('Lobby.Preguntas.FAQ2')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ3'))}
+                >
+                    <div className="lobby-item tres">
+                        <span>{t('Lobby.Preguntas.FAQ3')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ4'))}
+                >
+                    <div className="lobby-item cuatro">
+                        <span>{t('Lobby.Preguntas.FAQ4')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ5'))}
+                >
+                    <div className="lobby-item cinco">
+                        <span>{t('Lobby.Preguntas.FAQ5')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ6'))}
+                >
+                    <div className="lobby-item seis">
+                        <span>{t('Lobby.Preguntas.FAQ6')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ7'))}
+                >
+                    <div className="lobby-item uno">
+                        <span>{t('Lobby.Preguntas.FAQ7')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ8'))}
+                >
+                    <div className="lobby-item dos">
+                        <span>{t('Lobby.Preguntas.FAQ8')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ9'))}
+                >
+                    <div className="lobby-item tres">
+                        <span>{t('Lobby.Preguntas.FAQ9')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ10'))}
+                >
+                    <div className="lobby-item cuatro">
+                        <span>{t('Lobby.Preguntas.FAQ10')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ11'))}
+                >
+                    <div className="lobby-item cinco">
+                        <span>{t('Lobby.Preguntas.FAQ11')}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="FAQ">
+                <div
+                    className="FAQ-link"
+                    onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ12'))}
+                >
+                    <div className="lobby-item seis">
+                        <span>{t('Lobby.Preguntas.FAQ12')}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    // Renderizar Asuntos Estudiantiles
+    const renderAsuntosEstudiantiles = () => (
+        <div className="lobby-grid">
+            {/* Renderizar preguntas dinámicamente */}
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                        <div className="FAQ" key={num}>
+                            <div
+                                className="FAQ-link"
+                                onClick={() => handleQuestionClick(t(`Asuntos.FAQ${num}`))}
+                            >
+                                <div className="Coordinador-item uno">
+                                    <span>{t(`Asuntos.FAQ${num}`)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+        </div>
+    );
+
+    // Renderizar Desarrollo Profesional
+    const renderDesarrolloProfesional = () => (
+        <div className="lobby-grid">
+            {/* Renderizar preguntas dinámicamente */}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                        <div className="FAQ" key={num}>
+                            <div
+                                className="FAQ-link"
+                                onClick={() => handleQuestionClick(t(`Desarrollo.FAQ${num}`))}
+                            >
+                                <div className="Coordinador-item tres">
+                                    <span>{t(`Desarrollo.FAQ${num}`)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+        </div>
+    );
+
+    // Renderizar Bienestar Estudiantil
+    const renderBienestarEstudiantil = () => (
+        <div className="lobby-grid">
+            {/* Renderizar preguntas dinámicamente */}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((num) => (
+                        <div className="FAQ" key={num}>
+                            <div
+                                className="FAQ-link"
+                                onClick={() => handleQuestionClick(t(`Bienestar.FAQ${num}`))}
+                            >
+                                <div className="Coordinador-item cuatro">
+                                    <span>{t(`Bienestar.FAQ${num}`)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+        </div>
+    );
+
+    // Renderizar Deportes
+    const renderDeportes = () => (
+        <div className="lobby-grid">
+            {/* Renderizar preguntas dinámicamente */}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((num) => (
+                        <div className="FAQ" key={num}>
+                            <div
+                                className="FAQ-link"
+                                onClick={() => handleQuestionClick(t(`Deportes.FAQ${num}`))}
+                            >
+                                <div className="Coordinador-item cinco">
+                                    <span>{t(`Deportes.FAQ${num}`)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+        </div>
+    );
+
+    // Renderizar Pastoral
+    const renderPastoral = () => (
+        <div className="lobby-grid">
+            {/* Renderizar preguntas dinámicamente */}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((num) => (
+                        <div className="FAQ" key={num}>
+                            <div
+                                className="FAQ-link"
+                                onClick={() => handleQuestionClick(t(`Pastoral.FAQ${num}`))}
+                            >
+                                <div className="Coordinador-item cinco">
+                                    <span>{t(`Pastoral.FAQ${num}`)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+        </div>
+    );
+
     return (
         <div className="lobby-container">
-            {/* Botón de accesibilidad para leer la página */}
-
             <h2>{t('Lobby.title')}</h2>
-            {/* Botón de accesibilidad mejorado */}
+            <h3>{t('Lobby.Descripcion')}</h3>
+
+            {/* Botón de accesibilidad */}
             <div className="accessibility-controls">
                 <button
                     onClick={toggleReading}
@@ -301,143 +565,81 @@ function Lobby() {
                     {isReading ? '⏹️' : '🔊'}
                 </button>
             </div>
-            {/* Buscador por voz */}
-            <div className="voice-search-section">
-                <h4>{t('Lobby.voicetitle')}</h4>
-                <VoiceSearch onSearch={handleVoiceSearch} />
-            </div>
-            <h3>{t('Lobby.Descripcion')}</h3>
-            <div className="lobby-grid">
-                {/* Tus elementos FAQ existentes - Modificados para usar onClick */}
-                <div className="FAQ">
-                    <Link to="/Punto" className="FAQ-link">
-                        <div className="lobby-item uno">
-                            <span>{t('Lobby.Preguntas.FAQ1')}</span>
-                        </div>
-                    </Link>
-                </div>
 
-                <div className="FAQ">
+            {/* Botones de cambio de área */}
+            <div className="FAQ-horizontal">
+                <div className="cambio">
                     <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ2'))}
+                        className={`cambio-link ${areaActiva === 'asuntos' ? 'active' : ''}`}
+                        onClick={() => cambiarArea('asuntos')}
                     >
-                        <div className="lobby-item dos">
-                            <span>{t('Lobby.Preguntas.FAQ2')}</span>
+                        <div className="cambio-item cambio-color">
+                            <span>{t('Lobby.Switch.Asuntos')}</span>
                         </div>
                     </div>
                 </div>
-
-                <div className="FAQ">
+                <div className="cambio">
                     <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ3'))}
+                        className={`cambio-link ${areaActiva === 'desarrollo' ? 'active' : ''}`}
+                        onClick={() => cambiarArea('desarrollo')}
                     >
-                        <div className="lobby-item tres">
-                            <span>{t('Lobby.Preguntas.FAQ3')}</span>
+                        <div className="cambio-item cambio-color">
+                            <span>{t('Lobby.Switch.Desarrollo')}</span>
                         </div>
                     </div>
                 </div>
-
-                <div className="FAQ">
+                <div className="cambio">
                     <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ4'))}
+                        className={`cambio-link ${areaActiva === 'bienestar' ? 'active' : ''}`}
+                        onClick={() => cambiarArea('bienestar')}
                     >
-                        <div className="lobby-item cuatro">
-                            <span>{t('Lobby.Preguntas.FAQ4')}</span>
+                        <div className="cambio-item cambio-color">
+                            <span>{t('Lobby.Switch.Bienestar')}</span>
                         </div>
                     </div>
                 </div>
-
-                <div className="FAQ">
+                <div className="cambio">
                     <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ5'))}
+                        className={`cambio-link ${areaActiva === 'deportes' ? 'active' : ''}`}
+                        onClick={() => cambiarArea('deportes')}
                     >
-                        <div className="lobby-item cinco">
-                            <span>{t('Lobby.Preguntas.FAQ5')}</span>
+                        <div className="cambio-item cambio-color">
+                            <span>{t('Lobby.Switch.Deportes')}</span>
                         </div>
                     </div>
                 </div>
-
-                <div className="FAQ">
+                <div className="cambio">
                     <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ6'))}
+                        className={`cambio-link ${areaActiva === 'pastoral' ? 'active' : ''}`}
+                        onClick={() => cambiarArea('pastoral')}
                     >
-                        <div className="lobby-item seis">
-                            <span>{t('Lobby.Preguntas.FAQ6')}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="FAQ">
-                    <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ7'))}
-                    >
-                        <div className="lobby-item uno">
-                            <span>{t('Lobby.Preguntas.FAQ7')}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="FAQ">
-                    <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ8'))}
-                    >
-                        <div className="lobby-item dos">
-                            <span>{t('Lobby.Preguntas.FAQ8')}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="FAQ">
-                    <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ9'))}
-                    >
-                        <div className="lobby-item tres">
-                            <span>{t('Lobby.Preguntas.FAQ9')}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="FAQ">
-                    <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ10'))}
-                    >
-                        <div className="lobby-item cuatro">
-                            <span>{t('Lobby.Preguntas.FAQ10')}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="FAQ">
-                    <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ11'))}
-                    >
-                        <div className="lobby-item cinco">
-                            <span>{t('Lobby.Preguntas.FAQ11')}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="FAQ">
-                    <div
-                        className="FAQ-link"
-                        onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ12'))}
-                    >
-                        <div className="lobby-item seis">
-                            <span>{t('Lobby.Preguntas.FAQ12')}</span>
+                        <div className="cambio-item cambio-color">
+                            <span>{t('Lobby.Switch.Pastoral')}</span>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* Botón para volver al área general */}
+            {areaActiva !== 'general' && (
+                <div className="volver-general">
+                    <button onClick={volverAGeneral} className="btn-volver">
+                        ← {t('Lobby.VolverGeneral')}
+                    </button>
+                </div>
+            )}
+
+            {/* Contenido dinámico según el área activa */}
+            {renderizarContenido()}
+
+            {/* Buscador por voz (solo en área general) */}
+            {areaActiva === 'general' && (
+                <div className="voice-search-section">
+                    <h4>{t('Lobby.voicetitle')}</h4>
+                    <VoiceSearch onSearch={handleVoiceSearch} />
+                </div>
+            )}
+
             <div ref={messagesEndRef} />
         </div>
     );

@@ -406,99 +406,20 @@ export function Desarrollo() {
             </div>
             <h2 className='titulo'>{t('Bienestar.FAQTiltle')}</h2>
             <div className="Coordinador-grid">
-                {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
                 <div className="CFAQ">
-                    <div className="FAQ">
-                        <div
-                            className="FAQ-link"
-                            onClick={() => handleQuestionClick(t('Desarrollo.FAQ1'))}
-                        >
-                            <div className="Coordinador-item tres">
-                                <span>{t('Desarrollo.FAQ1')}</span>
+                    {/* Renderizar preguntas dinámicamente */}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                        <div className="FAQ" key={num}>
+                            <div
+                                className="FAQ-link"
+                                onClick={() => handleQuestionClick(t(`Desarrollo.FAQ${num}`))}
+                            >
+                                <div className="Coordinador-item tres">
+                                    <span>{t(`Desarrollo.FAQ${num}`)}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="FAQ">
-                        <div
-                            className="FAQ-link"
-                            onClick={() => handleQuestionClick(t('Desarrollo.FAQ2'))}
-                        >
-                            <div className="Coordinador-item tres">
-                                <span>{t('Desarrollo.FAQ2')}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="FAQ">
-                        <div
-                            className="FAQ-link"
-                            onClick={() => handleQuestionClick(t('Desarrollo.FAQ3'))}
-                        >
-                            <div className="Coordinador-item tres">
-                                <span>{t('Desarrollo.FAQ3')}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="FAQ">
-                        <div
-                            className="FAQ-link"
-                            onClick={() => handleQuestionClick(t('Desarrollo.FAQ4'))}
-                        >
-                            <div className="Coordinador-item tres">
-                                <span>{t('Desarrollo.FAQ4')}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="FAQ">
-                        <div
-                            className="FAQ-link"
-                            onClick={() => handleQuestionClick(t('Desarrollo.FAQ5'))}
-                        >
-                            <div className="Coordinador-item tres">
-                                <span>{t('Desarrollo.FAQ5')}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="FAQ">
-                        <div
-                            className="FAQ-link"
-                            onClick={() => handleQuestionClick(t('Desarrollo.FAQ6'))}
-                        >
-                            <div className="Coordinador-item tres">
-                                <span>{t('Desarrollo.FAQ6')}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="FAQ">
-                        <div
-                            className="FAQ-link"
-                            onClick={() => handleQuestionClick(t('Desarrollo.FAQ7'))}
-                        >
-                            <div className="Coordinador-item tres">
-                                <span>{t('Desarrollo.FAQ7')}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="FAQ">
-                        <div
-                            className="FAQ-link"
-                            onClick={() => handleQuestionClick(t('Desarrollo.FAQ8'))}
-                        >
-                            <div className="Coordinador-item tres">
-                                <span>{t('Desarrollo.FAQ8')}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="FAQ">
-                        <div
-                            className="FAQ-link"
-                            onClick={() => handleQuestionClick(t('Desarrollo.FAQ9'))}
-                        >
-                            <div className="Coordinador-item tres">
-                                <span>{t('Desarrollo.FAQ9')}</span>
-                            </div>
-                        </div>
-                    </div>
-
+                    ))}
                 </div>
             </div>
         </div>

@@ -405,12 +405,11 @@ export function Asuntos() {
             <div className="Coordinador-grid">
                 <div className="CFAQ">
                     {/* Renderizar preguntas dinámicamente */}
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                         <div className="FAQ" key={num}>
                             <div
                                 className="FAQ-link"
                                 onClick={() => handleQuestionClick(t(`Asuntos.FAQ${num}`))}
-                                style={{ cursor: 'pointer' }}
                             >
                                 <div className="Coordinador-item uno">
                                     <span>{t(`Asuntos.FAQ${num}`)}</span>

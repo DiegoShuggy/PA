@@ -408,36 +408,19 @@ export function Pastoral() {
             <div className="Coordinador-grid">
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
                 <div className="CFAQ">
-                    <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item seis">
-                            <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
+                    {/* Renderizar preguntas dinámicamente */}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((num) => (
+                        <div className="FAQ" key={num}>
+                            <div
+                                className="FAQ-link"
+                                onClick={() => handleQuestionClick(t(`Pastoral.FAQ${num}`))}
+                            >
+                                <div className="Coordinador-item cinco">
+                                    <span>{t(`Pastoral.FAQ${num}`)}</span>
+                                </div>
+                            </div>
                         </div>
-                    </Link>
-                    <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item seis">
-                            <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
-                        </div>
-                    </Link>
-                    <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item seis">
-                            <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
-                        </div>
-                    </Link>
-                    <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item seis">
-                            <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
-                        </div>
-                    </Link>
-                    <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item seis">
-                            <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
-                        </div>
-                    </Link>
-                    <Link to="/InA" className="CFAQ-link">
-                        <div className="Coordinador-item seis">
-                            <span>{t('Lobby.Preguntas.FAQ4', 'FAQ')}</span>
-                        </div>
-                    </Link>
+                    ))}
                 </div>
             </div>
         </div>

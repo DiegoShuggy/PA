@@ -1448,14 +1448,16 @@ useEffect(() => {
     ));
   };
 
-  // Agrega este useEffect para lectura automática
-  useEffect(() => {
-    // Si hubo una detención manual, no activar lectura automática
-    if (isManualStopRef.current) {
-      return;
-    }
-    // Obtener solo los mensajes de la IA
-    const aiMessages = messages.filter(msg => !msg.isUser);
+  // Reemplaza el useEffect de lectura automática con esta versión mejorada
+useEffect(() => {
+  // No leer si hay una detención manual o si está cargando una nueva respuesta
+  if (isManualStopRef.current || isLoading) {
+    console.log('🚫 Lectura automática bloqueada - carga en progreso o detención manual');
+    return;
+  }
+
+  // Obtener solo los mensajes de la IA
+  const aiMessages = messages.filter(msg => !msg.isUser);
 
     // Si no hay mensajes de IA, salir
     if (aiMessages.length === 0) {
@@ -1464,24 +1466,36 @@ useEffect(() => {
     const lastAIMessage = aiMessages[aiMessages.length - 1];
     // Buscar el último mensaje de la AI que no se haya leído
     const lastAIMessageIndex = messages.findIndex(msg => msg === lastAIMessage);
+    const isMostRecentMessage = lastAIMessageIndex === messages.length - 1;
+
+  // Si no es el mensaje más reciente, probablemente se está cargando uno nuevo
+  if (!isMostRecentMessage) {
+    console.log('🚫 No es el mensaje más reciente - posible carga en progreso');
+    return;
+  }
 
     // VERIFICACIÓN MODIFICADA: Permitir re-lectura si el mensaje es nuevo
     // Solo considerar como "ya leído" si fue leído completamente en esta sesión
     const hasBeenRead = hasBeenReadRef.current.has(lastAIMessageIndex);
+    // Verificar si este es realmente el mensaje más reciente (no uno anterior)
+  
 
-    // Si hay un nuevo mensaje de IA y no ha sido leído
-    if (lastAIMessageIndex !== -1 && !hasBeenRead && isTtsSupported) {
+     // Solo leer si es un mensaje nuevo de IA que no ha sido leído
+  if (lastAIMessageIndex !== -1 && !hasBeenRead && isTtsSupported) {
+    console.log('🔊 Condiciones para lectura automática cumplidas:', {
+      index: lastAIMessageIndex,
+      isMostRecent: isMostRecentMessage,
+      hasBeenRead: hasBeenRead,
+      isLoading: isLoading
+    });
 
-      // Pequeño delay para que el usuario pueda ver el mensaje primero
-      const autoReadTimer = setTimeout(() => {
-        console.log('🔊 Lectura automática del mensaje MÁS NUEVO (cancelando lectura anterior si existe):', lastAIMessageIndex);
-        readMessage(lastAIMessage.text, lastAIMessageIndex, true);
-      }, 1000); // 1 segundo de delay
+    const autoReadTimer = setTimeout(() => {
+      readMessage(lastAIMessage.text, lastAIMessageIndex, true);
+    }, 1000);
 
-
-      return () => clearTimeout(autoReadTimer);
-    }
-  }, [messages, isTtsSupported, readMessage]);
+    return () => clearTimeout(autoReadTimer);
+  }
+}, [messages, isTtsSupported, readMessage, isLoading]); // AGREGAR isLoading COMO DEPENDENCIA
 
   // Componente de Feedback MODIFICADO
   const renderFeedbackWidget = (messageIndex?: number) => {
