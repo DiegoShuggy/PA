@@ -226,7 +226,7 @@ function Punto() {
     // TEXTO ADICIONAL PARA LA LECTURA - Todo incluido en el JavaScript
     const getPageContentWithDescriptions = () => {
         // Texto descriptivo adicional que no está visible en la pantalla
-        const pageIntroduction = "Página de Área de Consultas Universitarias. En esta sección podrá acceder a diferentes departamentos y servicios de la universidad.";
+        const pageIntroduction = "Página de Área de Consultas Universitarias. En esta sección podrá acceder a diferentes departamentos y servicios de la institucion academica.";
         
         const navigationInstructions = "Para navegar a cualquier área, haga clic en la tarjeta correspondiente. Cada tarjeta representa un departamento universitario especializado.";
         
@@ -283,7 +283,7 @@ function Punto() {
         const fullText = `
             ${pageTitle}.
             
-            Bienvenido al área de consultas de la universidad. Esta plataforma le permite acceder a los diferentes servicios y departamentos universitarios.
+            Bienvenido al área de consultas de la Institucion academica. Esta plataforma le permite acceder a los diferentes servicios y departamentos universitarios.
             
             ${areasWithDescriptions}
             

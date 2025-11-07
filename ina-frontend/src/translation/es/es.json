@@ -102,6 +102,7 @@
     "title": "Bienvenido, soy InA",
     "Descripcion": "Tu asistente virtual para consultas sobre Duoc UC. ¿En qué puedo ayudarte hoy?",
     "voicetitle": "Búsqueda por Voz",
+    "VolverGeneral": "Volver a General",
     "Switch":{
       "Asuntos": "Asuntos Estudiantiles",
       "Desarrollo": "Desarrollo Profesional y Titulados",

@@ -622,7 +622,7 @@ function Lobby() {
 
             {/* Botón para volver al área general */}
             {areaActiva !== 'general' && (
-                <div className="volver-general">
+                <div className="back-button">
                     <button onClick={volverAGeneral} className="btn-volver">
                         ← {t('Lobby.VolverGeneral')}
                     </button>
