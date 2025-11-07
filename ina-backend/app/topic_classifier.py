@@ -8,17 +8,14 @@ logger = logging.getLogger(__name__)
 
 class TopicClassifier:
     def __init__(self):
-        # 🆕 TEMAS PERMITIDOS EXPANDIDOS Y MEJORADOS
+        # TEMAS PERMITIDOS EXPANDIDOS Y MEJORADOS
         self.allowed_categories = {
             "asuntos_estudiantiles": [
-                # TNE y certificados - EXPANDIDO
                 "tne", "tarjeta nacional estudiantil", "pase escolar", "validar tne", "renovar tne", "revalidar tne",
                 "sacar tne", "obtener tne", "primera tne", "nueva tne", "tne por primera vez",
                 "certificado alumno regular", "constancia de alumno", "certificado de notas", "record académico",
                 "concentración de notas", "certificado", "constancia", "record", "concentración",
                 "certificado de alumno regular", "constancia de alumno regular",
-                
-                # 🆕 PATRONES ESPECÍFICOS PARA LAS 3 PREGUNTAS CRÍTICAS
                 "programa de emergencia", "qué es programa emergencia", "información programa emergencia",
                 "requisitos programa emergencia", "postular programa emergencia", "solicitar programa emergencia",
                 "ayuda económica emergencia", "beneficio emergencia", "monto emergencia", "200.000 emergencia",
@@ -28,53 +25,37 @@ class TopicClassifier:
                 "programa emergencia duoc", "emergencia duoc", "ayuda financiera emergencia",
                 "situación imprevista", "estabilidad económica", "problema económico grave",
                 "gastos médicos", "fallecimiento familiar", "daños vivienda", "apoyo excepcional",
-                
-                # Becas y beneficios - EXPANDIDO
                 "becas", "beneficios estudiantiles", "beneficio", "ayuda económica", "programa emergencia",
                 "programa transporte", "programa materiales", "apoyo económico", "subsidio", "financiamiento",
                 "crédito estudiantil", "beca alimentación", "beneficio transporte", "beneficio materiales",
                 "postular beneficio", "solicitar beneficio", "requisitos beneficio",
-                
-                # Matrícula y trámites - EXPANDIDO
                 "matrícula", "matricular", "postulación", "admisión", "ingreso", "trámites estudiantiles",
                 "trámite", "documentación", "documentos", "inscripción", "reasignación", "cambio horario",
                 "modificación matrícula", "proceso matrícula", "fecha matrícula", "arancel", "pago matrícula",
-                
-                # Seguro estudiantil - EXPANDIDO
                 "seguro estudiantil", "seguro de accidentes", "accidente estudiantil", "doc duoc",
                 "atención médica", "seguro salud", "cobertura seguros", "beneficio seguro",
-                
-                # Información general - EXPANDIDO
                 "horario punto estudiantil", "ubicación punto estudiantil", "contacto punto estudiantil",
                 "punto estudiantil plaza norte", "punto estudiantil", "asuntos estudiantiles",
                 "información estudiantil", "servicios estudiantiles", "atención estudiante"
             ],
             "desarrollo_profesional": [
-                # Prácticas y empleo - EXPANDIDO
                 "práctica profesional", "prácticas", "practica", "practicas profesionales",
                 "bolsa de trabajo", "empleo", "trabajo", "duoclaboral", "duoclaboral.cl",
                 "oferta laboral", "empleador", "convenios empresas", "buscar práctica",
                 "encontrar práctica", "proceso práctica", "requisitos práctica",
-                
-                # CV y entrevistas - EXPANDIDO
                 "curriculum", "cv", "hoja de vida", "currículum vitae", "entrevista",
                 "entrevista laboral", "simulación entrevista", "mejorar curriculum",
                 "asesoría curricular", "preparación entrevista", "consejos entrevista",
                 "modelo curriculum", "formato cv", "cv duoc", "curriculum duoc",
-                
-                # Talleres y habilidades - EXPANDIDO
                 "taller empleabilidad", "taller cv", "taller entrevista", "marca personal",
                 "comunicación efectiva", "liderazgo", "habilidades blandas", "habilidades laborales",
                 "soft skills", "taller desarrollo profesional", "claudia cortés", "ccortesn",
                 "coordinadora desarrollo laboral", "desarrollo laboral",
-                
-                # Titulación y egresados - EXPANDIDO
                 "titulación", "egresados", "titulados", "beneficios titulados",
                 "ceremonia titulación", "diploma", "certificado titulación", "proceso titulación",
                 "fecha titulación", "egresar", "graduación", "titularse"
             ],
             "bienestar_estudiantil": [
-                # Salud mental y apoyo psicológico - EXPANDIDO
                 "apoyo psicológico", "psicólogo", "salud mental", "bienestar emocional", "consejería",
                 "consejero", "atención psicológica", "urgencia psicológica", "crisis emocional",
                 "línea ops", "acompañamiento psicológico", "sesiones psicológicas", "terapia",
@@ -89,74 +70,50 @@ class TopicClassifier:
                 "apoyos salud mental", "qué apoyos salud mental", "servicios salud mental",
                 "licencia médica psicológico", "psicólogo licencia", "permiso médico psicológico",
                 "psicólogo virtual licencia", "otorgar licencia psicológico",
-
-                
-                # Talleres y programas - EXPANDIDO
                 "talleres bienestar", "charlas bienestar", "micro webinars", "taller salud mental",
                 "embajadores salud mental", "curso embajadores", "taller manejo estrés",
                 "charla ansiedad", "webinar bienestar", "actividad bienestar", "adriana vásquez",
                 "avasquezm", "coordinadora bienestar", "bienestar estudiantil",
-                
-                # Crisis y urgencias - EXPANDIDO
                 "crisis de pánico", "angustia", "sala primeros auxilios", "apoyo en crisis",
                 "me siento mal", "urgencia psicológica", "atención inmediata", "emergencia emocional",
                 "ataque pánico", "crisis ansiedad", "urgencia salud mental", "apoyo urgente",
-                
-                # Inclusión y discapacidad - EXPANDIDO
                 "discapacidad", "paedis", "programa acompañamiento", "estudiantes con discapacidad",
                 "inclusión", "apoyo inclusión", "elizabeth domínguez", "edominguezs",
                 "coordinadora inclusión", "accesibilidad", "necesidades especiales",
                 "apoyo discapacidad", "recursos inclusión", "adaptaciones académicas"
             ],
             "deportes": [
-                
-                # 🆕 PALABRAS CLAVE CRÍTICAS
                 "ubicados", "lugar", "ubicación", "des inscribirme", "cancelar", "retirarme",
                 "en qué lugar están ubicados", "dónde están ubicados", "ubicación", 
                 "cómo puedo des inscribirme", "des inscribirme", "retirarme",
                 "cancelar inscripción", "darme de baja",
-                
-                # Talleres deportivos - EXPANDIDO
                 "talleres deportivos", "taller deportivo", "actividades deportivas", "deportes",
                 "fútbol masculino", "futbolito damas", "voleibol mixto", "basquetbol mixto",
                 "natación mixta", "tenis de mesa mixto", "ajedrez mixto", "entrenamiento funcional",
                 "boxeo mixto", "powerlifting mixto", "actividad física", "deporte recreativo",
                 "clase deportiva", "práctica deportiva", "entrenamiento deportivo",
-                
-                # Instalaciones y ubicaciones - EXPANDIDO
                 "complejo maiclub", "gimnasio entretiempo", "piscina acquatiempo", "caf",
                 "centro bienestar acondicionamiento físico", "ubicación deportes", "lugar talleres",
                 "instalación deportiva", "cancha deportiva", "gimnasio duoc", "piscina duoc",
                 "complejo deportivo", "espacio deportivo", "área deportiva",
-                
-                # Horarios deportivos - EXPANDIDO
                 "horario talleres", "horario deportes", "cuándo son los talleres", "días entrenamiento",
                 "horario entrenamiento", "cuándo entrenar", "horario clase deportiva",
                 "días y horarios deportes", "calendarización deportiva", "programación talleres",
-                
-                # Inscripción y reglamento - 🆕 NUEVO
                 "inscripción deportes", "cómo inscribo optativos", "optativos deportivos",
                 "talleres tienen nota", "tienen asistencia", "cómo des inscribirme",
                 "qué pasa si falto", "inasistencias taller", "retirarme del taller",
-                
-                # Selecciones y becas - EXPANDIDO
                 "selecciones deportivas", "equipos deportivos", "futsal", "rugby", "becas deportivas",
                 "postular beca deportiva", "reclutamiento deportivo", "competencia deportiva",
                 "campeonato", "torneo", "equipo representativo", "deporte competitivo",
-                "selección duoc", "representación deportiva", "competir por duoc"
-                
-                # Gimnasio CAF - MEJORADO
+                "selección duoc", "representación deportiva", "competir por duoc",
                 "gimnasio caf", "centro acondicionamiento físico", "preparador físico",
                 "evaluación física", "uso gimnasio", "horario gimnasio", "puedo ir en cualquier horario",
-                "profesores gimnasio", "si tengo horario disponible"
-                # 🆕 AGREGAR ESTOS PATRONES ESPECÍFICOS
+                "profesores gimnasio", "si tengo horario disponible",
                 "en qué lugar están ubicados", "dónde están ubicados", "ubicación de los talleres",
                 "cómo puedo des inscribirme", "des inscribirme", "retirarme del taller",
-                "cancelar inscripción deportes", "darme de baja taller",
-                
+                "cancelar inscripción deportes", "darme de baja taller"
             ],
             "pastoral": [
-                # 🆕 CATEGORÍA PASTORAL EXPANDIDA
                 "pastoral", "voluntariado", "voluntario", "actividades solidarias", "retiros",
                 "espiritualidad", "valores", "actividades pastorales", "solidaridad", "ayuda social",
                 "comunidad", "fe", "religión católica", "actividades voluntariado", "servicio social",
@@ -165,19 +122,14 @@ class TopicClassifier:
                 "voluntariado social", "servicio a la comunidad", "acción solidaria"
             ],
             "institucionales": [
-                # Información general Duoc UC - EXPANDIDO
                 "horario de atención", "horario", "atiende", "abre", "cierra", "horario sede",
                 "ubicación", "dirección", "sede", "cómo llegar", "dónde está", "plaza norte",
                 "santa elena", "huechuraba", "dirección plaza norte", "ubicación plaza norte",
                 "contacto", "teléfono", "email", "información general", "duoc uc", "servicios duoc",
                 "sedes", "directorio", "información institucional", "datos duoc",
-                
-                # Saludos y conversación - EXPANDIDO
                 "ina", "hola", "buenos días", "buenas tardes", "buenas noches", "saludos",
                 "quién eres", "qué puedes hacer", "funciones", "capacidades", "ayuda", "asistente",
                 "virtual", "presentación", "identidad", "propósito", "objetivo",
-                
-                # Servicios digitales - EXPANDIDO
                 "portal del estudiante", "plataforma", "correo institucional", "wifi", "contraseñas",
                 "password", "acceso digital", "internet", "sistema online", "plataforma duoc",
                 "mi duoc", "campus virtual", "miclase", "problema técnico plataforma",
@@ -185,33 +137,28 @@ class TopicClassifier:
             ]
         }
 
-        # 🆕 PATRONES ESPECIALES EXPANDIDOS Y MEJORADOS
+        # PATRONES ESPECIALES EXPANDIDOS
         self.special_patterns = {
-            
             "deportes_ubicaciones": [
                 r"en.qué.lugar.están.ubicados", r"dónde.están.ubicados",
                 r"en.qué.lugar.están.ubicados", r"dónde.están.los.talleres", 
                 r"ubicación.de.los.talleres", r"lugar.de.los.talleres",
                 r"dónde.se.hacen.los.talleres", r"complejo.maiclub",
-                r"gimnasio.entretiempo", r"piscina.acquatiempo"
+                r"gimnasio.entretiempo", r"piscina.acquatiempo",
                 r"ubicación.de.los.talleres", r"lugar.de.los.talleres"
             ],
-            
             "deportes_inscripcion": [
                 r"cómo.inscribo.optativos", r"inscripción.deportivos", 
                 r"tomar.taller.deporte", r"proceso.inscripción.deportes"
             ],
-            
             "deportes_desinscripcion": [
                 r"cómo.puedo.des.inscribirme", r"des.inscribirme", 
                 r"retirarme.del.taller", r"cancelar.inscripción"
             ],
-            
             "deportes_reglamento": [
                 r"qué.pasa.si.falto", r"talleres.tienen.nota", r"tienen.asistencia",
                 r"cómo.puedo.des.inscribirme", r"retirarme.taller", r"cancelar.inscripción"
             ],
-            
             "licencias_psicologicas": [
                 r"psicólogo.*licencia.*médica",r"licencia.*médica.*psicólogo", r"psicólogo.*puede.*otorgar.*licencia",
                 r"psicólogo.*virtual.*licencia",r"permiso.*médico.*psicólogo"
@@ -244,7 +191,6 @@ class TopicClassifier:
                 r"beca.*deport", r"complejo.*maiclub", r"gimnasio.*entretiempo", r"piscina.*acquatiempo",
                 r"caf", r"actividad.*f[ií]sica", r"ejercicio", r"deporte.*recreativo", r"clase.*deporte",
                 r"pr[aá]ctica.*deporte", r"entrenamiento.*deportivo", r"equipo.*deportivo"
-                
             ],
             "bienestar": [
                 r"psicol[oó]g", r"salud.mental", r"bienestar", r"crisis", r"angustia",
@@ -262,7 +208,6 @@ class TopicClassifier:
                 r"empleador", r"convenio.*empresa", r"taller.*empleabilidad", r"claudia.*cort[eé]s",
                 r"ccortesn", r"coordinadora.*desarrollo", r"entrevista.*trabajo"
             ],
-            # 🆕 PATRONES ESPECIALES PARA LAS 3 PREGUNTAS CRÍTICAS
             "programa_emergencia": [
                 r"programa.*emergencia", r"emergencia.*programa", r"qu[ée].*es.*programa.*emergencia",
                 r"informaci[óo]n.*programa.*emergencia", r"requisitos.*programa.*emergencia", 
@@ -284,18 +229,21 @@ class TopicClassifier:
             ]
         }
 
+        # === AQUÍ ESTABA EL ERROR: FALTABA redirect_categories ===
+        self.redirect_categories = {
+            "biblioteca": ["biblioteca", "libros", "préstamo", "sala estudio"],
+            "servicios_digitales": ["plataforma", "miclase", "wifi", "correo", "contraseña"],
+            "financiamiento": ["pago", "arancel", "deuda", "financiamiento"],
+            "coordinacion_academica": ["malla", "calificación", "profesor", "convalidación"],
+            "infraestructura": ["sala", "laboratorio", "estacionamiento", "cafetería"]
+        }
+        # =======================================================
+
     def classify_topic(self, question: str) -> Dict:
-        """
-        🆕 CLASIFICACIÓN MEJORADA con detección expandida
-        """
         question_lower = question.lower().strip()
-        
-        # 👇 1. DETECCIÓN DE PATRONES ESPECIALES MEJORADA
         special_match = self._detect_special_patterns(question_lower)
         if special_match:
             return special_match
-        
-        # 👇 2. Buscar en temas permitidos (Punto Estudiantil)
         allowed_match = self._find_category_match(question_lower, self.allowed_categories)
         if allowed_match:
             return {
@@ -305,8 +253,6 @@ class TopicClassifier:
                 "confidence": 0.9,
                 "message": f"Pregunta permitida - {allowed_match[0].replace('_', ' ').title()}"
             }
-        
-        # 👇 3. Buscar en temas para redirigir
         redirect_match = self._find_category_match(question_lower, self.redirect_categories)
         if redirect_match:
             return {
@@ -317,8 +263,6 @@ class TopicClassifier:
                 "confidence": 0.7,
                 "message": f"Redirigir a: {redirect_match[0].replace('_', ' ').title()}"
             }
-        
-        # 👇 4. Tema no reconocido (posiblemente off-topic)
         return {
             "is_institutional": False,
             "category": "unknown",
@@ -327,42 +271,33 @@ class TopicClassifier:
         }
 
     def _detect_special_patterns(self, question: str) -> Dict:
-        """🆕 DETECCIÓN ESPECIAL EXPANDIDA CON LAS 3 PREGUNTAS CRÍTICAS"""
-        
-        # 👇 DETECCIÓN DE LICENCIAS PSICOLÓGICAS
         for pattern in self.special_patterns["licencias_psicologicas"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
-            "is_institutional": True,
-            "category": "bienestar_estudiantil", 
-            "matched_keywords": ["licencia médica", "psicólogo"],
-            "confidence": 0.95,
-            "message": "Consulta Licencias Psicológicas detectada - Bienestar Estudiantil"
+                    "is_institutional": True,
+                    "category": "bienestar_estudiantil", 
+                    "matched_keywords": ["licencia médica", "psicólogo"],
+                    "confidence": 0.95,
+                    "message": "Consulta Licencias Psicológicas detectada - Bienestar Estudiantil"
                 }
-        
-        # 👇 DETECCIÓN DE APOYOS SALUD MENTAL
         for pattern in self.special_patterns["apoyos_salud_mental"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
-            "is_institutional": True,
-            "category": "bienestar_estudiantil",
-            "matched_keywords": ["apoyos salud mental", "servicios psicológicos"],
-            "confidence": 0.95,
-            "message": "Consulta Apoyos Salud Mental detectada - Bienestar Estudiantil"
+                    "is_institutional": True,
+                    "category": "bienestar_estudiantil",
+                    "matched_keywords": ["apoyos salud mental", "servicios psicológicos"],
+                    "confidence": 0.95,
+                    "message": "Consulta Apoyos Salud Mental detectada - Bienestar Estudiantil"
                 }
-                
-        # 👇 DETECCIÓN DE CURSO EMBAJADORES - AGREGAR ESTO
         for pattern in self.special_patterns["embajadores"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
-            "is_institutional": True,
-            "category": "bienestar_estudiantil",
-            "matched_keywords": ["embajadores", "curso embajadores"],
-            "confidence": 0.95,
-            "message": "Consulta Curso Embajadores detectada - Bienestar Estudiantil"
+                    "is_institutional": True,
+                    "category": "bienestar_estudiantil",
+                    "matched_keywords": ["embajadores", "curso embajadores"],
+                    "confidence": 0.95,
+                    "message": "Consulta Curso Embajadores detectada - Bienestar Estudiantil"
                 }
-        
-        # 👇 DETECCIÓN DE PROGRAMA EMERGENCIA
         for pattern in self.special_patterns["programa_emergencia"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
@@ -372,8 +307,6 @@ class TopicClassifier:
                     "confidence": 0.95,
                     "message": "Consulta Programa Emergencia detectada - Asuntos Estudiantiles"
                 }
-    
-        # 👇 DETECCIÓN DE TÉCNICAS DE ESTUDIO
         for pattern in self.special_patterns["tecnicas_estudio"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
@@ -381,10 +314,8 @@ class TopicClassifier:
                     "category": "asuntos_estudiantiles",
                     "matched_keywords": ["técnicas estudio", "apoyo aprendizaje"],
                     "confidence": 0.9,
-                    "message": "Consulta Técnicas de Estudio detectada - Asuntos Estudiantiles"
+                    "message": "Consulta Técnicas de Estudio detectada - Asuntos Estudiantes"
                 }
-        
-        # 👇 DETECCIÓN DE SALUDOS
         for pattern in self.special_patterns["saludos"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
@@ -394,8 +325,6 @@ class TopicClassifier:
                     "confidence": 0.95,
                     "message": "Saludo detectado - Permitido"
                 }
-        
-        # 👇 DETECCIÓN DE TNE
         for pattern in self.special_patterns["tne"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
@@ -405,8 +334,6 @@ class TopicClassifier:
                     "confidence": 0.9,
                     "message": "Consulta TNE detectada - Asuntos Estudiantiles"
                 }
-        
-        # 👇 DETECCIÓN DE DEPORTES
         for pattern in self.special_patterns["deportes"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
@@ -416,8 +343,6 @@ class TopicClassifier:
                     "confidence": 0.85,
                     "message": "Consulta deportiva detectada - Deportes"
                 }
-        
-        # 👇 DETECCIÓN DE BIENESTAR
         for pattern in self.special_patterns["bienestar"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
@@ -427,8 +352,6 @@ class TopicClassifier:
                     "confidence": 0.85,
                     "message": "Consulta bienestar detectada - Bienestar Estudiantil"
                 }
-        
-        # 👇 DETECCIÓN DE PRÁCTICAS
         for pattern in self.special_patterns["practicas"]:
             if re.search(pattern, question, re.IGNORECASE):
                 return {
@@ -438,78 +361,52 @@ class TopicClassifier:
                     "confidence": 0.85,
                     "message": "Consulta laboral detectada - Desarrollo Profesional"
                 }
-        
         return None
 
     def _find_category_match(self, question: str, categories: Dict) -> Tuple[str, List[str]]:
-        """
-        🆕 BÚSQUEDA MEJORADA con puntuación por categoría
-        """
         best_category = None
         best_score = 0
         best_keywords = []
-        
         for category, keywords in categories.items():
             matched_keywords = []
             score = 0
-            
             for keyword in keywords:
-                # Búsqueda flexible mejorada
                 if self._flexible_match(keyword, question):
                     matched_keywords.append(keyword)
                     score += 1
-            
-            # Ponderar por longitud de keywords encontradas
             if score > 0:
-                # Bonus por múltiples coincidencias
                 score += len(matched_keywords) * 0.5
-                
                 if score > best_score:
                     best_score = score
                     best_category = category
                     best_keywords = matched_keywords
-        
         return (best_category, best_keywords) if best_category else None
 
     def _flexible_match(self, keyword: str, question: str) -> bool:
-        """🆕 BÚSQUEDA FLEXIBLE MEJORADA"""
-        # Para palabras cortas, buscar coincidencia exacta
         if len(keyword) <= 3:
             return keyword in question
-        # Para palabras más largas, permitir variaciones
         else:
-            # Remover acentos y hacer búsqueda más flexible
             keyword_clean = self._remove_accents(keyword)
             question_clean = self._remove_accents(question)
             return keyword_clean in question_clean
 
     def _remove_accents(self, text: str) -> str:
-        """Remueve acentos para búsqueda más flexible"""
-        import unicodedata
         text = unicodedata.normalize('NFD', text)
         text = text.encode('ascii', 'ignore').decode("utf-8")
         return text.lower()
 
     def get_redirection_message(self, department: str) -> str:
-        """🆕 MENSAJES DE REDIRECCIÓN MEJORADOS"""
         redirection_messages = {
-            "biblioteca": "📚 Para consultas sobre biblioteca, préstamos de libros, recursos de estudio o salas de estudio, te recomiendo dirigirte directamente a la **Biblioteca** de la sede Plaza Norte. 📍 Ubicación: Edificio Central, 2do piso\n\n⏰ Horario: Lunes a Viernes 8:00-20:00, Sábados 9:00-14:00\n📞 Contacto: +56 2 2360 6400 (ext. Biblioteca)",
-            
-            "servicios_digitales": "💻 Las consultas sobre plataforma institucional, correo Duoc UC, acceso WiFi, contraseñas o problemas técnicos con MiClase son manejadas por el área de **Servicios Digitales**. 🌐 Contacto: https://centroayuda.duoc.cl\n\n🛠️ Soporte técnico especializado para:\n• Acceso a plataformas Duoc UC\n• Problemas con correo institucional\n• Configuración de WiFi\n• Recuperación de contraseñas\n• Problemas técnicos en MiClase",
-            
-            "financiamiento": "💰 Para información sobre pagos, aranceles, financiamiento estudiantil, deudas o formas de pago, debes contactar al área de **Financiamiento Estudiantil** en la oficina de cobranzas. 📞 Teléfono: +56 2 2360 6400\n\n📍 Ubicación: Edificio Central, 1er piso - Oficina de Finanzas\n⏰ Horario: Lunes a Viernes 9:00-18:00",
-            
-            "coordinacion_academica": "🎓 Las consultas académicas específicas sobre mallas curriculares, calificaciones, profesores, coordinación de ramos o problemas académicos son manejadas por **Coordinación Académica** de tu carrera. 📍 Ubicación: Edificio de tu escuela\n\n📋 Incluye:\n• Consultas sobre malla curricular\n• Problemas con calificaciones\n• Coordinación con profesores\n• Asuntos académicos específicos\n• Convalidación de ramos",
-            
-            "infraestructura": "🏫 Para temas de instalaciones, salas, laboratorios, estacionamiento, cafetería o mantenimiento de espacios, contacta a **Infraestructura** en la oficina de servicios generales. 📍 Ubicación: Edificio Central, 1er piso\n\n🔧 Áreas cubiertas:\n• Mantenimiento de salas y laboratorios\n• Problemas con equipamiento\n• Reporte de daños en infraestructura\n• Estacionamiento\n• Condiciones físicas del campus"
+            "biblioteca": "Para consultas sobre biblioteca, préstamos de libros, recursos de estudio o salas de estudio, te recomiendo dirigirte directamente a la **Biblioteca** de la sede Plaza Norte. Ubicación: Edificio Central, 2do piso\n\nHorario: Lunes a Viernes 8:00-20:00, Sábados 9:00-14:00\nContacto: +56 2 2360 6400 (ext. Biblioteca)",
+            "servicios_digitales": "Las consultas sobre plataforma institucional, correo Duoc UC, acceso WiFi, contraseñas o problemas técnicos con MiClase son manejadas por el área de **Servicios Digitales**. Soporte técnico especializado para:\n• Acceso a plataformas Duoc UC\n• Problemas con correo institucional\n• Configuración de WiFi\n• Recuperación de contraseñas\n• Problemas técnicos en MiClase",
+            "financiamiento": "Para información sobre pagos, aranceles, financiamiento estudiantil, deudas o formas de pago, debes contactar al área de **Financiamiento Estudiantil** en la oficina de cobranzas. Teléfono: +56 2 2360 6400\n\nUbicación: Edificio Central, 1er piso - Oficina de Finanzas\nHorario: Lunes a Viernes 9:00-18:00",
+            "coordinacion_academica": "Las consultas académicas específicas sobre mallas curriculares, calificaciones, profesores, coordinación de ramos o problemas académicos son manejadas por **Coordinación Académica** de tu carrera. Ubicación: Edificio de tu escuela\n\nIncluye:\n• Consultas sobre malla curricular\n• Problemas con calificaciones\n• Coordinación con profesores\n• Asuntos académicos específicos\n• Convalidación de ramos",
+            "infraestructura": "Para temas de instalaciones, salas, laboratorios, estacionamiento, cafetería o mantenimiento de espacios, contacta a **Infraestructura** en la oficina de servicios generales. Ubicación: Edificio Central, 1er piso\n\nÁreas cubiertas:\n• Mantenimiento de salas y laboratorios\n• Problemas con equipamiento\n• Reporte de daños en infraestructura\n• Estacionamiento\n• Condiciones físicas del campus"
         }
-        
-        default_message = "🔍 Esta consulta no corresponde al Punto Estudiantil. Te sugiero acercarte a **Atención General** para que te deriven al área adecuada. 📍 Punto Estudiantil: Lunes a Viernes 8:30-19:00 | 📞 +56 2 2360 6400"
-        
+        default_message = "Esta consulta no corresponde al Punto Estudiantil. Te sugiero acercarte a **Atención General** para que te deriven al área adecuada. Punto Estudiantil: Lunes a Viernes 8:30-19:00 | +56 2 2360 6400"
         return redirection_messages.get(department, default_message)
 
     def get_classification_stats(self) -> Dict:
-        """🆕 ESTADÍSTICAS EXPANDIDAS"""
         return {
             "allowed_categories": list(self.allowed_categories.keys()),
             "redirect_categories": list(self.redirect_categories.keys()),
