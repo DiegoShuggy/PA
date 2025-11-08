@@ -295,7 +295,7 @@ const Chat: React.FC = () => {
               const voices = speechSynthesisRef.current?.getVoices() || [];
 
               if (voices.length > 0) {
-                console.log(`✅ ${voices.length} voces cargadas en intento ${attempt}:`);
+                console.log(`✅ ${voices.length} (t('app.voiceloaded') en intento ${attempt}:`);
                 voices.forEach(voice => {
                   console.log(`   - ${voice.name} (${voice.lang})`);
                 });
@@ -309,7 +309,7 @@ const Chat: React.FC = () => {
 
             waitForVoices(1);
           } catch (error) {
-            console.error('Error cargando voces:', error);
+            console.error(t('app.errorload'), error);
           }
         }
       };
@@ -355,7 +355,7 @@ const Chat: React.FC = () => {
     }
 
     if (!speechSynthesisRef.current || !isTtsSupported) {
-      alert(t('chat.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+      alert(t('chat.ttsNotSupported') );
       return;
     }
 
@@ -598,7 +598,7 @@ const Chat: React.FC = () => {
       const result = await response.json();
 
       if (response.ok) {
-        console.log(`Feedback ${isSatisfied ? 'positivo' : 'negativo'} enviado exitosamente`);
+        console.log(`${t('chat.feedback1')} ${isSatisfied ? t('chat.feedbackpos') : t('chat.feedbackneg')} ${t('chat.feedbacksnet')}`);
 
         if (isSatisfied) {
           setFeedbackSubmitted(true);
@@ -750,7 +750,7 @@ const Chat: React.FC = () => {
     setIsLoading(false);
 
     const cancelMessage: Message = {
-      text: t('chat.generationCancelled') || 'Generación cancelada',
+      text: t('chat.generationCancelled'),
       isUser: false,
       timestamp: new Date()
     };
@@ -832,15 +832,15 @@ const Chat: React.FC = () => {
         switch (event.error) {
           case 'not-allowed':
           case 'permission-denied':
-            alert(t('chat.microphonePermission') || 'Permiso de micrófono denegado. Por favor, permite el acceso al micrófono en la configuración de tu navegador.');
+            alert(t('chat.microphonePermission'));
             setIsSpeechSupported(false);
             break;
           case 'audio-capture':
-            alert(t('chat.microphoneNotFound') || 'No se encontró ningún micrófono. Por favor, conecta un micrófono e intenta de nuevo.');
+            alert(t('chat.microphoneNotFound'));
             setIsSpeechSupported(false);
             break;
           case 'network':
-            alert(t('chat.speechRecognitionError') || 'Error de red en el reconocimiento de voz.');
+            alert(t('chat.speechRecognitionError'));
             break;
           case 'no-speech':
             console.log('No se detectó voz - continuando escucha');
@@ -975,7 +975,7 @@ const Chat: React.FC = () => {
         await navigator.mediaDevices.getUserMedia({ audio: true });
       } catch (error) {
         console.error('Error al acceder al micrófono:', error);
-        alert(t('chat.microphonePermission') || 'Permiso de micrófono denegado.');
+        alert(t('chat.microphonePermission'));
         setIsSpeechSupported(false);
         setIsListening(false);
         return;
@@ -1194,7 +1194,7 @@ const Chat: React.FC = () => {
   // Función mejorada para toggle del micrófono
   const toggleListening = async () => {
     if (!recognitionRef.current || !isSpeechSupported) {
-      alert(t('chat.browserNotSupported') || 'El reconocimiento de voz no es compatible con este navegador.');
+      alert(t('chat.browserNotSupported'));
       return;
     }
 
@@ -1208,7 +1208,7 @@ const Chat: React.FC = () => {
         setIsListening(true);
       } catch (error) {
         console.error('Error de permisos de micrófono:', error);
-        alert(t('chat.microphonePermission') || 'Permiso de micrófono denegado. Por favor, permite el acceso al micrófono.');
+        alert(t('chat.microphonePermission'));
         setIsSpeechSupported(false);
       }
     }
@@ -1230,36 +1230,7 @@ const Chat: React.FC = () => {
         setMessages([]);
         stopReading(); // Detener lectura al limpiar chat
         break;
-      case 'help':
-        alert(t('chat.helpMessage'));
-        break;
-      case 'greeting':
-        insertText(t('chat.quickActions.greeting'));
-        break;
-      case 'thanks':
-        insertText(t('chat.quickActions.thanks'));
-        break;
-      case 'Laboral':
-        insertText(t('chat.quickActions.internships'));
-        break;
-      case 'Consultas':
-        insertText(t('chat.quickActions.faq'));
-        break;
-      case 'TNE':
-        insertText(t('chat.quickActions.tne'));
-        break;
-      default:
-        break;
     }
-  };
-
-  const insertText = (text: string) => {
-    const newText = inputMessage ? `${inputMessage} ${text}` : text;
-    setInputMessage(newText);
-
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
   };
   // Agrega este useEffect específico para enfocar después de recibir respuesta
 useEffect(() => {
@@ -1638,65 +1609,6 @@ useEffect(() => {
       {/* Botón del menú flotante */}
       <div className="floating-menu-container" ref={menuRef}>
         <button
-          className="floating-menu-button"
-          onClick={toggleMenu}
-          title={t('chat.menuTitle')}
-          type="button"
-        >
-          <span className="menu-icon">☰</span>
-        </button>
-
-        {isMenuOpen && (
-          <div className="floating-dropdown-menu">
-            <div className="menu-section">
-              <div className="menu-section-title">{t('chat.menu.quickQuestions')}</div>
-              <button
-                className="menu-item"
-                onClick={() => handleMenuAction('greeting')}
-                type="button"
-              >
-                <span className="menu-icon">👋</span>
-                {t('chat.menu.greetIna')}
-              </button>
-              <button
-                className="menu-item"
-                onClick={() => handleMenuAction('Laboral')}
-                type="button"
-              >
-                <span className="menu-icon">📋</span>
-                {t('chat.menu.internships')}
-              </button>
-              <button
-                className="menu-item"
-                onClick={() => handleMenuAction('Consultas')}
-                type="button"
-              >
-                <span className="menu-icon">❓</span>
-                {t('chat.menu.faq')}
-              </button>
-              <button
-                className="menu-item"
-                onClick={() => handleMenuAction('TNE')}
-                type="button"
-              >
-                <span className="menu-icon">📋</span>
-                {t('chat.menu.tne')}
-              </button>
-              <button
-                className="menu-item"
-                onClick={() => handleMenuAction('thanks')}
-                type="button"
-              >
-                <span className="menu-icon">🙏</span>
-                {t('chat.menu.thankIna')}
-              </button>
-            </div>
-
-            <div className="menu-divider"></div>
-
-            <div className="menu-section">
-              <div className="menu-section-title">{t('chat.menu.tools')}</div>
-              <button
                 className="menu-item"
                 onClick={() => handleMenuAction('clear')}
                 disabled={messages.length === 0}
@@ -1705,29 +1617,7 @@ useEffect(() => {
                 <span className="menu-icon">🗑️</span>
                 {t('chat.menu.clearChat')}
               </button>
-            </div>
-
-            <div className="menu-divider"></div>
-
-            <button
-              className="menu-item"
-              onClick={() => handleMenuAction('settings')}
-              type="button"
-            >
-              <span className="menu-icon">⚙️</span>
-              {t('chat.menu.settings')}
-            </button>
-            <button
-              className="menu-item"
-              onClick={() => handleMenuAction('help')}
-              type="button"
-            >
-              <span className="menu-icon">❓</span>
-              {t('chat.menu.help')}
-            </button>
           </div>
-        )}
-      </div>
 
       {/* Contenedor del chat */}
       <div className="chat-container" id="Cuerpo">
@@ -1766,8 +1656,8 @@ useEffect(() => {
                         onClick={() => toggleReading(msg, index)}
                         type="button"
                         title={isReading && currentReadingIndex === index ?
-                          (t('chat.stopReading') || 'Detener lectura') :
-                          (t('chat.readAloud') || 'Leer en voz alta')}
+                          (t('chat.stopReading')) :
+                          (t('chat.readAloud'))}
                       >
                         {isReading && currentReadingIndex === index ? '⏹️' : '🔊'}
                       </button>
@@ -1841,7 +1731,7 @@ useEffect(() => {
               type="button"
               onClick={stopGeneration}
               className="stop-button"
-              title={t('chat.stopGeneration') || 'Detener generación'}
+              title={t('chat.stopGeneration')}
             >
               {t('chat.stopGeneration')}
             </button>

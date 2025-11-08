@@ -50,10 +50,10 @@ export function Deportes() {
                     try {
                         const voices = speechSynthesisRef.current.getVoices();
                         if (voices.length > 0) {
-                            console.log(`✅ ${voices.length} voces cargadas`);
+                            console.log(`✅ ${voices.length} (t('app.voiceloaded')`);
                         }
                     } catch (error) {
-                        console.error('Error cargando voces:', error);
+                        console.error(t('app.errorload'), error);
                     }
                 }
             };
@@ -76,12 +76,12 @@ export function Deportes() {
     const readText = useCallback((text: string, isAutoRead = false) => {
         // Si es lectura automática y hubo detención manual, no leer
         if (isAutoRead && isManualStopRef.current) {
-            console.log(t('app.ttsNotSupported'));
+            console.log(t('app.manualbloq'));
             return;
         }
 
         if (!speechSynthesisRef.current || !isTtsSupported) {
-            alert(t('app.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+            alert(t('app.ttsNotSupported') );
             return;
         }
 
