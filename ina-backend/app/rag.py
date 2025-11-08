@@ -793,12 +793,24 @@ No entiendo completamente '{original_query}'.
         try:
             doc_id = f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}_{hash(document) % 10000}"
 
-            enhanced_metadata = {
-                "timestamp": datetime.now().isoformat(),
-                "source": metadata.get('source', 'unknown') if metadata else 'unknown',
-                "category": metadata.get('category', 'general') if metadata else 'general',
-                "type": metadata.get('type', 'general') if metadata else 'general'
-            }
+            # Preservar todo el metadata que venga del loader (section, is_structured, optimized, etc.)
+            enhanced_metadata = {"timestamp": datetime.now().isoformat()}
+            if isinstance(metadata, dict):
+                # No sobrescribir timestamp si viene en metadata
+                for k, v in metadata.items():
+                    if k == 'timestamp':
+                        continue
+                    enhanced_metadata[k] = v
+                # Asegurar claves mínimas si faltan
+                enhanced_metadata.setdefault('source', metadata.get('source', 'unknown'))
+                enhanced_metadata.setdefault('category', metadata.get('category', 'general'))
+                enhanced_metadata.setdefault('type', metadata.get('type', 'general'))
+            else:
+                enhanced_metadata.update({
+                    'source': 'unknown',
+                    'category': 'general',
+                    'type': 'general'
+                })
 
             self.collection.add(
                 documents=[document],

@@ -157,6 +157,23 @@ async def cleanup_cache_endpoint():
             "message": f"Error in cache cleanup: {str(e)}"
         }
 
+
+@app.get("/admin/training-status")
+async def admin_training_status():
+    """Admin endpoint: devuelve el estado del training_loader y estadísticas del RAG"""
+    try:
+        status = training_loader.get_loading_status()
+        stats = rag_engine.get_cache_stats()
+        return {
+            "status": "success",
+            "training_status": status,
+            "rag_stats": stats,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error fetching training status: {e}")
+        raise HTTPException(status_code=500, detail="Error fetching training status")
+
 # 👇 NUEVAS IMPORTACIONES PARA EL SISTEMA DE FEEDBACK
 from app.response_feedback import response_feedback_system
 from app.sentiment_analyzer import sentiment_analyzer
