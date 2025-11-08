@@ -250,7 +250,12 @@ class QuestionClassifier:
             "programa_emergencia_que_es": [r'qué.*es.*programa.*emergencia'],
             "programa_emergencia_requisitos": [r'requisitos.*programa.*emergencia'],
             "ubicaciones_deportivas": [r'en.*qué.*lugar.*ubicados', r'dónde.*están.*talleres'],
-            "talleres_tienen_nota": [r'talleres.*tienen.*nota', r'nota.*taller'],
+            "talleres_tienen_nota": [
+                r'talleres.*tienen.*nota', r'nota.*taller',
+                # Variantes que incluyen la palabra "optativos" o que invierten el orden
+                r'(?:talleres|optativos|optativo).*(?:tienen.*nota|tienen.*calific|con nota|con calificación)',
+                r'(?:tienen.*nota|tienen.*calific|con nota|con calificación).*?(?:talleres|optativos|optativo)'
+            ],
             "talleres_tienen_asistencia": [r'tienen.*asistencia'],
             "desinscripcion_talleres": [r'cómo.*puedo.*des.*inscribirme'],
             "ubicaciones_deportivas": [r'en.*qué.*lugar.*ubicados', r'dónde.*están.*talleres',r'ubicación.*deportes', r'lugar.*taller'
