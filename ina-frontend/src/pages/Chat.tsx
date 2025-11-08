@@ -322,7 +322,7 @@ const Chat: React.FC = () => {
 
     } else {
       setIsTtsSupported(false);
-      console.warn('El lector de texto no es compatible con este navegador');
+      console.warn(t('app.noncompatible'));
     }
 
     // Cleanup: detener lectura cuando el componente se desmonta
@@ -340,7 +340,7 @@ const Chat: React.FC = () => {
 
     // Si es lectura automática y hubo una detención manual, no leer
     if (isAutoRead && isManualStopRef.current) {
-      console.log('🚫 Lectura automática bloqueada por detención manual');
+      console.log(t('app.ttsNotSupported'));
       return;
     }
 
@@ -521,7 +521,7 @@ const Chat: React.FC = () => {
         }, 100);
 
       } catch (error) {
-        console.error('💥 Error al configurar la lectura:', error);
+        console.error(t('app.readEmpty'), error);
         setIsReading(false);
         setCurrentReadingIndex(null);
       }

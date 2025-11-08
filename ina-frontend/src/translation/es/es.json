@@ -6,7 +6,15 @@
     "back": "Volver",
     "FAQ": "Preguntas Frecuentes",
     "readAloud": "Leer en voz alta",
-    "readPage": "Leer página"
+    "readPage": "Leer página",
+    "readconer": "💥 Error al configurar la lectura:",
+    "readError": "❌ Error en la lectura:",
+    "noncompatible": "El lector de texto no es compatible con este navegador",
+    "manualbloq": "🚫 Lectura automática bloqueada por detención manual",
+    "ttsNotSupported": "El lector de texto no es compatible con tu navegador",
+    "readStart": "🔊 Lectura iniciada con voz:",
+    "readFinished": "✅ Lectura finalizada",
+    "readEmpty":"No hay texto para leer"
   },
   "chat": {
     "title": "Chat Asistente",
@@ -66,7 +74,6 @@
     "readAloud": "Leer en voz alta",
     "readPage": "Leer página",
     "stopReading": "Detener lectura",
-    "ttsNotSupported": "El lector de texto no es compatible con tu navegador",
     "ttsPermission": "Permiso de síntesis de voz denegado"
   },
   "consultas": {
@@ -103,7 +110,14 @@
     "Descripcion": "Tu asistente virtual para consultas sobre Duoc UC. ¿En qué puedo ayudarte hoy?",
     "voicetitle": "Búsqueda por Voz",
     "VolverGeneral": "Volver a General",
-    "Switch":{
+    "VolverText": "Volviendo al área general. Aquí se encuentran las preguntas frecuentes generales:",
+    "area": "Área de ",
+    "areapas": "Área de Pastoral.",
+    "areaconnect": "y",
+    "FAQareas": "Aquí se encuentran las preguntas frecuentes generales:",
+    "FAQTitle": "Aquí se encuentran las preguntas frecuentes de",
+    "FAQDesc": "Aquí se puede escoger las preguntas frecuentes de las áreas de:",
+    "Switch": {
       "Asuntos": "Asuntos Estudiantiles",
       "Desarrollo": "Desarrollo Profesional y Titulados",
       "Bienestar": "Bienestar Estudiantil",
@@ -138,13 +152,16 @@
   },
   "Asuntos": {
     "cargo": "Asuntos Estudiantiles",
+    "coordinad@": "Coordinadora: ",
+    "correoE": "Correo electrónico: ",
     "title": "Natalia Varela Muñoz",
     "correo": "nvarelam@duoc.cl",
-    "correo_pronunciacion": "n varela m @duoc.cl",
+    "correo_pronunciacion": "n varela m @ duoc punto c l",
     "Descripcion": " El área de Asuntos Estudiantiles tiene como propósito acompañar, orientar y apoyar a los estudiantes durante su proceso formativo, promoviendo su desarrollo integral tanto en el ámbito académico como personal. Entre sus principales labores se destacan la planificación y ejecución de actividades extracurriculares orientadas al fortalecimiento del liderazgo estudiantil, el desarrollo de habilidades de comunicación y la adquisición de estrategias de estudio que favorezcan un desempeño académico exitoso. ",
     "Descripcion2": "Asimismo, el área coordina diversas Estrategias de Apoyo a los Estudiantes, tales como la entrega de información y orientación sobre beneficios institucionales, el Seguro Escolar de Accidentes, y las gestiones vinculadas a la Tarjeta Nacional Estudiantil (TNE). ",
     "Descripcion3": "Otro ámbito relevante es la vinculación con los Consejeros de Carrera, promoviendo la participación activa, la representación estudiantil y el trabajo colaborativo. ",
     "email": "Correo electrónico: {{email}}",
+    "area": "Área de ",
     "FAQTiltle": "Preguntas Frecuentes - Asuntos Estudiantiles",
     "FAQ1": "¿Cómo funciona el seguro? ",
     "FAQ2": "¿Cómo saco mi TNE? ",
@@ -159,6 +176,8 @@
   "Desarrollo": {
     "cargo": "Desarrollo Profesional y Titulados",
     "title": "Claudia Cortés",
+    "coordinad@": "Coordinadora: ",
+    "correoE": "Correo electrónico: ",
     "correo": "ccortesn@duoc.cl",
     "correo_pronunciacion": "c cortes n @duoc punto c l",
     "Desctitle": "Orientación y herramientas para tu desarrollo profesional:",
@@ -184,6 +203,8 @@
   "Bienestar": {
     "cargo": "Bienestar Estudiantil",
     "title": "Adriana Vasquez",
+    "coordinad@": "Coordinadora: ",
+    "correoE": "Correo electrónico: ",
     "correo": "avasquezm@duoc.cl",
     "correo_pronunciacion": "a vasquez m @duoc punto c l",
     "Descripcion": "El Área de Bienestar Estudiantil se enfoca en el desarrollo de actividades y la provisión de apoyos para fortalecer la salud mental y el bienestar integral de los estudiantes. Los principales programas asociados son: Salud Mental, Nutrición Consciente, Prevención del Consumo de Alcohol y Drogas, Convivencia Estudiantil e Inclusión. ",
@@ -208,8 +229,10 @@
     "final": ""
   },
   "Deportes": {
-   "cargo": "Deportes",
+    "cargo": "Deportes",
     "title": "Cesar Pino",
+    "coordinad@": "Coordinador: ",
+    "correoE": "Correo electrónico: ",
     "title2": "Nicolas Leiva",
     "correo": "cpinon@duoc.cl",
     "correo_pronunciacion": "c pino n @duoc punto c l",
@@ -217,7 +240,7 @@
     "correo2_pronunciacion": "n leiva s @duoc punto c l",
     "Desctitle": "Área de Deportes y Actividad Física ",
     "Descripcion": "El Área de Deportes y Actividad Física promueve la vida saludable, el bienestar integral y la participación estudiantil a través de diversas actividades deportivas y recreativas. ",
-    "principales":"Principales funciones:",
+    "principales": "Principales funciones:",
     "Descripcion2": "• Gestión y coordinación de talleres y disciplinas deportivas para estudiantes. ",
     "Descripcion3": "• Administración del CAF (Centro de Acondicionamiento Físico y Bienestar), espacio dedicado al entrenamiento físico y hábitos saludables. ",
     "Descripcion4": "• Organización de Talleres BIM (Bienestar Integral en Movimiento) e intervenciones en espacios comunes para fomentar la convivencia y la vida universitaria. ",
@@ -245,6 +268,8 @@
   "Pastoral": {
     "cargo": "Pastoral",
     "title": "Camila Celedon",
+    "coordinad@": "Coordinadora: ",
+    "correoE": "Correo electrónico: ",
     "correo": "ccelodon@duoc.cl",
     "correo_pronunciacion": "c celedon @duoc punto c l",
     "Descripcion": "El Área de Pastoral de Duoc UC busca promover el encuentro personal y comunitario con Jesucristo en toda la comunidad. Su misión es acompañar la vida de fe de alumnos, docentes y colaboradores, integrando la fe con el quehacer diario. ",

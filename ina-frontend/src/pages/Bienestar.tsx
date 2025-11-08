@@ -62,7 +62,7 @@ export function Bienestar() {
 
         } else {
             setIsTtsSupported(false);
-            console.warn('El lector de texto no es compatible con este navegador');
+            console.warn(t('app.noncompatible'));
         }
 
         // Cleanup al desmontar el componente
@@ -75,12 +75,12 @@ export function Bienestar() {
     const readText = useCallback((text: string, isAutoRead = false) => {
         // Si es lectura automática y hubo detención manual, no leer
         if (isAutoRead && isManualStopRef.current) {
-            console.log('🚫 Lectura automática bloqueada por detención manual');
+            console.log(t('app.ttsNotSupported'));
             return;
         }
 
         if (!speechSynthesisRef.current || !isTtsSupported) {
-            alert(t('Asuntos.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+            alert(t('app.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
             return;
         }
 
@@ -175,13 +175,13 @@ export function Bienestar() {
 
                 utterance.onstart = () => {
                     setIsReading(true);
-                    console.log(`🔊 Lectura iniciada con voz:`, utterance.voice?.name);
+                    console.log(t('app.readStart'), utterance.voice?.name);
                     // Reiniciar temporizador de inactividad cuando empieza la lectura
                     resetInactivityTimer();
                 };
 
                 utterance.onend = () => {
-                    console.log('✅ Lectura finalizada');
+                    console.log(t('app.readFinished'));
                     setIsReading(false);
                     currentUtteranceRef.current = null;
 
@@ -192,7 +192,7 @@ export function Bienestar() {
                 };
 
                 utterance.onerror = (event) => {
-                    console.error('❌ Error en la lectura:', event.error);
+                    console.error(t('app.readError'), event.error);
                     setIsReading(false);
                     currentUtteranceRef.current = null;
 
@@ -212,7 +212,7 @@ export function Bienestar() {
                 }, 100);
 
             } catch (error) {
-                console.error('💥 Error al configurar la lectura:', error);
+                console.error(t('app.readEmpty'), error);
                 setIsReading(false);
             }
         }, 50);
@@ -221,11 +221,11 @@ export function Bienestar() {
     // Función para leer todo el contenido de la página
     const readPageContent = () => {
         // Obtener todo el texto relevante de la página
-        const pageTitle = `Coordinadora: ${document.querySelector('.titulo')?.textContent || ''}`;
-        const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
+        const pageTitle = `${t('Asuntos.coordinad@')} ${document.querySelector('.titulo')?.textContent || ''}`;
+        const AreaTitle = `${t('Asuntos.area')} ${document.querySelector('.titulo-extra')?.textContent || ''}`;
 
         // Usar los elementos ocultos para pronunciación
-        const correoPronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
+        const correoPronunciacion = `${t('Asuntos.correoE')} ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
         const descripcion = document.querySelector('.desc')?.textContent || '';
         const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
             .map(span => span.textContent)
@@ -235,7 +235,7 @@ export function Bienestar() {
         const fullText = `${AreaTitle}. ${pageTitle}. ${correoPronunciacion}.  ${descripcion}. ${questions}`;
 
         if (!fullText.trim()) {
-            console.warn('No hay texto para leer');
+            console.warn(t('app.readEmpty'));
             return;
         }
 

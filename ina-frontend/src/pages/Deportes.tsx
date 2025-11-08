@@ -63,7 +63,7 @@ export function Deportes() {
 
         } else {
             setIsTtsSupported(false);
-            console.warn('El lector de texto no es compatible con este navegador');
+            console.warn(t('app.noncompatible'));
         }
 
         // Cleanup al desmontar el componente
@@ -76,12 +76,12 @@ export function Deportes() {
     const readText = useCallback((text: string, isAutoRead = false) => {
         // Si es lectura automática y hubo detención manual, no leer
         if (isAutoRead && isManualStopRef.current) {
-            console.log('🚫 Lectura automática bloqueada por detención manual');
+            console.log(t('app.ttsNotSupported'));
             return;
         }
 
         if (!speechSynthesisRef.current || !isTtsSupported) {
-            alert(t('Asuntos.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+            alert(t('app.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
             return;
         }
 
@@ -173,13 +173,13 @@ export function Deportes() {
 
                 utterance.onstart = () => {
                     setIsReading(true);
-                    console.log(`🔊 Lectura iniciada con voz:`, utterance.voice?.name);
+                    console.log(t('app.readStart'), utterance.voice?.name);
                     // Reiniciar temporizador de inactividad cuando empieza la lectura
                     resetInactivityTimer();
                 };
 
                 utterance.onend = () => {
-                    console.log('✅ Lectura finalizada');
+                    console.log(t('app.readFinished'));
                     setIsReading(false);
                     currentUtteranceRef.current = null;
 
@@ -190,7 +190,7 @@ export function Deportes() {
                 };
 
                 utterance.onerror = (event) => {
-                    console.error('❌ Error en la lectura:', event.error);
+                    console.error(t('app.readError'), event.error);
                     setIsReading(false);
                     currentUtteranceRef.current = null;
 
@@ -210,7 +210,7 @@ export function Deportes() {
                 }, 100);
 
             } catch (error) {
-                console.error('💥 Error al configurar la lectura:', error);
+                console.error(t('app.readEmpty'), error);
                 setIsReading(false);
             }
         }, 50);
@@ -219,13 +219,13 @@ export function Deportes() {
     // Función para leer todo el contenido de la página
     const readPageContent = () => {
         // Obtener todo el texto relevante de la página
-        const pageTitle = `Coordinador: ${document.querySelector('.titulo')?.textContent || ''}`;
-        const pageTitle2 = `Coordinador: ${document.querySelector('.titulo2')?.textContent || ''}`;
-        const AreaTitle = `Área de ${document.querySelector('.titulo-extra')?.textContent || ''}`;
+        const pageTitle = `${t('Asuntos.coordinad@')} ${document.querySelector('.titulo')?.textContent || ''}`;
+        const pageTitle2 = `${t('Asuntos.coordinad@')}  ${document.querySelector('.titulo2')?.textContent || ''}`;
+        const AreaTitle = `${t('Asuntos.area')}  ${document.querySelector('.titulo-extra')?.textContent || ''}`;
 
         // Usar los elementos ocultos para pronunciación
-        const correoPronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
-        const correo2Pronunciacion = `Correo electrónico:  ${document.querySelector('.sr-only:nth-of-type(2)')?.textContent || ''}`;
+        const correoPronunciacion = `${t('Asuntos.correoE')} ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
+        const correo2Pronunciacion = `${t('Asuntos.correoE')} ${document.querySelector('.sr-only:nth-of-type(2)')?.textContent || ''}`;
 
         const descripcion = document.querySelector('.desc')?.textContent || '';
         const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
@@ -236,7 +236,7 @@ export function Deportes() {
         const fullText = `${AreaTitle}. ${pageTitle}. ${correoPronunciacion}.  ${pageTitle2}.  ${correo2Pronunciacion}. ${descripcion}. ${questions}`;
 
         if (!fullText.trim()) {
-            console.warn('No hay texto para leer');
+            console.warn(t('app.readEmpty'));
             return;
         }
 

@@ -1,163 +1,296 @@
-{"app": {
-      "poweredBy": "Powered by Mistral 7B",
-      "title": "InA - Duoc UC Virtual Assistant",
-      "backButton": "Go Back",
-      "back": "Back"
+{
+  "app": {
+    "poweredBy": "Powered by Mistral 7B",
+    "title": "InA - Duoc UC Virtual Assistant",
+    "backButton": "Go Back",
+    "back": "Back",
+    "FAQ": "Frequently Asked Questions",
+    "readAloud": "Read aloud",
+    "readPage": "Read page"
+  },
+  "chat": {
+    "title": "Assistant Chat",
+    "quickTips": "← Use the ☰ menu for quick questions",
+    "inputPlaceholder": "Type your question or query...",
+    "listeningPlaceholder": "Listening... Speak now",
+    "send": "Send",
+    "microphoneAlt": "Microphone",
+    "startMicrophone": "Enable microphone",
+    "stopMicrophone": "Stop microphone",
+    "serverError": "Error connecting to server",
+    "browserNotSupported": "Your browser does not support voice recognition. Try Chrome or Edge.",
+    "microphonePermission": "Please allow microphone access in your browser",
+    "menuTitle": "Chat options",
+    "qrAlt": "QR code for {{url}}",
+    "qrInstruction": "Scan with your phone",
+    "qrSectionTitle": "📱 Scan with phone:",
+    "languageSelector": "Select language",
+    "helpMessage": "Show chat help",
+    "stopGeneration": "Cancel",
+    "listening": "Listening...",
+    "generationCancelled": "Response cancelled :c",
+    "menu": {
+      "quickQuestions": "- Quick questions",
+      "tools": "- Tools",
+      "greetIna": "Greet InA",
+      "internships": "Internships",
+      "faq": "Frequent questions",
+      "tne": "TNE inquiries",
+      "thankIna": "Thank InA",
+      "clearChat": "Clear chat",
+      "settings": "Settings",
+      "help": "Help"
     },
-    "chat": {
-      "title": "Assistant Chat",
-      "quickTips": "← Use the ☰ menu for quick questions",
-      "inputPlaceholder": "Type your question or query...",
-      "listeningPlaceholder": "Listening... Speak now",
-      "send": "Send",
-      "microphoneAlt": "Microphone",
-      "startMicrophone": "Activate microphone",
-      "stopMicrophone": "Stop microphone",
-      "serverError": "Error connecting to server",
-      "browserNotSupported": "Your browser does not support speech recognition. Try Chrome or Edge.",
-      "microphonePermission": "Please allow microphone access in your browser",
-      "menuTitle": "Chat options",
-      "qrAlt": "QR code for {{url}}",
-      "qrInstruction": "Scan with your phone",
-      "qrSectionTitle": "📱 Scan with phone:",
-      "languageSelector": "Select language",
-      "helpMessage": "Show chat help",
-      "stopGeneration": "Cancel",
-      "listening": "Listening...",
-      "generationCancelled": "Response cancelled :c",
-      "menu": {
-        "quickQuestions": "- Quick questions",
-        "tools": "- Tools",
-        "greetIna": "Greet InA",
-        "internships": "Internships",
-        "faq": "Frequently asked questions",
-        "tne": "TNE inquiries",
-        "thankIna": "Thank InA",
-        "clearChat": "Clear chat",
-        "settings": "Settings",
-        "help": "Help"
-      },
-      "quickActions": {
-        "greeting": "Hello InA! Could you help me with",
-        "thanks": "Thank you very much for your help InA, WAH!",
-        "internships": "Could you explain the Internship process at DuocUC?",
-        "faq": "Could you give me more information about DuocUC?",
-        "tne": "Could you explain the TNE acquisition/validation process at DuocUC?"
-      },
-      "feedback": {
-        "initialQuestion": "Was this response from Ina helpful?",
-        "positive": "👍 Yes, it met my needs",
-        "negative": "👎 No, it could be improved",
-        "thankYouImprove": "Thank you for helping us improve!",
-        "improvementQuestion": "Could you tell us more about how we can improve?",
-        "commentsPlaceholder": "Ex: The response was too technical, I needed more practical details...",
-        "submitComments": "Submit comments",
-        "cancel": "Cancel",
-        "thankYouFinal": "✅ Thank you for your feedback! Your opinion helps improve Ina."
-      },
-      "feedbackError": "Error: No active feedback session",
-      "feedbackServerError": "Error sending feedback. Please try again.",
-      "feedbackConnectionError": "Connection error. Please check if the server is running."
+    "quickActions": {
+      "greeting": "Hello InA! Could you help me with",
+      "thanks": "Thank you very much for your help InA, WAH!",
+      "internships": "Could you explain how the Internship process works at DuocUC?",
+      "faq": "Could you give me more information about DuocUC?",
+      "tne": "Could you explain how the TNE Obtaining/validation process works at DuocUC?"
     },
-    "consultas": {
-      "title": "Student Point Area",
-      "areas": {
-        "bienestar": {
-          "title": "Student Affairs",
-          "alt": "Student Affairs"
-        },
-        "ConsultasFrecuentes": {
-          "title": "Frequently Asked Questions",
-          "alt": "Frequently Asked Questions"
-        },
-        "professionalDevelopment": {
-          "title": "Professional Development and Graduates",
-          "alt": "Professional Development and Graduates"
-        },
-        "studentWelfare": {
-          "title": "Student Welfare",
-          "alt": "Student Welfare"
-        },
-        "sports": {
-          "title": "Sports",
-          "alt": "Sports"
-        },
-        "pastoral": {
-          "title": "Pastoral",
-          "alt": "Pastoral"
-        }
+    "feedback": {
+      "initialQuestion": "Was this response from Ina helpful?",
+      "positive": "👍 Yes, it met my needs",
+      "negative": "👎 No, it could improve",
+      "thankYouImprove": "Thank you for helping us improve!",
+      "improvementQuestion": "Could you tell us more about how we can improve?",
+      "optional": "Rate this response (optional):",
+      "commentsPlaceholder": "Ex: The response was too technical, I needed more practical details...",
+      "submitComments": "Submit comments",
+      "cancel": "Cancel",
+      "thankYouFinal": "✅ Thank you for your feedback! Your opinion helps improve Ina."
+    },
+    "feedbackError": "Error: No active feedback session",
+    "feedbackServerError": "Error sending feedback. Try again.",
+    "feedbackConnectionError": "Connection error. Verify the server is running.",
+    "readAloud": "Read aloud",
+    "readPage": "Read page",
+    "stopReading": "Stop reading",
+    "ttsNotSupported": "Text reader is not supported by your browser",
+    "ttsPermission": "Voice synthesis permission denied"
+  },
+  "consultas": {
+    "title": "Student Point Area",
+    "areas": {
+      "bienestar": {
+        "title": "Student Affairs",
+        "alt": "Student Affairs"
+      },
+      "ConsultasFrecuentes": {
+        "title": "Frequent Questions",
+        "alt": "Frequent Questions"
+      },
+      "professionalDevelopment": {
+        "title": "Professional Development and Graduates",
+        "alt": "Professional Development and Graduates"
+      },
+      "studentWelfare": {
+        "title": "Student Welfare",
+        "alt": "Student Welfare"
+      },
+      "sports": {
+        "title": "Sports",
+        "alt": "Sports"
+      },
+      "pastoral": {
+        "title": "Pastoral",
+        "alt": "Pastoral"
       }
-    },
-    "Lobby": {
-      "title": "Welcome, I'm InA",
-      "Descripcion": "Your virtual assistant for queries about Duoc UC. How can I help you today?",
-      "Preguntas": {
-        "FAQ1": "Meet the Point",
-        "FAQ2": "How can I enroll in an academic program at Duoc UC?",
-        "FAQ3": "Where can I renew my TNE?",
-        "FAQ4": "Placeholder",
-        "FAQ5": "Placeholder",
-        "FAQ6": "Placeholder",
-        "FAQ7": "Placeholder",
-        "FAQ8": "Placeholder",
-        "FAQ9": "Placeholder",
-        "FAQ10": "Placeholder",
-        "FAQ11": "Placeholder",
-        "FAQ12": "Placeholder"
-      }
-    },
-    "Accesibilidad": {
-      "titulo": "Accessibility",
-      "tamaño": "Text size",
-      "contraste": "High contrast",
-      "altura": "Line height",
-      "saturacion": "Grayscale",
-      "restablecer": "Reset",
-      "dyslexia": "Dyslexia-friendly font",
-      "espaciado": "Text spacing",
-      "tracker": "Cursor tracker"
-    },
-    "Asuntos": {
-      "cargo": "Student Affairs",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "miau",
-      "final": ""
-    },
-    "Desarrollo": {
-      "cargo": "Professional Development and Graduates",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "",
-      "final": ""
-    },
-    "Bienestar": {
-      "cargo": "Student Welfare",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "miau",
-      "final": ""
-    },
-    "Deportes": {
-      "cargo": "Sports",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "miau",
-      "final": ""
-    },
-    "Pastoral": {
-      "cargo": "Pastoral",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "miau",
-      "final": ""
-    },
-    "Reporte": {
-      "title": "reports"
     }
+  },
+  "Lobby": {
+    "title": "Welcome, I'm InA",
+    "Descripcion": "Your virtual assistant for queries about Duoc UC. How can I help you today?",
+    "voicetitle": "Voice Search",
+    "VolverGeneral": "Back to General",
+    "VolverText": "Returning to general area. Here are the general frequently asked questions:",
+    "area": "Area of ",
+    "areapas": "Pastoral Area.",
+    "areaconnect":"and",
+    "FAQareas": "Here are the general frequently asked questions:",
+    "FAQTitle": "Here are the frequently asked questions for",
+    "FAQDesc": "Here you can choose the frequently asked questions from the areas of:",
+    "Switch": {
+      "Asuntos": "Student Affairs",
+      "Desarrollo": "Professional Development and Graduates",
+      "Bienestar": "Student Welfare",
+      "Deportes": "Sports",
+      "Pastoral": "Pastoral"
+    },
+    "Preguntas": {
+      "FAQ1": "Meet the Point",
+      "FAQ2": "How can I enroll in an academic program at Duoc UC?",
+      "FAQ3": "Where can I renew my TNE?",
+      "FAQ4": "Placeholder",
+      "FAQ5": "Placeholder",
+      "FAQ6": "Placeholder",
+      "FAQ7": "Placeholder",
+      "FAQ8": "Placeholder",
+      "FAQ9": "Placeholder",
+      "FAQ10": "Placeholder",
+      "FAQ11": "Placeholder",
+      "FAQ12": "Placeholder"
+    }
+  },
+  "Accesibilidad": {
+    "titulo": "Accessibility",
+    "tamaño": "Text size",
+    "contraste": "High contrast",
+    "altura": "Line height",
+    "saturacion": "Grayscale",
+    "restablecer": "Reset",
+    "dyslexia": "Dyslexia font",
+    "espaciado": "Text spacing",
+    "tracker": "Cursor tracker"
+  },
+  "Asuntos": {
+    "cargo": "Student Affairs",
+    "title": "Natalia Varela Muñoz",
+    "correo": "nvarelam@duoc.cl",
+    "correo_pronunciacion": "n varela m @duoc.cl",
+    "Descripcion": "The Student Affairs area aims to accompany, guide and support students during their training process, promoting their comprehensive development in both academic and personal aspects. Among its main tasks are planning and executing extracurricular activities aimed at strengthening student leadership, developing communication skills and acquiring study strategies that favor successful academic performance.",
+    "Descripcion2": "Likewise, the area coordinates various Student Support Strategies, such as providing information and guidance on institutional benefits, School Accident Insurance, and procedures related to the National Student Card (TNE).",
+    "Descripcion3": "Another relevant area is the connection with Career Advisors, promoting active participation, student representation and collaborative work.",
+    "email": "Email: {{email}}",
+    "FAQTiltle": "Frequently Asked Questions - Student Affairs",
+    "FAQ1": "How does the insurance work?",
+    "FAQ2": "How do I get my TNE?",
+    "FAQ3": "How do I renew my TNE?",
+    "FAQ4": "How do I get my TNE if it's lost or damaged?",
+    "FAQ5": "What are the requirements to apply for the Emergency Program?",
+    "FAQ6": "What are the application categories for the Emergency Program?",
+    "FAQ7": "When can I apply for the Emergency Program?",
+    "FAQ8": "How can I get information about Student Support Programs?",
+    "final": ""
+  },
+  "Desarrollo": {
+    "cargo": "Professional Development and Graduates",
+    "title": "Claudia Cortés",
+    "correo": "ccortesn@duoc.cl",
+    "correo_pronunciacion": "c cortes n @duoc dot c l",
+    "Desctitle": "Guidance and tools for your professional development:",
+    "Descripcion": "The Labor Development and Graduates area is responsible for enhancing employment insertion and continuous professional growth of the community. We offer comprehensive and specialized support that accompanies users from their training stage to their positioning in the labor market.",
+    "Descripcion2": "• CV Advisory: Review and optimization of your CV to highlight your skills, experience and achievements professionally.",
+    "Descripcion3": "• Job interview tips: Practical guidance to confidently face selection processes and interviews.",
+    "Descripcion4": "• Professional LinkedIn support: Guide to create and maintain an attractive profile that reflects your personal brand and expands your job opportunities.",
+    "Descripcion5": "• Student Assistant Management: Coordination and support of students who help their peers in academic and professional development.",
+    "Descripcion6": "• Duoc Laboral management (students): Assistance in connecting with job opportunities and professional internships within the Duoc UC ecosystem.",
+    "Descripcion7": "• CDP Management - Professional Development Center: Coordination of activities, advisory services and programs aimed at strengthening your employability and career development.",
+    "FAQTiltle": "Frequently Asked Questions - Professional Development and Graduates",
+    "FAQ1": "What is Labor Development at Duoc UC?",
+    "FAQ2": "How can you help me improve my Curriculum Vitae?",
+    "FAQ3": "Do you offer job interview simulations?",
+    "FAQ4": "Where can I access the Duoc UC Job Bank?",
+    "FAQ5": "How do I create my CV on duoclaboral.cl?",
+    "FAQ6": "What type of employability workshops does the campus offer?",
+    "FAQ7": "What benefits do graduates have in Labor Development?",
+    "FAQ8": "What email or person can I contact at the Plaza Norte campus?",
+    "FAQ9": "What support do you provide for finding professional internships?",
+    "final": ""
+  },
+  "Bienestar": {
+    "cargo": "Student Welfare",
+    "title": "Adriana Vasquez",
+    "correo": "avasquezm@duoc.cl",
+    "correo_pronunciacion": "a vasquez m @duoc dot c l",
+    "Descripcion": "The Student Welfare Area focuses on developing activities and providing support to strengthen mental health and comprehensive well-being of students. The main associated programs are: Mental Health, Conscious Nutrition, Prevention of Alcohol and Drug Use, Student Coexistence and Inclusion.",
+    "Desctitle": "Main supports provided by the Student Welfare Area",
+    "Descripcion2": "• Free Virtual Psychological Care: Duoc UC students can access free virtual psychological care through the eventos.duoc.cl site. This benefit allows access to up to eight annual sessions with specialized professionals.",
+    "Descripcion3": "• OPS Line - Psychological Emergencies (228203450): Free telephone number available 24 hours a day, every day of the week, where students can receive immediate support during a psychological and/or emotional crisis. Calls are answered by professionals trained to provide containment and support in emergency situations.",
+    "Descripcion4": "• Mental Health Ambassadors Course: Free virtual course for students and staff, aimed at strengthening emotional support skills and providing tools to accompany other people in complex personal moments.",
+    "Descripcion5": "• Weekly Virtual Talks on Well-being and Mental Health: Various virtual talks open to Duoc UC students are offered, addressing topics related to psychological, emotional and general well-being, with the purpose of promoting healthy habits and strengthening mental health.",
+    "Descripcion6": "• In-person Workshops and Talks: Activities developed in sections or auditoriums, in coordination with career departments, aimed at promoting comprehensive well-being, healthy coexistence, mental health and prevention of alcohol and drug use, among other relevant topics for the student community.",
+    "FAQTiltle": "Frequently Asked Questions - Student Welfare",
+    "FAQ1": "What mental health supports exist at Duoc UC?",
+    "FAQ2": "Is there in-person psychological care?",
+    "FAQ3": "What should I do if I have a crisis or feel unwell while on campus?",
+    "FAQ4": "I tried to schedule psychological care, but I can't find available appointments",
+    "FAQ5": "How many psychological sessions can I have per year?",
+    "FAQ6": "Can the virtual psychologist issue medical leave?",
+    "FAQ7": "What can I do if I know a classmate is going through a tough time but doesn't want to ask for help?",
+    "FAQ8": "Is there any support for students with disabilities?",
+    "FAQ9": "I started the Ambassadors course, but I can't advance to the next module",
+    "FAQ10": "How do I know if I finished the Ambassadors course?",
+    "FAQ11": "Do I have any additional responsibility after completing the Ambassadors course?",
+    "final": ""
+  },
+  "Deportes": {
+    "cargo": "Sports",
+    "title": "Cesar Pino",
+    "title2": "Nicolas Leiva",
+    "correo": "cpinon@duoc.cl",
+    "correo_pronunciacion": "c pino n @duoc dot c l",
+    "correo2": "nleivas@duoc.cl",
+    "correo2_pronunciacion": "n leiva s @duoc dot c l",
+    "Desctitle": "Sports and Physical Activity Area",
+    "Descripcion": "The Sports and Physical Activity Area promotes healthy living, comprehensive well-being and student participation through various sports and recreational activities.",
+    "principales": "Main functions:",
+    "Descripcion2": "• Management and coordination of workshops and sports disciplines for students.",
+    "Descripcion3": "• Administration of the CAF (Physical Conditioning and Well-being Center), space dedicated to physical training and healthy habits.",
+    "Descripcion4": "• Organization of BIM Workshops (Comprehensive Well-being in Movement) and interventions in common spaces to promote coexistence and university life.",
+    "Descripcion5": "• Guidance on sports alternatives, scholarships, representative teams and practice spaces.",
+    "Competencias": "Highlighted institutional competitions:",
+    "Descripcion6": "• Intersedes Tournaments: Competitions between campuses in various sports disciplines.",
+    "Descripcion7": "• Duoc UC Olympic Games: National meeting that brings together students from across the country, promoting teamwork and sports spirit.",
+    "Descripcion8": "The CAF, located on level -1, is open to all students who wish to train and improve their well-being. After an initial evaluation, they can attend twice a week and have the guidance of a physical trainer.",
+    "FAQTiltle": "Frequently Asked Questions - Sports and Physical Activity Area",
+    "FAQ1": "What sports workshops do you have?",
+    "FAQ2": "Where are you located?",
+    "FAQ3": "2025 Workshop schedule?",
+    "FAQ4": "What happens if I miss one or more workshops?",
+    "FAQ5": "Do workshops have grades?",
+    "FAQ6": "How do I register for Sports Electives?",
+    "FAQ7": "Do Sports Electives have grades?",
+    "FAQ8": "How can I unregister?",
+    "FAQ9": "How can I register for the gym (CAF)?",
+    "FAQ10": "Can I go at any time?",
+    "FAQ11": "If I have free time and there are no teachers, can I use the gym?",
+    "FAQ12": "Sports Teams",
+    "FAQ13": "Sports Scholarships",
+    "final": ""
+  },
+  "Pastoral": {
+    "cargo": "Pastoral",
+    "title": "Camila Celedon",
+    "correo": "ccelodon@duoc.cl",
+    "correo_pronunciacion": "c celedon @duoc dot c l",
+    "Descripcion": "The Pastoral Area of Duoc UC seeks to promote personal and community encounter with Jesus Christ throughout the community. Its mission is to accompany the faith life of students, teachers and staff, integrating faith with daily activities.",
+    "Descripcion2": "Camila is a Pastoral Manager, working together with Father Luck Jamb and Sister Rut Gallardo.",
+    "Descripcion3": "The Eucharist is established as the center and summit of the pastoral experience and Christian life.",
+    "Descripcion4": "It offers means for a full sacramental and spiritual life, through prayer spaces and celebration of sacraments.",
+    "Descripcion5": "The area constitutes itself as a living Christian community within Duoc UC, seeking to be testimony of Christ and transform society.",
+    "Descripcion6": "It organizes service activities and service to others such as the summer and winter Solidarity Missions as well as monthly apostolates.",
+    "Descripcion7": "It seeks to increase the Catholic faith through dialogue between faith and culture.",
+    "Descripcion8": "It actively participates in the formation of people with a clear ethical-Christian seal.",
+    "Descripcion9": "Its work drives the community to discover the meaning of their lives and to live the values of the Gospel.",
+    "Descripcion10": "In summary, Pastoral is the area that animates the faith life and spiritually accompanies the Duoc UC community.",
+    "FAQTiltle": "Frequently Asked Questions - Pastoral Area",
+    "FAQ1": "What sports workshops do you have?",
+    "FAQ2": "Where are you located?",
+    "FAQ3": "2025 Workshop schedule?",
+    "FAQ4": "What happens if I miss one or more workshops?",
+    "FAQ5": "Do workshops have grades?",
+    "FAQ6": "How do I register for Sports Electives?",
+    "FAQ7": "Do they have attendance?",
+    "FAQ8": "How can I unregister?",
+    "FAQ9": "How can I register for the gym (CAF)?",
+    "FAQ10": "Can I go at any time?",
+    "FAQ11": "If I have free time and there are no teachers, can I use the gym?",
+    "FAQ12": "Sports Teams",
+    "FAQ13": "Sports Scholarships",
+    "final": ""
+  },
+  "Reporte": {
+    "title": "reports"
+  },
+  "VoiceSearch": {
+    "notSupported": "Voice recognition is not supported by your browser",
+    "startListening": "Start voice listening",
+    "stopListening": "Stop listening",
+    "listening": "Listening...",
+    "talk": "Speak now",
+    "recognized": "Recognized",
+    "results": "Results",
+    "noResults": "No results found"
   }
+}
