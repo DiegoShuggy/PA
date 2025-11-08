@@ -1,0 +1,411 @@
+{
+  "timestamp": "2025-11-08T13:58:48.204437",
+  "summary": {
+    "total_queries": 21,
+    "successful_queries": 21,
+    "failed_queries": 0,
+    "average_response_time": 4.03193922269912,
+    "median_response_time": 4.0554869174957275,
+    "min_response_time": 2.0573575496673584,
+    "max_response_time": 4.940771579742432,
+    "std_dev_response_time": 0.7300552698143127
+  },
+  "cache_stats": {
+    "memory": 21
+  },
+  "detailed_results": [
+    {
+      "query": "¿Dónde puedo obtener mi TNE?",
+      "response": {
+        "response": "Respuesta de template tne_primera_vez",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 1.000000000000002,
+        "conversation_context": "Usuario: ¿Dónde puedo obtener mi TNE?\nAsistente: Respuesta de template tne_primera_vez"
+      },
+      "processing_time": 4.74432635307312,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Cuál es el horario para validar la TNE?",
+      "response": {
+        "response": "Respuesta de template tne_primera_vez",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.8993031997945518,
+        "conversation_context": ""
+      },
+      "processing_time": 4.746588706970215,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Qué documentos necesito para la TNE?",
+      "response": {
+        "response": "Respuesta de template tne_primera_vez",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.9396652933983849,
+        "conversation_context": ""
+      },
+      "processing_time": 4.940771579742432,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Cómo me inscribo en los talleres deportivos?",
+      "response": {
+        "response": "Respuesta de template talleres_deportivos",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 1.0000000000000013,
+        "conversation_context": "Usuario: ¿Cómo me inscribo en los talleres deportivos?\nAsistente: Respuesta de template talleres_deportivos"
+      },
+      "processing_time": 4.613927364349365,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Qué horario tiene el gimnasio?",
+      "response": {
+        "response": "Respuesta de template gimnasio_caf",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 1.0000000000000013,
+        "conversation_context": "Usuario: ¿Qué horario tiene el gimnasio?\nAsistente: Respuesta de template gimnasio_caf"
+      },
+      "processing_time": 4.8876402378082275,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Dónde están las canchas deportivas?",
+      "response": {
+        "response": "Respuesta de template talleres_deportivos",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.8509630743221736,
+        "conversation_context": ""
+      },
+      "processing_time": 3.6120545864105225,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "Necesito un certificado de alumno regular",
+      "response": {
+        "response": "Respuesta de template certificado_alumno_regular",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 1.000000000000002,
+        "conversation_context": "Usuario: Necesito un certificado de alumno regular\nAsistente: Respuesta de template certificado_alumno_regular"
+      },
+      "processing_time": 3.8272392749786377,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Cómo solicito un certificado?",
+      "response": {
+        "response": "certificado de alumno regular del año en curso certificados constancia documento oficial record académico certificado de alumno regular del año en curso certificados constancia documento oficial record académico certificado de alumno regular del año en curso certificados constancia documento oficial record académico",
+        "sources": [
+          {
+            "content": "certificado de alumno regular del año en curso certificados constancia documento oficial record académico",
+            "metadata": {
+              "category": "asuntos_estudiantiles",
+              "is_structured": false,
+              "optimized": "true",
+              "section": "En este proceso corresponde para estudiantes que por primera ingresan a la Educación Superior, quienes deberán realizar los siguientes pasos:",
+              "source": "Preguntas frecuenes - Asuntos Estudiantiles.docx",
+              "timestamp": "2025-11-08T12:33:06.658504",
+              "type": "document_extract"
+            },
+            "similarity": 0.8033531308174133
+          },
+          {
+            "content": "certificado de alumno regular del año en curso certificados constancia documento oficial record académico",
+            "metadata": {
+              "category": "asuntos_estudiantiles",
+              "is_structured": false,
+              "optimized": "true",
+              "section": "En este proceso corresponde para estudiantes que por primera ingresan a la Educación Superior, quienes deberán realizar los siguientes pasos:",
+              "source": "Preguntas frecuenes - Asuntos Estudiantiles.docx",
+              "timestamp": "2025-11-08T12:48:41.357337",
+              "type": "document_extract"
+            },
+            "similarity": 0.8033531308174133
+          },
+          {
+            "content": "certificado de alumno regular del año en curso certificados constancia documento oficial record académico",
+            "metadata": {
+              "category": "asuntos_estudiantiles",
+              "is_structured": false,
+              "optimized": "true",
+              "section": "En este proceso corresponde para estudiantes que por primera ingresan a la Educación Superior, quienes deberán realizar los siguientes pasos:",
+              "source": "Preguntas frecuenes - Asuntos Estudiantiles.docx",
+              "timestamp": "2025-11-08T13:37:40.040634",
+              "type": "document_extract"
+            },
+            "similarity": 0.8033531308174133
+          }
+        ],
+        "cache_type": "memory",
+        "similarity_score": 0.9001121742715925,
+        "conversation_context": ""
+      },
+      "processing_time": 3.6684534549713135,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Cuánto demora la entrega de certificados?",
+      "response": {
+        "response": "certificado de alumno regular del año en curso certificados constancia documento oficial record académico certificado de alumno regular del año en curso certificados constancia documento oficial record académico certificado de alumno regular del año en curso certificados constancia documento oficial record académico",
+        "sources": [
+          {
+            "content": "certificado de alumno regular del año en curso certificados constancia documento oficial record académico",
+            "metadata": {
+              "category": "asuntos_estudiantiles",
+              "is_structured": false,
+              "optimized": "true",
+              "section": "En este proceso corresponde para estudiantes que por primera ingresan a la Educación Superior, quienes deberán realizar los siguientes pasos:",
+              "source": "Preguntas frecuenes - Asuntos Estudiantiles.docx",
+              "timestamp": "2025-11-08T12:33:06.658504",
+              "type": "document_extract"
+            },
+            "similarity": 0.8033531308174133
+          },
+          {
+            "content": "certificado de alumno regular del año en curso certificados constancia documento oficial record académico",
+            "metadata": {
+              "category": "asuntos_estudiantiles",
+              "is_structured": false,
+              "optimized": "true",
+              "section": "En este proceso corresponde para estudiantes que por primera ingresan a la Educación Superior, quienes deberán realizar los siguientes pasos:",
+              "source": "Preguntas frecuenes - Asuntos Estudiantiles.docx",
+              "timestamp": "2025-11-08T12:48:41.357337",
+              "type": "document_extract"
+            },
+            "similarity": 0.8033531308174133
+          },
+          {
+            "content": "certificado de alumno regular del año en curso certificados constancia documento oficial record académico",
+            "metadata": {
+              "category": "asuntos_estudiantiles",
+              "is_structured": false,
+              "optimized": "true",
+              "section": "En este proceso corresponde para estudiantes que por primera ingresan a la Educación Superior, quienes deberán realizar los siguientes pasos:",
+              "source": "Preguntas frecuenes - Asuntos Estudiantiles.docx",
+              "timestamp": "2025-11-08T13:37:40.040634",
+              "type": "document_extract"
+            },
+            "similarity": 0.8033531308174133
+          }
+        ],
+        "cache_type": "memory",
+        "similarity_score": 1.0000000000000018,
+        "conversation_context": "Usuario: ¿Cuánto demora la entrega de certificados?\nAsistente: certificado de alumno regular del año en curso certificados constancia documento oficial record académico certificado de alumno regular del año en curso certificados constancia documento oficial record académico certificado de alumno regular del año en curso certificados constancia documento oficial record académico"
+      },
+      "processing_time": 4.695939064025879,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Cómo contacto al equipo de bienestar?",
+      "response": {
+        "response": "Respuesta de template talleres_deportivos",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.8582749716581665,
+        "conversation_context": ""
+      },
+      "processing_time": 4.0554869174957275,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "Necesito ayuda psicológica",
+      "response": {
+        "response": "Detecto que podrías necesitar ayuda urgente. Te recomiendo contactar inmediatamente con el equipo de Bienestar Estudiantil o la Línea OPS. ¿Necesitas que te proporcione los contactos de emergencia?",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.8813627971382758,
+        "conversation_context": ""
+      },
+      "processing_time": 3.6958351135253906,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Qué servicios ofrece bienestar estudiantil?",
+      "response": {
+        "response": "pregunta apoyo psicológico respuesta línea ops 24 7 56 2 2820 3450 sesiones virtuales eventos duoc cl hasta 8 año gratuito y confidencial psicólogo salud mental bienestar emocional consejería pregunta apoyo psicológico respuesta línea ops 24 7 56 2 2820 3450 sesiones virtuales eventos duoc cl hasta 8 año gratuito y confidencial psicólogo salud mental bienestar emocional consejería pregunta apoyo psicológico respuesta línea ops 24 7 56 2 2820 3450 sesiones virtuales eventos duoc cl hasta 8 año gratuito y confidencial psicólogo salud mental bienestar emocional consejería",
+        "sources": [
+          {
+            "content": "pregunta apoyo psicológico respuesta línea ops 24 7 56 2 2820 3450 sesiones virtuales eventos duoc cl hasta 8 año gratuito y confidencial psicólogo salud mental bienestar emocional consejería",
+            "metadata": {
+              "category": "bienestar_estudiantil",
+              "is_structured": false,
+              "optimized": "true",
+              "section": "",
+              "source": "base",
+              "timestamp": "2025-11-08T12:33:05.868297",
+              "type": "faq"
+            },
+            "similarity": 0.5863591730594635
+          },
+          {
+            "content": "pregunta apoyo psicológico respuesta línea ops 24 7 56 2 2820 3450 sesiones virtuales eventos duoc cl hasta 8 año gratuito y confidencial psicólogo salud mental bienestar emocional consejería",
+            "metadata": {
+              "category": "bienestar_estudiantil",
+              "is_structured": false,
+              "optimized": "true",
+              "section": "",
+              "source": "base",
+              "timestamp": "2025-11-08T12:48:40.516662",
+              "type": "faq"
+            },
+            "similarity": 0.5863591730594635
+          },
+          {
+            "content": "pregunta apoyo psicológico respuesta línea ops 24 7 56 2 2820 3450 sesiones virtuales eventos duoc cl hasta 8 año gratuito y confidencial psicólogo salud mental bienestar emocional consejería",
+            "metadata": {
+              "category": "bienestar_estudiantil",
+              "is_structured": false,
+              "optimized": "true",
+              "section": "",
+              "source": "base",
+              "timestamp": "2025-11-08T13:37:39.279536",
+              "type": "faq"
+            },
+            "similarity": 0.5863591730594635
+          }
+        ],
+        "cache_type": "memory",
+        "similarity_score": 1.000000000000002,
+        "conversation_context": "Usuario: ¿Qué servicios ofrece bienestar estudiantil?\nAsistente: pregunta apoyo psicológico respuesta línea ops 24 7 56 2 2820 3450 sesiones virtuales eventos duoc cl hasta 8 año gratuito y confidencial psicólogo salud mental bienestar emocional consejería pregunta apoyo psicológico respuesta línea ops 24 7 56 2 2820 3450 sesiones virtuales eventos duoc cl hasta 8 año gratuito y confidencial psicólogo salud mental bienestar emocional consejería pregunta apoyo psicológico respuesta línea ops 24 7 56 2 2820 3450 sesiones virtuales eventos duoc cl hasta 8 año gratuito y confidencial psicólogo salud mental bienestar emocional consejería"
+      },
+      "processing_time": 4.221384525299072,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "Quiero saber sobre la TNE y los talleres deportivos",
+      "response": {
+        "response": "Respuesta de template talleres_deportivos",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.8878094267249244,
+        "conversation_context": ""
+      },
+      "processing_time": 4.329521417617798,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "Necesito un certificado y validar mi TNE",
+      "response": {
+        "response": "Respuesta de template tne_primera_vez",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.8927884562261371,
+        "conversation_context": ""
+      },
+      "processing_time": 4.4180004596710205,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "¿Dónde está el gimnasio y cómo reservo una cancha?",
+      "response": {
+        "response": "Respuesta de template gimnasio_caf",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.8758127064010028,
+        "conversation_context": ""
+      },
+      "processing_time": 4.8767194747924805,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "Necesito ayuda urgente",
+      "response": {
+        "response": "Detecto que podrías necesitar ayuda urgente. Te recomiendo contactar inmediatamente con el equipo de Bienestar Estudiantil o la Línea OPS. ¿Necesitas que te proporcione los contactos de emergencia?",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.87147307609019,
+        "conversation_context": ""
+      },
+      "processing_time": 3.497152090072632,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "Estoy en crisis",
+      "response": {
+        "response": "Detecto que podrías necesitar ayuda urgente. Te recomiendo contactar inmediatamente con el equipo de Bienestar Estudiantil o la Línea OPS. ¿Necesitas que te proporcione los contactos de emergencia?",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 1.0000000000000004,
+        "conversation_context": "Usuario: Estoy en crisis\nAsistente: Detecto que podrías necesitar ayuda urgente. Te recomiendo contactar inmediatamente con el equipo de Bienestar Estudiantil o la Línea OPS. ¿Necesitas que te proporcione los contactos de emergencia?"
+      },
+      "processing_time": 3.6219146251678467,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "Necesito hablar con alguien ahora",
+      "response": {
+        "response": "Detecto que podrías necesitar ayuda urgente. Te recomiendo contactar inmediatamente con el equipo de Bienestar Estudiantil o la Línea OPS. ¿Necesitas que te proporcione los contactos de emergencia?",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.8685467253678077,
+        "conversation_context": ""
+      },
+      "processing_time": 3.614039897918701,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "No puedo acceder a mi correo institucional",
+      "response": {
+        "response": "Para ayudarte mejor con esta consulta, te sugiero: Esta consulta no corresponde al Punto Estudiantil. Te sugiero acercarte a **Atención General** para que te deriven al área adecuada. Punto Estudiantil: Lunes a Viernes 8:30-19:00 | +56 2 2360 6400",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 1.0000000000000002,
+        "conversation_context": "Usuario: No puedo acceder a mi correo institucional\nAsistente: Para ayudarte mejor con esta consulta, te sugiero: Esta consulta no corresponde al Punto Estudiantil. Te sugiero acercarte a **Atención General** para que te deriven al área adecuada. Punto Estudiantil: Lunes a Viernes 8:30-19:00 | +56 2 2360 6400"
+      },
+      "processing_time": 3.5676803588867188,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "Olvidé mi contraseña de Mi Duoc",
+      "response": {
+        "response": "Para ayudarte mejor con esta consulta, te sugiero: Esta consulta no corresponde al Punto Estudiantil. Te sugiero acercarte a **Atención General** para que te deriven al área adecuada. Punto Estudiantil: Lunes a Viernes 8:30-19:00 | +56 2 2360 6400",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 0.8663124933242088,
+        "conversation_context": ""
+      },
+      "processing_time": 2.9786906242370605,
+      "success": true,
+      "cache_type": "memory"
+    },
+    {
+      "query": "Problemas con la plataforma",
+      "response": {
+        "response": "Para ayudarte mejor con esta consulta, te sugiero: Esta consulta no corresponde al Punto Estudiantil. Te sugiero acercarte a **Atención General** para que te deriven al área adecuada. Punto Estudiantil: Lunes a Viernes 8:30-19:00 | +56 2 2360 6400",
+        "sources": [],
+        "cache_type": "memory",
+        "similarity_score": 1.0000000000000016,
+        "conversation_context": "Usuario: Problemas con la plataforma\nAsistente: Para ayudarte mejor con esta consulta, te sugiero: Esta consulta no corresponde al Punto Estudiantil. Te sugiero acercarte a **Atención General** para que te deriven al área adecuada. Punto Estudiantil: Lunes a Viernes 8:30-19:00 | +56 2 2360 6400"
+      },
+      "processing_time": 2.0573575496673584,
+      "success": true,
+      "cache_type": "memory"
+    }
+  ]
+}

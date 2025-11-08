@@ -193,11 +193,16 @@ class EnhancedTopicClassifier:
 
 class RAGEngine:
     def __init__(self):
-        # En __init__ de RAGEngine, después de self.duoc_context
+        from app.memory_manager import MemoryManager
+        
+        # Inicializar el gestor de memoria
+        self.memory_manager = MemoryManager()
+        
+        # Expansiones de sinónimos mejoradas
         self.synonym_expansions = {
-            "tne": ["tarjeta nacional estudiantil", "pase escolar", "tne duoc", "beneficio tne", "tarjeta estudiante"],
-            "deporte": ["deportes", "actividad física", "taller deportivo", "entrenamiento", "gimnasio", "maiclub", "entretiempo", "acquatiempo"],
-            "certificado": ["certificados", "alumno regular", "constancia", "record académico", "concentración de notas"],
+            "tne": ["tarjeta nacional estudiantil", "pase escolar", "tne duoc", "beneficio tne", "tarjeta estudiante", "validación tne", "activación tne"],
+            "deporte": ["deportes", "actividad física", "taller deportivo", "entrenamiento", "gimnasio", "maiclub", "entretiempo", "acquatiempo", "deporte duoc", "selección deportiva"],
+            "certificado": ["certificados", "alumno regular", "constancia", "record académico", "concentración de notas", "documentos académicos", "solicitud certificado"],
             "bienestar": ["salud mental", "psicológico", "apoyo emocional", "consejería", "urgencia", "crisis", "línea ops"],
             "práctica": ["prácticas profesionales", "empleo", "duoclaboral", "bolsa de trabajo", "curriculum", "cv", "entrevista"],
             "matrícula": ["matricular", "arancel", "pago", "postulación", "admisión"],
@@ -325,11 +330,25 @@ class RAGEngine:
                 unique_words.append(word)
         return ' '.join(unique_words)
 
-    def process_user_query(self, user_message: str) -> Dict:
-        """PROCESAMIENTO INTELIGENTE MEJORADO CON TEMPLATES"""
+    def process_user_query(self, user_message: str, session_id: str = None) -> Dict:
+        """PROCESAMIENTO INTELIGENTE MEJORADO CON TEMPLATES Y MEMORIA JERÁRQUICA"""
         self.metrics['total_queries'] += 1
         
         query_lower = user_message.lower().strip()
+        
+        # Buscar en memoria primero
+        similar_queries = self.memory_manager.find_similar_queries(user_message)
+        if similar_queries:
+            best_match = similar_queries[0]
+            if best_match['similarity'] > 0.85:  # Alta confianza en la similitud
+                logger.info(f"Respuesta encontrada en memoria: {best_match['similarity']:.3f}")
+                return {
+                    'processing_strategy': 'memory',
+                    'original_query': user_message,
+                    'cached_response': best_match['response'],
+                    'similarity_score': best_match['similarity'],
+                    'metadata': best_match['metadata']
+                }
         
         # 1. PRIMERO VERIFICAR TEMPLATES (MÁS RÁPIDO)
         template_match = classifier.detect_template_match(user_message)
