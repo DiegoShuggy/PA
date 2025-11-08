@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VoiceSearch from '../components/VoiceSearch';
 import '../css/Lobby.css';
-
+import audio from '../assets/audio/inaaaaaaa.mp3'
 function Lobby() {
     console.log('Lobby component is rendering');
     const { t, i18n } = useTranslation();
@@ -19,32 +19,67 @@ function Lobby() {
     const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
     const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const isManualStopRef = useRef(false);
+     const autoReadEnabledRef = useRef(false); // Nuevo ref para controlar lectura automática
+    
+    // Nuevo estado para el contador de clics
+    const [clickCount, setClickCount] = useState(0);
+    const clickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // Efecto para el sonido al cargar/refrescar la página
+    // Ref para el audio
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    
+    // Efecto para inicializar el audio
     useEffect(() => {
-        const playRefreshSound = async () => {
-            try {
-                const refreshSound = new Audio('/sounds/kronii-gwakk.mp3');
-                refreshSound.volume = 0.3;
-                await refreshSound.play();
-                console.log('🔊 Sonido de refresh reproducido');
-            } catch (error) {
-                console.log('❌ No se pudo reproducir el sonido:', error);
-            }
-        };
-        playRefreshSound();
+        audioRef.current = new Audio(audio);
+        audioRef.current.volume = 0.7; // Ajusta el volumen si es necesario
+
         return () => {
-            const audioElements = document.querySelectorAll('audio');
-            audioElements.forEach(audio => {
-                audio.pause();
-                audio.currentTime = 0;
-            });
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current = null;
+            }
         };
     }, []);
 
-    // Función para cambiar entre áreas
+     // Función para manejar el clic en el título
+    const handleTitleClick = () => {
+        // Limpiar timeout anterior si existe
+        if (clickTimeoutRef.current) {
+            clearTimeout(clickTimeoutRef.current);
+        }
+
+        // Incrementar contador
+        const newCount = clickCount + 1;
+        setClickCount(newCount);
+
+        // Si llegó a 5 clics, reproducir sonido y resetear contador
+        if (newCount >= 5) {
+            playSecretSound();
+            setClickCount(0);
+        } else {
+            // Configurar timeout para resetear el contador después de 2 segundos
+            clickTimeoutRef.current = setTimeout(() => {
+                setClickCount(0);
+            }, 2000);
+        }
+    };
+
+     // Función para reproducir el sonido secreto
+    const playSecretSound = () => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0; // Reiniciar al inicio
+            audioRef.current.play().catch(error => {
+                console.log('❌ Error al reproducir sonido secreto:', error);
+            });
+            console.log('🎵 Sonido secreto reproducido');
+        }
+    };
+
+     // Función para cambiar entre áreas
     const cambiarArea = (area: string) => {
         setAreaActiva(area);
+        // Activar lectura automática cuando se cambia de área
+        autoReadEnabledRef.current = true;
         // Reproducir sonido al cambiar de área
         const playAreaChangeSound = async () => {
             try {
@@ -58,11 +93,13 @@ function Lobby() {
         };
         playAreaChangeSound();
     };
-
-    // Función para volver al área general
-    const volverAGeneral = () => {
-        setAreaActiva('general');
-    };
+const isReturningRef = useRef(false);
+   // Función para volver al área general
+const volverAGeneral = () => {
+    isReturningRef.current = true;
+    setAreaActiva('general');
+    autoReadEnabledRef.current = true;
+};
 
     // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO ADAPTADA
 
@@ -70,6 +107,7 @@ function Lobby() {
     const stopReading = useCallback((isManual = false) => {
         if (isManual) {
             isManualStopRef.current = true;
+            autoReadEnabledRef.current = false; // Desactivar auto-lectura cuando se detiene manualmente
         }
 
         if (speechSynthesisRef.current) {
@@ -112,6 +150,86 @@ function Lobby() {
             stopReading();
         };
     }, [stopReading]);
+    
+// Mantener getPageText como estaba anteriormente
+const getPageText = useCallback(() => {
+    // Si estamos volviendo a general, no leer título y descripción
+    const isReturning = isReturningRef.current;
+    isReturningRef.current = false; // Resetear después de usar
+    // Obtener título y descripción SOLO para área general
+    const pageTitle = (areaActiva === 'general' && !isReturning) ? document.querySelector('h2')?.textContent || '' : '';
+    const pageDescription = (areaActiva === 'general' && !isReturning) ? document.querySelector('h3')?.textContent || '' : '';
+    
+
+   // Obtener texto introductorio de áreas SOLO cuando no sea un "volver"
+    const areaIntroText = (!isReturning) ? document.querySelector('.sr-only')?.textContent || '' : '';
+    
+    // Obtener nombres de las áreas disponibles (botones) - SOLO para área general
+    let areaButtons = '';
+if (areaActiva === 'general' && !isReturning) {
+        const areaNames = Array.from(document.querySelectorAll('.cambio-item span'))
+            .map(span => span.textContent)
+            .filter(Boolean);
+        
+        // Formatear los nombres de áreas con "y" antes del último elemento
+        if (areaNames.length > 0) {
+            if (areaNames.length === 1) {
+                areaButtons = areaNames[0];
+            } else {
+                const lastArea = areaNames.pop();
+                areaButtons = `${areaNames.join(', ')} y ${lastArea}`;
+            }
+        }
+    }
+    
+    // Obtener todas las preguntas del área activa
+    const questions = Array.from(document.querySelectorAll('.lobby-item span, .Coordinador-item span'))
+        .map(span => span.textContent)
+        .filter(Boolean)
+        .join('. ');
+
+    // Construir texto completo según el área activa
+    let fullText = '';
+    
+    if (areaActiva === 'general') {
+        if (isReturning) {
+            // Texto conciso para cuando se vuelve a general - solo las preguntas
+            fullText = `Volviendo al área general. Aquí se encuentran las preguntas frecuentes generales: ${questions}`;
+        } else {
+            // Texto completo para primera vez en general
+            fullText = `${pageTitle}. ${pageDescription}. ${areaIntroText} ${areaButtons}. Aquí se encuentran las preguntas frecuentes generales: ${questions}`;
+        }
+    } else {
+        // Para áreas específicas - NO incluir título y descripción
+        const areaName = getCurrentAreaName();
+        let areaIntro = '';
+        
+        // Personalizar la introducción según el área
+        switch (areaActiva) {
+            case 'pastoral':
+                areaIntro = `Área de Pastoral.`;
+                break;
+            default:
+                areaIntro = `Área de ${areaName}.`;
+        }
+        
+        fullText = `${areaIntro} Aquí se encuentran las preguntas frecuentes de ${areaName.toLowerCase()}: ${questions}`;
+    }
+    
+    return fullText.trim();
+}, [areaActiva]);
+
+    // Función auxiliar para obtener el nombre del área actual
+    const getCurrentAreaName = () => {
+        switch (areaActiva) {
+            case 'asuntos': return t('Lobby.Switch.Asuntos');
+            case 'desarrollo': return t('Lobby.Switch.Desarrollo');
+            case 'bienestar': return t('Lobby.Switch.Bienestar');
+            case 'deportes': return t('Lobby.Switch.Deportes');
+            case 'pastoral': return t('Lobby.Switch.Pastoral');
+            default: return 'General';
+        }
+    };
 
     // Función para manejar búsquedas por voz (opcional)
     const handleVoiceSearch = (query: string) => {
@@ -119,7 +237,7 @@ function Lobby() {
         // Puedes agregar lógica adicional aquí si necesitas
     };
 
-    // Función para leer texto en voz alta
+       // Función para leer texto en voz alta
     const readText = useCallback((text: string, isAutoRead = false) => {
         // Si es lectura automática y hubo detención manual, no leer
         if (isAutoRead && isManualStopRef.current) {
@@ -150,15 +268,14 @@ function Lobby() {
                 const processedText = text.replace(/\//g, ' ');
                 const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
-                utterance.rate = 0.75;
+                utterance.rate = 1;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 
-                // Seleccionar voz adecuada
+                // Seleccionar voz adecuada (código existente de selección de voz)
                 const voices = speechSynthesisRef.current?.getVoices() || [];
                 let preferredVoice = null;
 
-                // Buscar voces femeninas
                 const femaleVoiceNames = [
                     'google español', 'español', 'spanish', 'mujer', 'female', 'femenina',
                     'mexico', 'colombia', 'argentina', 'latina', 'españa'
@@ -168,7 +285,6 @@ function Lobby() {
                     'raul', 'pablo', 'carlos', 'diego', 'male', 'masculino'
                 ];
 
-                // Buscar voz femenina del idioma correcto
                 for (let voice of voices) {
                     const voiceName = voice.name.toLowerCase();
                     const voiceLang = voice.lang.toLowerCase();
@@ -189,7 +305,6 @@ function Lobby() {
                     }
                 }
 
-                // Si no encuentra voz femenina, usar cualquier voz no masculina
                 if (!preferredVoice) {
                     for (let voice of voices) {
                         const voiceName = voice.name.toLowerCase();
@@ -208,7 +323,6 @@ function Lobby() {
                     }
                 }
 
-                // Si todavía no hay voz, usar la primera disponible del idioma
                 if (!preferredVoice) {
                     preferredVoice = voices.find(voice =>
                         voice.lang.startsWith(ttsLang.substring(0, 2))
@@ -262,17 +376,25 @@ function Lobby() {
         }, 50);
     }, [i18n.language, t, isTtsSupported, stopReading]);
 
-    // Función para leer todo el contenido de la página
-    const readPageContent = () => {
-        // Obtener todo el texto relevante de la página
-        const pageTitle = document.querySelector('h2')?.textContent || '';
-        const pageDescription = document.querySelector('h3')?.textContent || '';
-        const questions = Array.from(document.querySelectorAll('.lobby-item span'))
-            .map(span => span.textContent)
-            .filter(Boolean)
-            .join('. ');
+    // Efecto para leer automáticamente cuando cambia el área activa
+    useEffect(() => {
+        // Pequeño delay para asegurar que el DOM se haya actualizado
+        const timer = setTimeout(() => {
+            if (autoReadEnabledRef.current && !isManualStopRef.current) {
+                const fullText = getPageText();
+                if (fullText.trim()) {
+                    console.log('🔊 Lectura automática iniciada por cambio de área');
+                    readText(fullText, true);
+                }
+            }
+        }, 300);
 
-        const fullText = `${pageTitle}. ${pageDescription}. ${questions}`;
+        return () => clearTimeout(timer);
+    }, [areaActiva, getPageText, readText]);
+    // Función para leer todo el contenido de la página
+     // Función para leer todo el contenido de la página
+    const readPageContent = useCallback(() => {
+        const fullText = getPageText();
 
         if (!fullText.trim()) {
             console.warn('No hay texto para leer');
@@ -280,7 +402,7 @@ function Lobby() {
         }
 
         readText(fullText, false);
-    };
+    }, [getPageText, readText]);
 
     // Función para alternar lectura
     const toggleReading = () => {
@@ -293,7 +415,7 @@ function Lobby() {
 
     // FIN - FUNCIONALIDAD DEL LECTOR DE TEXTO
 
-   // Función para manejar el clic en las preguntas
+    // Función para manejar el clic en las preguntas
     const handleQuestionClick = (questionText: string) => {
         navigate('/InA', {
             state: {
@@ -458,101 +580,101 @@ function Lobby() {
     // Renderizar Asuntos Estudiantiles
     const renderAsuntosEstudiantiles = () => (
         <div className="lobby-grid">
-            {/* Renderizar preguntas dinámicamente */}
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-                        <div className="FAQ" key={num}>
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t(`Asuntos.FAQ${num}`))}
-                            >
-                                <div className="Coordinador-item uno">
-                                    <span>{t(`Asuntos.FAQ${num}`)}</span>
-                                </div>
-                            </div>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                <div className="FAQ" key={num}>
+                    <div
+                        className="FAQ-link"
+                        onClick={() => handleQuestionClick(t(`Asuntos.FAQ${num}`))}
+                    >
+                        <div className="Coordinador-item uno">
+                            <span>{t(`Asuntos.FAQ${num}`)}</span>
                         </div>
-                    ))}
+                    </div>
+                </div>
+            ))}
         </div>
     );
 
     // Renderizar Desarrollo Profesional
     const renderDesarrolloProfesional = () => (
         <div className="lobby-grid">
-            {/* Renderizar preguntas dinámicamente */}
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                        <div className="FAQ" key={num}>
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t(`Desarrollo.FAQ${num}`))}
-                            >
-                                <div className="Coordinador-item tres">
-                                    <span>{t(`Desarrollo.FAQ${num}`)}</span>
-                                </div>
-                            </div>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                <div className="FAQ" key={num}>
+                    <div
+                        className="FAQ-link"
+                        onClick={() => handleQuestionClick(t(`Desarrollo.FAQ${num}`))}
+                    >
+                        <div className="Coordinador-item tres">
+                            <span>{t(`Desarrollo.FAQ${num}`)}</span>
                         </div>
-                    ))}
+                    </div>
+                </div>
+            ))}
         </div>
     );
 
     // Renderizar Bienestar Estudiantil
     const renderBienestarEstudiantil = () => (
         <div className="lobby-grid">
-            {/* Renderizar preguntas dinámicamente */}
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((num) => (
-                        <div className="FAQ" key={num}>
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t(`Bienestar.FAQ${num}`))}
-                            >
-                                <div className="Coordinador-item cuatro">
-                                    <span>{t(`Bienestar.FAQ${num}`)}</span>
-                                </div>
-                            </div>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((num) => (
+                <div className="FAQ" key={num}>
+                    <div
+                        className="FAQ-link"
+                        onClick={() => handleQuestionClick(t(`Bienestar.FAQ${num}`))}
+                    >
+                        <div className="Coordinador-item cuatro">
+                            <span>{t(`Bienestar.FAQ${num}`)}</span>
                         </div>
-                    ))}
+                    </div>
+                </div>
+            ))}
         </div>
     );
 
     // Renderizar Deportes
     const renderDeportes = () => (
         <div className="lobby-grid">
-            {/* Renderizar preguntas dinámicamente */}
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((num) => (
-                        <div className="FAQ" key={num}>
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t(`Deportes.FAQ${num}`))}
-                            >
-                                <div className="Coordinador-item cinco">
-                                    <span>{t(`Deportes.FAQ${num}`)}</span>
-                                </div>
-                            </div>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((num) => (
+                <div className="FAQ" key={num}>
+                    <div
+                        className="FAQ-link"
+                        onClick={() => handleQuestionClick(t(`Deportes.FAQ${num}`))}
+                    >
+                        <div className="Coordinador-item cinco">
+                            <span>{t(`Deportes.FAQ${num}`)}</span>
                         </div>
-                    ))}
+                    </div>
+                </div>
+            ))}
         </div>
     );
 
     // Renderizar Pastoral
     const renderPastoral = () => (
         <div className="lobby-grid">
-            {/* Renderizar preguntas dinámicamente */}
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((num) => (
-                        <div className="FAQ" key={num}>
-                            <div
-                                className="FAQ-link"
-                                onClick={() => handleQuestionClick(t(`Pastoral.FAQ${num}`))}
-                            >
-                                <div className="Coordinador-item cinco">
-                                    <span>{t(`Pastoral.FAQ${num}`)}</span>
-                                </div>
-                            </div>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((num) => (
+                <div className="FAQ" key={num}>
+                    <div
+                        className="FAQ-link"
+                        onClick={() => handleQuestionClick(t(`Pastoral.FAQ${num}`))}
+                    >
+                        <div className="Coordinador-item cinco">
+                            <span>{t(`Pastoral.FAQ${num}`)}</span>
                         </div>
-                    ))}
+                    </div>
+                </div>
+            ))}
         </div>
     );
 
     return (
         <div className="lobby-container">
-            <h2>{t('Lobby.title')}</h2>
+            {/* Título con detector de clics */}
+            <h2 
+                onClick={handleTitleClick}
+            >
+                {t('Lobby.title')}
+            </h2>
             <h3>{t('Lobby.Descripcion')}</h3>
 
             {/* Botón de accesibilidad */}
@@ -565,6 +687,13 @@ function Lobby() {
                     {isReading ? '⏹️' : '🔊'}
                 </button>
             </div>
+
+            {/* Texto introductorio para áreas - SOLO en área general */}
+            {areaActiva === 'general' && (
+                <div className="sr-only">
+                    <p>Aquí se puede escoger las preguntas frecuentes de las áreas de:</p>
+                </div>
+            )}
 
             {/* Botones de cambio de área */}
             <div className="FAQ-horizontal">
