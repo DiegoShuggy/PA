@@ -37,6 +37,9 @@ from dotenv import load_dotenv
 from app.metrics_tracker import metrics_tracker
 from datetime import datetime, timedelta
 
+# DESACTIVAR TELEMETRÍA DE CHROMADB ANTES DE CUALQUIER USO
+import app.chroma_config  # ← LÍNEA CLAVE
+
 # Cargar variables de entorno
 load_dotenv()
 
@@ -67,6 +70,20 @@ duoc_url_manager = DuocURLManager()
 
 # Importar funciones y objetos de cache_manager después de definir app
 from app.cache_manager import get_cache_stats, rag_cache, classification_cache
+
+# ✅ SOLUCIÓN TELEMETRÍA: Configurar ChromaDB ANTES de cargar datos
+import chromadb
+from chromadb.config import Settings
+
+# Forzar configuración segura de ChromaDB (DESACTIVA TELEMETRÍA)
+if not hasattr(rag_engine, 'client') or rag_engine.client is None:
+    rag_engine.client = chromadb.PersistentClient(
+        path="./chroma_db",
+        settings=Settings(anonymized_telemetry=False)  # ← DESACTIVA TELEMETRÍA
+    )
+    logger.info("ChromaDB cliente inicializado con telemetría desactivada")
+
+
 
 success = training_loader.load_all_training_data()
 if success:

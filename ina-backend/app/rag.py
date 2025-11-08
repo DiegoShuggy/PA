@@ -1,5 +1,5 @@
 # rag.py - VERSIÓN COMPLETA ACTUALIZADA CON QR CORREGIDO
-import chromadb
+# IMPORTS SIN chromadb (para evitar activar telemetría)
 import ollama
 from typing import List, Dict, Optional
 import logging
@@ -13,10 +13,10 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# 👈 IMPORTACIONES EXISTENTES
+# IMPORTACIONES EXISTENTES
 from app.cache_manager import rag_cache, response_cache, normalize_question
 from app.topic_classifier import TopicClassifier
-from app.classifier import classifier  # 🆕 IMPORTAR CLASIFICADOR
+from app.classifier import classifier  # IMPORTAR CLASIFICADOR
 
 logger = logging.getLogger(__name__)
 
@@ -28,9 +28,9 @@ class SemanticCache:
                 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
             self.cache = {}
             self.threshold = similarity_threshold
-            logger.info(f"✅ Cache semántico inicializado (umbral: {similarity_threshold})")
+            logger.info(f"Cache semántico inicializado (umbral: {similarity_threshold})")
         except Exception as e:
-            logger.error(f"❌ Error inicializando cache semántico: {e}")
+            logger.error(f"Error inicializando cache semántico: {e}")
             self.model = None
             self.cache = {}
 
@@ -68,7 +68,7 @@ class SemanticCache:
                 continue
 
         if best_response:
-            logger.info(f"🎯 Semantic similarity found: {best_similarity:.3f}")
+            logger.info(f"Semantic similarity found: {best_similarity:.3f}")
             best_response['semantic_similarity'] = best_similarity
             return best_response
 
@@ -79,16 +79,16 @@ class SemanticCache:
         if embedding is not None:
             embedding_key = self._embedding_to_key(embedding)
             self.cache[embedding_key] = response_data
-            logger.info(f"✅ Added to semantic cache: '{query[:50]}...'")
+            logger.info(f"Added to semantic cache: '{query[:50]}...'")
 
 
 class EnhancedTopicClassifier:
-    """🆕 CLASIFICADOR MEJORADO CON DETECCIÓN INTELIGENTE"""
+    """CLASIFICADOR MEJORADO CON DETECCIÓN INTELIGENTE"""
     
     def __init__(self):
         self.topic_classifier = TopicClassifier()
         
-        # 🎯 PALABRAS CLAVE CRÍTICAS PARA DETECCIÓN MEJORADA
+        # PALABRAS CLAVE CRÍTICAS PARA DETECCIÓN MEJORADA
         self.critical_keywords = {
             'tne': ['tne', 'tarjeta nacional estudiantil', 'pase escolar', 'validar tne', 'renovar tne'],
             'deporte': ['deporte', 'taller deportivo', 'gimnasio', 'entrenamiento', 'fútbol', 'basquetbol'],
@@ -99,11 +99,11 @@ class EnhancedTopicClassifier:
         }
 
     def classify_topic(self, query: str) -> Dict:
-        """🆕 CLASIFICACIÓN MEJORADA"""
+        """CLASIFICACIÓN MEJORADA"""
         return self.topic_classifier.classify_topic(query)
 
     def should_derive(self, query: str) -> bool:
-        """🆕 DETECCIÓN MEJORADA DE CONSULTAS PARA DERIVAR"""
+        """DETECCIÓN MEJORADA DE CONSULTAS PARA DERIVAR"""
         topic_info = self.classify_topic(query)
         
         # Consultas que SIEMPRE deben derivarse
@@ -120,14 +120,14 @@ class EnhancedTopicClassifier:
         return not topic_info.get('is_institutional', True)
 
     def detect_multiple_queries(self, query: str) -> List[str]:
-        """🆕 DETECCIÓN INTELIGENTE MEJORADA DE CONSULTAS MÚLTIPLES"""
+        """DETECCIÓN INTELIGENTE MEJORADA DE CONSULTAS MÚLTIPLES"""
         query_lower = query.lower().strip()
         
-        # 🎯 EVITAR DIVIDIR CONSULTAS DE DERIVACIÓN
+        # EVITAR DIVIDIR CONSULTAS DE DERIVACIÓN
         if self.should_derive(query):
             return [query]
         
-        # 🎯 PATRONES MÁS INTELIGENTES PARA DIVISIÓN
+        # PATRONES MÁS INTELIGENTES PARA DIVISIÓN
         split_patterns = [
             r'\s+y\s+',          # " y "
             r'\s+también\s+',    # " también "
@@ -142,21 +142,21 @@ class EnhancedTopicClassifier:
         for pattern in split_patterns:
             parts = re.split(pattern, query_lower)
             if len(parts) > 1:
-                # 🎯 VERIFICAR QUE LAS PARTES TIENEN SENTIDO
+                # VERIFICAR QUE LAS PARTES TIENEN SENTIDO
                 valid_parts = []
                 for part in parts:
                     part_clean = part.strip()
-                    # 🎯 CRITERIOS MÁS FLEXIBLES
+                    # CRITERIOS MÁS FLEXIBLES
                     words = part_clean.split()
                     if (len(words) >= 2 or 
                         any(keyword in part_clean for keyword in ['tne', 'deporte', 'taller', 'gimnasio', 'certificado', 'psicológico', 'práctica'])):
                         valid_parts.append(part_clean)
                 
                 if len(valid_parts) > 1:
-                    logger.info(f"🎯 Consulta múltiple detectada por patrón: {valid_parts}")
+                    logger.info(f"Consulta múltiple detectada por patrón: {valid_parts}")
                     return valid_parts
         
-        # 🎯 DETECCIÓN POR PALABRAS CLAVE CONJUNTAS
+        # DETECCIÓN POR PALABRAS CLAVE CONJUNTAS
         topic_combinations = [
             ('tne', 'deporte'), ('tne', 'taller'), ('certificado', 'deporte'),
             ('beca', 'deporte'), ('psicológico', 'deporte'), ('tne', 'certificado'),
@@ -181,13 +181,13 @@ class EnhancedTopicClassifier:
                             parts.append(context)
                 
                 if len(parts) > 1:
-                    logger.info(f"🎯 Combo detectado: {parts}")
+                    logger.info(f"Combo detectado: {parts}")
                     return parts
         
         return [query]
     
     def get_derivation_suggestion(self, topic_type: str) -> str:
-        """🆕 SUGERENCIAS ESPECÍFICAS PARA DERIVACIÓN"""
+        """SUGERENCIAS ESPECÍFICAS PARA DERIVACIÓN"""
         return self.topic_classifier.get_redirection_message(topic_type)
 
 
@@ -204,15 +204,25 @@ class RAGEngine:
             "beneficio": ["beca", "ayuda económica", "programa emergencia", "subsidio"],
             "embajadores": ["curso embajadores", "embajadores salud mental", "módulo embajadores", "85% embajadores"]
         }
-        self.client = chromadb.PersistentClient(path="./chroma_db")
+
+        # IMPORTAR chromadb AL FINAL, DESPUÉS DE QUE chroma_config.py LO HAYA DESACTIVADO
+        import chromadb
+        from chromadb.config import Settings
+
+        self.client = chromadb.PersistentClient(
+            path="./chroma_db",
+            settings=Settings(anonymized_telemetry=False)  # TELEMETRÍA DESACTIVADA
+        )
+        logger.info("ChromaDB inicializado con telemetría DESACTIVADA")
+
         self.collection = self.client.get_or_create_collection(
             name="duoc_knowledge"
         )
 
-        # 🆕 CLASIFICADOR DE TEMAS MEJORADO
+        # CLASIFICADOR DE TEMAS MEJORADO
         self.topic_classifier = EnhancedTopicClassifier()
 
-        # 🆕 CONFIGURACIÓN ESPECÍFICA DUOC UC
+        # CONFIGURACIÓN ESPECÍFICA DUOC UC
         self.duoc_context = {
             "sede": "Plaza Norte",
             "direccion": "Santa Elena de Huechuraba 1660, Huechuraba",
@@ -221,11 +231,11 @@ class RAGEngine:
             "email": "Puntoestudiantil_pnorte@duoc.cl"
         }
 
-        # 🆕 CACHE SEMÁNTICO MEJORADO
+        # CACHE SEMÁNTICO MEJORADO
         self.semantic_cache = SemanticCache(similarity_threshold=0.65)
         self.text_cache = {}
 
-        logger.info("✅ RAG Engine DUOC UC inicializado")
+        logger.info("RAG Engine DUOC UC inicializado")
         self.metrics = {
             'total_queries': 0,
             'successful_responses': 0,
@@ -241,7 +251,7 @@ class RAGEngine:
             'ambiguous_queries': 0,
             'greetings': 0,
             'emergencies': 0,
-            'template_responses': 0  # 🆕 MÉTRICA PARA TEMPLATES
+            'template_responses': 0  # MÉTRICA PARA TEMPLATES
         }
         
     def _expand_query(self, query: str) -> str:
@@ -261,10 +271,10 @@ class RAGEngine:
 
     def enhanced_normalize_text(self, text: str) -> str:
         
-        """🆕 NORMALIZACIÓN SUPER MEJORADA PARA DUOC UC"""
+        """NORMALIZACIÓN SUPER MEJORADA PARA DUOC UC"""
         text = text.lower().strip()
         
-        # 🎯 EXPANDIR SINÓNIMOS Y VARIANTES ESPECÍFICAS DUOC
+        # EXPANDIR SINÓNIMOS Y VARIANTES ESPECÍFICAS DUOC
         synonym_expansions = {
             'tne': ['tarjeta nacional estudiantil', 'pase escolar', 'tne duoc', 'beneficio tne'],
             'deporte': ['deportes', 'actividad física', 'entrenamiento', 'ejercicio', 'taller deportivo'],
@@ -286,7 +296,7 @@ class RAGEngine:
         if expanded_terms:
             text += " " + " ".join(expanded_terms)
     
-        # 🎯 PATRONES ESPECÍFICOS DUOC
+        # PATRONES ESPECÍFICOS DUOC
         duoc_patterns = {
             r'plaza norte': 'sede plaza norte ubicación',
             r'mi duoc': 'plataforma mi duoc portal duoc acceso digital',
@@ -300,8 +310,6 @@ class RAGEngine:
         
         for pattern, replacement in duoc_patterns.items():
             text = re.sub(pattern, replacement, text)
-        
-        
         
         # Limpieza final - EVITAR DUPLICADOS Y OPTIMIZAR
         text = re.sub(r'[^\w\sáéíóúñü]', ' ', text)
@@ -318,15 +326,15 @@ class RAGEngine:
         return ' '.join(unique_words)
 
     def process_user_query(self, user_message: str) -> Dict:
-        """🆕 PROCESAMIENTO INTELIGENTE MEJORADO CON TEMPLATES"""
+        """PROCESAMIENTO INTELIGENTE MEJORADO CON TEMPLATES"""
         self.metrics['total_queries'] += 1
         
         query_lower = user_message.lower().strip()
         
-        # 🆕 1. PRIMERO VERIFICAR TEMPLATES (MÁS RÁPIDO)
+        # 1. PRIMERO VERIFICAR TEMPLATES (MÁS RÁPIDO)
         template_match = classifier.detect_template_match(user_message)
         if template_match:
-            logger.info(f"🚀 TEMPLATE DETECTADO: '{user_message}' -> {template_match}")
+            logger.info(f"TEMPLATE DETECTADO: '{user_message}' -> {template_match}")
             return {
                 'processing_strategy': 'template',
                 'original_query': user_message,
@@ -334,7 +342,7 @@ class RAGEngine:
                 'query_parts': [user_message]
             }
         
-        # 🆕 2. DETECCIÓN PRIORITARIA DE SALUDOS
+        # 2. DETECCIÓN PRIORITARIA DE SALUDOS
         greeting_keywords = [
             'hola', 'holi', 'holis', 'holaa', 'buenos días', 'buenas tardes', 
             'buenas noches', 'saludos', 'quién eres', 'presentate', 'presentación',
@@ -342,7 +350,7 @@ class RAGEngine:
         ]
         
         if any(greeting in query_lower for greeting in greeting_keywords):
-            logger.info(f"👋 SALUDO DETECTADO: {user_message}")
+            logger.info(f"SALUDO DETECTADO: {user_message}")
             self.metrics['greetings'] += 1
             return {
                 'processing_strategy': 'greeting',
@@ -352,7 +360,7 @@ class RAGEngine:
                 'query_parts': [user_message]
             }
         
-        # 🆕 3. DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
+        # 3. DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
         emergency_keywords = [
             'crisis', 'urgencia', 'emergencia', 'línea ops', 
             'me siento mal', 'ayuda urgente', 'necesito ayuda ahora',
@@ -361,7 +369,7 @@ class RAGEngine:
         ]
         
         if any(keyword in query_lower for keyword in emergency_keywords):
-            logger.warning(f"🚨 URGENCIA DETECTADA: {user_message}")
+            logger.warning(f"URGENCIA DETECTADA: {user_message}")
             self.metrics['emergencies'] += 1
             return {
                 'processing_strategy': 'emergency',
@@ -375,10 +383,10 @@ class RAGEngine:
                 'query_parts': [user_message]
             }
         
-        # 🆕 4. VERIFICAR SI ES DERIVACIÓN
+        # 4. VERIFICAR SI ES DERIVACIÓN
         if self.topic_classifier.should_derive(user_message):
             topic_info = self.topic_classifier.classify_topic(user_message)
-            logger.info(f"🎯 DERIVACIÓN DETECTADA: {user_message} -> {topic_info.get('category', 'unknown')}")
+            logger.info(f"DERIVACIÓN DETECTADA: {user_message} -> {topic_info.get('category', 'unknown')}")
             self.metrics['derivations'] += 1
             return {
                 'processing_strategy': 'derivation',
@@ -403,7 +411,7 @@ class RAGEngine:
             'processing_strategy': 'standard'
         }
         
-        # 🎯 ESTRATEGIAS DIFERENCIADAS MEJORADAS
+        # ESTRATEGIAS DIFERENCIADAS MEJORADAS
         if topic_info.get('category') == 'unknown':
             response_info['processing_strategy'] = 'clarification'
             self.metrics['ambiguous_queries'] += 1
@@ -415,18 +423,18 @@ class RAGEngine:
         else:
             response_info['processing_strategy'] = 'standard_rag'
             
-        logger.info(f"🎯 Procesamiento: '{user_message}' -> Estrategia: {response_info['processing_strategy']}")
+        logger.info(f"Procesamiento: '{user_message}' -> Estrategia: {response_info['processing_strategy']}")
         
         return response_info
 
     def generate_template_response(self, processing_info: Dict) -> Dict:
-        """🆕 GENERAR RESPUESTA DESDE TEMPLATE CON QR CODES CORREGIDO"""
+        """GENERAR RESPUESTA DESDE TEMPLATE CON QR CODES CORREGIDO"""
         import time
         start_time = time.time()
         
         template_id = processing_info['template_id']
         
-        # 🎯 CARGAR TEMPLATES
+        # CARGAR TEMPLATES
         try:
             from app.templates import TEMPLATES
             
@@ -441,7 +449,7 @@ class RAGEngine:
                     break
             
             if template_response:
-                # 🔥 AGREGAR GENERACIÓN DE QR CODES PARA TEMPLATES (ESTRUCTURA CORREGIDA)
+                # AGREGAR GENERACIÓN DE QR CODES PARA TEMPLATES (ESTRUCTURA CORREGIDA)
                 original_query = processing_info['original_query']
                 qr_processed_response = qr_generator.process_response(template_response, original_query)
                 
@@ -449,11 +457,11 @@ class RAGEngine:
                 self.metrics['template_responses'] += 1
                 self.metrics['categories_used'][template_category] += 1
                 
-                logger.info(f"⚡ TEMPLATE RESPONSE: {template_id} en {response_time:.3f}s")
+                logger.info(f"TEMPLATE RESPONSE: {template_id} en {response_time:.3f}s")
                 if qr_processed_response['has_qr']:
-                    logger.info(f"📱 QR generados desde template: {qr_processed_response['total_qr_generated']} códigos")
+                    logger.info(f"QR generados desde template: {qr_processed_response['total_qr_generated']} códigos")
                 
-                # 👈 ESTRUCTURA CORREGIDA - qr_codes como dict simple
+                # ESTRUCTURA CORREGIDA - qr_codes como dict simple
                 return {
                     'response': template_response.strip(),
                     'sources': [],
@@ -462,53 +470,53 @@ class RAGEngine:
                     'cache_type': 'template',
                     'processing_info': processing_info,
                     'template_used': template_id,
-                    'qr_codes': qr_processed_response['qr_codes'],  # 👈 Dict simple {url: qr_image}
-                    'has_qr': qr_processed_response['has_qr']       # 👈 Boolean
+                    'qr_codes': qr_processed_response['qr_codes'],  # Dict simple {url: qr_image}
+                    'has_qr': qr_processed_response['has_qr']       # Boolean
                 }
             else:
-                logger.warning(f"⚠️ Template no encontrado: {template_id}")
+                logger.warning(f"Template no encontrado: {template_id}")
                 
         except ImportError:
-            logger.error("❌ No se pudo importar templates.py")
+            logger.error("No se pudo importar templates.py")
         except Exception as e:
-            logger.error(f"❌ Error cargando template: {e}")
+            logger.error(f"Error cargando template: {e}")
         
         # Fallback si no se encuentra el template
         return self.generate_clarification_response(processing_info)
 
     def generate_greeting_response(self, processing_info: Dict) -> Dict:
-        """🆕 RESPUESTA CORTA Y AMIGABLE PARA SALUDOS CON QR"""
+        """RESPUESTA CORTA Y AMIGABLE PARA SALUDOS CON QR"""
         import random
         import time
         start_time = time.time()
         
         greeting_options = [
-            "¡Hola! 👋 Soy InA, tu asistente del Punto Estudiantil Duoc UC. ¿En qué puedo ayudarte hoy?",
-            "¡Hola! 😊 Soy InA, estoy aquí para ayudarte con información del Punto Estudiantil.",
-            "¡Hola! 🎓 Soy InA, tu asistente de Duoc UC. ¿Qué necesitas saber?",
-            "¡Hola! 💫 Soy InA, del Punto Estudiantil. ¿En qué te puedo ayudar?",
+            "¡Hola! Soy InA, tu asistente del Punto Estudiantil Duoc UC. ¿En qué puedo ayudarte hoy?",
+            "¡Hola! Soy InA, estoy aquí para ayudarte con información del Punto Estudiantil.",
+            "¡Hola! Soy InA, tu asistente de Duoc UC. ¿Qué necesitas saber?",
+            "¡Hola! Soy InA, del Punto Estudiantil. ¿En qué te puedo ayudar?",
         ]
         
         greeting = random.choice(greeting_options)
         
-        # 🆕 SUGERENCIAS DE CONSULTAS COMUNES
+        # SUGERENCIAS DE CONSULTAS COMUNES
         suggestions = """
         
-💡 *Puedo ayudarte con:*
-• 🎓 TNE, certificados, programas de apoyo
-• 🧠 Salud mental, bienestar estudiantil  
-• 🏀 Deportes, talleres, gimnasio
-• 💼 CV, prácticas, empleabilidad
+Puedo ayudarte con:*
+• TNE, certificados, programas de apoyo
+• Salud mental, bienestar estudiantil  
+• Deportes, talleres, gimnasio
+• CV, prácticas, empleabilidad
 
-*¿Qué necesitas?* 🙂
+¿Qué necesitas? 
 """
         
         response = greeting + suggestions
         
-        # 🔥 AGREGAR QR CODES PARA GREETING (ESTRUCTURA CORREGIDA)
+        # AGREGAR QR CODES PARA GREETING (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(response, processing_info['original_query'])
         
-        # 👈 ESTRUCTURA CORREGIDA
+        # ESTRUCTURA CORREGIDA
         return {
             'response': response.strip(),
             'sources': [],
@@ -516,36 +524,36 @@ class RAGEngine:
             'response_time': time.time() - start_time,
             'cache_type': 'greeting',
             'processing_info': processing_info,
-            'qr_codes': qr_processed_response['qr_codes'],  # 👈 Dict simple
-            'has_qr': qr_processed_response['has_qr']       # 👈 Boolean
+            'qr_codes': qr_processed_response['qr_codes'],  # Dict simple
+            'has_qr': qr_processed_response['has_qr']       # Boolean
         }
 
     def generate_emergency_response(self, processing_info: Dict) -> Dict:
-        """🆕 RESPUESTA DE EMERGENCIA PRIORITARIA CON QR"""
+        """RESPUESTA DE EMERGENCIA PRIORITARIA CON QR"""
         import time
         start_time = time.time()
         
         response = """
-🚨 **URGENCIA - APOYO INMEDIATO DISPONIBLE**
+**URGENCIA - APOYO INMEDIATO DISPONIBLE**
 
-📞 *Líneas de ayuda 24/7:*
+*Líneas de ayuda 24/7:*
 • **Línea OPS Duoc UC**: +56 2 2820 3450
 • **Salud Responde**: 600 360 7777
 • **Fono Mayor**: 800 4000 35
 
-🏥 *Atención en sede:*
+*Atención en sede:*
 • **Sala primeros auxilios**: Primer piso, junto a caja
 • **Teléfono interno**: +56 2 2999 3005
 
-💙 *Recuerda: No estás solo/a - hay ayuda disponible*
+*Recuerda: No estás solo/a - hay ayuda disponible*
 
-⚠️ *Si es emergencia médica vital, llama al 131*
+*Si es emergencia médica vital, llama al 131*
 """
         
-        # 🔥 AGREGAR QR CODES PARA EMERGENCIA (ESTRUCTURA CORREGIDA)
+        # AGREGAR QR CODES PARA EMERGENCIA (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(response, processing_info['original_query'])
         
-        # 👈 ESTRUCTURA CORREGIDA
+        # ESTRUCTURA CORREGIDA
         return {
             'response': response.strip(),
             'sources': [],
@@ -553,33 +561,33 @@ class RAGEngine:
             'response_time': time.time() - start_time,
             'cache_type': 'emergency',
             'processing_info': processing_info,
-            'qr_codes': qr_processed_response['qr_codes'],  # 👈 Dict simple
-            'has_qr': qr_processed_response['has_qr']       # 👈 Boolean
+            'qr_codes': qr_processed_response['qr_codes'],  # Dict simple
+            'has_qr': qr_processed_response['has_qr']       # Boolean
         }
 
     def generate_derivation_response(self, processing_info: Dict) -> Dict:
-        """🆕 DERIVACIÓN MEJORADA CON INFORMACIÓN ESPECÍFICA Y QR"""
+        """DERIVACIÓN MEJORADA CON INFORMACIÓN ESPECÍFICA Y QR"""
         import time
         start_time = time.time()
         
         suggestion = processing_info.get('derivation_suggestion', 
-            "🔍 **Consulta especializada**\n\n"
+            "**Consulta especializada**\n\n"
             "Te recomiendo acercarte a Punto Estudiantil para derivación al área correspondiente.\n\n"
-            "📍 Santa Elena de Huechuraba 1660\n"
-            "📞 +56 2 2360 6400\n"
-            "⏰ L-V 8:30-19:00"
+            "Santa Elena de Huechuraba 1660\n"
+            "+56 2 2360 6400\n"
+            "L-V 8:30-19:00"
         )
         
         response = f"""
 {suggestion}
 
-💡 *¿Puedo ayudarte con TNE, bienestar, deportes o desarrollo laboral?*
+¿Puedo ayudarte con TNE, bienestar, deportes o desarrollo laboral?*
 """
         
-        # 🔥 AGREGAR QR CODES PARA DERIVACIÓN (ESTRUCTURA CORREGIDA)
+        # AGREGAR QR CODES PARA DERIVACIÓN (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(response, processing_info['original_query'])
         
-        # 👈 ESTRUCTURA CORREGIDA
+        # ESTRUCTURA CORREGIDA
         return {
             'response': response.strip(),
             'sources': [],
@@ -587,28 +595,28 @@ class RAGEngine:
             'response_time': time.time() - start_time,
             'cache_type': 'derivation',
             'processing_info': processing_info,
-            'qr_codes': qr_processed_response['qr_codes'],  # 👈 Dict simple
-            'has_qr': qr_processed_response['has_qr']       # 👈 Boolean
+            'qr_codes': qr_processed_response['qr_codes'],  # Dict simple
+            'has_qr': qr_processed_response['has_qr']       # Boolean
         }
 
     def generate_multiple_queries_response(self, processing_info: Dict) -> Dict:
-        """🆕 RESPUESTA OPTIMIZADA PARA CONSULTAS MÚLTIPLES CON QR"""
+        """RESPUESTA OPTIMIZADA PARA CONSULTAS MÚLTIPLES CON QR"""
         import time
         start_time = time.time()
         
         query_parts = processing_info['query_parts']
         original_query = processing_info['original_query']
         
-        logger.info(f"🔍 Procesando {len(query_parts)} consultas múltiples: {query_parts}")
+        logger.info(f"Procesando {len(query_parts)} consultas múltiples: {query_parts}")
         
-        # 🎯 ESTRATEGIA MEJORADA
+        # ESTRATEGIA MEJORADA
         detailed_responses = []
         all_sources = []
         
         for i, part in enumerate(query_parts):
-            logger.info(f"  📝 Procesando parte {i+1}: '{part}'")
+            logger.info(f"  Procesando parte {i+1}: '{part}'")
             
-            # 🆕 BUSCAR CON TÉRMINOS EXPANDIDOS
+            # BUSCAR CON TÉRMINOS EXPANDIDOS
             expanded_query = self._expand_query_with_context(part, original_query)
             sources = self.hybrid_search(expanded_query, n_results=2)
             
@@ -616,7 +624,7 @@ class RAGEngine:
                 part_response = self._process_with_ollama_optimized(expanded_query, sources)
                 response_text = part_response['response']
                 
-                # 🎯 MEJORAR CALIDAD DE RESPUESTA
+                # MEJORAR CALIDAD DE RESPUESTA
                 if "no hay información" in response_text.lower() or "consulta en punto estudiantil" in response_text.lower():
                     # Intentar con búsqueda más amplia
                     broader_sources = self.hybrid_search(part, n_results=3)
@@ -626,24 +634,24 @@ class RAGEngine:
                 detailed_responses.append(f"**{i+1}. {part}:**\n{part_response['response']}")
                 all_sources.extend(part_response['sources'])
             else:
-                # 🆕 RESPUESTA MÁS ÚTIL CON INFORMACIÓN GENÉRICA
+                # RESPUESTA MÁS ÚTIL CON INFORMACIÓN GENÉRICA
                 generic_info = self._get_generic_topic_info(part)
                 detailed_responses.append(f"**{i+1}. {part}:**\n{generic_info}")
         
-        # 🎯 CONSTRUIR RESPUESTA MÁS COHERENTE
+        # CONSTRUIR RESPUESTA MÁS COHERENTE
         if detailed_responses:
-            response = "📋 **Varias consultas detectadas:**\n\n" + "\n\n".join(detailed_responses)
-            response += "\n\n💡 *¿Necesitas más detalles de alguna consulta?*"
+            response = "**Varias consultas detectadas:**\n\n" + "\n\n".join(detailed_responses)
+            response += "\n\n¿Necesitas más detalles de alguna consulta?*"
         else:
-            response = "🤔 No pude procesar todas las consultas. ¿Podrías reformularlas por separado?"
+            response = "No pude procesar todas las consultas. ¿Podrías reformularlas por separado?"
         
         processing_time = time.time() - start_time
-        logger.info(f"✅ Consultas múltiples procesadas en {processing_time:.2f}s")
+        logger.info(f"Consultas múltiples procesadas en {processing_time:.2f}s")
         
-        # 🔥 AGREGAR QR CODES PARA MÚLTIPLES CONSULTAS (ESTRUCTURA CORREGIDA)
+        # AGREGAR QR CODES PARA MÚLTIPLES CONSULTAS (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(response, original_query)
         
-        # 👈 ESTRUCTURA CORREGIDA
+        # ESTRUCTURA CORREGIDA
         return {
             'response': response,
             'sources': all_sources[:3],
@@ -651,12 +659,12 @@ class RAGEngine:
             'response_time': processing_time,
             'cache_type': 'multiple_queries',
             'processing_info': processing_info,
-            'qr_codes': qr_processed_response['qr_codes'],  # 👈 Dict simple
-            'has_qr': qr_processed_response['has_qr']       # 👈 Boolean
+            'qr_codes': qr_processed_response['qr_codes'],  # Dict simple
+            'has_qr': qr_processed_response['has_qr']       # Boolean
         }
 
     def _expand_query_with_context(self, partial_query: str, full_query: str) -> str:
-        """🆕 EXPANDIR CONSULTA PARCIAL CON CONTEXTO COMPLETO"""
+        """EXPANDIR CONSULTA PARCIAL CON CONTEXTO COMPLETO"""
         important_keywords = ['tne', 'deporte', 'taller', 'certificado', 'beca', 'psicológico', 'práctica']
         
         expanded = partial_query
@@ -668,27 +676,27 @@ class RAGEngine:
         return expanded
 
     def _get_generic_topic_info(self, query: str) -> str:
-        """🆕 INFORMACIÓN GENÉRICA POR TEMA CUANDO NO HAY FUENTES"""
+        """INFORMACIÓN GENÉRICA POR TEMA CUANDO NO HAY FUENTES"""
         query_lower = query.lower()
         
         generic_responses = {
-            'tne': "ℹ️ **TNE**: Para trámites de Tarjeta Nacional Estudiantil, acude a Punto Estudiantil con tu cédula de identidad. Horario: L-V 8:30-19:00",
-            'deporte': "🏀 **Deportes**: Duoc UC ofrece talleres deportivos, gimnasio y selecciones. Información en Complejo Deportivo Maiclub.",
-            'taller': "🎯 **Talleres**: Hay talleres deportivos, culturales y de desarrollo. Consulta programación en Punto Estudiantil.",
-            'certificado': "📄 **Certificados**: Solicita certificados de alumno regular en Punto Estudiantil o portal Mi Duoc.",
-            'gimnasio': "💪 **Gimnasio**: El Complejo Deportivo Maiclub tiene gimnasio, piscina y canchas. Horario: L-V 8:00-21:00.",
-            'psicológico': "🧠 **Apoyo Psicológico**: Sesiones de apoyo psicológico disponibles. Contacta a Bienestar Estudiantil.",
-            'práctica': "💼 **Prácticas**: Asesoría para prácticas profesionales con Claudia Cortés. Desarrollo Laboral, edificio central.",
+            'tne': "**TNE**: Para trámites de Tarjeta Nacional Estudiantil, acude a Punto Estudiantil con tu cédula de identidad. Horario: L-V 8:30-19:00",
+            'deporte': "**Deportes**: Duoc UC ofrece talleres deportivos, gimnasio y selecciones. Información en Complejo Deportivo Maiclub.",
+            'taller': "**Talleres**: Hay talleres deportivos, culturales y de desarrollo. Consulta programación en Punto Estudiantil.",
+            'certificado': "**Certificados**: Solicita certificados de alumno regular en Punto Estudiantil o portal Mi Duoc.",
+            'gimnasio': "**Gimnasio**: El Complejo Deportivo Maiclub tiene gimnasio, piscina y canchas. Horario: L-V 8:00-21:00.",
+            'psicológico': "**Apoyo Psicológico**: Sesiones de apoyo psicológico disponibles. Contacta a Bienestar Estudiantil.",
+            'práctica': "**Prácticas**: Asesoría para prácticas profesionales con Claudia Cortés. Desarrollo Laboral, edificio central.",
         }
         
         for topic, response in generic_responses.items():
             if topic in query_lower:
                 return response
         
-        return "ℹ️ Consulta en Punto Estudiantil para información específica sobre este tema."
+        return "Consulta en Punto Estudiantil para información específica sobre este tema."
 
     def _process_with_ollama_optimized(self, query: str, sources: List[Dict]) -> Dict:
-        """🆕 VERSIÓN OPTIMIZADA PARA EQUIPO FINAL"""
+        """VERSIÓN OPTIMIZADA PARA EQUIPO FINAL"""
         try:
             limited_sources = sources[:2]
             
@@ -731,7 +739,7 @@ class RAGEngine:
             }
             
         except Exception as e:
-            logger.error(f"❌ Error procesando con Ollama: {e}")
+            logger.error(f"Error procesando con Ollama: {e}")
             if sources:
                 short_response = sources[0]['document'][:100] + "..." if len(sources[0]['document']) > 100 else sources[0]['document']
                 return {
@@ -752,9 +760,9 @@ class RAGEngine:
         original_query = processing_info['original_query']
         
         response = f"""
-🤔 No entiendo completamente '{original_query}'.
+No entiendo completamente '{original_query}'.
 
-💡 *¿Te refieres a alguno de estos temas?*
+¿Te refieres a alguno de estos temas?*
 
 • TNE y certificados
 • Programas de apoyo económico  
@@ -765,10 +773,10 @@ class RAGEngine:
 *Ejemplo: "¿Cómo saco mi TNE?"*
 """
         
-        # 🔥 AGREGAR QR CODES PARA CLARIFICATION (ESTRUCTURA CORREGIDA)
+        # AGREGAR QR CODES PARA CLARIFICATION (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(response, original_query)
         
-        # 👈 ESTRUCTURA CORREGIDA
+        # ESTRUCTURA CORREGIDA
         return {
             'response': response.strip(),
             'sources': [],
@@ -776,8 +784,8 @@ class RAGEngine:
             'response_time': time.time() - start_time,
             'cache_type': 'clarification',
             'processing_info': processing_info,
-            'qr_codes': qr_processed_response['qr_codes'],  # 👈 Dict simple
-            'has_qr': qr_processed_response['has_qr']       # 👈 Boolean
+            'qr_codes': qr_processed_response['qr_codes'],  # Dict simple
+            'has_qr': qr_processed_response['has_qr']       # Boolean
         }
 
     def add_document(self, document: str, metadata: Dict = None) -> bool:
@@ -802,7 +810,7 @@ class RAGEngine:
             return True
             
         except Exception as e:
-            logger.error(f"❌ Error añadiendo documento: {e}")
+            logger.error(f"Error añadiendo documento: {e}")
             self.metrics['errors'] += 1
             return False
 
@@ -819,7 +827,7 @@ class RAGEngine:
             return []
 
     def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.35):
-        """🆕 BÚSQUEDA OPTIMIZADA CON UMBRALES FLEXIBLES"""
+        """BÚSQUEDA OPTIMIZADA CON UMBRALES FLEXIBLES"""
         try:
             processed_query = self.enhanced_normalize_text(query_text)
 
@@ -851,19 +859,19 @@ class RAGEngine:
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
             
             if not filtered_docs:
-                logger.info(f"🔍 No se encontraron documentos para: {query_text}")
+                logger.info(f"No se encontraron documentos para: {query_text}")
                 return []
             
             return filtered_docs[:n_results]
 
         except Exception as e:
-            logger.error(f"❌ Error en query optimizada: {e}")
+            logger.error(f"Error en query optimizada: {e}")
             # En caso de error, retornar resultados simples sin recursión
             simple_results = self.query(query_text, n_results)
             return [{'document': doc, 'metadata': {}, 'similarity': 0.7} for doc in simple_results]
 
     def _is_relevant_document_improved(self, query: str, document: str) -> bool:
-        """🆕 VERIFICACIÓN DE RELEVANCIA MEJORADA"""
+        """VERIFICACIÓN DE RELEVANCIA MEJORADA"""
         query_words = set(query.lower().split())
         doc_words = set(document.lower().split())
 
@@ -908,11 +916,11 @@ class RAGEngine:
             return sources
 
         except Exception as e:
-            logger.error(f"❌ Error en query con fuentes: {e}")
+            logger.error(f"Error en query con fuentes: {e}")
             return []
 
     def hybrid_search(self, query_text: str, n_results: int = 3) -> List[Dict]:
-        """🆕 BÚSQUEDA HÍBRIDA MEJORADA"""
+        """BÚSQUEDA HÍBRIDA MEJORADA"""
         try:
             expanded_query = self._expand_query(query_text)
             processed_query = self.enhanced_normalize_text(expanded_query)
@@ -927,7 +935,7 @@ class RAGEngine:
             return filtered_docs[:n_results]
 
         except Exception as e:
-            logger.error(f"❌ Error en hybrid search: {e}")
+            logger.error(f"Error en hybrid search: {e}")
             return []
 
     def get_cache_stats(self) -> Dict:
@@ -945,7 +953,7 @@ class RAGEngine:
                 'total_ambiguous': self.metrics['ambiguous_queries'],
                 'total_greetings': self.metrics['greetings'],
                 'total_emergencies': self.metrics['emergencies'],
-                'total_templates': self.metrics['template_responses']  # 🆕
+                'total_templates': self.metrics['template_responses']  # 
             }
         }
 
@@ -958,19 +966,19 @@ class RAGEngine:
         return stats
 
 
-# ✅ Instancia global del motor RAG
+# Instancia global del motor RAG
 rag_engine = RAGEngine()
 
 
 def get_ai_response(user_message: str, context: list = None) -> Dict:
-    """🎯 VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES Y QR CORREGIDO"""
+    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES Y QR CORREGIDO"""
     import time
     start_time = time.time()
 
     processing_info = rag_engine.process_user_query(user_message)
     strategy = processing_info['processing_strategy']
 
-    # 🆕 ESTRATEGIAS PRIORITARIAS - TEMPLATES PRIMERO
+    # ESTRATEGIAS PRIORITARIAS - TEMPLATES PRIMERO
     if strategy == 'template':
         response_data = rag_engine.generate_template_response(processing_info)
         response_data['response_time'] = time.time() - start_time
@@ -986,7 +994,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         response_data['response_time'] = time.time() - start_time
         return response_data
 
-    # 🆕 ESTRATEGIAS DIFERENCIADAS
+    # ESTRATEGIAS DIFERENCIADAS
     if strategy == 'derivation':
         response_data = rag_engine.generate_derivation_response(processing_info)
         response_data['response_time'] = time.time() - start_time
@@ -1002,18 +1010,18 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         response_data['response_time'] = time.time() - start_time
         return response_data
 
-    # 🆕 ESTRATEGIA ESTÁNDAR RAG MEJORADA
+    # ESTRATEGIA ESTÁNDAR RAG MEJORADA
     normalized_message = rag_engine.enhanced_normalize_text(user_message)
     cache_key = f"rag_{hashlib.md5(user_message.encode()).hexdigest()}"
 
     if cache_key in rag_engine.text_cache:
         cached_response = rag_engine.text_cache[cache_key]
         rag_engine.metrics['text_cache_hits'] += 1
-        logger.info(f"🎯 RAG Text Cache HIT para: '{user_message}'")
+        logger.info(f"RAG Text Cache HIT para: '{user_message}'")
         cached_response['response_time'] = time.time() - start_time
         return cached_response
 
-    logger.info(f"🔍 RAG Cache MISS para: '{user_message}'")
+    logger.info(f"RAG Cache MISS para: '{user_message}'")
 
     try:
         sources = rag_engine.hybrid_search(user_message, n_results=3)
@@ -1037,7 +1045,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         )
 
         if final_sources:
-            system_message += "📚 INFORMACIÓN DISPONIBLE:\n\n"
+            system_message += "INFORMACIÓN DISPONIBLE:\n\n"
             for i, source in enumerate(final_sources):
                 content = source['document']
                 category = source['metadata'].get('category', 'general')
@@ -1045,13 +1053,13 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
                 system_message += f"--- Fuente {i+1} ({category}) ---\n{short_content}\n\n"
             
             system_message += (
-                "💡 Responde ÚNICAMENTE con la información de arriba.\n"
-                "📍 Sé específico y breve (máximo 3 líneas).\n"
-                "❌ NO inventes información.\n"
-                "✅ Si la información no es suficiente, di 'Consulta en Punto Estudiantil'."
+                "Responde ÚNICAMENTE con la información de arriba.\n"
+                "Sé específico y breve (máximo 3 líneas).\n"
+                "NO inventes información.\n"
+                "Si la información no es suficiente, di 'Consulta en Punto Estudiantil'."
             )
         else:
-            system_message += "⚠️ No hay información específica disponible.\n"
+            system_message += "No hay información específica disponible.\n"
 
         response = ollama.chat(
             model='mistral:7b',
@@ -1073,7 +1081,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
                 'similarity': round(source.get('similarity', 0.5), 3)
             })
 
-        # 🔥 AGREGAR GENERACIÓN DE QR CODES PARA RESPUESTAS RAG (ESTRUCTURA CORREGIDA)
+        # AGREGAR GENERACIÓN DE QR CODES PARA RESPUESTAS RAG (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(respuesta, user_message)
 
         response_data = {
@@ -1084,8 +1092,8 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
             'response_time': time.time() - start_time,
             'cache_type': 'ollama_generated',
             'processing_info': processing_info,
-            'qr_codes': qr_processed_response['qr_codes'],  # 👈 Dict simple {url: qr_image}
-            'has_qr': qr_processed_response['has_qr']       # 👈 Boolean
+            'qr_codes': qr_processed_response['qr_codes'],  # Dict simple {url: qr_image}
+            'has_qr': qr_processed_response['has_qr']       # Boolean
         }
 
         rag_engine.text_cache[cache_key] = response_data
@@ -1094,9 +1102,9 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
         return response_data
 
     except Exception as e:
-        logger.error(f"❌ Error en RAG estándar: {str(e)}")
+        logger.error(f"Error en RAG estándar: {str(e)}")
         return {
-            "response": "🔧 Error técnico. Intenta nuevamente.",
+            "response": "Error técnico. Intenta nuevamente.",
             "sources": [],
             "category": "error",
             "response_time": time.time() - start_time,
@@ -1105,7 +1113,7 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
 
 
 def _optimize_response(respuesta: str, pregunta: str) -> str:
-    """🆕 OPTIMIZACIÓN DE RESPUESTA MEJORADA"""
+    """OPTIMIZACIÓN DE RESPUESTA MEJORADA"""
     if respuesta.startswith(("¡Hola! Soy InA", "Hola, soy el asistente", "Hola, soy InA")):
         respuesta = re.sub(r'^¡?Hola!?\s*(soy|me llamo)\s*(InA|el asistente)[^.!?]*[.!?]\s*', '', respuesta)
     
@@ -1173,7 +1181,7 @@ def clear_caches():
     """LIMPIAR CACHES"""
     rag_engine.text_cache.clear()
     rag_engine.semantic_cache.cache.clear()
-    logger.info("🧹 Todos los caches limpiados")
+    logger.info("Todos los caches limpiados")
     
 def get_standard_rag_response(self, question: str, context: List[str]) -> Dict:
     try:
@@ -1181,14 +1189,14 @@ def get_standard_rag_response(self, question: str, context: List[str]) -> Dict:
         sources = self.hybrid_search(normalized_question)
         return self._process_with_ollama_optimized(question, sources)
     except Exception as e:
-        logger.error(f"❌ Error RAG para '{question}': {e}")
+        logger.error(f"Error RAG para '{question}': {e}")
         
         # FALLBACK INTELIGENTE POR CATEGORÍA
         if "deportes" in question.lower():
             return self.templates.get("informacion_general_deportes", 
-                                   "🔧 Información sobre deportes no disponible temporalmente")
+                                   "Información sobre deportes no disponible temporalmente")
         elif "desarrollo laboral" in question.lower():
             return self.templates.get("que_es_desarrollo_laboral",
-                                   "🔧 Información sobre desarrollo laboral no disponible")
+                                   "Información sobre desarrollo laboral no disponible")
         else:
-            return "🔧 Error técnico. Intenta nuevamente o consulta información específica."
+            return "Error técnico. Intenta nuevamente o consulta información específica."
