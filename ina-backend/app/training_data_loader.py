@@ -1,4 +1,4 @@
-# training_data_loader.py - VERSIÓN FINAL, COMPLETA Y FUNCIONANDO
+# training_data_loader.py - VERSIÓN FINAL, CORREGIDA Y OPTIMIZADA
 import json
 import os
 import glob
@@ -6,7 +6,7 @@ import logging
 import re
 from typing import List, Dict, Any
 from datetime import datetime
-from app.rag import rag_engine
+from app.rag import rag_engine  # ← IMPORTA rag_engine (inicializado después de chroma_config)
 
 # Soporte para documentos Word
 try:
@@ -17,6 +17,7 @@ except ImportError:
     logging.warning("python-docx no instalado. No se procesarán .docx")
 
 logger = logging.getLogger(__name__)
+
 
 class DocumentProcessor:
     """Procesa documentos Word de Duoc UC para RAG"""
@@ -257,26 +258,21 @@ class TrainingDataLoader:
         self.word_documents_loaded = True
 
     def _add_document_direct(self, doc: str, meta: Dict = None) -> bool:
+        """USO SEGURO: rag_engine.add_document() → Evita acceso directo a collection"""
         try:
-            doc_id = f"doc_{datetime.now():%Y%m%d_%H%M%S_%f}_{hash(doc)%10000:04d}"
-            meta = meta or {}
-            full_meta = {
-                "timestamp": datetime.now().isoformat(),
-                "source": meta.get('source', 'unknown'),
-                "category": meta.get('category', 'general'),
-                "type": meta.get('type', 'general'),
-                "optimized": meta.get('optimized', 'false'),
-                "section": meta.get('section', ''),
-                "is_structured": meta.get('is_structured', False)
-            }
-            rag_engine.collection.add(
-                documents=[doc],
-                metadatas=[full_meta],
-                ids=[doc_id]
+            return rag_engine.add_document(
+                document=doc,
+                metadata={
+                    "source": meta.get('source', 'unknown'),
+                    "category": meta.get('category', 'general'),
+                    "type": meta.get('type', 'general'),
+                    "optimized": meta.get('optimized', 'false'),
+                    "section": meta.get('section', ''),
+                    "is_structured": meta.get('is_structured', False)
+                }
             )
-            return True
         except Exception as e:
-            logger.error(f"Error RAG: {e}")
+            logger.error(f"Error añadiendo documento: {e}")
             return False
 
     def _load_historical_training_data(self):
