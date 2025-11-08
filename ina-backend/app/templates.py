@@ -95,6 +95,32 @@ TEMPLATES = {
 💡 *El seguro es un BENEFICIO que te cubre frente a cualquier accidente*
 🔗 **Centro de ayuda:** https://centroayuda.duoc.cl
 """,
+        # Alias / plantilla adicional para cubrir consultas detectadas como 'seguro_cobertura'
+        "seguro_cobertura": """
+🛡️ **Seguro Estudiantil — Cobertura y Procedimientos**
+
+Resumen rápido:
+- El seguro de accidentes cubre a estudiantes regulares las 24 horas del día, los 7 días de la semana, dentro y fuera de las sedes.
+- Cubre atención de urgencia derivada de accidentes y procedimientos indicados por el servicio médico asociado (DOC DUOC).
+
+Qué hacer en caso de accidente:
+1. Llama a DOC DUOC: 600 362 3862 para coordinar atención inmediata.
+2. Dirígete al centro de atención que te indiquen y presenta tu cédula de identidad y documentación académica si te la solicitan.
+3. Informa que eres estudiante de Duoc UC y solicita que se active la cobertura del seguro estudiantil.
+4. Sigue las instrucciones del personal médico y conserva comprobantes (honorarios, recetas, certificados) para posibles tramites.
+
+Cobertura típica:
+- Atención de urgencia y urgencias médicas por accidente.
+- Traslado/derivación cuando la situación lo requiera (según políticas del proveedor).
+- No cubre tratamientos electivos ni condiciones preexistentes no relacionadas con el accidente.
+
+Contacto y recursos:
+- DOC DUOC: 600 362 3862
+- Centro de ayuda Duoc: https://centroayuda.duoc.cl
+- Portal Alumnos: https://www.duoc.cl/alumnos/
+
+Si necesitas información más específica (por ejemplo, pasos para hacer uso del seguro, coberturas en el extranjero o cómo presentar un reclamo), dime y te proporciono los detalles o te indico el contacto correspondiente.
+""",
         # 🎯 TNE - INFORMACIÓN GENERAL DESDE DOCUMENTOS
         "tne_informacion_general": """
 🎫 **TNE - Información General:**

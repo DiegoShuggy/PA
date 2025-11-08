@@ -23,17 +23,17 @@ class QuestionClassifier:
             "otros"
         ]
         
-        # ✅ PATRONES MEJORADOS Y EXPANDIDOS - MANTENIENDO TODOS LOS ORIGINALES
+        # PATRONES MEJORADOS Y EXPANDIDOS - MANTENIENDO TODOS LOS ORIGINALES
         self.keyword_patterns = {
             "asuntos_estudiantiles": [
-                # 🚨 PATRONES CRÍTICOS MEJORADOS - PROGRAMA EMERGENCIA
+                # PATRONES CRÍTICOS MEJORADOS - PROGRAMA EMERGENCIA
                 r'\b(programa.*emergencia|emergencia.*duoc|ayuda.*emergencia|200\.000)\b',
                 r'\b(requisitos.*emergencia|postular.*emergencia|solicitar.*emergencia)\b',
                 r'\b(qué.*es.*programa.*emergencia|información.*emergencia|definición.*emergencia)\b',
                 r'\b(situación.*imprevista|estabilidad.*económica|problema.*económico.*grave)\b',
                 r'\b(gastos.*médicos|fallecimiento|daños.*vivienda|apoyo.*excepcional)\b',
                 
-                # 🚨 TNE PÉRDIDA/DAÑO - MÁS ESPECÍFICOS
+                # TNE PÉRDIDA/DAÑO - MÁS ESPECÍFICOS
                 r'\b(tne.*perdí|perdí.*tne|tne.*extravi|extravié.*tne|tne.*desapareció)\b',
                 r'\b(tne.*dañad|dañé.*tne|tne.*robaron|hurtaron.*tne|tne.*malograda)\b',
                 r'\b(tne.*mal.*estado|tne.*rota|tne.*deteriorad|tne.*inservible)\b',
@@ -118,7 +118,7 @@ class QuestionClassifier:
                 r'\b(complejo.*maiclub|gimnasio.*entretiempo|piscina.*acquatiempo)\b',
                 r'\b(caf|centro.*bienestar|acondicionamiento.*físico)\b',
                 r'\b(ubicación.*deportes|lugar.*taller|instalación.*deportiva)\b',
-                r'\b(en.*qué.*lugar|dónde.*están|dónde.*se.*hacen)\b',  # 🆕 NUEVO
+                r'\b(en.*qué.*lugar|dónde.*están|dónde.*se.*hacen)\b',  # NUEVO
                 
                 # Horarios deportivos - EXPANDIDO
                 r'\b(horario.*taller|horario.*deporte|cuándo.*taller)\b',
@@ -167,7 +167,7 @@ class QuestionClassifier:
             ],
             
             "institucionales": [
-                # 🆕 CONTACTO ESPECÍFICO PLAZA NORTE
+                # CONTACTO ESPECÍFICO PLAZA NORTE
                 r'\b(correo.*plaza.*norte|email.*plaza.*norte|contacto.*plaza.*norte)\b',
                 r'\b(persona.*plaza.*norte|quién.*plaza.*norte|directamente.*plaza.*norte)\b',
                 r'\b(claudia.*cortés|ccortesn|adriana.*vásquez|avasquezm)\b',
@@ -220,11 +220,11 @@ class QuestionClassifier:
             ]
         }
         
-        # ✅ Cache SEMÁNTICO
+        # Cache SEMÁNTICO
         self._semantic_cache = {}
         self._cache_size = 200
         
-        # ✅ Estadísticas de uso
+        # Estadísticas de uso
         self.stats = {
             'total_classifications': 0,
             'ollama_calls': 0,
@@ -240,10 +240,10 @@ class QuestionClassifier:
         return question.lower().strip()
     
     def detect_template_match(self, question: str) -> Optional[str]:
-        """🎯 DETECCIÓN INTELIGENTE DE TEMPLATES EXPANDIDA CON TODOS LOS NUEVOS"""
+        """DETECCIÓN INTELIGENTE DE TEMPLATES EXPANDIDA CON TODOS LOS NUEVOS"""
         question_lower = self._clean_question(question)
         
-        # 🆕 DETECCIÓN PRIORITARIA PARA TEMPLATES CRÍTICOS
+        # DETECCIÓN PRIORITARIA PARA TEMPLATES CRÍTICOS
         priority_templates = {
             "tne_primera_vez": [r'cómo.*saco.*tne', r'obtener.*tne', r'sacar.*tne'],
             "tne_reposicion_perdida_danada": [r'tne.*pierde', r'tne.*pérdida', r'tne.*dañada'],
@@ -281,7 +281,7 @@ class QuestionClassifier:
             "practicas_profesionales": [r'prácticas.*profesionales', r'practica.*profesional',r'experiencia.*laboral', 
                                         r'inserción.*laboral',r'practicar(?!.*deporte)',
                                        r'trabajo.*graduado', r'empleo.*egresado'],
-            # 🧠 BIENESTAR - PATRONES MEJORADOS
+            # BIENESTAR - PATRONES MEJORADOS
             "apoyo_psicologico": [r'ansiedad.*académica', r'estrés.*universitario',r'apoyo.*psicológico', 
                                   r'necesito.*ayuda.*psicológica',r'dónde.*busco.*ayuda', r'apoyo.*emocional',r'crisis.*emocional', r'salud.*mental'],
 
@@ -300,12 +300,12 @@ class QuestionClassifier:
         for template_id, patterns in priority_templates.items():
             for pattern in patterns:
                 if re.search(pattern, question_lower):
-                    logger.info(f"🎯 PRIORITY TEMPLATE: '{question}' -> {template_id}")
+                    logger.info(f"PRIORITY TEMPLATE: '{question}' -> {template_id}")
                     return template_id
         
-        # 🎯 PATRONES ESPECÍFICOS PARA TEMPLATES - COMPLETAMENTE EXPANDIDOS
+        # PATRONES ESPECÍFICOS PARA TEMPLATES - COMPLETAMENTE EXPANDIDOS
         template_patterns = {
-            # 🆕 NUEVOS TEMPLATES CRÍTICOS
+            # NUEVOS TEMPLATES CRÍTICOS
             
             "licencias_medicas_psicologicas": [
                 r'psicólogo.*virtual.*licencia.*médica',r'psicólogo.*puede.*otorgar.*licencia',
@@ -413,7 +413,7 @@ class QuestionClassifier:
             "certificado_alumno_regular": [
                 r'certificado.*alumno', r'constancia.*alumno', r'certificado.*regular',
                 r'documento.*alumno', r'acreditar.*alumno', r'certificado.*estudiante',
-                r'cómo.*saco.*certificado', r'obtener.*certificado'
+                r'cómo.*saco.*certificado', r'ob.*certificado'
             ],
             "certificado_notas": [
                 r'certificado.*notas', r'concentración.*notas', r'record.*académico',
@@ -479,7 +479,7 @@ class QuestionClassifier:
                 r'8.*sesiones', r'sesiones.*incluye', r'límite.*sesiones',
                 r'cuántas.*veces.*psicólogo', r'número.*sesiones'
             ],
-            # 🎯 MEJORAR DETECCIÓN DE APOYO A COMPAÑEROS
+            # MEJORAR DETECCIÓN DE APOYO A COMPAÑEROS
             "apoyo_companeros": [
                 r'qué.*puedo.*hacer.*si.*sé.*que.*compañero.*pasando.*mal.*momento',
                 r'compañero.*mal.*momento.*no.*quiere.*ayuda',
@@ -714,7 +714,6 @@ class QuestionClassifier:
             ],
             "contingencias_emergencias": [
                 r'contingencias', r'emergencias', r'protocolo.*emergencia',
-                r'situación.*emergencia', r'cómo.*actuar.*emergencia', r'números.*emergencia',
                 r'protocolo.*seguridad', r'emergencia.*sede'
             ],
             "contacto_areas": [
@@ -727,7 +726,7 @@ class QuestionClassifier:
         for template_id, patterns in template_patterns.items():
             for pattern in patterns:
                 if re.search(pattern, question_lower):
-                    logger.info(f"🎯 TEMPLATE MATCH: '{question}' -> {template_id}")
+                    logger.info(f"TEMPLATE MATCH: '{question}' -> {template_id}")
                     self.stats['template_matches'] += 1
                     return template_id
         
@@ -740,15 +739,15 @@ class QuestionClassifier:
         """
         question_lower = self._clean_question(question)
         
-        # 🆕 DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
+        # DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
         emergency_words = ['crisis', 'urgencia', 'emergencia', 'línea ops', 'me siento mal', 'ayuda urgente']
         if any(word in question_lower for word in emergency_words):
-            logger.warning(f"🚨 URGENCIA DETECTADA en clasificación: {question}")
+            logger.warning(f"URGENCIA DETECTADA en clasificación: {question}")
             return "bienestar_estudiantil", 0.95  # Alta confianza para urgencias
         
-        # 🆕 DETECCIÓN ESPECÍFICA PARA CONSULTAS PROBLEMÁTICAS
+        # DETECCIÓN ESPECÍFICA PARA CONSULTAS PROBLEMÁTICAS
         specific_patterns = {
-            "bienestar_estudiantil": [  # 🎯 AÑADIR MÁS PATRONES AQUÍ
+            "bienestar_estudiantil": [  # AÑADIR MÁS PATRONES AQUÍ
                 r'compañero.*mal.*momento', r'amigo.*no.*quiere.*ayuda',
                 r'ayudar.*compañero.*problemas', r'persona.*deprimida.*qué.*hacer',
                 r'embajadores.*no.*puedo.*avanzar', r'curso.*embajadores.*terminé',
@@ -775,12 +774,22 @@ class QuestionClassifier:
             ]
         }
         
-        # 🆕 VERIFICAR PATRONES ESPECÍFICOS PRIMERO
+        # VERIFICAR PATRONES ESPECÍFICOS PRIMERO
         for category, patterns in specific_patterns.items():
             for pattern in patterns:
                 if re.search(pattern, question_lower):
-                    logger.info(f"🎯 PATRÓN ESPECÍFICO detectado: '{question}' -> '{category}'")
+                    logger.info(f"PATRÓN ESPECÍFICO detectado: '{question}' -> '{category}'")
                     return category, 0.8  # Alta confianza para patrones específicos
+
+        # --- FIX: SEGURO ESTUDIANTIL - FORZAR MATCH DIRECTO ---
+        seguro_patterns = [
+            r'\bseguro\b', r'\bcobertura\b', r'\baccidente\b', r'\bdoc\s*duoc\b',
+            r'\bcómo.*funciona.*seguro\b', r'\bqué.*cubre.*seguro\b'
+        ]
+        if any(re.search(p, question_lower, re.IGNORECASE) for p in seguro_patterns):
+            logger.info(f"SEGURO ESTUDIANTIL DETECTADO: '{question}' -> asuntos_estudiantiles")
+            return "asuntos_estudiantiles", 0.95
+        # --- FIN FIX ---
     
         best_category = "otros"
         best_score = 0
@@ -790,11 +799,11 @@ class QuestionClassifier:
             for pattern in patterns:
                 matches = re.findall(pattern, question_lower, re.IGNORECASE)
                 if matches:
-                    # 🆕 SCORING MEJORADO - patrones específicos tienen más peso
+                    # SCORING MEJORADO - patrones específicos tienen más peso
                     if any(keyword in pattern for keyword in ['crisis', 'urgencia', 'emergencia', 'psicológico']):
                         score += len(matches) * 3
                     elif 'programa.*emergencia' in pattern or 'tne.*perdí' in pattern:
-                        score += len(matches) * 4  # 🆕 BONUS EXTRA para patrones críticos
+                        score += len(matches) * 4  # BONUS EXTRA para patrones críticos
                     elif '.*' in pattern:  # Patrón complejo
                         score += len(matches) * 2
                     else:  # Patrón simple
@@ -804,10 +813,10 @@ class QuestionClassifier:
                 best_score = score
                 best_category = category
         
-        # 🆕 CONFIANZA MEJORADA CON BONUS ESPECÍFICOS
+        # CONFIANZA MEJORADA CON BONUS ESPECÍFICOS
         confidence = min(best_score / 4.0, 1.0) if best_score > 0 else 0.0
         
-        # 🆕 BONUS POR COINCIDENCIAS FUERTES ESPECÍFICAS - ACTUALIZADO
+        # BONUS POR COINCIDENCIAS FUERTES ESPECÍFICAS - ACTUALIZADO
         strong_matches = {
             'bienestar_estudiantil': ['crisis', 'urgencia', 'psicológico', 'línea ops', 'sesiones psicológicas','compañero','amigo','mal momento','embajadores'
                                       ,'modulo embajadores','responsabilidad embajadores','85% embajadores','terminé embajadores'],
@@ -875,45 +884,45 @@ class QuestionClassifier:
         """
         self.stats['total_classifications'] += 1
         
-        # 1. ✅ Verificar cache SEMÁNTICO (normalizado)
+        # 1. Verificar cache SEMÁNTICO (normalizado)
         normalized_question = normalize_question(question)
         if normalized_question in self._semantic_cache:
             self.stats['semantic_cache_hits'] += 1
             cached_category = self._semantic_cache[normalized_question]
             self.stats['category_counts'][cached_category] += 1
-            logger.info(f"🎯 Semantic Cache hit - Pregunta: '{question}' -> '{cached_category}'")
+            logger.info(f"Semantic Cache hit - Pregunta: '{question}' -> '{cached_category}'")
             return cached_category
         
         try:
-            # 2. ✅ Clasificación por palabras clave MEJORADA
+            # 2. Clasificación por palabras clave MEJORADA
             keyword_category, confidence = self._keyword_classification(question)
             
-            # 🆕 UMBRAL MÁS INTELIGENTE
+            # UMBRAL MÁS INTELIGENTE
             if confidence >= 0.25:  # Bajado de 0.2 para más cobertura
                 self.stats['keyword_matches'] += 1
                 self.stats['category_counts'][keyword_category] += 1
                 self._manage_semantic_cache(question, keyword_category)
                 
-                logger.info(f"🔑 Keyword classification - Pregunta: '{question}' -> '{keyword_category}' (confianza: {confidence:.2f})")
+                logger.info(f"Keyword classification - Pregunta: '{question}' -> '{keyword_category}' (confianza: {confidence:.2f})")
                 return keyword_category
             
-            # 3. ✅ Usar el nuevo sistema de filtros como respaldo
+            # 3. Usar el nuevo sistema de filtros como respaldo
             fallback_category = self._fallback_classify(question)
             self.stats['category_counts'][fallback_category] += 1
             self._manage_semantic_cache(question, fallback_category)
             
-            logger.info(f"🔄 Fallback to topic classifier - Pregunta: '{question}' -> '{fallback_category}'")
+            logger.info(f"Fallback to topic classifier - Pregunta: '{question}' -> '{fallback_category}'")
             return fallback_category
             
         except Exception as e:
-            logger.error(f"❌ Error en clasificación para pregunta '{question}': {e}")
+            logger.error(f"Error en clasificación para pregunta '{question}': {e}")
             
             # Fallback final
             final_category = self._fallback_classify(question)
             self.stats['category_counts'][final_category] += 1
             self._manage_semantic_cache(question, final_category)
             
-            logger.info(f"🚨 Emergency fallback - Pregunta: '{question}' -> '{final_category}'")
+            logger.info(f"Emergency fallback - Pregunta: '{question}' -> '{final_category}'")
             return final_category
     
     def get_classification_stats(self) -> Dict:
@@ -936,7 +945,7 @@ class QuestionClassifier:
     def clear_cache(self):
         """Limpiar el cache de clasificaciones"""
         self._semantic_cache.clear()
-        logger.info("🧹 Cache semántico de clasificaciones limpiado")
+        logger.info("Cache semántico de clasificaciones limpiado")
 
 # Instancia global del clasificador
 classifier = QuestionClassifier()

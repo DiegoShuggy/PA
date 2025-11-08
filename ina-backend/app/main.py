@@ -8,7 +8,17 @@ from app.rag import rag_engine
 from sqlmodel import Session, select
 import asyncio
 import logging
-import ollama
+import importlib
+_ollama_spec = importlib.util.find_spec("ollama")
+if _ollama_spec is not None:
+    ollama = importlib.import_module("ollama")
+else:
+    # Entorno sin ollama: crear stub ligero para evitar fallos en import y permitir health checks controlados
+    class _OllamaStub:
+        def chat(self, *args, **kwargs):
+            raise RuntimeError("ollama no está disponible en este entorno")
+
+    ollama = _OllamaStub()
 from app.analytics import get_query_analytics, get_category_analytics
 from app.classifier import classifier
 from pydantic import BaseModel as BaseModelOriginal
@@ -21,6 +31,8 @@ from app.topic_classifier import TopicClassifier
 from app.advanced_analytics import advanced_analytics
 from sqlalchemy import text
 from app.training_data_loader import training_loader
+# Alias histórico: compatibilidad con endpoints que referencian `auto_trainer`
+auto_trainer = training_loader
 
 # 👇 ✅ IMPORTACIÓN ACTUALIZADA PARA QR
 from app.qr_generator import QRGenerator, DuocURLManager
@@ -190,13 +202,13 @@ async def chat(message: Message, request: Request):
     try:
         start_time = datetime.now()
         question = message.text.strip()
-        
+
         # 👇 1. VALIDACIÓN DE CONTENIDO - NUEVO SISTEMA
         content_validation = content_filter.validate_question(question)
-        if not content_validation["is_allowed"]:
+        if not content_validation.get("is_allowed", True):
             logger.warning(f"🚫 Pregunta bloqueada por contenido: {question}")
             return {
-                "response": content_validation["rejection_message"],
+                "response": content_validation.get("rejection_message", "Lo siento, no puedo responder a eso."),
                 "allowed": False,
                 "success": False,
                 "block_reason": content_validation.get("block_reason"),
@@ -1055,8 +1067,7 @@ async def analytics_health():
 async def get_semantic_cache_stats():
     """Endpoint para ver estadísticas del cache semántico"""
     try:
-        from app.rag import get_rag_cache_stats
-        
+        # Usar rag_engine y rag_cache directamente en lugar de una función ausente
         # Ejemplos de normalización mejorada
         test_questions = [
             "Hola Ina",
@@ -1074,8 +1085,12 @@ async def get_semantic_cache_stats():
         for q in test_questions:
             normalized_examples[q] = rag_engine.enhanced_normalize_text(q)
         
-        # Obtener stats del cache
-        cache_stats = get_rag_cache_stats()
+        # Obtener stats del cache a partir de los objetos disponibles
+        cache_stats = {
+            "rag_cache_size": len(getattr(rag_cache, 'cache', {})),
+            "semantic_cache_size": len(getattr(rag_engine.semantic_cache, 'cache', {})) if hasattr(rag_engine, 'semantic_cache') else 0,
+            "text_cache_entries": len(getattr(rag_engine, 'text_cache', {})) if hasattr(rag_engine, 'text_cache') else 0
+        }
         
         return {
             "status": "success",
@@ -1127,10 +1142,16 @@ async def test_semantic_cache():
                 "match": normalized == expected_normalized
             })
         
+        cache_stats = {
+            "rag_cache_size": len(getattr(rag_cache, 'cache', {})),
+            "semantic_cache_size": len(getattr(rag_engine.semantic_cache, 'cache', {})) if hasattr(rag_engine, 'semantic_cache') else 0,
+            "text_cache_entries": len(getattr(rag_engine, 'text_cache', {})) if hasattr(rag_engine, 'text_cache') else 0
+        }
+
         return {
             "status": "success",
             "test_results": results,
-            "cache_stats": get_rag_cache_stats()
+            "cache_stats": cache_stats
         }
     except Exception as e:
         logger.error(f"Error en test de cache semántico: {e}")

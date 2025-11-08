@@ -32,7 +32,7 @@ class TopicClassifier:
                 "matrícula", "matricular", "postulación", "admisión", "ingreso", "trámites estudiantiles",
                 "trámite", "documentación", "documentos", "inscripción", "reasignación", "cambio horario",
                 "modificación matrícula", "proceso matrícula", "fecha matrícula", "arancel", "pago matrícula",
-                "seguro estudiantil", "seguro de accidentes", "accidente estudiantil", "doc duoc",
+                "seguro", "seguro estudiantil", "seguro de accidentes", "accidente estudiantil", "doc duoc",
                 "atención médica", "seguro salud", "cobertura seguros", "beneficio seguro",
                 "horario punto estudiantil", "ubicación punto estudiantil", "contacto punto estudiantil",
                 "punto estudiantil plaza norte", "punto estudiantil", "asuntos estudiantiles",
@@ -80,7 +80,11 @@ class TopicClassifier:
                 "discapacidad", "paedis", "programa acompañamiento", "estudiantes con discapacidad",
                 "inclusión", "apoyo inclusión", "elizabeth domínguez", "edominguezs",
                 "coordinadora inclusión", "accesibilidad", "necesidades especiales",
-                "apoyo discapacidad", "recursos inclusión", "adaptaciones académicas"
+                "apoyo discapacidad", "recursos inclusión", "adaptaciones académicas",
+                "seguro", "seguro estudiantil", "seguro accidente", "cobertura seguro", "doc duoc",
+                "activar seguro", "accidente en clases", "póliza seguro",
+                "programas de apoyo", "apoyo al estudiante", "ayuda financiera",
+                "programa emergencia", "postular emergencia", "requisitos emergencia"
             ],
             "deportes": [
                 "ubicados", "lugar", "ubicación", "des inscribirme", "cancelar", "retirarme",
@@ -231,11 +235,31 @@ class TopicClassifier:
 
         # === AQUÍ ESTABA EL ERROR: FALTABA redirect_categories ===
         self.redirect_categories = {
-            "biblioteca": ["biblioteca", "libros", "préstamo", "sala estudio"],
-            "servicios_digitales": ["plataforma", "miclase", "wifi", "correo", "contraseña"],
-            "financiamiento": ["pago", "arancel", "deuda", "financiamiento"],
-            "coordinacion_academica": ["malla", "calificación", "profesor", "convalidación"],
-            "infraestructura": ["sala", "laboratorio", "estacionamiento", "cafetería"]
+            "biblioteca": [
+                "biblioteca", "libros", "préstamo", "sala estudio", "bases de datos",
+                "computadores biblioteca", "biblioteca.duoc.cl", "libro físico", "reserva sala"
+            ],
+            "servicios_digitales": [
+                "plataforma", "miclase", "wifi", "correo institucional", "contraseña",
+                "password", "acceso digital", "internet", "sistema online", "portal duoc",
+                "mi duoc", "campus virtual", "problema técnico", "no puedo entrar",
+                "olvidé contraseña", "recuperar acceso", "bloqueado plataforma"
+            ],
+            "financiamiento": [
+                "pago", "arancel", "deuda", "financiamiento", "cuota", "boleta",
+                "webpay", "pagar matrícula", "deuda estudiantil", "cobranza",
+                "forma de pago", "crédito cae", "financiamiento duoc"
+            ],
+            "coordinacion_academica": [
+                "malla", "calificación", "profesor", "convalidación", "ramo",
+                "asignatura", "notas", "examen", "reprobé", "revisión nota",
+                "coordinador carrera", "jefe carrera", "cambio de ramo"
+            ],
+            "infraestructura": [
+                "sala", "laboratorio", "estacionamiento", "cafetería", "casino",
+                "mantenimiento", "daño", "limpieza", "aire acondicionado",
+                "proyector", "computador", "problema sala", "reserva laboratorio"
+            ]
         }
         # =======================================================
 
