@@ -129,10 +129,10 @@ const volverAGeneral = () => {
                     try {
                         const voices = speechSynthesisRef.current.getVoices();
                         if (voices.length > 0) {
-                            console.log(`✅ ${voices.length} voces cargadas`);
+                            console.log(`✅ ${voices.length} (t('app.voiceloaded')`);
                         }
                     } catch (error) {
-                        console.error('Error cargando voces:', error);
+                        console.error(t('app.errorload'), error);
                     }
                 }
             };
@@ -142,7 +142,7 @@ const volverAGeneral = () => {
 
         } else {
             setIsTtsSupported(false);
-            console.warn('El lector de texto no es compatible con este navegador');
+            console.warn(t('app.noncompatible'));
         }
 
         // Cleanup al desmontar el componente
@@ -177,7 +177,7 @@ if (areaActiva === 'general' && !isReturning) {
                 areaButtons = areaNames[0];
             } else {
                 const lastArea = areaNames.pop();
-                areaButtons = `${areaNames.join(', ')} y ${lastArea}`;
+                areaButtons = `${areaNames.join(', ')} ${t('Lobby.areaconnect')} ${lastArea}`;
             }
         }
     }
@@ -194,10 +194,10 @@ if (areaActiva === 'general' && !isReturning) {
     if (areaActiva === 'general') {
         if (isReturning) {
             // Texto conciso para cuando se vuelve a general - solo las preguntas
-            fullText = `Volviendo al área general. Aquí se encuentran las preguntas frecuentes generales: ${questions}`;
+            fullText = `${t('Lobby.VolverText')} ${questions}`;
         } else {
             // Texto completo para primera vez en general
-            fullText = `${pageTitle}. ${pageDescription}. ${areaIntroText} ${areaButtons}. Aquí se encuentran las preguntas frecuentes generales: ${questions}`;
+            fullText = `${pageTitle}. ${pageDescription}. ${areaIntroText} ${areaButtons}. ${t('Lobby.FAQareas')} ${questions}`;
         }
     } else {
         // Para áreas específicas - NO incluir título y descripción
@@ -207,13 +207,13 @@ if (areaActiva === 'general' && !isReturning) {
         // Personalizar la introducción según el área
         switch (areaActiva) {
             case 'pastoral':
-                areaIntro = `Área de Pastoral.`;
+                areaIntro = `${t('Lobby.areapas')}`;
                 break;
             default:
-                areaIntro = `Área de ${areaName}.`;
+                areaIntro = `${t('Lobby.area')} ${areaName}.`;
         }
         
-        fullText = `${areaIntro} Aquí se encuentran las preguntas frecuentes de ${areaName.toLowerCase()}: ${questions}`;
+        fullText = `${areaIntro} ${t('Lobby.FAQTitle')} ${areaName.toLowerCase()}: ${questions}`;
     }
     
     return fullText.trim();
@@ -241,12 +241,12 @@ if (areaActiva === 'general' && !isReturning) {
     const readText = useCallback((text: string, isAutoRead = false) => {
         // Si es lectura automática y hubo detención manual, no leer
         if (isAutoRead && isManualStopRef.current) {
-            console.log('🚫 Lectura automática bloqueada por detención manual');
+            console.log(t('app.manualbloq'));
             return;
         }
 
         if (!speechSynthesisRef.current || !isTtsSupported) {
-            alert(t('Lobby.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+            alert(t('Lobby.ttsNotSupported') );
             return;
         }
 
@@ -335,11 +335,11 @@ if (areaActiva === 'general' && !isReturning) {
 
                 utterance.onstart = () => {
                     setIsReading(true);
-                    console.log(`🔊 Lectura iniciada con voz:`, utterance.voice?.name);
+                    console.log(t('app.readStart'), utterance.voice?.name);
                 };
 
                 utterance.onend = () => {
-                    console.log('✅ Lectura finalizada');
+                    console.log(t('app.readFinished'));
                     setIsReading(false);
                     currentUtteranceRef.current = null;
 
@@ -350,7 +350,7 @@ if (areaActiva === 'general' && !isReturning) {
                 };
 
                 utterance.onerror = (event) => {
-                    console.error('❌ Error en la lectura:', event.error);
+                    console.error(t('app.readError'), event.error);
                     setIsReading(false);
                     currentUtteranceRef.current = null;
 
@@ -370,7 +370,7 @@ if (areaActiva === 'general' && !isReturning) {
                 }, 100);
 
             } catch (error) {
-                console.error('💥 Error al configurar la lectura:', error);
+                console.error(t('app.readEmpty'), error);
                 setIsReading(false);
             }
         }, 50);
@@ -397,7 +397,7 @@ if (areaActiva === 'general' && !isReturning) {
         const fullText = getPageText();
 
         if (!fullText.trim()) {
-            console.warn('No hay texto para leer');
+            console.warn(t('app.readEmpty'));
             return;
         }
 
@@ -691,7 +691,7 @@ if (areaActiva === 'general' && !isReturning) {
             {/* Texto introductorio para áreas - SOLO en área general */}
             {areaActiva === 'general' && (
                 <div className="sr-only">
-                    <p>Aquí se puede escoger las preguntas frecuentes de las áreas de:</p>
+                    <p>{t('Lobby.FAQDesc')}</p>
                 </div>
             )}
 

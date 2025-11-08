@@ -1,164 +1,296 @@
 {
-    "app": {
-      "poweredBy": "Propulsé par Mistral 7B",
-      "title": "InA - Assistant Virtuel Duoc UC",
-      "backButton": "Retour",
-      "back": "Retour"
+  "app": {
+    "poweredBy": "Propulsé par Mistral 7B",
+    "title": "InA - Assistant Virtuel Duoc UC",
+    "backButton": "Retour",
+    "back": "Retour",
+    "FAQ": "Questions Fréquentes",
+    "readAloud": "Lire à voix haute",
+    "readPage": "Lire la page"
+  },
+  "chat": {
+    "title": "Chat Assistant",
+    "quickTips": "← Utilisez le menu ☰ pour des questions rapides",
+    "inputPlaceholder": "Tapez votre question ou requête...",
+    "listeningPlaceholder": "Écoute... Parlez maintenant",
+    "send": "Envoyer",
+    "microphoneAlt": "Microphone",
+    "startMicrophone": "Activer le microphone",
+    "stopMicrophone": "Arrêter le microphone",
+    "serverError": "Erreur de connexion au serveur",
+    "browserNotSupported": "Votre navigateur ne prend pas en charge la reconnaissance vocale. Essayez Chrome ou Edge.",
+    "microphonePermission": "Veuillez autoriser l'accès au microphone dans votre navigateur",
+    "menuTitle": "Options du chat",
+    "qrAlt": "Code QR pour {{url}}",
+    "qrInstruction": "Scannez avec votre téléphone",
+    "qrSectionTitle": "📱 Scanner avec téléphone :",
+    "languageSelector": "Sélectionner la langue",
+    "helpMessage": "Afficher l'aide du chat",
+    "stopGeneration": "Annuler",
+    "listening": "Écoute...",
+    "generationCancelled": "Réponse annulée :c",
+    "menu": {
+      "quickQuestions": "- Questions rapides",
+      "tools": "- Outils",
+      "greetIna": "Saluer InA",
+      "internships": "Stages",
+      "faq": "Questions fréquentes",
+      "tne": "Demandes TNE",
+      "thankIna": "Remercier InA",
+      "clearChat": "Effacer le chat",
+      "settings": "Paramètres",
+      "help": "Aide"
     },
-    "chat": {
-      "title": "Chat Assistant",
-      "quickTips": "← Utilisez le menu ☰ pour des questions rapides",
-      "inputPlaceholder": "Tapez votre question ou requête...",
-      "listeningPlaceholder": "Écoute... Parlez maintenant",
-      "send": "Envoyer",
-      "microphoneAlt": "Microphone",
-      "startMicrophone": "Activer le microphone",
-      "stopMicrophone": "Arrêter le microphone",
-      "serverError": "Erreur de connexion au serveur",
-      "browserNotSupported": "Votre navigateur ne supporte pas la reconnaissance vocale. Essayez Chrome ou Edge.",
-      "microphonePermission": "Veuillez autoriser l'accès au microphone dans votre navigateur",
-      "menuTitle": "Options du chat",
-      "qrAlt": "Code QR pour {{url}}",
-      "qrInstruction": "Scannez avec votre téléphone",
-      "qrSectionTitle": "📱 Scanner avec téléphone :",
-      "languageSelector": "Sélectionner la langue",
-      "helpMessage": "Afficher l'aide du chat",
-      "stopGeneration": "Annuler",
-      "listening": "Écoute...",
-      "generationCancelled": "Réponse annulée :c",
-      "menu": {
-        "quickQuestions": "- Questions rapides",
-        "tools": "- Outils",
-        "greetIna": "Saluer InA",
-        "internships": "Stages",
-        "faq": "Questions fréquentes",
-        "tne": "Demandes TNE",
-        "thankIna": "Remercier InA",
-        "clearChat": "Effacer le chat",
-        "settings": "Paramètres",
-        "help": "Aide"
-      },
-      "quickActions": {
-        "greeting": "Bonjour InA ! Pourriez-vous m'aider avec",
-        "thanks": "Merci beaucoup pour votre aide InA, WAH !",
-        "internships": "Pourriez-vous m'expliquer le processus de stages à DuocUC ?",
-        "faq": "Pourriez-vous me donner plus d'informations sur DuocUC ?",
-        "tne": "Pourriez-vous m'expliquer le processus d'obtention/validation de la TNE à DuocUC ?"
-      },
-      "feedback": {
-        "initialQuestion": "Cette réponse d'Ina vous a-t-elle été utile ?",
-        "positive": "👍 Oui, elle a répondu à mes besoins",
-        "negative": "👎 Non, elle pourrait être améliorée",
-        "thankYouImprove": "Merci de nous aider à nous améliorer !",
-        "improvementQuestion": "Pourriez-vous nous en dire plus sur comment nous pouvons améliorer ?",
-        "commentsPlaceholder": "Ex: La réponse était trop technique, j'avais besoin de plus de détails pratiques...",
-        "submitComments": "Soumettre les commentaires",
-        "cancel": "Annuler",
-        "thankYouFinal": "✅ Merci pour votre feedback ! Votre opinion aide à améliorer Ina."
-      },
-      "feedbackError": "Erreur : Aucune session de feedback active",
-      "feedbackServerError": "Erreur lors de l'envoi du feedback. Veuillez réessayer.",
-      "feedbackConnectionError": "Erreur de connexion. Vérifiez que le serveur fonctionne."
+    "quickActions": {
+      "greeting": "Bonjour InA ! Pourriez-vous m'aider avec",
+      "thanks": "Merci beaucoup pour votre aide InA, WAH !",
+      "internships": "Pourriez-vous m'expliquer comment se déroule le processus de Stages à DuocUC ?",
+      "faq": "Pourriez-vous me donner plus d'informations sur DuocUC ?",
+      "tne": "Pourriez-vous m'expliquer comment se déroule le processus d'Obtention/validation de la TNE à DuocUC ?"
     },
-    "consultas": {
-      "title": "Zone du Point Étudiant",
-      "areas": {
-        "bienestar": {
-          "title": "Affaires Estudiantines",
-          "alt": "Affaires Estudiantines"
-        },
-        "ConsultasFrecuentes": {
-          "title": "Questions Fréquentes",
-          "alt": "Questions Fréquentes"
-        },
-        "professionalDevelopment": {
-          "title": "Développement Professionnel et Diplômés",
-          "alt": "Développement Professionnel et Diplômés"
-        },
-        "studentWelfare": {
-          "title": "Bien-être Étudiant",
-          "alt": "Bien-être Étudiant"
-        },
-        "sports": {
-          "title": "Sports",
-          "alt": "Sports"
-        },
-        "pastoral": {
-          "title": "Pastorale",
-          "alt": "Pastorale"
-        }
+    "feedback": {
+      "initialQuestion": "Cette réponse d'Ina vous a-t-elle été utile ?",
+      "positive": "👍 Oui, elle a répondu à mes besoins",
+      "negative": "👎 Non, elle pourrait être améliorée",
+      "thankYouImprove": "Merci de nous aider à nous améliorer !",
+      "improvementQuestion": "Pourriez-vous nous en dire plus sur la façon dont nous pouvons nous améliorer ?",
+      "optional": "Évaluez cette réponse (optionnel) :",
+      "commentsPlaceholder": "Ex : La réponse était trop technique, j'avais besoin de plus de détails pratiques...",
+      "submitComments": "Envoyer les commentaires",
+      "cancel": "Annuler",
+      "thankYouFinal": "✅ Merci pour votre feedback ! Votre opinion aide à améliorer Ina."
+    },
+    "feedbackError": "Erreur : Aucune session de feedback active",
+    "feedbackServerError": "Erreur lors de l'envoi du feedback. Réessayez.",
+    "feedbackConnectionError": "Erreur de connexion. Vérifiez que le serveur fonctionne.",
+    "readAloud": "Lire à voix haute",
+    "readPage": "Lire la page",
+    "stopReading": "Arrêter la lecture",
+    "ttsNotSupported": "Le lecteur de texte n'est pas compatible avec votre navigateur",
+    "ttsPermission": "Permission de synthèse vocale refusée"
+  },
+  "consultas": {
+    "title": "Zone du Point Étudiant",
+    "areas": {
+      "bienestar": {
+        "title": "Affaires Estudiantines",
+        "alt": "Affaires Estudiantines"
+      },
+      "ConsultasFrecuentes": {
+        "title": "Questions Fréquentes",
+        "alt": "Questions Fréquentes"
+      },
+      "professionalDevelopment": {
+        "title": "Développement Professionnel et Diplômés",
+        "alt": "Développement Professionnel et Diplômés"
+      },
+      "studentWelfare": {
+        "title": "Bien-être Étudiant",
+        "alt": "Bien-être Étudiant"
+      },
+      "sports": {
+        "title": "Sports",
+        "alt": "Sports"
+      },
+      "pastoral": {
+        "title": "Pastorale",
+        "alt": "Pastorale"
       }
-    },
-    "Lobby": {
-      "title": "Bienvenue, je suis InA",
-      "Descripcion": "Votre assistant virtuel pour les questions sur Duoc UC. Comment puis-je vous aider aujourd'hui ?",
-      "Preguntas": {
-        "FAQ1": "Rencontrer le Point",
-        "FAQ2": "Comment puis-je m'inscrire à un programme académique à Duoc UC ?",
-        "FAQ3": "Où puis-je renouveler ma TNE ?",
-        "FAQ4": "Placeholder",
-        "FAQ5": "Placeholder",
-        "FAQ6": "Placeholder",
-        "FAQ7": "Placeholder",
-        "FAQ8": "Placeholder",
-        "FAQ9": "Placeholder",
-        "FAQ10": "Placeholder",
-        "FAQ11": "Placeholder",
-        "FAQ12": "Placeholder"
-      }
-    },
-    "Accesibilidad": {
-      "titulo": "Accessibilité",
-      "tamaño": "Taille du texte",
-      "contraste": "Contraste élevé",
-      "altura": "Hauteur de ligne",
-      "saturacion": "Échelle de gris",
-      "restablecer": "Réinitialiser",
-      "dyslexia": "Police pour dyslexie",
-      "espaciado": "Espacement du texte",
-      "tracker": "Suiveur de curseur"
-    },
-    "Asuntos": {
-      "cargo": "Affaires Estudiantines",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "miau",
-      "final": ""
-    },
-    "Desarrollo": {
-      "cargo": "Développement Professionnel et Diplômés",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "miau",
-      "final": ""
-    },
-    "Bienestar": {
-      "cargo": "Bien-être Étudiant",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "miau",
-      "final": ""
-    },
-    "Deportes": {
-      "cargo": "Sports",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "miau",
-      "final": ""
-    },
-    "Pastoral": {
-      "cargo": "Pastorale",
-      "title": "InA",
-      "Descripcion": "miau",
-      "Descripcion2": "miau",
-      "Descripcion3": "miau",
-      "final": ""
-    },
-    "Reporte": {
-      "title": "rapports"
     }
+  },
+  "Lobby": {
+    "title": "Bienvenue, je suis InA",
+    "Descripcion": "Votre assistant virtuel pour les questions sur Duoc UC. Comment puis-je vous aider aujourd'hui ?",
+    "voicetitle": "Recherche Vocale",
+    "VolverGeneral": "Retour au Général",
+    "VolverText": "Retour à la zone générale. Voici les questions fréquentes générales :",
+    "area": "Zone de ",
+    "areapas": "Zone de Pastorale.",
+    "areaconnect":"et",
+    "FAQareas": "Voici les questions fréquentes générales :",
+    "FAQTitle": "Voici les questions fréquentes de",
+    "FAQDesc": "Ici vous pouvez choisir les questions fréquentes des zones de :",
+    "Switch": {
+      "Asuntos": "Affaires Estudiantines",
+      "Desarrollo": "Développement Professionnel et Diplômés",
+      "Bienestar": "Bien-être Étudiant",
+      "Deportes": "Sports",
+      "Pastoral": "Pastorale"
+    },
+    "Preguntas": {
+      "FAQ1": "Découvrez le Point",
+      "FAQ2": "Comment puis-je m'inscrire à un programme académique à Duoc UC ?",
+      "FAQ3": "Où puis-je renouveler ma TNE ?",
+      "FAQ4": "Placeholder",
+      "FAQ5": "Placeholder",
+      "FAQ6": "Placeholder",
+      "FAQ7": "Placeholder",
+      "FAQ8": "Placeholder",
+      "FAQ9": "Placeholder",
+      "FAQ10": "Placeholder",
+      "FAQ11": "Placeholder",
+      "FAQ12": "Placeholder"
+    }
+  },
+  "Accesibilidad": {
+    "titulo": "Accessibilité",
+    "tamaño": "Taille du texte",
+    "contraste": "Contraste élevé",
+    "altura": "Hauteur de ligne",
+    "saturacion": "Échelle de gris",
+    "restablecer": "Réinitialiser",
+    "dyslexia": "Police pour dyslexie",
+    "espaciado": "Espacement du texte",
+    "tracker": "Suiveur de curseur"
+  },
+  "Asuntos": {
+    "cargo": "Affaires Estudiantines",
+    "title": "Natalia Varela Muñoz",
+    "correo": "nvarelam@duoc.cl",
+    "correo_pronunciacion": "n varela m @duoc.cl",
+    "Descripcion": "La zone des Affaires Estudiantines a pour but d'accompagner, d'orienter et de soutenir les étudiants pendant leur processus de formation, en promouvant leur développement intégral tant sur le plan académique que personnel. Parmi ses principales tâches, on note la planification et l'exécution d'activités extrascolaires visant à renforcer le leadership étudiant, le développement des compétences en communication et l'acquisition de stratégies d'étude favorisant une performance académique réussie.",
+    "Descripcion2": "De même, la zone coordonne diverses Stratégies de Soutien aux Étudiants, telles que la fourniture d'informations et d'orientation sur les avantages institutionnels, l'Assurance Scolaire contre les Accidents, et les démarches liées à la Carte Nationale Étudiante (TNE).",
+    "Descripcion3": "Un autre domaine pertinent est le lien avec les Conseillers de Carrière, promouvant la participation active, la représentation étudiante et le travail collaboratif.",
+    "email": "Email : {{email}}",
+    "FAQTiltle": "Questions Fréquentes - Affaires Estudiantines",
+    "FAQ1": "Comment fonctionne l'assurance ?",
+    "FAQ2": "Comment obtenir ma TNE ?",
+    "FAQ3": "Comment renouveler ma TNE ?",
+    "FAQ4": "Comment obtenir ma TNE si elle est perdue ou endommagée ?",
+    "FAQ5": "Quelles sont les exigences pour postuler au Programme d'Urgence ?",
+    "FAQ6": "Quelles sont les catégories de postulation au Programme d'Urgence ?",
+    "FAQ7": "Quand puis-je postuler au Programme d'Urgence ?",
+    "FAQ8": "Comment puis-je obtenir des informations sur les Programmes de Soutien aux Étudiants ?",
+    "final": ""
+  },
+  "Desarrollo": {
+    "cargo": "Développement Professionnel et Diplômés",
+    "title": "Claudia Cortés",
+    "correo": "ccortesn@duoc.cl",
+    "correo_pronunciacion": "c cortes n @duoc point c l",
+    "Desctitle": "Orientation et outils pour votre développement professionnel :",
+    "Descripcion": "La zone de Développement Professionnel et Diplômés est chargée de renforcer l'insertion professionnelle et la croissance professionnelle continue de la communauté. Nous offrons un soutien intégral et spécialisé qui accompagne les utilisateurs depuis leur étape de formation jusqu'à leur positionnement sur le marché du travail.",
+    "Descripcion2": "• Conseil en Curriculum Vitae : Révision et optimisation de votre CV pour mettre en valeur vos compétences, expérience et réalisations de manière professionnelle.",
+    "Descripcion3": "• Conseils pour les entretiens d'embauche : Orientation pratique pour affronter avec confiance les processus de sélection et les entretiens.",
+    "Descripcion4": "• Soutien LinkedIn professionnel : Guide pour créer et maintenir un profil attrayant qui reflète votre marque personnelle et élargit vos opportunités professionnelles.",
+    "Descripcion5": "• Gestion des Étudiants Assistants : Coordination et accompagnement des étudiants qui aident leurs pairs dans le développement académique et professionnel.",
+    "Descripcion6": "• Gestion Duoc Laboral (étudiants) : Assistance pour se connecter avec des opportunités d'emploi et des stages professionnels dans l'écosystème Duoc UC.",
+    "Descripcion7": "• Gestion CDP - Centre de Développement Professionnel : Coordination d'activités, de conseils et de programmes visant à renforcer votre employabilité et développement de carrière.",
+    "FAQTiltle": "Questions Fréquentes - Développement Professionnel et Diplômés",
+    "FAQ1": "Qu'est-ce que le Développement Professionnel à Duoc UC ?",
+    "FAQ2": "Comment pouvez-vous m'aider à améliorer mon Curriculum Vitae ?",
+    "FAQ3": "Offrez-vous des simulations d'entretiens d'embauche ?",
+    "FAQ4": "Où puis-je accéder à la Banque d'Emploi de Duoc UC ?",
+    "FAQ5": "Comment créer mon CV sur duoclaboral.cl ?",
+    "FAQ6": "Quel type d'ateliers d'employabilité le campus offre-t-il ?",
+    "FAQ7": "Quels avantages ont les diplômés en Développement Professionnel ?",
+    "FAQ8": "À quel email ou personne puis-je m'adresser au campus Plaza Norte ?",
+    "FAQ9": "Quel soutien apportez-vous pour trouver des stages professionnels ?",
+    "final": ""
+  },
+  "Bienestar": {
+    "cargo": "Bien-être Étudiant",
+    "title": "Adriana Vasquez",
+    "correo": "avasquezm@duoc.cl",
+    "correo_pronunciacion": "a vasquez m @duoc point c l",
+    "Descripcion": "La Zone de Bien-être Étudiant se concentre sur le développement d'activités et la fourniture de soutiens pour renforcer la santé mentale et le bien-être intégral des étudiants. Les principaux programmes associés sont : Santé Mentale, Nutrition Consciente, Prévention de la Consommation d'Alcool et de Drogues, Cohabitation Estudiantine et Inclusion.",
+    "Desctitle": "Principaux soutiens fournis par la Zone de Bien-être Étudiant",
+    "Descripcion2": "• Soins Psychologiques Virtuels Gratuits : Les étudiants de Duoc UC peuvent accéder à des soins psychologiques virtuels gratuits via le site eventos.duoc.cl. Cet avantage permet d'accéder jusqu'à huit sessions annuelles avec des professionnels spécialisés.",
+    "Descripcion3": "• Ligne OPS - Urgences Psychologiques (228203450) : Numéro de téléphone gratuit disponible 24 heures sur 24, tous les jours de la semaine, où les étudiants peuvent recevoir un accompagnement immédiat lors d'une crise psychologique et/ou émotionnelle. Les appels sont répondus par des professionnels formés pour fournir du soutien dans des situations d'urgence.",
+    "Descripcion4": "• Cours d'Ambassadeurs en Santé Mentale : Cours virtuel et gratuit destiné aux étudiants et collaborateurs, visant à renforcer les compétences de soutien émotionnel et à fournir des outils pour accompagner d'autres personnes dans des moments personnels complexes.",
+    "Descripcion5": "• Conférences Virtuelles Hebdomadaires sur le Bien-être et la Santé Mentale : Différentes conférences virtuelles ouvertes aux étudiants de Duoc UC sont offertes, abordant des thèmes liés au bien-être psychologique, émotionnel et général, dans le but de promouvoir des habitudes saines et de renforcer la santé mentale.",
+    "Descripcion6": "• Ateliers et Conférences en Présentiel : Activités développées en sections ou auditoriums, en coordination avec les directions de carrière, visant à promouvoir le bien-être intégral, la saine cohabitation, la santé mentale et la prévention de la consommation d'alcool et de drogues, parmi d'autres thèmes pertinents pour la communauté étudiante.",
+    "FAQTiltle": "Questions Fréquentes - Bien-être Étudiant",
+    "FAQ1": "Quels soutiens en santé mentale existent à Duoc UC ?",
+    "FAQ2": "Existe-t-il des soins psychologiques en présentiel ?",
+    "FAQ3": "Que dois-je faire si j'ai une crise ou me sens mal sur le campus ?",
+    "FAQ4": "J'ai essayé de prendre rendez-vous pour des soins psychologiques, mais je ne trouve pas de créneaux disponibles",
+    "FAQ5": "Combien de sessions psychologiques puis-je avoir par an ?",
+    "FAQ6": "Le psychologue virtuel peut-il délivrer un arrêt maladie ?",
+    "FAQ7": "Que puis-je faire si je sais qu'un camarade traverse un mauvais moment mais ne veut pas demander d'aide ?",
+    "FAQ8": "Existe-t-il un soutien pour les étudiants handicapés ?",
+    "FAQ9": "J'ai commencé le cours d'Ambassadeurs, mais je ne peux pas passer au module suivant",
+    "FAQ10": "Comment savoir si j'ai terminé le cours d'Ambassadeurs ?",
+    "FAQ11": "Ai-je une responsabilité supplémentaire après avoir réalisé le cours d'Ambassadeurs ?",
+    "final": ""
+  },
+  "Deportes": {
+    "cargo": "Sports",
+    "title": "Cesar Pino",
+    "title2": "Nicolas Leiva",
+    "correo": "cpinon@duoc.cl",
+    "correo_pronunciacion": "c pino n @duoc point c l",
+    "correo2": "nleivas@duoc.cl",
+    "correo2_pronunciacion": "n leiva s @duoc point c l",
+    "Desctitle": "Zone des Sports et Activité Physique",
+    "Descripcion": "La Zone des Sports et Activité Physique promeut la vie saine, le bien-être intégral et la participation étudiante à travers diverses activités sportives et récréatives.",
+    "principales": "Fonctions principales :",
+    "Descripcion2": "• Gestion et coordination d'ateliers et disciplines sportives pour les étudiants.",
+    "Descripcion3": "• Administration du CAF (Centre de Conditionnement Physique et Bien-être), espace dédié à l'entraînement physique et aux habitudes saines.",
+    "Descripcion4": "• Organisation d'Ateliers BIM (Bien-être Intégral en Mouvement) et interventions dans les espaces communs pour promouvoir la cohabitation et la vie universitaire.",
+    "Descripcion5": "• Orientation sur les alternatives sportives, bourses, sélections représentatives et espaces de pratique.",
+    "Competencias": "Compétitions institutionnelles destacadas :",
+    "Descripcion6": "• Tournois Intersedes : Compétitions entre campus dans diverses disciplines sportives.",
+    "Descripcion7": "• Jeux Olympiques Duoc UC : Rencontre nationale qui réunit des étudiants de tout le pays, promouvant le travail d'équipe et l'esprit sportif.",
+    "Descripcion8": "Le CAF, situé au niveau -1, est ouvert à tous les étudiants qui souhaitent s'entraîner et améliorer leur bien-être. Après une évaluation initiale, ils peuvent y assister deux fois par semaine et bénéficier des conseils d'un préparateur physique.",
+    "FAQTiltle": "Questions Fréquentes - Zone des Sports et Activité Physique",
+    "FAQ1": "Quels ateliers sportifs avez-vous ?",
+    "FAQ2": "Où êtes-vous situés ?",
+    "FAQ3": "Horaire des Ateliers 2025 ?",
+    "FAQ4": "Que se passe-t-il si je manque un ou plusieurs ateliers ?",
+    "FAQ5": "Les ateliers ont-ils des notes ?",
+    "FAQ6": "Comment m'inscrire aux Options Sportives ?",
+    "FAQ7": "Les Options Sportives ont-elles des notes ?",
+    "FAQ8": "Comment puis-je me désinscrire ?",
+    "FAQ9": "Comment puis-je m'inscrire à la salle de sport (CAF) ?",
+    "FAQ10": "Puis-je y aller à n'importe quel horaire ?",
+    "FAQ11": "Si j'ai du temps libre et qu'il n'y a pas de professeurs, puis-je utiliser la salle de sport ?",
+    "FAQ12": "Sélections Sportives",
+    "FAQ13": "Bourses Sportives",
+    "final": ""
+  },
+  "Pastoral": {
+    "cargo": "Pastorale",
+    "title": "Camila Celedon",
+    "correo": "ccelodon@duoc.cl",
+    "correo_pronunciacion": "c celedon @duoc point c l",
+    "Descripcion": "La Zone de Pastorale de Duoc UC cherche à promouvoir la rencontre personnelle et communautaire avec Jésus-Christ dans toute la communauté. Sa mission est d'accompagner la vie de foi des élèves, enseignants et collaborateurs, en intégrant la foi avec les activités quotidiennes.",
+    "Descripcion2": "Camila est Gestionnaire Pastorale, travaillant ensemble avec le Père Luck Jamb et la Sœur Rut Gallardo.",
+    "Descripcion3": "L'Eucharistie est établie comme le centre et le sommet de l'expérience pastorale et de la vie chrétienne.",
+    "Descripcion4": "Elle offre des moyens pour une vie sacramentelle et spirituelle pleine, à travers des espaces de prière et de célébration des sacrements.",
+    "Descripcion5": "La zone se constitue comme une communauté chrétienne vivante à l'intérieur de Duoc UC, cherchant à être témoignage du Christ et à transformer la société.",
+    "Descripcion6": "Elle organise des activités de service et de service aux autres comme les Missions Solidaires d'été et d'hiver ainsi que les apostolats mensuels.",
+    "Descripcion7": "Elle cherche à accroître la foi catholique à partir du dialogue entre la foi et la culture.",
+    "Descripcion8": "Elle participe activement à la formation de personnes avec une marque éthique-chrétienne claire.",
+    "Descripcion9": "Son travail pousse la communauté à découvrir le sens de leur vie et à vivre les valeurs de l'Évangile.",
+    "Descripcion10": "En résumé, la Pastorale est la zone qui anime la vie de foi et accompagne spirituellement la communauté Duoc UC.",
+    "FAQTiltle": "Questions Fréquentes - Zone Pastorale",
+    "FAQ1": "Quels ateliers sportifs avez-vous ?",
+    "FAQ2": "Où êtes-vous situés ?",
+    "FAQ3": "Horaire des Ateliers 2025 ?",
+    "FAQ4": "Que se passe-t-il si je manque un ou plusieurs ateliers ?",
+    "FAQ5": "Les ateliers ont-ils des notes ?",
+    "FAQ6": "Comment m'inscrire aux Options Sportives ?",
+    "FAQ7": "Ont-ils de l'assiduité ?",
+    "FAQ8": "Comment puis-je me désinscrire ?",
+    "FAQ9": "Comment puis-je m'inscrire à la salle de sport (CAF) ?",
+    "FAQ10": "Puis-je y aller à n'importe quel horaire ?",
+    "FAQ11": "Si j'ai du temps libre et qu'il n'y a pas de professeurs, puis-je utiliser la salle de sport ?",
+    "FAQ12": "Sélections Sportives",
+    "FAQ13": "Bourses Sportives",
+    "final": ""
+  },
+  "Reporte": {
+    "title": "rapports"
+  },
+  "VoiceSearch": {
+    "notSupported": "La reconnaissance vocale n'est pas supportée par votre navigateur",
+    "startListening": "Commencer l'écoute vocale",
+    "stopListening": "Arrêter l'écoute",
+    "listening": "Écoute...",
+    "talk": "Parlez maintenant",
+    "recognized": "Reconnu",
+    "results": "Résultats",
+    "noResults": "Aucun résultat trouvé"
   }
+}

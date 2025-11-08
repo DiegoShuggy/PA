@@ -55,10 +55,10 @@ function Punto() {
                     try {
                         const voices = speechSynthesisRef.current.getVoices();
                         if (voices.length > 0) {
-                            console.log(`✅ ${voices.length} voces cargadas`);
+                            console.log(`✅ ${voices.length} (t('app.voiceloaded')`);
                         }
                     } catch (error) {
-                        console.error('Error cargando voces:', error);
+                        console.error(t('app.errorload'), error);
                     }
                 }
             };
@@ -68,7 +68,7 @@ function Punto() {
 
         } else {
             setIsTtsSupported(false);
-            console.warn('El lector de texto no es compatible con este navegador');
+            console.warn(t('app.noncompatible'));
         }
 
         // Cleanup al desmontar el componente
@@ -81,12 +81,12 @@ function Punto() {
     const readText = useCallback((text: string, isAutoRead = false) => {
         // Si es lectura automática y hubo detención manual, no leer
         if (isAutoRead && isManualStopRef.current) {
-            console.log('🚫 Lectura automática bloqueada por detención manual');
+            console.log(t('app.manualbloq'));
             return;
         }
 
         if (!speechSynthesisRef.current || !isTtsSupported) {
-            alert(t('consultas.ttsNotSupported') || 'El lector de texto no es compatible con este navegador.');
+            alert(t('consultas.ttsNotSupported') );
             return;
         }
 
@@ -180,13 +180,13 @@ function Punto() {
 
                 utterance.onstart = () => {
                     setIsReading(true);
-                    console.log(`🔊 Lectura iniciada con voz:`, utterance.voice?.name);
+                    console.log(t('app.readStart'), utterance.voice?.name);
                     // Reiniciar temporizador de inactividad cuando empieza la lectura
                     resetInactivityTimer();
                 };
 
                 utterance.onend = () => {
-                    console.log('✅ Lectura finalizada');
+                    console.log(t('app.readFinished'));
                     setIsReading(false);
                     currentUtteranceRef.current = null;
                     
@@ -197,7 +197,7 @@ function Punto() {
                 };
 
                 utterance.onerror = (event) => {
-                    console.error('❌ Error en la lectura:', event.error);
+                    console.error(t('app.readError'), event.error);
                     setIsReading(false);
                     currentUtteranceRef.current = null;
 
@@ -217,7 +217,7 @@ function Punto() {
                 }, 100);
 
             } catch (error) {
-                console.error('💥 Error al configurar la lectura:', error);
+                console.error(t('app.readEmpty'), error);
                 setIsReading(false);
             }
         }, 50);
@@ -292,7 +292,7 @@ function Punto() {
         `;
 
         if (!fullText.trim()) {
-            console.warn('No hay texto para leer');
+            console.warn(t('app.readEmpty'));
             return;
         }
 
