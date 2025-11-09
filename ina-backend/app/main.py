@@ -72,6 +72,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Incluir router de ingesta (integrado en la app principal bajo /ingest)
+try:
+    from app.ingest_api import router as ingest_router
+    app.include_router(ingest_router, prefix="/ingest", tags=["ingest"])
+    logger.info("Router de ingest incluid o disponible en /ingest")
+except Exception as e:
+    logger.warning(f"No se pudo incluir ingest router: {e}")
+
 # 👇 INICIALIZAR SISTEMA DE FILTROS (GLOBAL)
 content_filter = ContentFilter()
 topic_classifier = TopicClassifier()
