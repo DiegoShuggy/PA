@@ -2,6 +2,8 @@
 from typing import Dict, List, Optional
 import logging
 from datetime import datetime
+import re
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -10,18 +12,113 @@ class ResponseGenerator:
         self.rag_engine = rag_engine
         self.response_history = {}
     
+    def detect_opinion_question(self, query: str) -> bool:
+        """
+        Detecta si la consulta solicita una opinión personal.
+        Returns: True si es una consulta de opinión, False si no.
+        """
+        query_lower = query.lower().strip()
+        
+        # Patrones que indican solicitud de opinión
+        opinion_patterns = [
+            # Patrones directos de opinión
+            r'\b(que opinas|que piensas|cuál es tu opinión|cuál es tu punto de vista)\b',
+            r'\b(te parece|crees que|consideras que|piensas que)\b',
+            r'\b(me recomiendas|me aconsejas|que me sugieres)\b',
+            r'\b(cuál prefieres|cuál te gusta más|cuál es mejor)\b',
+            r'\b(estarías de acuerdo|estarías a favor|estarías en contra)\b',
+            r'\b(sería bueno|sería malo|sería mejor)\b',
+            
+            # Patrones de preferencia personal
+            r'\b(cuál es tu favorito|cuál te gusta|cuál prefieres)\b',
+            r'\b(te gusta|te agrada|te disgusta|te molesta)\b',
+            
+            # Patrones de juicio personal
+            r'\b(está bien|está mal|es correcto|es incorrecto)\b',
+            r'\b(debería|no debería|tengo que|no tengo que)\b',
+            
+            # Patrones de evaluación subjetiva
+            r'\b(es bueno|es malo|es mejor|es peor)\b',
+            r'\b(vale la pena|no vale la pena|merece la pena)\b',
+            
+            # Patrones de consejo personalizado
+            r'\b(qué harías tú|qué harías en mi lugar|cómo lo harías tú)\b',
+            r'\b(qué me recomiendas hacer|qué me sugieres que haga)\b',
+            
+            # Patrones de gustos y preferencias
+            r'\b(te gustaría|te encantaría|te interesaría)\b',
+            r'\b(prefiero|me gusta más|me agrada más)\b'
+        ]
+        
+        # Verificar patrones de opinión
+        for pattern in opinion_patterns:
+            if re.search(pattern, query_lower):
+                logger.info(f"OPINIÓN DETECTADA: '{query}' -> Patrón: {pattern}")
+                return True
+        
+        # Palabras clave que suelen indicar solicitud de opinión
+        opinion_keywords = [
+            'opinas', 'piensas', 'opinión', 'parece', 'crees', 'consideras',
+            'recomiendas', 'aconsejas', 'sugieres', 'prefieres', 'gusta',
+            'favorito', 'debería', 'correcto', 'incorrecto', 'mejor', 'peor'
+        ]
+        
+        # Contar palabras clave de opinión
+        opinion_word_count = sum(1 for keyword in opinion_keywords if keyword in query_lower)
+        
+        # Si tiene 2 o más palabras clave de opinión, probablemente es una consulta de opinión
+        if opinion_word_count >= 2:
+            logger.info(f"OPINIÓN DETECTADA por múltiples keywords: '{query}'")
+            return True
+        
+        return False
+    
+    def _get_opinion_rejection_response(self) -> Dict:
+        """
+        Devuelve una respuesta estándar para consultas de opinión
+        """
+        rejection_responses = [
+            {
+                'response': "Como asistente virtual de Duoc UC, mi función es proporcionar información objetiva y factual sobre los servicios y programas estudiantiles. No puedo ofrecer opiniones personales o consejos subjetivos. ¿Puedo ayudarte con información específica sobre algún servicio o programa?",
+                'sources': [],
+                'cache_type': 'opinion_rejection'
+            },
+            {
+                'response': "Mi propósito es brindarte información precisa sobre los servicios de Duoc UC. Para consultas que requieran opiniones personales o consejos subjetivos, te recomiendo contactar directamente con las áreas especializadas correspondientes. ¿En qué información objetiva puedo asistirte?",
+                'sources': [],
+                'cache_type': 'opinion_rejection'
+            },
+            {
+                'response': "Entiendo que buscas una perspectiva personal, pero como sistema de información de Duoc UC, debo limitarme a proporcionar datos objetivos sobre nuestros servicios estudiantiles. Puedo ayudarte con información factual sobre programas, horarios, requisitos y procedimientos.",
+                'sources': [],
+                'cache_type': 'opinion_rejection'
+            },
+            {
+                'response': "Puedo ayudarte con información factual sobre programas, servicios y procedimientos de Duoc UC. Para orientación personalizada que requiera opiniones subjetivas, te sugiero consultar con los profesionales correspondientes en cada área. ¿Qué información específica necesitas?",
+                'sources': [],
+                'cache_type': 'opinion_rejection'
+            }
+        ]
+        
+        return random.choice(rejection_responses)
+    
     def generate_response(self, query: str, session_id: str, processing_info: Dict) -> Dict:
         try:
-            # 1. Verificar memoria primero
+            # 1. VERIFICAR SI ES CONSULTA DE OPINIÓN (NUEVO)
+            if self.detect_opinion_question(query):
+                logger.info(f"CONSULTA DE OPINIÓN BLOQUEADA: '{query}'")
+                return self._get_opinion_rejection_response()
+            
+            # 2. Verificar memoria primero
             memory_response = self._check_memory(query, session_id)
             if memory_response:
                 return memory_response
             
-            # 2. Procesar según estrategia
+            # 3. Procesar según estrategia
             strategy = processing_info.get('processing_strategy', 'default')
             response_data = self._process_by_strategy(query, strategy, processing_info)
             
-            # 3. Guardar en memoria
+            # 4. Guardar en memoria
             self._store_in_memory(query, response_data, session_id)
             
             return response_data
