@@ -18,7 +18,8 @@ import hashlib
 from typing import List, Optional
 
 import requests
-from bs4 import BeautifulSoup
+# Importing BeautifulSoup lazily inside functions so missing optional deps
+# don't break app import time (e.g. when including ingest router in main.py)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -65,6 +66,12 @@ def fetch_url(url: str, timeout: int = 20) -> Optional[requests.Response]:
 
 
 def extract_text_from_html(content: str) -> str:
+    try:
+        from bs4 import BeautifulSoup
+    except Exception:
+        logger.error("beautifulsoup4 no está instalado. Instala con: pip install beautifulsoup4\nLas operaciones de ingesta vía /ingest pueden quedar deshabilitadas hasta instalar esta dependencia.")
+        return ""
+
     soup = BeautifulSoup(content, "html.parser")
     # Eliminar scripts y estilos
     for s in soup(["script", "style", "noscript"]):

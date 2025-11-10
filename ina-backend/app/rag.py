@@ -1134,6 +1134,36 @@ def get_ai_response(user_message: str, context: list = None) -> Dict:
 
     except Exception as e:
         logger.error(f"Error en RAG estándar: {str(e)}")
+        # Fallback: si tenemos fuentes recuperadas, devolver su contenido bruto como respuesta
+        try:
+            if final_sources:
+                fallback_texts = []
+                formatted_sources = []
+                for src in final_sources:
+                    doc = src.get('document', '')
+                    meta = src.get('metadata', {})
+                    fallback_texts.append(doc[:800] + ('...' if len(doc) > 800 else ''))
+                    formatted_sources.append({
+                        'content': doc[:200] + ('...' if len(doc) > 200 else ''),
+                        'category': meta.get('category', 'general'),
+                        'source': meta.get('source', 'unknown'),
+                        'similarity': round(src.get('similarity', 0.0), 3)
+                    })
+
+                fallback_response = '\n\n'.join(fallback_texts[:3])
+                return {
+                    'response': fallback_response or "Consulta en Punto Estudiantil para información específica.",
+                    'sources': formatted_sources,
+                    'category': processing_info['topic_classification'].get('category', 'general'),
+                    'timestamp': time.time(),
+                    'response_time': time.time() - start_time,
+                    'cache_type': 'fallback_documents',
+                    'processing_info': processing_info
+                }
+        except Exception:
+            # If fallback fails, return generic error
+            logger.error('Fallback de documentos falló al generar respuesta')
+
         return {
             "response": "Error técnico. Intenta nuevamente.",
             "sources": [],

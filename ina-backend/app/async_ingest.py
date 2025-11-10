@@ -16,7 +16,8 @@ import os
 from typing import List, Dict
 
 import httpx
-from bs4 import BeautifulSoup
+# Import BeautifulSoup lazily in extraction function so import-time failures
+# don't prevent the app from starting when bs4 is not installed.
 
 from app.rag import rag_engine
 
@@ -65,6 +66,12 @@ def _chunk_text(text: str, max_chars: int = 1000, overlap: int = 200) -> List[st
 
 
 def _extract_text_from_html(content: str) -> str:
+    try:
+        from bs4 import BeautifulSoup
+    except Exception:
+        logger.error("beautifulsoup4 no está instalado. Instala con: pip install beautifulsoup4\nLa ingesta de HTML/Páginas no funcionará hasta instalar esta dependencia.")
+        return ''
+
     soup = BeautifulSoup(content, 'html.parser')
     for s in soup(['script', 'style', 'noscript']):
         s.decompose()
@@ -119,9 +126,11 @@ async def async_add_url(url: str, client: httpx.AsyncClient, hashes: Dict[str, b
 
     chunks = _chunk_text(text)
     added = 0
+    skipped = 0
     for i, chunk in enumerate(chunks):
         h = hashlib.md5(chunk.encode('utf-8')).hexdigest()
         if h in hashes:
+            skipped += 1
             continue
         enhanced = rag_engine.enhanced_normalize_text(chunk)
         meta = {"source": url, "category": "web", "type": "web", "section": f"chunk_{i}"}
@@ -130,8 +139,12 @@ async def async_add_url(url: str, client: httpx.AsyncClient, hashes: Dict[str, b
             hashes[h] = True
             added += 1
 
-    if added:
-        logger.info(f'Añadidos {added}/{len(chunks)} chunks desde {url}')
+    if added > 0:
+        logger.info(f'✅ Añadidos {added}/{len(chunks)} chunks desde {url}' + (f' ({skipped} omitidos por deduplicación)' if skipped > 0 else ''))
+    elif skipped > 0:
+        logger.info(f'⚠️  Todos los {len(chunks)} chunks desde {url} fueron omitidos (ya indexados previamente)')
+    else:
+        logger.warning(f'❌ No se añadieron chunks desde {url} (error o sin contenido)')
     return added
 
 

@@ -31,6 +31,7 @@ from app.topic_classifier import TopicClassifier
 from app.advanced_analytics import advanced_analytics
 from sqlalchemy import text
 from app.training_data_loader import training_loader
+from app.async_ingest import async_add_urls
 # Alias histórico: compatibilidad con endpoints que referencian `auto_trainer`
 auto_trainer = training_loader
 
@@ -74,11 +75,22 @@ app.add_middleware(
 
 # Incluir router de ingesta (integrado en la app principal bajo /ingest)
 try:
+    # Detectar si BeautifulSoup está disponible para informar al administrador
+    try:
+        import bs4  # pragma: no cover - optional dependency
+        _bs4_available = True
+    except Exception:
+        _bs4_available = False
+
     from app.ingest_api import router as ingest_router
     app.include_router(ingest_router, prefix="/ingest", tags=["ingest"])
-    logger.info("Router de ingest incluid o disponible en /ingest")
+    if _bs4_available:
+        logger.info("Router de ingest incluido y disponible en /ingest (beautifulsoup4 instalado)")
+    else:
+        logger.warning("Router de ingest incluido en /ingest pero 'beautifulsoup4' no está instalado. \nInstala con: pip install beautifulsoup4 para habilitar parsing HTML/PDF correctamente.")
 except Exception as e:
-    logger.warning(f"No se pudo incluir ingest router: {e}")
+    # No bloquear el arranque de la app por problemas en dependencias opcionales
+    logger.warning(f"No se pudo incluir ingest router: {e} — las operaciones de ingesta vía HTTP estarán deshabilitadas. \nPuedes usar las herramientas CLI (python -m app.web_ingest / app.async_ingest) si lo prefieres.")
 
 # 👇 INICIALIZAR SISTEMA DE FILTROS (GLOBAL)
 content_filter = ContentFilter()
@@ -209,7 +221,7 @@ class DetailedFeedbackRequest(BaseModelOriginal):
 
 # Inicializar base de datos al iniciar
 @app.on_event("startup")
-def on_startup():
+async def on_startup():
     init_db()
     # Cargar conocimiento desde training data + base conocimiento
     training_loader.load_all_training_data()
@@ -218,6 +230,89 @@ def on_startup():
     logger.info("✅ Sistema de filtros de contenido inicializado")
     logger.info("✅ Sistema de emails Gmail configurado y listo")
     logger.info("✅ Generador de QR inicializado y listo")
+
+    # Si existe urls.txt en el proyecto, realizar ingesta automática en startup
+    try:
+        urls_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'urls.txt'))
+        if os.path.exists(urls_path):
+            try:
+                with open(urls_path, 'r', encoding='utf-8') as f:
+                    urls = [line.strip() for line in f if line.strip()]
+            except Exception as e:
+                urls = []
+                logger.warning(f"No se pudo leer urls.txt: {e}")
+
+            if urls:
+                logger.info(f"🔄 Iniciando ingesta automática desde {urls_path} ({len(urls)} URLs)")
+                try:
+                    added = await async_add_urls(urls, concurrency=6)
+                    if added > 0:
+                        logger.info(f"✅ Ingesta automática completada: {added} fragmentos nuevos añadidos desde urls.txt")
+                    else:
+                        logger.warning(f"⚠️  Ingesta automática completada pero 0 fragmentos nuevos añadidos. Posible causa: contenido ya indexado previamente.")
+                    for u in urls:
+                        logger.info(f" - Ingestada URL: {u}")
+                except Exception as e:
+                    logger.error(f"Error durante ingesta automática desde urls.txt: {e}")
+            else:
+                logger.info("ℹ️ urls.txt encontrado pero no contiene URLs.")
+        else:
+            logger.info("ℹ️ No se encontró urls.txt en la raíz del proyecto; no se ejecutó ingesta automática de URLs.")
+    except Exception as e:
+        logger.error(f"Error al intentar iniciar ingesta automática en startup: {e}")
+
+    # --- Startup: resumen de ingestas (URLs detectadas en la colección Chroma) ---
+    try:
+        stats = rag_engine.get_cache_stats()
+        total_docs = stats.get('total_documents', 'N/A')
+
+        url_sources = set()
+        try:
+            if hasattr(rag_engine, 'collection') and rag_engine.collection is not None:
+                # Obtener solo metadatas (incluir 'ids' provocaba error en algunas versiones)
+                coll_data = rag_engine.collection.get(include=['metadatas'])
+                metadatas = []
+                if isinstance(coll_data, dict):
+                    metadatas = coll_data.get('metadatas', [])
+
+                # Aplanar estructuras anidadas devueltas por chroma (p. ej. [ [md1, md2, ...] ])
+                flat_mds = []
+                if isinstance(metadatas, list):
+                    for m in metadatas:
+                        if isinstance(m, list):
+                            flat_mds.extend(m)
+                        else:
+                            flat_mds.append(m)
+
+                # Buscar valores que parezcan URLs en varias claves posibles
+                for md in flat_mds:
+                    if not isinstance(md, dict):
+                        continue
+                    for key in ('source', 'uri', 'url'):
+                        val = md.get(key)
+                        if isinstance(val, str) and (val.startswith('http://') or val.startswith('https://')):
+                            url_sources.add(val)
+                        elif isinstance(val, list):
+                            for v in val:
+                                if isinstance(v, str) and (v.startswith('http://') or v.startswith('https://')):
+                                    url_sources.add(v)
+        except Exception as e:
+            logger.warning(f"No se pudo enumerar fuentes ingestadas desde Chroma (esto no impide el servicio): {e}")
+
+        if url_sources:
+            logger.info(f"✅ Ingesta web detectada: {len(url_sources)} URLs indexadas en la colección")
+            # Loguear cada URL (limitar a 100 para no spamear logs)
+            for i, u in enumerate(sorted(url_sources)):
+                if i >= 100:
+                    logger.info(f"... (más URLs omitidas en log, total {len(url_sources)})")
+                    break
+                logger.info(f" - URL ingestada: {u}")
+        else:
+            logger.info("ℹ️  No se detectaron URLs ingestadas en la colección Chroma (no hay ingestas web registradas)")
+
+        logger.info(f"📦 Resumen RAG al inicio: total_documents={total_docs}")
+    except Exception as e:
+        logger.error(f"Error generando resumen de ingestas en startup: {e}")
 
 class Message(BaseModel):
     text: str
