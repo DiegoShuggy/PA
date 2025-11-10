@@ -76,7 +76,7 @@ body {
 /* Menú flotante en la esquina derecha */
 .floating-menu-container {
   position: fixed;
-  top: 24%;
+  top: 19%;
   left: calc(56% - 450px - 80px);
   /* 450px = mitad del ancho del chat (900px/2) */
   transform: translateY(-50%);
@@ -103,24 +103,6 @@ body {
   transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
-
-.floating-dropdown-menu {
-  position: absolute;
-  left: -400%;
-  /* Se abre hacia la derecha */
-  top: 0;
-  margin-left: 10px;
-  /* Espacio entre botón y menú */
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  min-width: 220px;
-  z-index: 1000;
-  animation: slideRight 0.2s ease;
-  /* Nueva animación */
-  overflow: hidden;
-}
-
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -146,6 +128,7 @@ body {
   transition: background-color 0.2s ease;
   text-align: left;
   font-family: inherit;
+  background-color: #ffff;
 }
 
 .menu-item:hover:not(:disabled) {
@@ -162,6 +145,7 @@ body {
   font-size: 16px;
   width: 20px;
   text-align: center;
+  
 }
 
 .menu-divider {

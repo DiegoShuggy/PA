@@ -20,7 +20,6 @@
   },
   "chat": {
     "title": "Chat Asistente",
-    "quickTips": "← Usa el menú ☰ para preguntas rápidas",
     "inputPlaceholder": "Escribe tu pregunta o consulta...",
     "listeningPlaceholder": "Escuchando... Habla ahora",
     "send": "Enviar",

@@ -1623,9 +1623,6 @@ useEffect(() => {
       <div className="chat-container" id="Cuerpo">
         <div className="chat-header">
           <h2>{t('chat.title')}</h2>
-          <div className="quick-tips">
-            {t('chat.quickTips')}
-          </div>
           {isListening && (
             <div className="extended-listening-info">
             </div>
