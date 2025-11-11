@@ -1,0 +1,861 @@
+
+(venv) C:\Users\SSDD1\Documents\GitHub\Proyecto_InA\ina-backend>venv\Scripts\activate
+
+(venv) C:\Users\SSDD1\Documents\GitHub\Proyecto_InA\ina-backend>uvicorn app.main:app --reload --port 8000
+INFO:     Will watch for changes in these directories: ['C:\\Users\\SSDD1\\Documents\\GitHub\\Proyecto_InA\\ina-backend']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [15288] using WatchFiles
+Failed to send telemetry event ClientStartEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.metrics_tracker:✅ Tablas de métricas verificadas/creadas
+TELEMETRÍA DE CHROMADB DESACTIVADA / SILENCIADA (si estaba activa)
+INFO:app.main:Router de ingest incluido y disponible en /ingest (beautifulsoup4 instalado)
+INFO:app.qr_generator:✅ QR Generator inicializado con detección mejorada de URLs
+INFO:app.training_data_loader:INICIANDO CARGA COMPLETA
+INFO:app.training_data_loader:Cargando conocimiento base corregido...
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionAddEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.training_data_loader:Base: 11 ítems
+INFO:app.training_data_loader:6 documentos Word encontrados
+INFO:app.training_data_loader:Procesando: Paginas y descripcion.docx
+INFO:app.training_data_loader:Extrayendo: Paginas y descripcion.docx
+INFO:app.training_data_loader:Paginas y descripcion.docx: 22 fragmentos útiles
+INFO:app.training_data_loader:Paginas y descripcion.docx: 22/22 agregados
+INFO:app.training_data_loader:Procesando: Preguntas frecuenes - Asuntos Estudiantiles.docx
+INFO:app.training_data_loader:Extrayendo: Preguntas frecuenes - Asuntos Estudiantiles.docx
+INFO:app.training_data_loader:Preguntas frecuenes - Asuntos Estudiantiles.docx: 64 fragmentos útiles
+INFO:app.training_data_loader:Preguntas frecuenes - Asuntos Estudiantiles.docx: 64/64 agregados
+INFO:app.training_data_loader:Procesando: Preguntas frecuentes BE.docx
+INFO:app.training_data_loader:Extrayendo: Preguntas frecuentes BE.docx
+INFO:app.training_data_loader:Preguntas frecuentes BE.docx: 2 fragmentos útiles
+INFO:app.training_data_loader:Preguntas frecuentes BE.docx: 2/2 agregados
+INFO:app.training_data_loader:Procesando: Preguntas Frecuentes Deportes y Activididad Física (1).docx
+INFO:app.training_data_loader:Extrayendo: Preguntas Frecuentes Deportes y Activididad Física (1).docx
+INFO:app.training_data_loader:Preguntas Frecuentes Deportes y Activididad Física (1).docx: 69 fragmentos útiles
+INFO:app.training_data_loader:Preguntas Frecuentes Deportes y Activididad Física (1).docx: 69/69 agregados
+INFO:app.training_data_loader:Procesando: PREGUNTAS FRECUENTES DL.docx
+INFO:app.training_data_loader:Extrayendo: PREGUNTAS FRECUENTES DL.docx
+INFO:app.training_data_loader:PREGUNTAS FRECUENTES DL.docx: 24 fragmentos útiles
+INFO:app.training_data_loader:PREGUNTAS FRECUENTES DL.docx: 24/24 agregados
+INFO:app.training_data_loader:Procesando: RESUMEN AREAS DDE.docx
+INFO:app.training_data_loader:Extrayendo: RESUMEN AREAS DDE.docx
+INFO:app.training_data_loader:RESUMEN AREAS DDE.docx: 24 fragmentos útiles
+INFO:app.training_data_loader:RESUMEN AREAS DDE.docx: 24/24 agregados
+INFO:app.training_data_loader:TOTAL RAG: 205 documentos
+INFO:app.training_data_loader:CARGA COMPLETA FINALIZADA
+✅ RAG cargado con toda la información de documentos Word
+Device set to use cpu
+INFO:app.sentiment_analyzer:Analizador de sentimiento inicializado correctamente
+INFO:     Started server process [8312]
+INFO:     Waiting for application startup.
+INFO:app.models:✅ Tablas de base de datos creadas/verificadas
+INFO:app.training_data_loader:INICIANDO CARGA COMPLETA
+INFO:app.training_data_loader:CARGA COMPLETA FINALIZADA
+INFO:app.main:✅ Base de datos y conocimiento histórico cargados
+INFO:app.main:✅ Sistema de filtros de contenido inicializado
+INFO:app.main:✅ Sistema de emails Gmail configurado y listo
+INFO:app.main:✅ Generador de QR inicializado y listo
+INFO:app.main:🔄 Iniciando ingesta automática desde C:\Users\SSDD1\Documents\GitHub\Proyecto_InA\ina-backend\urls.txt (11 URLs)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/vida-estudiantil/titulados/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/admision/financiamiento/becas-estatales/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/alumnos/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/sedes/info-tne/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/test-oficina-de-titulos-y-certificados/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 4 chunks desde https://www.duoc.cl/vida-estudiantil/titulados/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/alumnos/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 11 chunks desde https://www.duoc.cl/admision/financiamiento/becas-estatales/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 9 chunks desde https://www.duoc.cl/test-oficina-de-titulos-y-certificados/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/alumnos/seguro/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 5 chunks desde https://www.duoc.cl/sedes/info-tne/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/beneficios/salud-autocuidado/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 44 chunks desde https://www.duoc.cl/beneficios/salud-autocuidado/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 8 chunks desde https://www.duoc.cl/alumnos/seguro/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/sedes/plaza-norte/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 5 chunks desde https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://bibliotecas.duoc.cl/inicio/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 2 chunks desde https://bibliotecas.duoc.cl/inicio/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/sedes/plaza-norte/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:Total chunks añadidos: 0
+WARNING:app.main:⚠️  Ingesta automática completada pero 0 fragmentos nuevos añadidos. Posible causa: contenido ya indexado previamente.
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/alumnos/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/test-oficina-de-titulos-y-certificados/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/vida-estudiantil/titulados/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/sedes/info-tne/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/admision/financiamiento/becas-estatales/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/alumnos/seguro/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/beneficios/salud-autocuidado/
+INFO:app.main: - Ingestada URL: https://bibliotecas.duoc.cl/inicio/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/sedes/plaza-norte/
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionGetEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.main:ℹ️  No se detectaron URLs ingestadas en la colección Chroma (no hay ingestas web registradas)
+INFO:app.main:📦 Resumen RAG al inicio: total_documents=1122
+INFO:     Application startup complete.
+INFO:     127.0.0.1:53958 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53958 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51534 - "OPTIONS /chat HTTP/1.1" 200 OK
+INFO:app.main:❓ Tema desconocido/off-topic: a
+INFO:     127.0.0.1:51534 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:PRIORIDAD ALTA - Pregunta institucional: necesito ayuda con la tne
+INFO:app.main:✅ Pregunta aprobada por filtros: necesito ayuda con la tne - Categoría: asuntos_estudiantiles
+INFO:app.classifier:Keyword classification - Pregunta: 'necesito ayuda con la tne' -> 'asuntos_estudiantiles' (confianza: 0.55)
+INFO:app.main:Categoría detectada: asuntos_estudiantiles
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:04<00:00,  4.38s/it]
+INFO:app.rag:Procesamiento: 'necesito ayuda con la tne' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'necesito ayuda con la tne'
+INFO:app.rag:Query Expansion: 'necesito ayuda con la tne' → 'necesito ayuda con la tne tarjeta nacional estudiantil pase escolar tne duoc beneficio tne tarjeta e...'
+INFO:app.rag:No se encontraron documentos para: necesito ayuda con la tne tarjeta nacional estudiantil pase escolar duoc beneficio estudiante validación activación
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 34 caracteres
+INFO:app.qr_generator:❓ Pregunta original: necesito ayuda con la tne
+INFO:app.qr_generator:🔍 Buscando URLs en texto: Error técnico. Intenta nuevamente....
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: ['ayuda', 'tne_seguimiento']
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado desde contexto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:📱 Generando QR para: https://www.tne.cl
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.tne.cl
+INFO:app.qr_generator:✅ QR agregado desde contexto: https://www.tne.cl
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.qr_generator:   📱 QR: https://www.tne.cl
+INFO:app.main:📱 QR generados: 2 códigos
+INFO:app.main:   🔗 QR para: https://ayuda.duoc.cl/
+INFO:app.main:   🔗 QR para: https://www.tne.cl
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 4.72s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 34 caracteres
+INFO:app.main:📊 Métricas trackeadas: 4.85s para categoría 'asuntos_estudiantiles'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 1ab02b3c-ade7-4b63-ace7-5bdbe455052a
+INFO:     127.0.0.1:50537 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50537 - "OPTIONS /feedback/response HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "1ab02b3c-ade7-4b63-ace7-5bdbe455052a",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=1ab02b3c-ade7-4b63-ace7-5bdbe455052a, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión 1ab02b3c-ade7-4b63-ace7-5bdbe455052a: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:50537 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:PRIORIDAD ALTA - Pregunta institucional: tengo dudas con la TNE
+INFO:app.main:✅ Pregunta aprobada por filtros: tengo dudas con la TNE - Categoría: asuntos_estudiantiles
+INFO:app.classifier:Keyword classification - Pregunta: 'tengo dudas con la TNE' -> 'asuntos_estudiantiles' (confianza: 0.55)
+INFO:app.main:Categoría detectada: asuntos_estudiantiles
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  2.79it/s]
+INFO:app.rag:Procesamiento: 'tengo dudas con la TNE' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'tengo dudas con la TNE'
+INFO:app.rag:Query Expansion: 'tengo dudas con la TNE' → 'tengo dudas con la TNE tarjeta nacional estudiantil pase escolar tne duoc beneficio tne tarjeta estu...'
+INFO:app.rag:No se encontraron documentos para: tengo dudas con la tne tarjeta nacional estudiantil pase escolar duoc beneficio estudiante validación activación
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 34 caracteres
+INFO:app.qr_generator:❓ Pregunta original: tengo dudas con la TNE
+INFO:app.qr_generator:🔍 Buscando URLs en texto: Error técnico. Intenta nuevamente....
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: ['tne_seguimiento']
+INFO:app.qr_generator:🔄 Usando QR en cache para: tne_seguimiento
+INFO:app.qr_generator:✅ QR agregado desde contexto: https://www.tne.cl
+INFO:app.qr_generator:🎊 Generación de QR completada: 1 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.tne.cl
+INFO:app.main:📱 QR generados: 1 códigos
+INFO:app.main:   🔗 QR para: https://www.tne.cl
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 0.53s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 34 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.59s para categoría 'asuntos_estudiantiles'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 1eeeef50-b0b4-4a90-989f-f4f234ca1be7
+INFO:     127.0.0.1:57189 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "1eeeef50-b0b4-4a90-989f-f4f234ca1be7",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=1eeeef50-b0b4-4a90-989f-f4f234ca1be7, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión 1eeeef50-b0b4-4a90-989f-f4f234ca1be7: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:57189 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:PRIORIDAD ALTA - Pregunta institucional: quiero sacar mi TNE
+INFO:app.main:✅ Pregunta aprobada por filtros: quiero sacar mi TNE - Categoría: asuntos_estudiantiles
+INFO:app.classifier:Keyword classification - Pregunta: 'quiero sacar mi TNE' -> 'asuntos_estudiantiles' (confianza: 0.55)
+INFO:app.main:Categoría detectada: asuntos_estudiantiles
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.39it/s]
+INFO:app.classifier:PRIORITY TEMPLATE: 'quiero sacar mi TNE' -> tne_primera_vez
+INFO:app.rag:TEMPLATE DETECTADO: 'quiero sacar mi TNE' -> tne_primera_vez
+INFO:app.templates:✅ Templates cargados: 93 templates en 7 categorías
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 589 caracteres
+INFO:app.qr_generator:❓ Pregunta original: quiero sacar mi TNE
+INFO:app.qr_generator:🔍 Buscando URLs en texto:
+🆕 **¿Cómo saco mi TNE por primera vez?**
+**Para estudiantes que ingresan por primera vez a la Educa...
+INFO:app.qr_generator:📎 URL detectada: https://portal.duoc.cl
+INFO:app.qr_generator:📎 URL detectada: https://www.tne.cl
+INFO:app.qr_generator:📊 Total URLs encontradas: 2
+INFO:app.qr_generator:📱 Generando QR para: https://portal.duoc.cl
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://portal.duoc.cl
+INFO:app.qr_generator:✅ QR agregado desde texto: https://portal.duoc.cl
+INFO:app.qr_generator:📱 Generando QR para: https://www.tne.cl
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.tne.cl
+INFO:app.qr_generator:✅ QR agregado desde texto: https://www.tne.cl
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: ['tne_seguimiento']
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://portal.duoc.cl
+INFO:app.qr_generator:   📱 QR: https://www.tne.cl
+INFO:app.rag:TEMPLATE RESPONSE: tne_primera_vez en 0.039s
+INFO:app.rag:QR generados desde template: 2 códigos
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: template
+INFO:app.main:📊 Tiempo total: 0.34s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 587 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.40s para categoría 'asuntos_estudiantiles'
+INFO:app.response_feedback:Nueva sesión de feedback creada: e52c4406-49ad-4b81-a228-4b37ebb8ad41
+INFO:     127.0.0.1:51980 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "e52c4406-49ad-4b81-a228-4b37ebb8ad41",
+  "isSatisfied": true
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=e52c4406-49ad-4b81-a228-4b37ebb8ad41, is_satisfied=True
+INFO:app.response_feedback:Feedback básico guardado para sesión e52c4406-49ad-4b81-a228-4b37ebb8ad41: satisfecho=True
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:51980 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:PRIORIDAD ALTA - Pregunta institucional: como puedo renovar la TNE
+INFO:app.main:✅ Pregunta aprobada por filtros: como puedo renovar la TNE - Categoría: asuntos_estudiantiles
+INFO:app.classifier:Keyword classification - Pregunta: 'como puedo renovar la TNE' -> 'asuntos_estudiantiles' (confianza: 0.55)
+INFO:app.main:Categoría detectada: asuntos_estudiantiles
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.66it/s]
+INFO:app.classifier:TEMPLATE MATCH: 'como puedo renovar la TNE' -> tne_revalidacion
+INFO:app.rag:TEMPLATE DETECTADO: 'como puedo renovar la TNE' -> tne_revalidacion
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 501 caracteres
+INFO:app.qr_generator:❓ Pregunta original: como puedo renovar la TNE
+INFO:app.qr_generator:🔍 Buscando URLs en texto:
+🔄 **Revalidar TNE (estudiantes con TNE previa):**
+• **Pago:** $1.100 en caja de sede o portal web
+•...
+INFO:app.qr_generator:📎 URL detectada: https://portal.duoc.cl
+INFO:app.qr_generator:📊 Total URLs encontradas: 1
+INFO:app.qr_generator:📱 Generando QR para: https://portal.duoc.cl
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://portal.duoc.cl
+INFO:app.qr_generator:✅ QR agregado desde texto: https://portal.duoc.cl
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: ['tne_seguimiento']
+INFO:app.qr_generator:📱 Generando QR para: https://www.tne.cl
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.tne.cl
+INFO:app.qr_generator:✅ QR agregado desde contexto: https://www.tne.cl
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://portal.duoc.cl
+INFO:app.qr_generator:   📱 QR: https://www.tne.cl
+INFO:app.rag:TEMPLATE RESPONSE: tne_revalidacion en 0.010s
+INFO:app.rag:QR generados desde template: 2 códigos
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: template
+INFO:app.main:📊 Tiempo total: 0.30s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 499 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.35s para categoría 'asuntos_estudiantiles'
+INFO:app.response_feedback:Nueva sesión de feedback creada: d552b517-bbb0-4f18-b66a-989f5d2bc519
+INFO:     127.0.0.1:62143 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "d552b517-bbb0-4f18-b66a-989f5d2bc519",
+  "isSatisfied": true
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=d552b517-bbb0-4f18-b66a-989f5d2bc519, is_satisfied=True
+INFO:app.response_feedback:Feedback básico guardado para sesión d552b517-bbb0-4f18-b66a-989f5d2bc519: satisfecho=True
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:62143 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:PRIORIDAD ALTA - Pregunta institucional: que certificados existen?
+INFO:app.main:✅ Pregunta aprobada por filtros: que certificados existen? - Categoría: asuntos_estudiantiles
+INFO:app.classifier:Keyword classification - Pregunta: 'que certificados existen?' -> 'asuntos_estudiantiles' (confianza: 0.70)
+INFO:app.main:Categoría detectada: asuntos_estudiantiles
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.17it/s]
+INFO:app.rag:Procesamiento: 'que certificados existen?' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'que certificados existen?'
+INFO:app.rag:Query Expansion: 'que certificados existen?' → 'que certificados existen? certificados alumno regular constancia record académico concentración de n...'
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 357 caracteres
+INFO:app.qr_generator:❓ Pregunta original: que certificados existen?
+INFO:app.qr_generator:🔍 Buscando URLs en texto: certificado de alumno regular del año en curso certificados constancia documento oficial record acad...
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: ['certificados']
+INFO:app.qr_generator:📱 Generando QR para: https://certificados.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://certificados.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado desde contexto: https://certificados.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 1 códigos creados
+INFO:app.qr_generator:   📱 QR: https://certificados.duoc.cl/
+INFO:app.main:📱 QR generados: 1 códigos
+INFO:app.main:   🔗 QR para: https://certificados.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 0.49s
+INFO:app.main:🔍 Fuentes utilizadas: 2
+INFO:app.main:📝 Longitud respuesta: 357 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.55s para categoría 'asuntos_estudiantiles'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 52ff5985-20c7-4181-b7c5-253fadfdf059
+INFO:     127.0.0.1:64777 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "52ff5985-20c7-4181-b7c5-253fadfdf059",
+  "isSatisfied": true
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=52ff5985-20c7-4181-b7c5-253fadfdf059, is_satisfied=True
+INFO:app.response_feedback:Feedback básico guardado para sesión 52ff5985-20c7-4181-b7c5-253fadfdf059: satisfecho=True
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:59600 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: que paginas puedes revisar?
+INFO:app.main:✅ Pregunta aprobada por filtros: que paginas puedes revisar? - Categoría: institucionales
+INFO:app.classifier:Fallback to topic classifier - Pregunta: 'que paginas puedes revisar?' -> 'institucionales'
+INFO:app.main:Categoría detectada: institucionales
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'institucionales'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.42it/s]
+INFO:app.rag:Procesamiento: 'que paginas puedes revisar?' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'que paginas puedes revisar?'
+INFO:app.rag:No se encontraron documentos para: que paginas puedes revisar
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 34 caracteres
+INFO:app.qr_generator:❓ Pregunta original: que paginas puedes revisar?
+INFO:app.qr_generator:🔍 Buscando URLs en texto: Error técnico. Intenta nuevamente....
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.main:📱 QR generados: 2 códigos
+INFO:app.main:   🔗 QR para: https://www.duoc.cl/alumnos/
+INFO:app.main:   🔗 QR para: https://ayuda.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 0.46s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 34 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.53s para categoría 'institucionales'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 394f799e-d0f5-4781-8620-329677f03e12
+INFO:     127.0.0.1:54119 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "394f799e-d0f5-4781-8620-329677f03e12",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=394f799e-d0f5-4781-8620-329677f03e12, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión 394f799e-d0f5-4781-8620-329677f03e12: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:54119 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: tengo dudas con la institucion
+INFO:app.main:❓ Tema desconocido/off-topic: tengo dudas con la institucion
+INFO:     127.0.0.1:54154 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: quiero saber sobre deportes
+INFO:app.main:✅ Pregunta aprobada por filtros: quiero saber sobre deportes - Categoría: deportes
+INFO:app.classifier:Keyword classification - Pregunta: 'quiero saber sobre deportes' -> 'deportes' (confianza: 0.50)
+INFO:app.main:Categoría detectada: deportes
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'deportes'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.30it/s]
+INFO:app.rag:Procesamiento: 'quiero saber sobre deportes' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'quiero saber sobre deportes'
+INFO:app.rag:Query Expansion: 'quiero saber sobre deportes' → 'quiero saber sobre deportes deportes actividad física taller deportivo entrenamiento gimnasio maiclu...'
+INFO:app.rag:No se encontraron documentos para: quiero saber sobre deportes actividad física taller deportivo entrenamiento gimnasio maiclub entretiempo acquatiempo deporte duoc selección deportiva ejercicio talleres clase grupal complejo instalaciones deportivas
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 34 caracteres
+INFO:app.qr_generator:❓ Pregunta original: quiero saber sobre deportes
+INFO:app.qr_generator:🔍 Buscando URLs en texto: Error técnico. Intenta nuevamente....
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.main:📱 QR generados: 2 códigos
+INFO:app.main:   🔗 QR para: https://www.duoc.cl/alumnos/
+INFO:app.main:   🔗 QR para: https://ayuda.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 0.47s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 34 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.53s para categoría 'deportes'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 6dc90b57-99a7-4244-aaf8-0cea35174e5b
+INFO:     127.0.0.1:60160 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "6dc90b57-99a7-4244-aaf8-0cea35174e5b",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=6dc90b57-99a7-4244-aaf8-0cea35174e5b, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión 6dc90b57-99a7-4244-aaf8-0cea35174e5b: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:60160 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: como puedo saber sobre deportes en la sede
+INFO:app.main:✅ Pregunta aprobada por filtros: como puedo saber sobre deportes en la sede - Categoría: deportes
+INFO:app.classifier:Keyword classification - Pregunta: 'como puedo saber sobre deportes en la sede' -> 'deportes' (confianza: 0.50)
+INFO:app.main:Categoría detectada: deportes
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'deportes'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.08it/s]
+INFO:app.rag:Procesamiento: 'como puedo saber sobre deportes en la sede' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'como puedo saber sobre deportes en la sede'
+INFO:app.rag:Query Expansion: 'como puedo saber sobre deportes en la sede' → 'como puedo saber sobre deportes en la sede deportes actividad física taller deportivo entrenamiento ...'
+INFO:app.rag:No se encontraron documentos para: como puedo saber sobre deportes en la sede actividad física taller deportivo entrenamiento gimnasio maiclub entretiempo acquatiempo deporte duoc selección deportiva ejercicio talleres clase grupal complejo instalaciones deportivas
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 34 caracteres
+INFO:app.qr_generator:❓ Pregunta original: como puedo saber sobre deportes en la sede
+INFO:app.qr_generator:🔍 Buscando URLs en texto: Error técnico. Intenta nuevamente....
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: ['plaza_norte']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/sede/plaza-norte/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/sede/plaza-norte/
+INFO:app.qr_generator:✅ QR agregado desde contexto: https://www.duoc.cl/sede/plaza-norte/
+INFO:app.qr_generator:🎊 Generación de QR completada: 1 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/sede/plaza-norte/
+INFO:app.main:📱 QR generados: 1 códigos
+INFO:app.main:   🔗 QR para: https://www.duoc.cl/sede/plaza-norte/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 0.49s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 34 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.55s para categoría 'deportes'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 9f7d45f8-d916-4583-b1d8-b48a9cf254b0
+INFO:     127.0.0.1:55134 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "9f7d45f8-d916-4583-b1d8-b48a9cf254b0",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=9f7d45f8-d916-4583-b1d8-b48a9cf254b0, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión 9f7d45f8-d916-4583-b1d8-b48a9cf254b0: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:55134 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: quiero saber que talleres de deportes existen
+INFO:app.main:✅ Pregunta aprobada por filtros: quiero saber que talleres de deportes existen - Categoría: deportes
+INFO:app.classifier:Keyword classification - Pregunta: 'quiero saber que talleres de deportes existen' -> 'deportes' (confianza: 0.50)
+INFO:app.main:Categoría detectada: deportes
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'deportes'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.93it/s]
+INFO:app.rag:Combo detectado: ['quiero saber que talleres de deportes existen', 'quiero saber que talleres de deportes existen']
+INFO:app.rag:Procesamiento: 'quiero saber que talleres de deportes existen' -> Estrategia: multiple_queries
+INFO:app.rag:Procesando 2 consultas múltiples: ['quiero saber que talleres de deportes existen', 'quiero saber que talleres de deportes existen']
+INFO:app.rag:  Procesando parte 1: 'quiero saber que talleres de deportes existen'
+INFO:app.rag:Query Expansion: 'quiero saber que talleres de deportes existen' → 'quiero saber que talleres de deportes existen deportes actividad física taller deportivo entrenamien...'
+INFO:app.rag:No se encontraron documentos para: quiero saber que talleres de deportes existen actividad física taller deportivo entrenamiento gimnasio maiclub entretiempo acquatiempo deporte duoc selección deportiva ejercicio clase grupal complejo instalaciones deportivas
+INFO:app.rag:  Procesando parte 2: 'quiero saber que talleres de deportes existen'
+INFO:app.rag:Query Expansion: 'quiero saber que talleres de deportes existen' → 'quiero saber que talleres de deportes existen deportes actividad física taller deportivo entrenamien...'
+INFO:app.rag:No se encontraron documentos para: quiero saber que talleres de deportes existen actividad física taller deportivo entrenamiento gimnasio maiclub entretiempo acquatiempo deporte duoc selección deportiva ejercicio clase grupal complejo instalaciones deportivas
+INFO:app.rag:Consultas múltiples procesadas en 0.08s
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 422 caracteres
+INFO:app.qr_generator:❓ Pregunta original: quiero saber que talleres de deportes existen
+INFO:app.qr_generator:🔍 Buscando URLs en texto: **Varias consultas detectadas:**
+
+**1. quiero saber que talleres de deportes existen:**
+**Deportes**...
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: multiple_queries
+INFO:app.main:📊 Tiempo total: 0.38s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 422 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.44s para categoría 'deportes'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 82f00a89-212f-4167-9c05-af24b3daa844
+INFO:     127.0.0.1:52941 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "82f00a89-212f-4167-9c05-af24b3daa844",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=82f00a89-212f-4167-9c05-af24b3daa844, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión 82f00a89-212f-4167-9c05-af24b3daa844: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:65420 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: ayuda
+INFO:app.main:✅ Pregunta aprobada por filtros: ayuda - Categoría: institucionales
+INFO:app.classifier:Keyword classification - Pregunta: 'ayuda' -> 'institucionales' (confianza: 0.25)
+INFO:app.main:Categoría detectada: institucionales
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'institucionales'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  6.21it/s]
+INFO:app.rag:Procesamiento: 'ayuda' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'ayuda'
+INFO:app.rag:No se encontraron documentos para: ayuda
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 34 caracteres
+INFO:app.qr_generator:❓ Pregunta original: ayuda
+INFO:app.qr_generator:🔍 Buscando URLs en texto: Error técnico. Intenta nuevamente....
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: ['ayuda']
+INFO:app.qr_generator:🔄 Usando QR en cache para: ayuda
+INFO:app.qr_generator:✅ QR agregado desde contexto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 1 códigos creados
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.main:📱 QR generados: 1 códigos
+INFO:app.main:   🔗 QR para: https://ayuda.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 0.33s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 34 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.40s para categoría 'institucionales'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 2fc8e8f3-5b2b-47ad-b97c-4bf863ea0b0f
+INFO:     127.0.0.1:65420 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "2fc8e8f3-5b2b-47ad-b97c-4bf863ea0b0f",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=2fc8e8f3-5b2b-47ad-b97c-4bf863ea0b0f, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión 2fc8e8f3-5b2b-47ad-b97c-4bf863ea0b0f: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:65420 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:PRIORIDAD ALTA - Pregunta institucional: Duoc uc
+INFO:app.main:✅ Pregunta aprobada por filtros: Duoc uc - Categoría: institucionales
+INFO:app.classifier:Keyword classification - Pregunta: 'Duoc uc' -> 'institucionales' (confianza: 0.50)
+INFO:app.main:Categoría detectada: institucionales
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'institucionales'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.64it/s]
+INFO:app.rag:Procesamiento: 'Duoc uc' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'Duoc uc'
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 100 caracteres
+INFO:app.qr_generator:❓ Pregunta original: Duoc uc
+INFO:app.qr_generator:🔍 Buscando URLs en texto: todos los estudiantes regulares de duoc uc
+
+todos los estudiantes de duoc uc con su cuenta duocuc cl...
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.main:📱 QR generados: 2 códigos
+INFO:app.main:   🔗 QR para: https://www.duoc.cl/alumnos/
+INFO:app.main:   🔗 QR para: https://ayuda.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 0.44s
+INFO:app.main:🔍 Fuentes utilizadas: 2
+INFO:app.main:📝 Longitud respuesta: 100 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.50s para categoría 'institucionales'
+INFO:app.response_feedback:Nueva sesión de feedback creada: bc2069cc-e7e0-4b48-a776-2a93c0f7c353
+INFO:     127.0.0.1:65420 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "bc2069cc-e7e0-4b48-a776-2a93c0f7c353",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=bc2069cc-e7e0-4b48-a776-2a93c0f7c353, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión bc2069cc-e7e0-4b48-a776-2a93c0f7c353: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:64259 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54948 - "OPTIONS /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: tengo 2 duas
+INFO:app.main:❓ Tema desconocido/off-topic: tengo 2 duas
+INFO:     127.0.0.1:54948 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: tengo 2 consultas
+INFO:app.main:❓ Tema desconocido/off-topic: tengo 2 consultas
+INFO:     127.0.0.1:54948 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: hola
+INFO:app.main:✅ Pregunta aprobada por filtros: hola - Categoría: institucionales
+INFO:app.classifier:Keyword classification - Pregunta: 'hola' -> 'institucionales' (confianza: 0.75)
+INFO:app.main:Categoría detectada: institucionales
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'institucionales'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  5.03it/s]
+INFO:app.classifier:TEMPLATE MATCH: 'hola' -> saludo_inicial
+INFO:app.rag:TEMPLATE DETECTADO: 'hola' -> saludo_inicial
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 1021 caracteres
+INFO:app.qr_generator:❓ Pregunta original: hola
+INFO:app.qr_generator:🔍 Buscando URLs en texto:
+👋 **¡Hola! Soy INA, tu asistente virtual de Duoc UC**
+**¿En qué puedo ayudarte hoy?**
+🎯 **Puedo ori...
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.rag:TEMPLATE RESPONSE: saludo_inicial en 0.011s
+INFO:app.rag:QR generados desde template: 2 códigos
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: template
+INFO:app.main:📊 Tiempo total: 0.24s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 1019 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.30s para categoría 'institucionales'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 3ca6834a-1762-4637-8a88-440da110e2c9
+INFO:     127.0.0.1:60756 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: quiero hacer consultas
+INFO:app.main:❓ Tema desconocido/off-topic: quiero hacer consultas
+INFO:     127.0.0.1:60756 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60756 - "OPTIONS /feedback/response HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "3ca6834a-1762-4637-8a88-440da110e2c9",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=3ca6834a-1762-4637-8a88-440da110e2c9, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión 3ca6834a-1762-4637-8a88-440da110e2c9: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:64645 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: tengo dudas con
+INFO:app.main:❓ Tema desconocido/off-topic: tengo dudas con
+INFO:     127.0.0.1:55415 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: tengo multiples dudas sobre la sede
+INFO:app.main:✅ Pregunta aprobada por filtros: tengo multiples dudas sobre la sede - Categoría: institucionales
+INFO:app.classifier:Keyword classification - Pregunta: 'tengo multiples dudas sobre la sede' -> 'institucionales' (confianza: 0.50)
+INFO:app.main:Categoría detectada: institucionales
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'institucionales'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  4.10it/s]
+INFO:app.rag:Procesamiento: 'tengo multiples dudas sobre la sede' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'tengo multiples dudas sobre la sede'
+INFO:app.rag:No se encontraron documentos para: tengo multiples dudas sobre la sede
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 34 caracteres
+INFO:app.qr_generator:❓ Pregunta original: tengo multiples dudas sobre la sede
+INFO:app.qr_generator:🔍 Buscando URLs en texto: Error técnico. Intenta nuevamente....
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: ['plaza_norte']
+INFO:app.qr_generator:🔄 Usando QR en cache para: plaza_norte
+INFO:app.qr_generator:✅ QR agregado desde contexto: https://www.duoc.cl/sede/plaza-norte/
+INFO:app.qr_generator:🎊 Generación de QR completada: 1 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/sede/plaza-norte/
+INFO:app.main:📱 QR generados: 1 códigos
+INFO:app.main:   🔗 QR para: https://www.duoc.cl/sede/plaza-norte/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 0.41s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 34 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.47s para categoría 'institucionales'
+INFO:app.response_feedback:Nueva sesión de feedback creada: f6f752bf-ac98-4642-8a1e-d9ab2e0e1675
+INFO:     127.0.0.1:58945 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "f6f752bf-ac98-4642-8a1e-d9ab2e0e1675",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=f6f752bf-ac98-4642-8a1e-d9ab2e0e1675, is_satisfied=False
+INFO:app.response_feedback:Feedback básico guardado para sesión f6f752bf-ac98-4642-8a1e-d9ab2e0e1675: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:58945 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56611 - "OPTIONS /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: puedes hablar sobre politica?
+INFO:app.main:❓ Tema desconocido/off-topic: puedes hablar sobre politica?
+INFO:     127.0.0.1:56611 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: puedes hablar de drogas
+INFO:app.main:❓ Tema desconocido/off-topic: puedes hablar de drogas
+INFO:     127.0.0.1:63307 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: sexo
+INFO:app.main:❓ Tema desconocido/off-topic: sexo
+INFO:     127.0.0.1:63307 - "POST /chat HTTP/1.1" 200 OK
+WARNING:app.content_filter:Pregunta bloqueada por patrón: \b(mat[ae]r|asesin[ae]r|violar|dañar gravemente)\b
+INFO:app.main:❓ Tema desconocido/off-topic: matar
+INFO:     127.0.0.1:63307 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: suicidio
+INFO:app.main:❓ Tema desconocido/off-topic: suicidio
+INFO:     127.0.0.1:63307 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: autolesiones
+INFO:app.main:❓ Tema desconocido/off-topic: autolesiones
+INFO:     127.0.0.1:63307 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: dulces
+INFO:app.main:❓ Tema desconocido/off-topic: dulces
+INFO:     127.0.0.1:63307 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: videojuegos
+INFO:app.main:❓ Tema desconocido/off-topic: videojuegos
+INFO:     127.0.0.1:63307 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: cine
+INFO:app.main:❓ Tema desconocido/off-topic: cine
+INFO:     127.0.0.1:63307 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: musica
+INFO:app.main:❓ Tema desconocido/off-topic: musica
+INFO:     127.0.0.1:63307 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: inteligencia artificial
+INFO:app.main:❓ Tema desconocido/off-topic: inteligencia artificial
+INFO:     127.0.0.1:55011 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: politica
+INFO:app.main:❓ Tema desconocido/off-topic: politica
+INFO:     127.0.0.1:55011 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: izquierda
+INFO:app.main:❓ Tema desconocido/off-topic: izquierda
+INFO:     127.0.0.1:55011 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: derecha
+INFO:app.main:❓ Tema desconocido/off-topic: derecha
+INFO:     127.0.0.1:55011 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: nazis
+INFO:app.main:❓ Tema desconocido/off-topic: nazis
+INFO:     127.0.0.1:55011 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: comunistas
+INFO:app.main:❓ Tema desconocido/off-topic: comunistas
+INFO:     127.0.0.1:55011 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: israel
+INFO:app.main:❓ Tema desconocido/off-topic: israel
+INFO:     127.0.0.1:57581 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Pregunta permitida por términos institucionales: palestina
+INFO:app.main:✅ Pregunta aprobada por filtros: palestina - Categoría: institucionales
+INFO:app.classifier:Fallback to topic classifier - Pregunta: 'palestina' -> 'institucionales'
+INFO:app.main:Categoría detectada: institucionales
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'institucionales'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  5.07it/s]
+INFO:app.rag:Procesamiento: 'palestina' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'palestina'
+INFO:app.rag:No se encontraron documentos para: palestina
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 500 Internal Server Error"
+ERROR:app.rag:Error en RAG estándar: model requires more system memory than is currently available unable to load full model on GPU (status code: 500)
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 34 caracteres
+INFO:app.qr_generator:❓ Pregunta original: palestina
+INFO:app.qr_generator:🔍 Buscando URLs en texto: Error técnico. Intenta nuevamente....
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.main:📱 QR generados: 2 códigos
+INFO:app.main:   🔗 QR para: https://www.duoc.cl/alumnos/
+INFO:app.main:   🔗 QR para: https://ayuda.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 0.39s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 34 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.46s para categoría 'institucionales'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 2a2ee868-d01c-4b92-8f0f-80cf3e0427ba
+INFO:     127.0.0.1:57581 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57581 - "OPTIONS /feedback/response HTTP/1.1" 200 OK
+INFO:app.main:🎯 DEBUG - RAW DATA RECEIVED:
+INFO:app.main:🎯 DEBUG - Tipo: <class 'dict'>
+INFO:app.main:🎯 DEBUG - Contenido: {
+  "currentFeedbackSession": "2a2ee868-d01c-4b92-8f0f-80cf3e0427ba",
+  "isSatisfied": false
+}
+INFO:app.main:🎯 DEBUG - Campos encontrados: session_id=2a2ee868-d01c-4b92-8f0f-80cf3e0427ba, is_satisfied=False
+INFO:app.response_feedback:Sesión expirada eliminada: 1ab02b3c-ade7-4b63-ace7-5bdbe455052a
+INFO:app.response_feedback:Sesión expirada eliminada: 1eeeef50-b0b4-4a90-989f-f4f234ca1be7
+INFO:app.response_feedback:Sesión expirada eliminada: e52c4406-49ad-4b81-a228-4b37ebb8ad41
+INFO:app.response_feedback:Sesión expirada eliminada: d552b517-bbb0-4f18-b66a-989f5d2bc519
+INFO:app.response_feedback:Sesión expirada eliminada: 52ff5985-20c7-4181-b7c5-253fadfdf059
+INFO:app.response_feedback:Sesión expirada eliminada: 394f799e-d0f5-4781-8620-329677f03e12
+INFO:app.response_feedback:Sesión expirada eliminada: 6dc90b57-99a7-4244-aaf8-0cea35174e5b
+INFO:app.response_feedback:Sesión expirada eliminada: 9f7d45f8-d916-4583-b1d8-b48a9cf254b0
+INFO:app.response_feedback:Sesión expirada eliminada: 82f00a89-212f-4167-9c05-af24b3daa844
+INFO:app.response_feedback:Sesión expirada eliminada: 2fc8e8f3-5b2b-47ad-b97c-4bf863ea0b0f
+INFO:app.response_feedback:Sesión expirada eliminada: bc2069cc-e7e0-4b48-a776-2a93c0f7c353
+INFO:app.response_feedback:Sesión expirada eliminada: 3ca6834a-1762-4637-8a88-440da110e2c9
+INFO:app.response_feedback:Feedback básico guardado para sesión 2a2ee868-d01c-4b92-8f0f-80cf3e0427ba: satisfecho=False
+INFO:app.main:✅ Feedback básico guardado exitosamente
+INFO:     127.0.0.1:57581 - "POST /feedback/response HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: filtros
+INFO:app.main:❓ Tema desconocido/off-topic: filtros
+INFO:     127.0.0.1:57581 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: hamburgesa
+INFO:app.main:❓ Tema desconocido/off-topic: hamburgesa
+INFO:     127.0.0.1:49429 - "POST /chat HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [8312]
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "C:\Users\SSDD1\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\SSDD1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\SSDD1\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 313, in _bootstrap
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Users\SSDD1\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\SSDD1\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\_subprocess.py", line 78, in subprocess_started
+    target(sockets=sockets)
+    ~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\SSDD1\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\SSDD1\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\SSDD1\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+INFO:     Stopping reloader process [15288]
+
+(venv) C:\Users\SSDD1\Documents\GitHub\Proyecto_InA\ina-backend>
