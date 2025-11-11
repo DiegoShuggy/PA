@@ -29,6 +29,31 @@ class ContentFilter:
             r"\b(porno|xxx|desnudo explícito|onlyfans)\b",
             r"\b(contraseña|clave secreta|cvv|pin)\b"
         ]
+                # En el __init__ del ContentFilter, agregar:
+        self.opinion_blockers = [
+            # Palabras que suelen preceder a solicitudes de opinión
+            "qué opinas", "cuál es tu opinión", "qué piensas", "te parece",
+            "crees que", "consideras que", "dirías que", "recomiendas",
+            "aconsejas", "sugieres", "cuál crees", "piensas que",
+            
+            # Contextos subjetivos peligrosos
+            "mejor carrera", "peor carrera", "más fácil", "más difícil",
+            "recomendación personal", "tu favorito", "prefieres",
+            
+            # Evaluaciones subjetivas
+            "es bueno", "es malo", "vale la pena", "es mejor que",
+            "es peor que", "es recomendable", "no recomiendo"
+        ]
+
+        self.opinion_patterns = [
+            r"\b(qué|cuál).*opini[óo]n",
+            r"\b(qué|cuál).*piensas",
+            r"\b(crees|piensas).*que",
+            r"\b(mejor|peor).*carrera",
+            r"\b(recomiendas|aconsejas).*",
+            r"\b(te parece).*",
+            r"\b(sugieres).*"
+        ]
 
         # TÉRMINOS INSTITUCIONALES PERMITIDOS (MUY AMPLIO PARA EVITAR FALSOS OFF-TOPIC)
         self.allowed_terms = [
@@ -155,6 +180,14 @@ class ContentFilter:
                 "reason": "Término institucional fuerte detectado",
                 "category": category or "institucionales"
             }
+                # BLOQUEO DE SOLICITUDES DE OPINIÓN
+        if self._is_opinion_request(question_lower):
+            return {
+                "allowed": False,
+                "reason": "No puedo ofrecer opiniones personales. Puedo proporcionarte información objetiva sobre los servicios del Punto Estudiantil.",
+                "category": None,
+                "block_reason": "opinion_request"
+            }
 
         # PRIORIDAD 3: TÉRMINOS PERMITIDOS
         if self._contains_allowed_terms(question_lower):
@@ -208,6 +241,18 @@ class ContentFilter:
 
     def _contains_allowed_terms(self, question: str) -> bool:
         return any(term in question for term in self.allowed_terms)
+
+    def _is_opinion_request(self, question: str) -> bool:
+        """Detecta solicitudes de opinión personal"""
+        # Verificar palabras clave directas
+        if any(phrase in question for phrase in self.opinion_blockers):
+            return True
+
+        # Verificar patrones regex
+        if any(re.search(pattern, question) for pattern in self.opinion_patterns):
+            return True
+
+        return False
 
     def _is_in_allowed_context(self, question: str) -> bool:
         for context_list in self.allowed_contexts.values():
