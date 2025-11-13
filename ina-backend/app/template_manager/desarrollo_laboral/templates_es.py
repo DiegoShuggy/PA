@@ -108,4 +108,79 @@ Es el área institucional que te acompaña en tu proceso de inserción y desarro
 🔗 **Inscripciones:** https://duoclaboral.cl/talleres
 💡 *85% de participantes consigue empleo en 3 meses después de los talleres*
 """,
+
+    "beneficios_titulados": """
+🎓 **Beneficios para Titulados en Desarrollo Laboral**
+**Apoyo continuo después de graduarte:**
+✅ **Servicios exclusivos:**
+• **Acceso permanente** a DuocLaboral
+• **Actualización de CV** sin costo
+• **Alertas laborales** personalizadas
+• **Ferias de empleo** exclusivas para titulados
+• **Networking** con empresas partners
+🎯 **Programas especiales:**
+• **Follow Up:** Seguimiento laboral primer año
+• **Alumni Network:** Red de contactos profesionales
+• **Capacitaciones continuas:** Actualización de habilidades
+• **Mentorías:** Con profesionales senior
+💼 **Estadísticas 2024:**
+• 78% encuentra trabajo en 6 meses
+• 45% mejora salario respecto primer empleo
+• 92% satisfacción con servicios
+👩‍💼 **Coordinadora:** Claudia Cortés - ccortesn@duoc.cl
+🔗 **Portal:** https://duoclaboral.cl/titulados
+💡 *Tu relación con Duoc UC no termina al titularte*
+""",
+
+    "simulaciones_entrevistas": """
+🎭 **Simulaciones de Entrevistas Laborales**
+**Prepárate para tus entrevistas** con ejercicios prácticos y retroalimentación profesional.
+✅ **¿Qué incluye?**
+• Simulación de entrevista real (30-45 min)
+• Preguntas técnicas según tu carrera
+• Evaluación de comunicación no verbal
+• Retroalimentación personalizada detallada
+• Consejos específicos para mejorar
+🎯 **Tipos de entrevistas:**
+• **Entrevista técnica:** Preguntas específicas de tu área
+• **Entrevista por competencias:** Situaciones y comportamientos
+• **Entrevista grupal:** Dinámicas de grupo
+• **Entrevista panel:** Múltiples entrevistadores
+📅 **Duración:** 1 hora (30 min simulación + 30 min feedback)
+💻 **Modalidades:** Presencial y virtual
+👩‍💼 **Conductores:** Claudia Cortés y psicólogos laborales
+🔗 **Agendar:** https://duoclaboral.cl/simulaciones
+📞 **Contacto:** +56 2 2360 6450
+💡 *Los candidatos que practican entrevistas tienen 60% más probabilidades de éxito*
+""",
+
+    "que_es_desarrollo_laboral": """🏢 **¿Qué es Desarrollo Laboral en Duoc UC?**
+**Dirección que apoya tu inserción y crecimiento profesional**
+
+✅ **Misión:**
+• **Facilitar la empleabilidad** de estudiantes y egresados
+• **Conectar talento** con oportunidades laborales
+• **Desarrollar habilidades** para el mundo laboral
+• **Acompañar la transición** entre estudio y trabajo
+
+🎯 **Servicios que ofrece:**
+• **Bolsa de Empleo:** Ofertas laborales y prácticas
+• **Talleres de Empleabilidad:** CV, entrevistas, LinkedIn
+• **Simulaciones:** Entrevistas laborales reales
+• **Asesorías personalizadas** para tu carrera
+• **Ferias Laborales** con empresas empleadoras
+• **Seguimiento a egresados** y apoyo continuo
+
+👥 **Equipo Sede Plaza Norte:**
+• **Coordinadora:** Claudia Cortés Soto
+• **Email:** claudia.cortes@duoc.cl
+• **Teléfono:** +56 2 2360 6450
+
+🔗 **Plataformas:**
+• **Portal principal:** https://duoclaboral.cl
+• **Postulación trabajos:** https://duoclaboral.cl/empleos
+• **Recursos:** https://duoclaboral.cl/recursos
+
+💡 *Tu puente hacia el éxito profesional*
+""",
 }

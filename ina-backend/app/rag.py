@@ -586,7 +586,13 @@ class RAGEngine:
                 try:
                     from app.template_manager.templates_manager import template_manager, detect_area_from_query
                     
-                    detected_area = detect_area_from_query(original_query)
+                    detected_area_tuple = detect_area_from_query(original_query)
+                    detected_area = detected_area_tuple[0]  # Solo tomar el área, no la tupla completa
+                    
+                    # Override específico para desinscripción deportiva
+                    if template_id == "desinscripcion_optativos" and category == "deportes":
+                        detected_area = "deportes"
+                        logger.info(f"🔧 Override: Forzando área 'deportes' para template 'desinscripcion_optativos'")
                     
                     # Buscar template en nuevo sistema (español como fallback)
                     template_response = template_manager.get_template(detected_area, template_id, 'es')
