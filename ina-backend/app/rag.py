@@ -350,14 +350,34 @@ class RAGEngine:
                     'metadata': best_match['metadata']
                 }
         
-        # 1. PRIMERO VERIFICAR TEMPLATES (MÁS RÁPIDO)
+        # 1. PRIMERO VERIFICAR TEMPLATES (MÁS RÁPIDO) CON DETECCIÓN DE IDIOMA MEJORADA
+        # Usar el nuevo método que incluye información de idioma
+        try:
+            classification_info = classifier.get_classification_info(user_message)
+            detected_language = classification_info.get('language', 'es')
+            category = classification_info.get('category', 'otros')
+            confidence = classification_info.get('confidence', 0.5)
+            
+            print(f"🌍 Idioma detectado: {detected_language}, Categoría: {category}, Confianza: {confidence:.2f}")
+            logger.info(f"CLASIFICACIÓN COMPLETA: '{user_message}' -> {category} ({detected_language}) conf:{confidence:.2f}")
+        except Exception as e:
+            logger.warning(f"Error obteniendo información completa, usando detección básica: {e}")
+            detected_language = self.detect_language(user_message)
+            category = classifier.classify_question(user_message)
+            confidence = 0.6
+        
+        print(f"🌍 Idioma detectado: {detected_language}")
+        
         template_match = classifier.detect_template_match(user_message)
         if template_match:
+            print(f"📋 Template detectado: {template_match} para idioma {detected_language}")
             logger.info(f"TEMPLATE DETECTADO: '{user_message}' -> {template_match}")
             return {
                 'processing_strategy': 'template',
                 'original_query': user_message,
                 'template_id': template_match,
+                'detected_language': detected_language,
+                'category': category,
                 'query_parts': [user_message]
             }
         
@@ -446,28 +466,151 @@ class RAGEngine:
         
         return response_info
 
+    def detect_language(self, query: str) -> str:
+        """Detecta el idioma de la consulta basándose en palabras clave"""
+        query_lower = query.lower()
+        
+        # Palabras indicadoras de inglés - ESPECÍFICAS Y EXPANDIDAS
+        english_words = [
+            'how', 'what', 'when', 'where', 'why', 'the', 'and', 'student', 'card', 'insurance', 
+            'work', 'does', 'get', 'my', 'renew', 'lost', 'damaged', 'emergency',
+            'requirements', 'apply', 'information', 'coverage', 'application', 'categories',
+            'support', 'programs', 'there', 'can', 'should', 'will', 'would', 'could',
+            'mental', 'health', 'supports', 'exist', 'person', 'care', 'crisis', 'feel',
+            'unwell', 'campus', 'tried', 'schedule', 'find', 'available', 'appointments',
+            'many', 'sessions', 'year', 'virtual', 'psychologist', 'provide', 'medical',
+            'leave', 'know', 'classmate', 'going', 'through', 'difficult', 'time',
+            'help', 'disabilities', 'started', 'ambassadors', 'course', 'advance',
+            'next', 'module', 'finished', 'additional', 'responsibility', 'after',
+            'completing', 'if', 'is', 'any', 'do', 'have'
+        ]
+        
+        # Palabras indicadoras de francés - EXPANDIDAS
+        french_words = [
+            # Interrogativos franceses
+            'comment', 'quest', 'quand', 'quelles', 'pourquoi', 'combien', 'que',
+            # Específicos franceses
+            'étudiant', 'étudiants', 'carte', 'assurance', 'fonctionne', 'obtenir', 
+            'renouveler', 'perdue', 'endommagée', 'programme', 'urgence', 'conditions', 
+            'postuler', 'information', 'puis-je', 'puis', 'soutien', 
+            # Términos de salud mental en francés
+            'psychologue', 'santé', 'mentale', 'bien-être', 'soins', 'psychologiques',
+            'sessions', 'thérapie', 'conseil', 'crise', 'aide', 'arrêt', 'maladie',
+            'camarade', 'traverse', 'mauvais', 'moment', 'handicapés', 'ambassadeurs',
+            'existe-t-il', 'présentiel', 'créneaux', 'disponibles', 'responsabilité',
+            'supplémentaire', 'terminé', 'cours', 'avancer', 'module', 'suivant',
+            # Conectores franceses únicos
+            'mais', 'avec', 'pour', 'dans', 'sur', 'après', 'avoir', 'être',
+            'fournir', 'faire', 'savoir', 'passer', 'commencé', 'peux', 'veut',
+            'demander', 'réalisé'
+        ]
+        
+        # Contar coincidencias
+        english_score = sum(1 for word in english_words if word in query_lower)
+        french_score = sum(1 for word in french_words if word in query_lower)
+        
+        # Logging detallado para debugging
+        print(f"🔍 Análisis de idioma para: '{query_lower[:50]}...'")
+        print(f"   📊 Puntuación inglés: {english_score} palabras")
+        print(f"   📊 Puntuación francés: {french_score} palabras")
+        
+        # Determinación de idioma - LÓGICA MEJORADA
+        if english_score >= 2 and english_score > french_score:
+            print(f"   🇺🇸 RESULTADO: INGLÉS (score: {english_score})")
+            return 'en'
+        elif french_score >= 2 and french_score > english_score:
+            print(f"   🇫🇷 RESULTADO: FRANCÉS (score: {french_score})")
+            return 'fr'
+        elif english_score > 0 and english_score > french_score:
+            print(f"   🇺🇸 RESULTADO: INGLÉS (score bajo: {english_score})")
+            return 'en'
+        elif french_score > 0:
+            print(f"   🇫🇷 RESULTADO: FRANCÉS (score bajo: {french_score})")
+            return 'fr'
+        else:
+            print(f"   🇪🇸 RESULTADO: ESPAÑOL (por defecto, en:{english_score}, fr:{french_score})")
+            return 'es'  # Por defecto español
+    
     def generate_template_response(self, processing_info: Dict) -> Dict:
-        """GENERAR RESPUESTA DESDE TEMPLATE CON QR CODES CORREGIDO"""
+        """GENERAR RESPUESTA DESDE TEMPLATE CON QR CODES CORREGIDO CON SOPORTE MULTIIDIOMA"""
         import time
         start_time = time.time()
         
         template_id = processing_info['template_id']
+        original_query = processing_info.get('original_query', '')
         
-        # CARGAR TEMPLATES
+        # DETECTAR IDIOMA - PRIORIZAR EL DEL PROCESSING_INFO SI ESTÁ DISPONIBLE
+        detected_language = processing_info.get('detected_language', None)
+        if not detected_language:
+            detected_language = self.detect_language(original_query)
+        
+        print(f"🗣️ Idioma detectado: {detected_language} para '{original_query[:50]}...'")
+        logger.info(f"🌍 Idioma detectado: '{detected_language}' para query: '{original_query}'")
+        
+        # CARGAR TEMPLATES - PRIORIDAD AL SISTEMA MULTIIDIOMA
         try:
-            from app.templates import TEMPLATES
-            
-            # Buscar template en todas las categorías
             template_response = None
             template_category = None
             
-            for category, templates in TEMPLATES.items():
-                if template_id in templates:
-                    template_response = templates[template_id]
-                    template_category = category
-                    break
+            # PRIMERO: Intentar con templates multiidioma nuevos
+            from app.templates import MULTILINGUAL_TEMPLATES, get_multilingual_template
             
+            multilingua_response = get_multilingual_template(template_id, detected_language)
+            if multilingua_response:
+                template_response = multilingua_response
+                template_category = processing_info.get('category', 'asuntos_estudiantiles')
+                print(f"✅ Template multiidioma encontrado: {template_id} en {template_category} ({detected_language})")
+                logger.info(f"✅ Template multiidioma '{template_id}' encontrado en '{template_category}' idioma '{detected_language}'")
+            else:
+                print(f"❌ Template multiidioma NO encontrado: {template_id} en {template_category} ({detected_language})")
+                logger.warning(f"❌ Template multiidioma '{template_id}' NO encontrado en '{template_category}' idioma '{detected_language}'")
+            
+            # SEGUNDO: Si no se encontró, usar sistema anterior
+            if not template_response:
+                from app.templates import TEMPLATES
+                
+                # Buscar template en todas las categorías del sistema español
+                for category, templates in TEMPLATES.items():
+                    if template_id in templates:
+                        template_response = templates[template_id]
+                        template_category = category
+                        if detected_language != 'es':
+                            print(f"⚠️ Usando template español como fallback para idioma {detected_language}")
+                        else:
+                            print(f"📋 Template español usado: {template_id} en {category}")
+                        logger.info(f"✅ Template español '{template_id}' encontrado en categoría '{template_category}'")
+                        break
+            
+            # TERCERO: Si aún no se encuentra, intentar multiidioma en español
+            if not template_response:
+                try:
+                    from app.template_manager.templates_manager import template_manager, detect_area_from_query
+                    
+                    detected_area = detect_area_from_query(original_query)
+                    
+                    # Buscar template en nuevo sistema (español como fallback)
+                    template_response = template_manager.get_template(detected_area, template_id, 'es')
+                    template_category = detected_area
+                    
+                    if template_response:
+                        logger.info(f"✅ Template fallback '{template_id}' encontrado en área '{detected_area}' idioma 'es'")
+                
+                except Exception as e:
+                    logger.warning(f"Error en sistema multiidioma fallback: {e}")
+            
+            # LOGGING DE RESULTADOS FINAL
             if template_response:
+                logger.info(f"🎯 Template FINAL: '{template_id}' en idioma '{detected_language}' categoría '{template_category}'")
+            else:
+                logger.warning(f"❌ Template '{template_id}' NO encontrado en ningún sistema")
+                
+        except Exception as e:
+            logger.error(f"Error cargando templates: {e}")
+            template_response = None
+            template_category = None
+        
+        # PROCESAR RESPUESTA SI SE ENCONTRÓ TEMPLATE
+        if template_response:
                 # AGREGAR GENERACIÓN DE QR CODES PARA TEMPLATES (ESTRUCTURA CORREGIDA)
                 original_query = processing_info['original_query']
                 qr_processed_response = qr_generator.process_response(template_response, original_query)
@@ -492,16 +635,10 @@ class RAGEngine:
                     'qr_codes': qr_processed_response['qr_codes'],  # Dict simple {url: qr_image}
                     'has_qr': qr_processed_response['has_qr']       # Boolean
                 }
-            else:
-                logger.warning(f"Template no encontrado: {template_id}")
-                
-        except ImportError:
-            logger.error("No se pudo importar templates.py")
-        except Exception as e:
-            logger.error(f"Error cargando template: {e}")
-        
-        # Fallback si no se encuentra el template
-        return self.generate_clarification_response(processing_info)
+        else:
+            logger.warning(f"Template no encontrado: {template_id}")
+            # Fallback si no se encuentra el template
+            return self.generate_clarification_response(processing_info)
 
     def generate_greeting_response(self, processing_info: Dict) -> Dict:
         """RESPUESTA CORTA Y AMIGABLE PARA SALUDOS CON QR"""

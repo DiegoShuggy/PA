@@ -56,8 +56,14 @@ import app.chroma_config  # ← LÍNEA CLAVE
 # Cargar variables de entorno
 load_dotenv()
 
-# Configurar logging
-logging.basicConfig(level=logging.INFO)
+# Configurar logging visible
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler()  # Asegurar que aparezca en consola
+    ]
+)
 logger = logging.getLogger(__name__)
 
 # Instanciar la app ANTES de cualquier uso de @app
@@ -325,10 +331,14 @@ async def chat(message: Message, request: Request):
 
         # 👇 1. VALIDACIÓN DE CONTENIDO - NUEVO SISTEMA
         content_validation = content_filter.validate_question(question)
-        if not content_validation.get("is_allowed", True):
+        
+        # Obtener categoría del content filter
+        category = content_validation.get("category", None)
+        
+        if not content_validation.get("allowed", True):
             logger.warning(f"🚫 Pregunta bloqueada por contenido: {question}")
             return {
-                "response": content_validation.get("rejection_message", "Lo siento, no puedo responder a eso."),
+                "response": content_validation.get("reason", "Lo siento, no puedo responder a eso."),
                 "allowed": False,
                 "success": False,
                 "block_reason": content_validation.get("block_reason"),
@@ -338,11 +348,27 @@ async def chat(message: Message, request: Request):
                 "timestamp": datetime.now().isoformat()
             }
         
-        # 👇 2. CLASIFICACIÓN DE TEMA - NUEVO SISTEMA
-        topic_classification = topic_classifier.classify_topic(question)
+        # 👇 2. CLASIFICACIÓN DE TEMA - MODO PERMISIVO MEJORADO
+        try:
+            topic_classification = topic_classifier.classify_topic(question)
+        except Exception as e:
+            logger.warning(f"Error en topic classifier: {e}")
+            # En caso de error, asumir que es institucional y continuar
+            topic_classification = {
+                "is_institutional": True,
+                "category": category or "asuntos_estudiantiles",
+                "confidence": 0.5,
+                "keywords": []
+            }
         
-        # Si no es tema institucional, redirigir
-        if not topic_classification["is_institutional"]:
+        # MODO PERMISIVO: Si el content filter permitió la pregunta, continuar procesamiento
+        if category:  # Si el content filter asignó una categoría, es válida
+            logger.info(f"✅ Pregunta aprobada por filtros: {question} - Categoría: {category}")
+            topic_classification["is_institutional"] = True
+            topic_classification["category"] = category
+        
+        # Si no es tema institucional, redirigir (SOLO si realmente no es institucional)
+        if not topic_classification.get("is_institutional", True):
             if topic_classification["category"] != "unknown":
                 # Es un tema institucional pero de otra área
                 redirect_message = topic_classifier.get_redirection_message(
@@ -361,25 +387,37 @@ async def chat(message: Message, request: Request):
                     "timestamp": datetime.now().isoformat()
                 }
             else:
-                # Tema desconocido (posiblemente off-topic)
-                logger.info(f"❓ Tema desconocido/off-topic: {question}")
-                return {
-                    "response": "No puedo responder a esa pregunta. Estoy especializado en temas del Punto Estudiantil de Duoc UC. ¿Tienes alguna consulta sobre Asuntos Estudiantiles, Desarrollo Profesional, Bienestar, Deportes o Pastoral?",
-                    "allowed": False,
-                    "success": False,
-                    "category": "unknown",
-                    "has_context": False,
-                    "has_qr": False,
-                    "qr_codes": {},
-                    "timestamp": datetime.now().isoformat()
-                }
+                # MODO MUY PERMISIVO: En lugar de bloquear, intentar procesar con categoría por defecto
+                logger.info(f"❓ Tema no identificado, pero intentando procesar: {question}")
+                # Asignar categoría por defecto basada en palabras clave
+                default_category = "asuntos_estudiantiles"
+                if any(word in question.lower() for word in ["psicolog", "bienestar", "apoyo", "crisis"]):
+                    default_category = "bienestar_estudiantil"
+                elif any(word in question.lower() for word in ["trabajo", "empleo", "cv", "curriculum", "practica"]):
+                    default_category = "desarrollo_profesional"
+                elif any(word in question.lower() for word in ["deporte", "gimnasio", "entrenamiento"]):
+                    default_category = "deportes"
+                elif any(word in question.lower() for word in ["voluntar", "pastoral", "solidar"]):
+                    default_category = "pastoral"
+                
+                # Actualizar topic_classification para continuar procesamiento
+                topic_classification["is_institutional"] = True
+                topic_classification["category"] = default_category
+                category = default_category
+                logger.info(f"Asignando categoría por defecto: {default_category}")
+                # Continuar con el procesamiento normal en lugar de bloquear
         
         
         # 👇 3. SI PASÓ TODOS LOS FILTROS - PROCESAR NORMALMENTE
+        print("\n" + "="*80)
+        print(f"🌐 NUEVA CONSULTA RECIBIDA - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"📝 Texto: '{question}'")
+        print(f"✅ Pregunta aprobada por filtros - Categoría: {topic_classification['category']}")
         logger.info(f"✅ Pregunta aprobada por filtros: {question} - Categoría: {topic_classification['category']}")
         
         # 3.1 CLASIFICAR LA PREGUNTA (sistema original)
         category = classifier.classify_question(question)
+        print(f"📂 Categoría detectada: {category}")
         logger.info(f"Categoría detectada: {category}")
         
         # 3.2 REGISTRAR PREGUNTA DEL USUARIO CON CATEGORÍA
@@ -393,6 +431,7 @@ async def chat(message: Message, request: Request):
         context_results = rag_engine.query(question)
         has_context = bool(context_results)
 
+        print(f"🔍 Contexto encontrado: {len(context_results)} resultados")
         logger.info(f"Contexto encontrado: {len(context_results)} resultados para categoría '{category}'")
         
         # 3.4 OBTENER RESPUESTA (AHORA CON QR)
@@ -424,6 +463,12 @@ async def chat(message: Message, request: Request):
             strategy = response_data.get('processing_info', {}).get('processing_strategy', 'N/A')
             response_time = response_data.get('response_time', 0)
             sources_count = len(response_data.get('sources', []))
+            
+            print(f"🎯 RESPUESTA GENERADA")
+            print(f"🗣️  Estrategia: {strategy}")
+            print(f"📊 Tiempo: {response_time:.2f}s")
+            print(f"🔍 Fuentes: {sources_count}")
+            print(f"📝 Longitud: {len(response_data.get('response', ''))} caracteres")
             
             logger.info(f"🎯 RESPUESTA GENERADA - Estrategia: {strategy}")
             logger.info(f"📊 Tiempo total: {response_time:.2f}s")
@@ -492,7 +537,7 @@ async def chat(message: Message, request: Request):
             chatlog_id = None
         
         # 3.9 RETORNAR RESPUESTA CON QR CODES Y FEEDBACK SESSION
-        return {
+        final_response = {
             "response": response_data.get("text") or response_data.get("response"),
             "has_context": has_context,
             "qr_codes": response_data.get("qr_codes", {}),
@@ -504,6 +549,12 @@ async def chat(message: Message, request: Request):
             "category": category,
             "timestamp": datetime.now().isoformat()
         }
+        
+        # Log final de finalización
+        print("✅ CONSULTA COMPLETADA EXITOSAMENTE")
+        print("=" * 80 + "\n")
+        
+        return final_response
         
     except Exception as e:
         logger.error(f"Error general en /chat: {e}")

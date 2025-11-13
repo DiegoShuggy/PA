@@ -36,7 +36,9 @@ class TopicClassifier:
                 "atención médica", "seguro salud", "cobertura seguros", "beneficio seguro",
                 "horario punto estudiantil", "ubicación punto estudiantil", "contacto punto estudiantil",
                 "punto estudiantil plaza norte", "punto estudiantil", "asuntos estudiantiles",
-                "información estudiantil", "servicios estudiantiles", "atención estudiante"
+                "información estudiantil", "servicios estudiantiles", "atención estudiante",
+                "programas de apoyo", "apoyo al estudiante", "ayuda financiera",
+                "programa emergencia", "postular emergencia", "requisitos emergencia"
             ],
             "desarrollo_profesional": [
                 "práctica profesional", "prácticas", "practica", "practicas profesionales",
@@ -55,37 +57,65 @@ class TopicClassifier:
                 "ceremonia titulación", "diploma", "certificado titulación", "proceso titulación",
                 "fecha titulación", "egresar", "graduación", "titularse"
             ],
-            "bienestar_estudiantil": [
-                "apoyo psicológico", "psicólogo", "salud mental", "bienestar emocional", "consejería",
-                "consejero", "atención psicológica", "urgencia psicológica", "crisis emocional",
-                "línea ops", "acompañamiento psicológico", "sesiones psicológicas", "terapia",
-                "consultar psicólogo", "hablar con psicólogo", "apoyo emocional", "estrés académico",
-                "ansiedad estudios", "depresión universidad", "problemas emocionales",
-                "embajadores salud mental", "curso embajadores", "embajadores duoc",
-                "no puedo avanzar embajadores", "módulo embajadores", "85% embajadores",
-                "terminé embajadores", "finalizar embajadores", "soy embajador",
-                "responsabilidad embajadores", "compromiso embajadores", "tareas embajadores",
-                "curso de embajadores", "embajadores en salud mental", "avanzar en embajadores",
-                "siguiente módulo embajadores", "bloqueado embajadores", "no avanzo embajadores",
-                "apoyos salud mental", "qué apoyos salud mental", "servicios salud mental",
-                "licencia médica psicológico", "psicólogo licencia", "permiso médico psicológico",
-                "psicólogo virtual licencia", "otorgar licencia psicológico",
-                "talleres bienestar", "charlas bienestar", "micro webinars", "taller salud mental",
-                "embajadores salud mental", "curso embajadores", "taller manejo estrés",
-                "charla ansiedad", "webinar bienestar", "actividad bienestar", "adriana vásquez",
-                "avasquezm", "coordinadora bienestar", "bienestar estudiantil",
-                "crisis de pánico", "angustia", "sala primeros auxilios", "apoyo en crisis",
-                "me siento mal", "urgencia psicológica", "atención inmediata", "emergencia emocional",
-                "ataque pánico", "crisis ansiedad", "urgencia salud mental", "apoyo urgente",
-                "discapacidad", "paedis", "programa acompañamiento", "estudiantes con discapacidad",
-                "inclusión", "apoyo inclusión", "elizabeth domínguez", "edominguezs",
-                "coordinadora inclusión", "accesibilidad", "necesidades especiales",
-                "apoyo discapacidad", "recursos inclusión", "adaptaciones académicas",
-                "seguro", "seguro estudiantil", "seguro accidente", "cobertura seguro", "doc duoc",
-                "activar seguro", "accidente en clases", "póliza seguro",
-                "programas de apoyo", "apoyo al estudiante", "ayuda financiera",
-                "programa emergencia", "postular emergencia", "requisitos emergencia"
-            ],
+            "bienestar_estudiantil": {
+                "es": [
+                    # ESPAÑOL - TÉRMINOS ESPECÍFICOS
+                    "apoyo psicológico", "psicólogo", "salud mental", "bienestar emocional", "consejería",
+                    "consejero", "atención psicológica", "urgencia psicológica", "crisis emocional",
+                    "línea ops", "acompañamiento psicológico", "sesiones psicológicas", "terapia",
+                    "consultar psicólogo", "hablar con psicólogo", "apoyo emocional", "estrés académico",
+                    "ansiedad estudios", "depresión universidad", "problemas emocionales",
+                    "embajadores salud mental", "curso embajadores", "embajadores duoc",
+                    "no puedo avanzar embajadores", "módulo embajadores", "85% embajadores",
+                    "terminé embajadores", "finalizar embajadores", "soy embajador",
+                    "responsabilidad embajadores", "compromiso embajadores", "tareas embajadores",
+                    "curso de embajadores", "embajadores en salud mental", "avanzar en embajadores",
+                    "siguiente módulo embajadores", "bloqueado embajadores", "no avanzo embajadores",
+                    "apoyos salud mental", "qué apoyos salud mental", "servicios salud mental",
+                    "licencia médica psicológico", "psicólogo licencia", "permiso médico psicológico",
+                    "psicólogo virtual licencia", "otorgar licencia psicológico",
+                    "talleres bienestar", "charlas bienestar", "micro webinars", "taller salud mental",
+                    "taller manejo estrés", "charla ansiedad", "webinar bienestar", "actividad bienestar",
+                    "adriana vásquez", "avasquezm", "coordinadora bienestar", "bienestar estudiantil",
+                    "crisis de pánico", "angustia", "sala primeros auxilios", "apoyo en crisis",
+                    "me siento mal", "urgencia psicológica", "atención inmediata", "emergencia emocional",
+                    "ataque pánico", "crisis ansiedad", "urgencia salud mental", "apoyo urgente",
+                    "discapacidad", "paedis", "programa acompañamiento", "estudiantes con discapacidad",
+                    "inclusión", "apoyo inclusión", "elizabeth domínguez", "edominguezs",
+                    "coordinadora inclusión", "accesibilidad", "necesidades especiales",
+                    "apoyo discapacidad", "recursos inclusión", "adaptaciones académicas"
+                ],
+                "en": [
+                    # INGLÉS - TÉRMINOS ESPECÍFICOS
+                    "psychological support", "psychologist", "mental health", "emotional welfare", "counseling",
+                    "counselor", "psychological care", "psychological emergency", "emotional crisis",
+                    "psychological sessions", "therapy", "talk to psychologist", "emotional support",
+                    "academic stress", "study anxiety", "university depression", "emotional problems",
+                    "in-person psychological", "virtual psychologist", "medical leave", "feel unwell",
+                    "going through difficult time", "classmate", "disabilities", "ambassadors course",
+                    "mental health ambassadors", "ambassadors program", "wellness ambassadors",
+                    "can't advance ambassadors", "ambassadors module", "finished ambassadors",
+                    "ambassador responsibilities", "what mental health supports", "psychological services",
+                    "schedule psychological care", "book psychological appointment",
+                    "how many sessions", "sessions per year", "crisis support", "emergency support",
+                    "disability support", "inclusion program", "special needs students"
+                ],
+                "fr": [
+                    # FRANCÉS - TÉRMINOS ESPECÍFICOS
+                    "soutien psychologique", "psychologue", "santé mentale", "bien-être émotionnel", "conseil",
+                    "conseiller", "soins psychologiques", "urgence psychologique", "crise émotionnelle",
+                    "sessions psychologiques", "thérapie", "parler psychologue", "soutien émotionnel",
+                    "stress académique", "anxiété études", "dépression université", "problèmes émotionnels",
+                    "soins présentiel", "psychologue virtuel", "arrêt maladie", "me sens mal",
+                    "moment difficile", "camarade", "handicapés", "cours ambassadeurs",
+                    "ambassadeurs santé mentale", "programme ambassadeurs", "ambassadeurs bien-être",
+                    "ne peux pas avancer ambassadeurs", "module ambassadeurs", "terminé ambassadeurs",
+                    "responsabilités ambassadeurs", "quels soutiens santé mentale", "services psychologiques",
+                    "prendre rendez-vous soins", "réserver rendez-vous psychologue",
+                    "combien sessions", "sessions par an", "soutien crise", "soutien urgence",
+                    "soutien handicap", "programme inclusion", "étudiants besoins spéciaux"
+                ]
+            },
             "deportes": [
                 "ubicados", "lugar", "ubicación", "des inscribirme", "cancelar", "retirarme",
                 "en qué lugar están ubicados", "dónde están ubicados", "ubicación", 
@@ -264,19 +294,59 @@ class TopicClassifier:
         # =======================================================
 
     def classify_topic(self, question: str) -> Dict:
+        """Clasifica un tópico usando coincidencias de palabras clave con soporte multilingüe"""
         question_lower = question.lower().strip()
+        
+        # Detectar idioma primero
+        detected_language = self._detect_simple_language(question_lower)
+        
+        # Buscar en patrones especiales primero
         special_match = self._detect_special_patterns(question_lower)
         if special_match:
             return special_match
-        allowed_match = self._find_category_match(question_lower, self.allowed_categories)
-        if allowed_match:
-            return {
-                "is_institutional": True,
-                "category": allowed_match[0],
-                "matched_keywords": allowed_match[1],
-                "confidence": 0.9,
-                "message": f"Pregunta permitida - {allowed_match[0].replace('_', ' ').title()}"
-            }
+        
+        # Buscar coincidencias por idioma específico
+        for category, keywords_data in self.allowed_categories.items():
+            if isinstance(keywords_data, dict):  # Estructura multilingüe (bienestar_estudiantil)
+                # Buscar en el idioma detectado primero
+                if detected_language in keywords_data:
+                    matches = self._find_category_match_by_language(question_lower, keywords_data[detected_language])
+                    if matches:
+                        return {
+                            "is_institutional": True,
+                            "category": category,
+                            "matched_keywords": matches,
+                            "confidence": 0.9,
+                            "language": detected_language,
+                            "message": f"Pregunta permitida - {category.replace('_', ' ').title()} ({detected_language.upper()})"
+                        }
+                
+                # Si no hay coincidencias en el idioma detectado, buscar en otros idiomas
+                for lang, terms in keywords_data.items():
+                    if lang != detected_language:
+                        matches = self._find_category_match_by_language(question_lower, terms)
+                        if matches:
+                            return {
+                                "is_institutional": True,
+                                "category": category,
+                                "matched_keywords": matches,
+                                "confidence": 0.8,  # Menor confianza si no coincide el idioma
+                                "language": lang,
+                                "message": f"Pregunta permitida - {category.replace('_', ' ').title()} ({lang.upper()})"
+                            }
+            else:  # Estructura simple (lista)
+                matches = self._find_category_match_by_language(question_lower, keywords_data)
+                if matches:
+                    return {
+                        "is_institutional": True,
+                        "category": category,
+                        "matched_keywords": matches,
+                        "confidence": 0.9,
+                        "language": "es",  # Por defecto español para listas simples
+                        "message": f"Pregunta permitida - {category.replace('_', ' ').title()}"
+                    }
+        
+        # Buscar en categorías de redirección
         redirect_match = self._find_category_match(question_lower, self.redirect_categories)
         if redirect_match:
             return {
@@ -285,14 +355,74 @@ class TopicClassifier:
                 "appropriate_department": redirect_match[0],
                 "matched_keywords": redirect_match[1],
                 "confidence": 0.7,
+                "language": detected_language,
                 "message": f"Redirigir a: {redirect_match[0].replace('_', ' ').title()}"
             }
+        
         return {
             "is_institutional": False,
             "category": "unknown",
             "confidence": 0.3,
+            "language": detected_language,
             "message": "Tema no reconocido - posible off-topic"
         }
+    
+    def _detect_simple_language(self, question: str) -> str:
+        """Detección mejorada de idioma basada en palabras clave específicas"""
+        question_lower = question.lower()
+        
+        # Palabras indicadoras de inglés - EXPANDIDAS Y ESPECÍFICAS
+        english_indicators = [
+            'how', 'what', 'when', 'where', 'why', 'is', 'are', 'can', 'do', 'does', 'the', 'and',
+            'support', 'help', 'services', 'mental', 'health', 'there', 'should', 'will', 'would',
+            'psychological', 'care', 'crisis', 'feel', 'unwell', 'campus', 'while', 'tried', 'schedule',
+            'find', 'available', 'appointments', 'many', 'sessions', 'year', 'virtual', 'psychologist',
+            'provide', 'medical', 'leave', 'know', 'classmate', 'going', 'through', 'difficult', 'time',
+            'disabilities', 'started', 'ambassadors', 'course', 'advance', 'next', 'module', 'finished',
+            'additional', 'responsibility', 'after', 'completing', 'if', 'any', 'have'
+        ]
+        
+        # Palabras indicadoras de francés - EXPANDIDAS Y ESPECÍFICAS  
+        french_indicators = [
+            'comment', 'que', 'quand', 'où', 'est', 'sont', 'peut', 'faire', 'le', 'la', 'dans', 'pour', 'avec',
+            'soutien', 'aide', 'services', 'santé', 'mentale', 'soins', 'psychologiques', 'psychologue',
+            'crise', 'campus', 'essayé', 'prendre', 'rendez-vous', 'créneaux', 'disponibles', 'combien',
+            'sessions', 'virtuel', 'fournir', 'arrêt', 'maladie', 'savoir', 'camarade', 'traverse',
+            'mauvais', 'moment', 'handicapés', 'commencé', 'cours', 'ambassadeurs', 'peux', 'passer',
+            'module', 'suivant', 'terminé', 'responsabilité', 'supplémentaire', 'après', 'avoir', 'réalisé',
+            'quels', 'existe', 'puis'
+        ]
+        
+        # Contar coincidencias de manera más inteligente
+        english_count = sum(1 for word in english_indicators if word in question_lower)
+        french_count = sum(1 for word in french_indicators if word in question_lower)
+        
+        print(f"🔍 Language detection: EN={english_count}, FR={french_count} para '{question_lower[:50]}...'")
+        
+        # Lógica mejorada de decisión
+        if english_count >= 2 and english_count > french_count:
+            print(f"   🇺🇸 DETECTED: ENGLISH (score: {english_count})")
+            return 'en'
+        elif french_count >= 2 and french_count > english_count:
+            print(f"   🇫🇷 DETECTED: FRENCH (score: {french_count})")
+            return 'fr'
+        elif english_count > 0 and english_count > french_count:
+            print(f"   🇺🇸 DETECTED: ENGLISH (low score: {english_count})")
+            return 'en'
+        elif french_count > 0:
+            print(f"   🇫🇷 DETECTED: FRENCH (low score: {french_count})")
+            return 'fr'
+        else:
+            print(f"   🇪🇸 DETECTED: SPANISH (default, EN:{english_count}, FR:{french_count})")
+            return 'es'
+    
+    def _find_category_match_by_language(self, question: str, terms: List[str]) -> List[str]:
+        """Busca coincidencias en una lista de términos específicos de un idioma"""
+        matches = []
+        for term in terms:
+            if self._flexible_match(term, question):
+                matches.append(term)
+        return matches
 
     def _detect_special_patterns(self, question: str) -> Dict:
         for pattern in self.special_patterns["licencias_psicologicas"]:
@@ -388,22 +518,35 @@ class TopicClassifier:
         return None
 
     def _find_category_match(self, question: str, categories: Dict) -> Tuple[str, List[str]]:
+        """Busca coincidencias en categorías, manejando tanto estructura simple como multilingüe"""
         best_category = None
         best_score = 0
         best_keywords = []
-        for category, keywords in categories.items():
+        
+        for category, keywords_data in categories.items():
             matched_keywords = []
             score = 0
-            for keyword in keywords:
-                if self._flexible_match(keyword, question):
-                    matched_keywords.append(keyword)
-                    score += 1
+            
+            if isinstance(keywords_data, dict):  # Estructura multilingüe
+                # Buscar en todos los idiomas
+                for lang, keywords in keywords_data.items():
+                    for keyword in keywords:
+                        if self._flexible_match(keyword, question):
+                            matched_keywords.append(keyword)
+                            score += 1
+            else:  # Estructura simple (lista)
+                for keyword in keywords_data:
+                    if self._flexible_match(keyword, question):
+                        matched_keywords.append(keyword)
+                        score += 1
+            
             if score > 0:
                 score += len(matched_keywords) * 0.5
                 if score > best_score:
                     best_score = score
                     best_category = category
                     best_keywords = matched_keywords
+        
         return (best_category, best_keywords) if best_category else None
 
     def _flexible_match(self, keyword: str, question: str) -> bool:

@@ -2,6 +2,841 @@
 import logging
 from typing import Dict, Optional, List
 logger = logging.getLogger(__name__)
+
+# ==========================================
+# TEMPLATES MULTIIDIOMA
+# ==========================================
+
+MULTILINGUAL_TEMPLATES = {
+    # TNE PRIMERA VEZ - MULTIIDIOMA
+    'tne_primera_vez': {
+        'es': """🆕 **¿Cómo saco mi TNE por primera vez?**
+**Para estudiantes que ingresan por primera vez a la Educación Superior:**
+
+📋 **Proceso simplificado:**
+1. **Fotografía:** Tomar foto en formato requerido por TNE
+2. **Validación:** Duoc UC valida tu matrícula automáticamente
+3. **Postulación:** Sistema online de JUNAEB
+4. **Entrega:** Retirar en institución
+
+🌐 **Enlaces directos:**
+- Portal estudiante: https://portal.duoc.cl
+- TNE oficial: https://www.tne.cl
+
+⏰ **Tiempo estimado:** 15-20 días hábiles
+💡 *¡Es gratis y cubre transporte público a nivel nacional!*
+""",
+        'en': """🆕 **How do I get my TNE for the first time?**
+
+For students entering for the first time or who have never had a TNE:
+
+📋 **Simplified process:**
+1. **Photo:** Take photo in TNE required format
+2. **Validation:** Duoc UC validates your enrollment automatically
+3. **Application:** Online through JUNAEB system
+4. **Delivery:** Pick up at institution
+
+🌐 **Direct links:**
+- Student portal: https://portal.duoc.cl
+- Official TNE: https://www.tne.cl
+
+⏰ **Estimated time:** 15-20 business days
+💡 *It's free and covers public transport nationwide!*
+""",
+        'fr': """🆕 **Comment obtenir ma TNE pour la première fois?**
+
+Pour les étudiants qui entrent pour la première fois ou qui n'ont jamais eu de TNE:
+
+📋 **Processus simplifié:**
+1. **Photo:** Prendre photo au format requis par TNE
+2. **Validation:** Duoc UC valide votre inscription automatiquement
+3. **Demande:** En ligne via le système JUNAEB
+4. **Livraison:** Récupération à l'institution
+
+🌐 **Liens directs:**
+- Portail étudiant: https://portal.duoc.cl
+- TNE officiel: https://www.tne.cl
+
+⏰ **Temps estimé:** 15-20 jours ouvrables
+💡 *C'est gratuit et couvre les transports publics au niveau national!*
+"""
+    },
+
+    # TNE SEGUIMIENTO - MULTIIDIOMA
+    'tne_seguimiento': {
+        'es': """📊 **Seguimiento de Estado TNE:**
+**Consultar estado de tu TNE:**
+1. **Web oficial:** https://www.tne.cl
+2. **Portal estudiante:** https://portal.duoc.cl
+
+📋 **Qué puedes consultar:**
+• Estado de la postulación
+• Estado de entrega
+• Proceso de revalidación
+• Validación de tarjeta
+
+⚡ **Tiempo de procesamiento:** 15-20 días hábiles
+""",
+        'en': """📊 **TNE Status Tracking:**
+**Check your TNE status:**
+1. **Official website:** https://www.tne.cl
+2. **Student portal:** https://portal.duoc.cl
+
+📋 **What you can check:**
+• Application status
+• Delivery status
+• Renewal process
+• Card validation
+
+⚡ **Processing time:** 15-20 business days
+""",
+        'fr': """📊 **Suivi Statut TNE:**
+**Vérifier statut de votre TNE:**
+1. **Site officiel:** https://www.tne.cl
+2. **Portail étudiant:** https://portal.duoc.cl
+
+📋 **Ce que vous pouvez vérifier:**
+• Statut de la demande
+• Statut de livraison
+• Processus de renouvellement
+• Validation de la carte
+
+⚡ **Temps de traitement:** 15-20 jours ouvrables
+"""
+    },
+
+    # PROGRAMA EMERGENCIA - MULTIIDIOMA
+    'programa_emergencia': {
+        'es': """🆘 **Programa de Emergencia Duoc UC:**
+**Ayuda financiera inmediata** para situaciones imprevistas que afecten continuidad académica.
+
+📋 **Quiénes pueden postular:**
+• Estudiantes regulares matriculados
+• Situación de emergencia documentada
+• No estar recibiendo beneficios similares
+
+💰 **Monto de apoyo:** Hasta $200.000
+
+🌐 **Más información:**
+- Portal beneficios: https://beneficios.duoc.cl
+- Centro ayuda: https://centroayuda.duoc.cl
+""",
+        'en': """🆘 **Duoc UC Emergency Program:**
+**Immediate financial aid** for unforeseen situations affecting academic continuity.
+
+📋 **Who can apply:**
+• Regular enrolled students
+• Documented emergency situation
+• Not already receiving similar benefits
+
+💰 **Support amount:** Up to $200,000 CLP
+
+🌐 **More information:**
+- Benefits portal: https://beneficios.duoc.cl
+- Student support: https://centroayuda.duoc.cl
+""",
+        'fr': """🆘 **Programme d'Urgence Duoc UC:**
+**Aide financière immédiate** pour situations imprévues affectant la continuité académique.
+
+📋 **Qui peut postuler:**
+• Étudiants régulièrement inscrits
+• Situation d'urgence documentée
+• Ne pas recevoir de bénéfices similaires
+
+💰 **Montant d'aide:** Jusqu'à 200.000 CLP
+
+🌐 **Plus d'informations:**
+- Portail bénéfices: https://beneficios.duoc.cl
+- Support étudiant: https://centroayuda.duoc.cl
+"""
+    },
+
+    # PROGRAMA EMERGENCIA REQUISITOS - MULTIIDIOMA
+    'programa_emergencia_requisitos': {
+        'es': """✅ **Requisitos para postular al Programa de Emergencia:**
+**Requisitos generales:**
+• Ser alumno regular matriculado
+• Tener situación de emergencia documentada
+• No estar recibiendo beneficios similares
+• Presentar documentación completa
+
+📋 **Documentos requeridos:**
+• Certificado alumno regular
+• Documentación situación emergencia
+• Declaración de ingresos
+• Formulario de postulación
+
+🌐 **Postular en:** https://centroayuda.duoc.cl
+""",
+        'en': """✅ **Requirements for Emergency Program application:**
+**General requirements:**
+• Be a regular enrolled student
+• Have a documented emergency situation
+• Not receiving similar benefits
+• Submit complete documentation
+
+📋 **Required documents:**
+• Student enrollment certificate
+• Emergency situation documentation
+• Income declaration
+• Application form
+
+🌐 **Apply at:** https://centroayuda.duoc.cl
+""",
+        'fr': """✅ **Conditions pour postuler au Programme d'Urgence:**
+**Conditions générales:**
+• Être étudiant régulièrement inscrit
+• Avoir une situation d'urgence documentée
+• Ne pas recevoir de bénéfices similaires
+• Soumettre documentation complète
+
+📋 **Documents requis:**
+• Certificat d'inscription étudiant
+• Documentation situation d'urgence
+• Déclaration de revenus
+• Formulaire de demande
+
+🌐 **Postuler sur:** https://centroayuda.duoc.cl
+"""
+    },
+
+    # SEGURO COBERTURA - MULTIIDIOMA 
+    'seguro_cobertura': {
+        'en': """🛡️ **Student Insurance — Coverage and Procedures**
+
+Quick summary:
+- Accident insurance covers educational activities and commuting
+- Active during classes, practices, and commutes
+- Automatic activation for enrolled students
+- Free coverage with comprehensive protection
+
+🏥 **Coverage includes:**
+• Medical emergencies during classes
+• Accidents in commute to/from institution
+• On-campus incident coverage
+• Medical transportation if needed
+
+📋 **How to use:**
+1. **Emergency:** Present student ID at healthcare center
+2. **Accident:** Report immediately to Student Services
+3. **Claims:** Submit documentation within 24 hours
+4. **Coverage:** Show this QR for direct attention
+
+🌐 **More information:**
+- Student portal: https://www.duoc.cl/alumnos/
+- Help center: https://centroayuda.duoc.cl
+
+⚡ **Emergency:** Always carry your student credential
+💡 *Remember: Coverage is automatic and free for all enrolled students*
+""",
+        'fr': """🛡️ **Assurance Étudiante — Couverture et Procédures**
+
+Résumé rapide:
+- Assurance accident couvre activités éducatives et trajets
+- Active pendant les cours, pratiques et trajets
+- Activation automatique pour étudiants inscrits
+- Couverture gratuite avec protection complète
+
+🏥 **La couverture comprend:**
+• Urgences médicales pendant les cours
+• Accidents lors des trajets vers/depuis l'institution
+• Couverture des incidents sur le campus
+• Transport médical si nécessaire
+
+📋 **Comment utiliser:**
+1. **Urgence:** Présenter ID étudiant au centre de santé
+2. **Accident:** Signaler immédiatement aux Services Étudiants
+3. **Réclamations:** Soumettre documentation dans les 24 heures
+4. **Couverture:** Montrer ce QR pour attention directe
+
+🌐 **Plus d'informations:**
+- Portail étudiant: https://www.duoc.cl/alumnos/
+- Centre d'aide: https://centroayuda.duoc.cl
+
+⚡ **Urgence:** Toujours porter votre credential étudiant
+💡 *Rappelez-vous: La couverture est automatique et gratuite pour tous les étudiants inscrits*
+"""
+    },
+    
+    # PROGRAMAS APOYO ESTUDIANTE - MULTIIDIOMA
+    'programas_apoyo_estudiante': {
+        'es': """🎓 **Programas de Apoyo al Estudiante:**
+
+**Servicios disponibles:**
+• Apoyo académico y tutorías
+• Orientación psicológica
+• Programas de bienestar estudiantil
+• Becas y financiamiento
+• Apoyo en situaciones de emergencia
+
+📋 **Áreas de apoyo:**
+• Rendimiento académico
+• Bienestar emocional
+• Integración social
+• Desarrollo personal
+• Orientación vocacional
+
+📞 **Contacto:**
+- Portal estudiantes: https://www.duoc.cl/alumnos/
+- Centro de ayuda: https://centroayuda.duoc.cl
+
+💡 *Estamos aquí para apoyarte en tu experiencia universitaria*
+""",
+        'en': """🎓 **Student Support Programs:**
+
+**Available services:**
+• Academic support and tutoring
+• Psychological counseling
+• Student wellness programs
+• Scholarships and financing
+• Emergency situation support
+
+📋 **Support areas:**
+• Academic performance
+• Emotional wellbeing
+• Social integration
+• Personal development
+• Career guidance
+
+📞 **Contact:**
+- Student portal: https://www.duoc.cl/alumnos/
+- Help center: https://centroayuda.duoc.cl
+
+💡 *We're here to support you in your university experience*
+""",
+        'fr': """🎓 **Programmes de Soutien aux Étudiants:**
+
+**Services disponibles:**
+• Soutien académique et tutorat
+• Conseil psychologique
+• Programmes de bien-être étudiant
+• Bourses et financement
+• Soutien en situations d'urgence
+
+📋 **Domaines de soutien:**
+• Performance académique
+• Bien-être émotionnel
+• Intégration sociale
+• Développement personnel
+• Orientation professionnelle
+
+📞 **Contact:**
+- Portail étudiants: https://www.duoc.cl/alumnos/
+- Centre d'aide: https://centroayuda.duoc.cl
+
+💡 *Nous sommes là pour vous soutenir dans votre expérience universitaire*
+"""
+    },
+
+    # ========================
+    # BIENESTAR ESTUDIANTIL - TEMPLATES MULTILINGÜES
+    # ========================
+
+    # APOYO PSICOLÓGICO
+    'apoyo_psicologico': {
+        'es': """🧠 **Apoyo Psicológico para Ansiedad y Estrés Académico**
+**¿Sientes ansiedad o estrés por tus estudios?** Tenemos ayuda para ti.
+✅ **Servicios disponibles:**
+• **8 sesiones gratuitas** anuales con psicólogos especializados
+• **Atención virtual** disponible fines de semana y festivos
+• **Talleres grupales** de manejo de ansiedad académica
+• **Recursos online** en Centro Virtual de Aprendizaje
+📅 **Agendar cita:** https://eventos.duoc.cl
+🚨 **Urgencias 24/7:** Línea OPS +56 2 2820 3450
+**Técnicas que aprenderás:**
+• Manejo del estrés académico
+• Técnicas de respiración y relajación
+• Organización del tiempo efectiva
+• Manejo de pensamientos ansiosos
+🔗 **Agendar:** https://eventos.duoc.cl
+🔗 **Recursos CVA:** https://cva.duoc.cl
+💡 *Tu bienestar mental es fundamental para tu éxito académico*
+""",
+        'en': """🧠 **Psychological Support for Anxiety and Academic Stress**
+**Feeling anxiety or stress about your studies?** We have help for you.
+✅ **Available services:**
+• **8 free sessions** annually with specialized psychologists
+• **Virtual care** available on weekends and holidays
+• **Group workshops** for academic anxiety management
+• **Online resources** in Virtual Learning Center
+📅 **Schedule appointment:** https://eventos.duoc.cl
+🚨 **24/7 Emergency:** OPS Line +56 2 2820 3450
+**Techniques you'll learn:**
+• Academic stress management
+• Breathing and relaxation techniques
+• Effective time organization
+• Managing anxious thoughts
+🔗 **Schedule:** https://eventos.duoc.cl
+🔗 **CVA Resources:** https://cva.duoc.cl
+💡 *Your mental wellbeing is fundamental for your academic success*
+""",
+        'fr': """🧠 **Soutien Psychologique pour l'Anxiété et le Stress Académique**
+**Ressentez-vous de l'anxiété ou du stress concernant vos études ?** Nous avons de l'aide pour vous.
+✅ **Services disponibles :**
+• **8 séances gratuites** annuelles avec des psychologues spécialisés
+• **Soins virtuels** disponibles les week-ends et jours fériés
+• **Ateliers de groupe** pour la gestion de l'anxiété académique
+• **Ressources en ligne** dans le Centre Virtuel d'Apprentissage
+📅 **Prendre rendez-vous :** https://eventos.duoc.cl
+🚨 **Urgence 24h/7j :** Ligne OPS +56 2 2820 3450
+**Techniques que vous apprendrez :**
+• Gestion du stress académique
+• Techniques de respiration et relaxation
+• Organisation efficace du temps
+• Gestion des pensées anxieuses
+🔗 **Planifier :** https://eventos.duoc.cl
+🔗 **Ressources CVA :** https://cva.duoc.cl
+💡 *Votre bien-être mental est fondamental pour votre succès académique*
+"""
+    },
+
+    # SESIONES PSICOLÓGICAS
+    'sesiones_psicologicas': {
+        'es': """🧠 **Sesiones de Apoyo Psicológico:**
+• **8 sesiones gratuitas** por año
+• **Atención virtual** disponible fines de semana y festivos
+• **Profesionales especializados** en salud mental estudiantil
+• **Confidencialidad** garantizada
+📅 **Agendar:** https://eventos.duoc.cl
+👩‍💼 **Coordinadora:** Adriana Vásquez - avasquezm@duoc.cl
+🔗 **Agendar cita:** https://eventos.duoc.cl
+🚨 **Urgencias 24/7:** Línea OPS +56 2 2820 3450
+🔗 **Recursos online:** https://cva.duoc.cl
+💡 *Espacio seguro para trabajar en tu bienestar emocional*
+""",
+        'en': """🧠 **Psychological Support Sessions:**
+• **8 free sessions** per year
+• **Virtual care** available weekends and holidays
+• **Specialized professionals** in student mental health
+• **Confidentiality** guaranteed
+📅 **Schedule:** https://eventos.duoc.cl
+👩‍💼 **Coordinator:** Adriana Vásquez - avasquezm@duoc.cl
+🔗 **Book appointment:** https://eventos.duoc.cl
+🚨 **24/7 Emergency:** OPS Line +56 2 2820 3450
+🔗 **Online resources:** https://cva.duoc.cl
+💡 *Safe space to work on your emotional wellbeing*
+""",
+        'fr': """🧠 **Séances de Soutien Psychologique :**
+• **8 séances gratuites** par an
+• **Soins virtuels** disponibles week-ends et jours fériés
+• **Professionnels spécialisés** en santé mentale étudiante
+• **Confidentialité** garantie
+📅 **Planifier :** https://eventos.duoc.cl
+👩‍💼 **Coordinatrice :** Adriana Vásquez - avasquezm@duoc.cl
+🔗 **Prendre rendez-vous :** https://eventos.duoc.cl
+🚨 **Urgence 24h/7j :** Ligne OPS +56 2 2820 3450
+🔗 **Ressources en ligne :** https://cva.duoc.cl
+💡 *Espace sûr pour travailler sur votre bien-être émotionnel*
+"""
+    },
+
+    # AGENDAR ATENCIÓN PSICOLÓGICA
+    'agendar_psicologico': {
+        'es': """📱 **Agendar Atención Psicológica - Paso a Paso:**
+1. **Ingresa a:** https://eventos.duoc.cl
+2. **Usa tu correo institucional** (@duocuc.cl)
+3. Selecciona pestaña **"Apoyo Psicológico"**
+4. Elige fecha y hora disponible
+5. Confirma tu cita
+✅ **Características:**
+• 8 sesiones gratuitas anuales
+• Atención virtual por videollamada
+• Profesionales especializados
+• Confidencialidad garantizada
+🆘 **Si no hay horas disponibles:**
+• Contacta a: Adriana Vásquez - avasquezm@duoc.cl
+• O agenda mediante **Agenda Norte**
+🚨 **Urgencias 24/7:** Línea OPS +56 2 2820 3450
+🔗 **Plataforma citas:** https://eventos.duoc.cl
+🔗 **Recursos apoyo:** https://cva.duoc.cl
+💡 *Disponible incluso fines de semana y festivos*
+""",
+        'en': """📱 **Schedule Psychological Care - Step by Step:**
+1. **Go to:** https://eventos.duoc.cl
+2. **Use your institutional email** (@duocuc.cl)
+3. Select **"Psychological Support"** tab
+4. Choose available date and time
+5. Confirm your appointment
+✅ **Features:**
+• 8 free sessions annually
+• Virtual care via video call
+• Specialized professionals
+• Guaranteed confidentiality
+🆘 **If no appointments available:**
+• Contact: Adriana Vásquez - avasquezm@duoc.cl
+• Or schedule through **Agenda Norte**
+🚨 **24/7 Emergency:** OPS Line +56 2 2820 3450
+🔗 **Appointment platform:** https://eventos.duoc.cl
+🔗 **Support resources:** https://cva.duoc.cl
+💡 *Available even on weekends and holidays*
+""",
+        'fr': """📱 **Planifier des Soins Psychologiques - Étape par Étape :**
+1. **Aller à :** https://eventos.duoc.cl
+2. **Utilisez votre email institutionnel** (@duocuc.cl)
+3. Sélectionnez l'onglet **"Soutien Psychologique"**
+4. Choisissez la date et l'heure disponibles
+5. Confirmez votre rendez-vous
+✅ **Caractéristiques :**
+• 8 séances gratuites annuellement
+• Soins virtuels par appel vidéo
+• Professionnels spécialisés
+• Confidentialité garantie
+🆘 **Si aucun rendez-vous disponible :**
+• Contact : Adriana Vásquez - avasquezm@duoc.cl
+• Ou planifier via **Agenda Norte**
+🚨 **Urgence 24h/7j :** Ligne OPS +56 2 2820 3450
+🔗 **Plateforme rendez-vous :** https://eventos.duoc.cl
+🔗 **Ressources de soutien :** https://cva.duoc.cl
+💡 *Disponible même les week-ends et jours fériés*
+"""
+    },
+
+    # APOYOS SALUD MENTAL
+    'apoyos_salud_mental': {
+        'es': """🧠 **¿Qué apoyos en salud mental existen en Duoc UC?**
+**1. 🚨 Acompañamiento psicológico urgente:**
+• **Línea OPS 24/7:** +56 2 2820 3450
+• Gratuito y confidencial
+• Urgencias psicológicas
+**2. 💻 Acompañamiento psicológico virtual:**
+• **Plataforma:** https://eventos.duoc.cl
+• Sesiones online gratuitas
+• Usuario institucional @duocuc.cl
+**3. 🏥 Apoyo en crisis dentro de la sede:**
+• **Sala primeros auxilios:** Primer piso, junto a caja
+• **Teléfono:** +56 2 2999 3005
+🔗 **Charlas y talleres:** Disponibles en eventos.duoc.cl
+💡 *Servicios gratuitos para todos los estudiantes regulares*
+""",
+        'en': """🧠 **What mental health supports exist at Duoc UC?**
+**1. 🚨 Urgent psychological support:**
+• **OPS Line 24/7:** +56 2 2820 3450
+• Free and confidential
+• Psychological emergencies
+**2. 💻 Virtual psychological support:**
+• **Platform:** https://eventos.duoc.cl
+• Free online sessions
+• Institutional user @duocuc.cl
+**3. 🏥 Crisis support within campus:**
+• **First aid room:** First floor, next to cashier
+• **Phone:** +56 2 2999 3005
+🔗 **Talks and workshops:** Available at eventos.duoc.cl
+💡 *Free services for all regular students*
+""",
+        'fr': """🧠 **Quels soutiens en santé mentale existent à Duoc UC ?**
+**1. 🚨 Accompagnement psychologique urgent :**
+• **Ligne OPS 24h/7j :** +56 2 2820 3450
+• Gratuit et confidentiel
+• Urgences psychologiques
+**2. 💻 Accompagnement psychologique virtuel :**
+• **Plateforme :** https://eventos.duoc.cl
+• Séances en ligne gratuites
+• Utilisateur institutionnel @duocuc.cl
+**3. 🏥 Soutien de crise dans le campus :**
+• **Salle premiers secours :** Premier étage, près de la caisse
+• **Téléphone :** +56 2 2999 3005
+🔗 **Conférences et ateliers :** Disponibles sur eventos.duoc.cl
+💡 *Services gratuits pour tous les étudiants réguliers*
+"""
+    },
+
+    # ATENCIÓN PSICOLÓGICA PRESENCIAL
+    'atencion_presencial_psicologica': {
+        'es': """🏥 **¿Existe atención psicológica presencial?**
+**No.** Actualmente Duoc UC ofrece exclusivamente **atención psicológica virtual**
+✅ **Disponible:**
+• Fines de semana
+• Días festivos
+• Horarios flexibles
+🔗 **Agendar virtual:** https://eventos.duoc.cl
+📞 **Apoyo en sede:** +56 2 2999 3005 (Primeros auxilios)
+💡 *La atención virtual mantiene la misma calidad y confidencialidad*
+""",
+        'en': """🏥 **Is in-person psychological care available?**
+**No.** Currently Duoc UC exclusively offers **virtual psychological care**
+✅ **Available:**
+• Weekends
+• Holidays
+• Flexible schedules
+🔗 **Schedule virtual:** https://eventos.duoc.cl
+📞 **Campus support:** +56 2 2999 3005 (First aid)
+💡 *Virtual care maintains the same quality and confidentiality*
+""",
+        'fr': """🏥 **Les soins psychologiques en personne sont-ils disponibles ?**
+**Non.** Actuellement Duoc UC offre exclusivement **des soins psychologiques virtuels**
+✅ **Disponible :**
+• Week-ends
+• Jours fériés
+• Horaires flexibles
+🔗 **Planifier virtuel :** https://eventos.duoc.cl
+📞 **Soutien campus :** +56 2 2999 3005 (Premiers secours)
+💡 *Les soins virtuels maintiennent la même qualité et confidentialité*
+"""
+    },
+
+    # LICENCIAS MÉDICAS PSICOLÓGICAS
+    'licencias_medicas_psicologicas': {
+        'es': """🏥 **¿El psicólogo virtual puede otorgar licencia médica?**
+**No.** Los psicólogos no están facultados para emitir licencias médicas.
+✅ **Alternativas:**
+• **Médico general:** Para licencias médicas
+• **Psiquiatra:** Para condiciones de salud mental que requieran licencia
+• **Centros de salud:** Consultorios y hospitales
+🔗 **Salud Responde:** 600 360 7777
+💡 *Los psicólogos brindan apoyo terapéutico, no licencias médicas*
+""",
+        'en': """🏥 **Can the virtual psychologist issue medical leave?**
+**No.** Psychologists are not authorized to issue medical leave.
+✅ **Alternatives:**
+• **General physician:** For medical leave
+• **Psychiatrist:** For mental health conditions requiring leave
+• **Health centers:** Clinics and hospitals
+🔗 **Health Response:** 600 360 7777
+💡 *Psychologists provide therapeutic support, not medical leave*
+""",
+        'fr': """🏥 **Le psychologue virtuel peut-il délivrer un congé médical ?**
+**Non.** Les psychologues ne sont pas autorisés à délivrer des congés médicaux.
+✅ **Alternatives :**
+• **Médecin généraliste :** Pour les congés médicaux
+• **Psychiatre :** Pour les conditions de santé mentale nécessitant un congé
+• **Centres de santé :** Cliniques et hôpitaux
+🔗 **Réponse Santé :** 600 360 7777
+💡 *Les psychologues fournissent un soutien thérapeutique, pas des congés médicaux*
+"""
+    },
+
+    # APOYO A COMPAÑEROS
+    'apoyo_companeros': {
+        'es': """🤝 **¿Qué puedo hacer si sé que un/a compañero/a está pasando por un mal momento pero no quiere pedir ayuda?**
+**Acciones recomendadas:**
+1. **Motivarle** a solicitar atención psicológica virtual
+2. **Recordarle** que es confidencial y gratuito
+3. **Ofrecer acompañamiento** en el proceso
+🎓 **Curso "Embajadores en Salud Mental":**
+• **Acceso:** https://embajadores.duoc.cl
+• **Aprendes:** Estrategias para acompañar adecuadamente
+• **Sin compromisos** posteriores
+💙 *Tu apoyo puede marcar la diferencia en la vida de un compañero*
+""",
+        'en': """🤝 **What can I do if I know a classmate is going through a tough time but doesn't want to ask for help?**
+**Recommended actions:**
+1. **Encourage them** to request virtual psychological care
+2. **Remind them** it's confidential and free
+3. **Offer support** in the process
+🎓 **"Mental Health Ambassadors" Course:**
+• **Access:** https://embajadores.duoc.cl
+• **You learn:** Strategies to provide adequate support
+• **No commitments** afterwards
+💙 *Your support can make a difference in a classmate's life*
+""",
+        'fr': """🤝 **Que puis-je faire si je sais qu'un/une camarade traverse une période difficile mais ne veut pas demander de l'aide ?**
+**Actions recommandées :**
+1. **L'encourager** à demander des soins psychologiques virtuels
+2. **Lui rappeler** que c'est confidentiel et gratuit
+3. **Offrir un accompagnement** dans le processus
+🎓 **Cours "Ambassadeurs en Santé Mentale" :**
+• **Accès :** https://embajadores.duoc.cl
+• **Vous apprenez :** Stratégies pour fournir un soutien adéquat
+• **Aucun engagement** par la suite
+💙 *Votre soutien peut faire la différence dans la vie d'un camarade*
+"""
+    },
+
+    # APOYO DISCAPACIDAD
+    'apoyo_discapacidad': {
+        'es': """♿ **Programa de Acompañamiento a Estudiantes con Discapacidad (PAEDIS):**
+**Apoyo especializado** para estudiantes con discapacidad.
+👩‍💼 **Coordinadora:** Elizabeth Domínguez
+📧 **Contacto:** edominguezs@duoc.cl
+📞 **Teléfono:** +56 2 2360 6400
+✅ **Beneficios incluyen:**
+• Adecuaciones curriculares personalizadas
+• Apoyo tecnológico y recursos
+• Acompañamiento académico
+• Accesibilidad en instalaciones
+• Tutorías especializadas
+🔗 **Centro ayuda:** https://centroayuda.duoc.cl
+🔗 **Portal CVA:** https://cva.duoc.cl
+💡 *Contacta para conocer requisitos específicos y beneficios disponibles*
+""",
+        'en': """♿ **Student Support Program for Students with Disabilities (PAEDIS):**
+**Specialized support** for students with disabilities.
+👩‍💼 **Coordinator:** Elizabeth Domínguez
+📧 **Contact:** edominguezs@duoc.cl
+📞 **Phone:** +56 2 2360 6400
+✅ **Benefits include:**
+• Personalized curricular adaptations
+• Technological support and resources
+• Academic support
+• Facility accessibility
+• Specialized tutoring
+🔗 **Help center:** https://centroayuda.duoc.cl
+🔗 **CVA Portal:** https://cva.duoc.cl
+💡 *Contact to learn about specific requirements and available benefits*
+""",
+        'fr': """♿ **Programme d'Accompagnement des Étudiants en Situation de Handicap (PAEDIS) :**
+**Soutien spécialisé** pour les étudiants en situation de handicap.
+👩‍💼 **Coordinatrice :** Elizabeth Domínguez
+📧 **Contact :** edominguezs@duoc.cl
+📞 **Téléphone :** +56 2 2360 6400
+✅ **Les avantages comprennent :**
+• Adaptations curriculaires personnalisées
+• Soutien technologique et ressources
+• Accompagnement académique
+• Accessibilité des installations
+• Tutorat spécialisé
+🔗 **Centre d'aide :** https://centroayuda.duoc.cl
+🔗 **Portail CVA :** https://cva.duoc.cl
+💡 *Contactez pour connaître les exigences spécifiques et les avantages disponibles*
+"""
+    },
+
+    # CURSO EMBAJADORES AVANCE
+    'curso_embajadores_avance': {
+        'es': """🎯 **Comencé el curso de Embajadores, pero no puedo avanzar al siguiente módulo**
+**Requisito para avanzar:**
+• **85% o más** de respuestas correctas en cada actividad
+✅ **Si no alcanzas el 85%:**
+• La plataforma no te permitirá continuar
+• Revisa las respuestas incorrectas
+• Reintenta el módulo
+🔗 **Acceso al curso:** https://embajadores.duoc.cl
+💡 *Asegúrate de comprender bien cada contenido antes de avanzar*
+""",
+        'en': """🎯 **I started the Ambassadors course, but I can't advance to the next module**
+**Requirement to advance:**
+• **85% or more** correct answers in each activity
+✅ **If you don't reach 85%:**
+• The platform won't allow you to continue
+• Review incorrect answers
+• Retry the module
+🔗 **Course access:** https://embajadores.duoc.cl
+💡 *Make sure you understand each content well before advancing*
+""",
+        'fr': """🎯 **J'ai commencé le cours d'Ambassadeurs, mais je ne peux pas passer au module suivant**
+**Exigence pour avancer :**
+• **85% ou plus** de réponses correctes dans chaque activité
+✅ **Si vous n'atteignez pas 85% :**
+• La plateforme ne vous permettra pas de continuer
+• Révisez les réponses incorrectes
+• Réessayez le module
+🔗 **Accès au cours :** https://embajadores.duoc.cl
+💡 *Assurez-vous de bien comprendre chaque contenu avant d'avancer*
+"""
+    },
+
+    # CURSO EMBAJADORES FINALIZACIÓN
+    'curso_embajadores_finalizacion': {
+        'es': """🎓 **¿Cómo sé si terminé el curso de Embajadores?**
+**Al finalizar exitosamente:**
+• La plataforma mostrará el mensaje: **"Eres un embajador"**
+• Esto confirma que completaste toda la formación
+✅ **Sin responsabilidades adicionales:**
+• No implica tareas posteriores
+• Sin compromisos obligatorios
+• Propósito: comunidad empática y solidaria
+🔗 **Curso:** https://embajadores.duoc.cl
+💡 *Formación para fortalecer el apoyo mutuo en la comunidad Duoc UC*
+""",
+        'en': """🎓 **How do I know if I finished the Ambassadors course?**
+**Upon successful completion:**
+• The platform will show the message: **"You are an ambassador"**
+• This confirms you completed all training
+✅ **No additional responsibilities:**
+• No subsequent tasks involved
+• No mandatory commitments
+• Purpose: empathetic and supportive community
+🔗 **Course:** https://embajadores.duoc.cl
+💡 *Training to strengthen mutual support in the Duoc UC community*
+""",
+        'fr': """🎓 **Comment savoir si j'ai terminé le cours d'Ambassadeurs ?**
+**Lors de la réussite :**
+• La plateforme affichera le message : **"Vous êtes un ambassadeur"**
+• Ceci confirme que vous avez terminé toute la formation
+✅ **Aucune responsabilité supplémentaire :**
+• Aucune tâche ultérieure impliquée
+• Aucun engagement obligatoire
+• Objectif : communauté empathique et solidaire
+🔗 **Cours :** https://embajadores.duoc.cl
+💡 *Formation pour renforcer le soutien mutuel dans la communauté Duoc UC*
+"""
+    },
+
+    # CURSO EMBAJADORES SALUD MENTAL
+    'curso_embajadores_salud_mental': {
+        'es': """🌟 **Curso "Embajadores en Salud Mental":**
+**Aprende estrategias** para acompañar a compañeros que estén atravesando momentos difíciles.
+🎯 **Objetivo:** Fortalecer una comunidad empática, solidaria y preparada
+✅ **Características:**
+• Sin responsabilidades adicionales
+• Sin tareas ni compromisos posteriores
+• Enfoque en herramientas de apoyo práctico
+• Certificación al completar
+📋 **Contenidos:**
+• Detección temprana de problemas
+• Escucha activa y empática
+• Derivación adecuada a profesionales
+• Autocuidado del acompañante
+🔗 **Acceder al curso:** https://embajadores.duoc.cl
+🔗 **Portal CVA:** https://cva.duoc.cl
+💡 *Tu participación contribuye a un ambiente universitario más solidario*
+""",
+        'en': """🌟 **"Mental Health Ambassadors" Course:**
+**Learn strategies** to support classmates going through difficult times.
+🎯 **Objective:** Strengthen an empathetic, supportive and prepared community
+✅ **Features:**
+• No additional responsibilities
+• No tasks or subsequent commitments
+• Focus on practical support tools
+• Certification upon completion
+📋 **Contents:**
+• Early problem detection
+• Active and empathetic listening
+• Proper referral to professionals
+• Caregiver self-care
+🔗 **Access course:** https://embajadores.duoc.cl
+🔗 **CVA Portal:** https://cva.duoc.cl
+💡 *Your participation contributes to a more supportive university environment*
+""",
+        'fr': """🌟 **Cours "Ambassadeurs en Santé Mentale" :**
+**Apprenez des stratégies** pour accompagner des camarades traversant des moments difficiles.
+🎯 **Objectif :** Renforcer une communauté empathique, solidaire et préparée
+✅ **Caractéristiques :**
+• Aucune responsabilité supplémentaire
+• Aucune tâche ni engagement ultérieur
+• Focus sur les outils de soutien pratiques
+• Certification à la fin
+📋 **Contenus :**
+• Détection précoce des problèmes
+• Écoute active et empathique
+• Orientation appropriée vers les professionnels
+• Autosoins de l'accompagnant
+🔗 **Accéder au cours :** https://embajadores.duoc.cl
+🔗 **Portail CVA :** https://cva.duoc.cl
+💡 *Votre participation contribue à un environnement universitaire plus solidaire*
+"""
+    }
+}
+
+# Función para obtener template multiidioma
+def get_multilingual_template(template_id: str, language: str = 'es') -> str:
+    """
+    Obtiene un template en el idioma solicitado
+    Args:
+        template_id: ID del template
+        language: Código de idioma ('es', 'en', 'fr')
+    Returns:
+        Template en el idioma solicitado o español como fallback
+    """
+    if template_id in MULTILINGUAL_TEMPLATES:
+        templates = MULTILINGUAL_TEMPLATES[template_id]
+        return templates.get(language, templates.get('es', ''))
+    return ''
+
+# ==========================================
+# TEMPLATES ORIGINALES (ESPAÑOL)
+# ==========================================
+
 TEMPLATES = {
     "asuntos_estudiantiles": {
         # 🎯 TNE - DOCUMENTOS PRIMERA VEZ (ORIGINAL)

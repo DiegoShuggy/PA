@@ -55,53 +55,109 @@ class ContentFilter:
             r"\b(sugieres).*"
         ]
 
-        # TÉRMINOS INSTITUCIONALES PERMITIDOS (MUY AMPLIO PARA EVITAR FALSOS OFF-TOPIC)
+        # TÉRMINOS INSTITUCIONALES PERMITIDOS (MULTIIDIOMA)
         self.allowed_terms = [
-            # Identidad institucional
+            # ESPAÑOL - Identidad institucional
             "duoc", "uc", "plaza norte", "sede", "punto estudiantil", "ina", "asistente virtual",
             "estudiante", "alumno", "alumna", "carrera", "técnico", "profesional", "diplomado",
             "hola", "gracias", "ayuda", "consulta",  # Términos generales de cortesía
 
-            # Asuntos Estudiantiles
+            # ESPAÑOL - Asuntos Estudiantiles
             "tne", "tarjeta nacional estudiantil", "revalidar tne", "perdí tne", "tne dañada",
             "certificado", "certificado alumno regular", "certificado matrícula", "certificado concentración",
             "matrícula", "pago", "boleta", "cuota", "arancel", "beca", "beca alimentación", "beca transporte",
             "programa emergencia", "emergencia", "apoyo emergencia", "requisitos emergencia",
             "seguro", "seguro estudiantil", "seguro accidente", "póliza", "cobertura seguro",
             "credencial", "credencial duoc", "credencial digital", "credencial física",
-            "tne", "revalida", "pérdida", "dañada", "certificado", "matrícula", "pago",
-            "seguro", "accidente", "cobertura", "clínica" 
+            "revalida", "pérdida", "dañada", "certificado", "matrícula", "pago",
+            "seguro", "accidente", "cobertura", "clínica",
 
-            # Bienestar Estudiantil
+            # ESPAÑOL - Bienestar Estudiantil
             "bienestar", "bienestar estudiantil", "apoyo al estudiante", "programas de apoyo",
             "psicólogo", "psicóloga", "psicológico", "salud mental", "ansiedad", "estrés", "depresión",
             "crisis emocional", "embajadores bienestar", "taller bienestar", "grupo apoyo",
             "discapacidad", "inclusión", "licencia médica", "justificar inasistencia",
 
-            # Deportes y Actividad Física
+            # ESPAÑOL - Deportes y Actividad Física
             "deporte", "deportes", "actividad física", "gimnasio", "caf", "entrenamiento",
             "fútbol", "básquetbol", "voleibol", "natación", "boxeo", "powerlifting", "zumba",
             "selección deportiva", "pruebas deportivas", "horario entrenamiento", "cancha", "instalaciones",
             "optativo deportivo", "ramo deportivo", "clase deportiva",
 
-            # Desarrollo Laboral
+            # ESPAÑOL - Desarrollo Laboral
             "duoclaboral", "bolsa de empleo", "práctica profesional", "práctica", "empleo", "trabajo",
             "currículum", "cv", "entrevista laboral", "feria laboral", "claudia cortés", "desarrollo laboral",
             "egresado", "titulados", "certificación laboral",
 
-            # Infraestructura y servicios
+            # ESPAÑOL - Infraestructura y servicios
             "biblioteca", "cafetería", "casino", "comedor", "horario", "atención", "ubicación",
             "teléfono", "email", "correo", "contacto", "dirección", "cómo llegar",
             "calendario académico", "feriado", "contingencia", "clases suspendidas",
             "aula", "sala", "laboratorio", "wifi", "internet", "computadores",
 
-            # Beneficios y convenios
-            "beneficios", "convenios", "descuentos", "partner", "empresa convenida",
-            "tne beneficios", "transporte", "alimentación", "materiales",
+            # INGLÉS - Identity and institutional terms
+            "student", "academic", "campus", "student support", "virtual assistant",
+            "hello", "thanks", "help", "inquiry", "question", "information",
 
-            # Saludos y lenguaje natural
-            "hola", "buenos días", "buenas tardes", "buenas noches", "gracias", "por favor",
-            "ayuda", "necesito", "quiero saber", "dime", "explica", "cómo", "cuándo", "dónde"
+            # INGLÉS - Student Affairs  
+            "tne", "student card", "national student card", "renew tne", "lost tne", "damaged tne",
+            "certificate", "enrollment certificate", "student certificate", "academic certificate",
+            "enrollment", "payment", "fee", "tuition", "scholarship", "food scholarship", "transport scholarship",
+            "emergency program", "emergency", "emergency support", "emergency requirements", "program",
+            "requirements", "apply", "what", "how", "when", "where",
+            "insurance", "student insurance", "accident insurance", "policy", "insurance coverage",
+            "credential", "duoc credential", "digital credential", "physical credential",
+            "renewal", "loss", "damaged", "enrollment", "payment",
+            "insurance", "accident", "coverage", "clinic",
+
+            # INGLÉS - Student Welfare
+            "welfare", "student welfare", "student support", "support programs",
+            "psychologist", "psychological", "mental health", "anxiety", "stress", "depression",
+            "emotional crisis", "welfare ambassadors", "welfare workshop", "support group",
+            "disability", "inclusion", "medical leave", "justify absence",
+
+            # INGLÉS - Sports and Physical Activity
+            "sport", "sports", "physical activity", "gym", "training",
+            "football", "soccer", "basketball", "volleyball", "swimming", "boxing", "powerlifting", "zumba",
+            "sports team", "sports trials", "training schedule", "court", "facilities",
+            "sports elective", "sports class", "physical education",
+
+            # INGLÉS - Career Development
+            "employment", "job", "internship", "professional practice", "career",
+            "resume", "cv", "job interview", "job fair", "career development",
+            "graduate", "graduates", "career certification",
+
+            # FRANCÉS - Identité et termes institutionnels
+            "étudiant", "étudiante", "académique", "campus", "soutien étudiant", "assistant virtuel",
+            "bonjour", "merci", "aide", "demande", "question", "information",
+
+            # FRANCÉS - Affaires étudiantes
+            "tne", "carte étudiant", "carte nationale étudiant", "renouveler tne", "perdu tne", "tne endommagé",
+            "certificat", "certificat inscription", "certificat étudiant", "certificat académique",
+            "inscription", "paiement", "frais", "scolarité", "bourse", "bourse alimentaire", "bourse transport",
+            "programme urgence", "urgence", "soutien urgence", "exigences urgence", "programme",
+            "conditions", "exigences", "postuler", "quest", "comment", "quand", "quelles",
+            "assurance", "assurance étudiant", "assurance accident", "police", "couverture assurance",
+            "identifiant", "identifiant duoc", "identifiant numérique", "identifiant physique",
+            "renouvellement", "perte", "endommagé", "inscription", "paiement",
+            "assurance", "accident", "couverture", "clinique",
+
+            # FRANCÉS - Bien-être étudiant
+            "bien-être", "bien-être étudiant", "soutien étudiant", "programmes soutien",
+            "psychologue", "psychologique", "santé mentale", "anxiété", "stress", "dépression",
+            "crise émotionnelle", "ambassadeurs bien-être", "atelier bien-être", "groupe soutien",
+            "handicap", "inclusion", "congé médical", "justifier absence",
+
+            # FRANCÉS - Sports et activité physique
+            "sport", "sports", "activité physique", "gym", "gymnase", "entraînement",
+            "football", "basketball", "volleyball", "natation", "boxe", "powerlifting", "zumba",
+            "équipe sportive", "essais sportifs", "horaire entraînement", "terrain", "installations",
+            "optionnel sportif", "cours sport", "éducation physique",
+
+            # FRANCÉS - Développement professionnel
+            "emploi", "travail", "stage", "pratique professionnelle", "carrière",
+            "curriculum", "cv", "entretien travail", "foire emploi", "développement carrière",
+            "diplômé", "diplômés", "certification carrière"
         ]
 
         # CONTEXTOS ESPECÍFICOS (para reforzar detección)
@@ -131,10 +187,19 @@ class ContentFilter:
             ]
         }
 
-        # TÉRMINOS INSTITUCIONALES FUERTES (si aparece, es 100% válido)
+        # TÉRMINOS INSTITUCIONALES FUERTES MULTIIDIOMA (si aparece, es 100% válido)
         self.strong_institutional_terms = [
+            # ESPAÑOL
             "duoc", "plaza norte", "punto estudiantil", "tne", "seguro estudiantil",
-            "programa emergencia", "bienestar estudiantil", "duoclaboral", "certificado"
+            "programa emergencia", "bienestar estudiantil", "duoclaboral", "certificado",
+            
+            # INGLÉS  
+            "student card", "student insurance", "emergency program", "student welfare",
+            "student certificate", "student support", "duoc", "tne",
+            
+            # FRANCÉS
+            "carte étudiant", "assurance étudiant", "programme urgence", "bien-être étudiant", 
+            "certificat étudiant", "soutien étudiant", "duoc", "tne"
         ]
 
         # CATEGORÍAS CONOCIDAS DEL CLASIFICADOR (PERMITIR SIEMPRE)
@@ -230,13 +295,12 @@ class ContentFilter:
                 "blocked_pattern": blocked_pattern
             }
 
-        # OFF-TOPIC: Solo si no hay nada institucional
-        logger.info(f"Tema desconocido/off-topic: {question}")
+        # OFF-TOPIC: MUY PERMISIVO - solo bloquear si es contenido realmente peligroso
+        logger.info(f"Permitiendo consulta por defecto: {question}")
         return {
-            "allowed": False,
-            "reason": "Tema desconocido/off-topic",
-            "category": None,
-            "block_reason": "off_topic"
+            "allowed": True,
+            "reason": "Permitido por defecto - consulta institucional",
+            "category": category or "institucionales"
         }
 
     def _contains_allowed_terms(self, question: str) -> bool:

@@ -68,7 +68,7 @@ class QuestionClassifier:
             ],
             
             "bienestar_estudiantil": [
-                # Salud mental y apoyo psicológico - EXPANDIDO
+                # PATRONES EN ESPAÑOL (MANTENIENDO TODOS)
                 r'\b(psicológico|psicólogo|salud mental|bienestar|apoyo psicológico)\b',
                 r'\b(consejería|consejero|atención psicológica|urgencia psicológica)\b',
                 r'\b(crisis|urgencia|emergencia|linea ops|línea ops)\b',
@@ -77,6 +77,20 @@ class QuestionClassifier:
                 r'\b(sesión psicológica|terapia|consultar.*psicólogo|hablar con alguien)\b',
                 r'\b(no puedo más|estoy estresado|deprimido|tristeza profunda)\b',
                 r'\b(adriana vásquez|avasquezm|bienestar estudiantil)\b',
+                # PATRONES EN INGLÉS
+                r'\b(psychological|psychologist|mental health|student welfare|psychological support)\b',
+                r'\b(counseling|psychological care|psychological sessions|therapy)\b',
+                r'\b(crisis|emergency|feel unwell|going through difficult time)\b',
+                r'\b(need help|feeling bad|stressed|anxious|depression)\b',
+                r'\b(in-person psychological|virtual psychologist|medical leave)\b',
+                r'\b(mental health support|classmate|disabilities|ambassadors)\b',
+                # PATRONES EN FRANCÉS
+                r'\b(psychologue|santé mentale|bien-être|soutien psychologique)\b',
+                r'\b(conseil|soins psychologiques|sessions psychologiques|thérapie)\b',
+                r'\b(crise|urgence|me sens mal|moment difficile)\b',
+                r'\b(besoin aide|mal être|stressé|anxieux|dépression)\b',
+                r'\b(soins présentiel|psychologue virtuel|arrêt maladie)\b',
+                r'\b(soutien santé mentale|camarade|handicapés|ambassadeurs)\b',
                 
                 # Sesiones psicológicas - EXPANDIDO
                 r'\b(sesiones psicológicas|sesión psicológica|8 sesiones)\b',
@@ -243,64 +257,95 @@ class QuestionClassifier:
         """DETECCIÓN INTELIGENTE DE TEMPLATES EXPANDIDA CON TODOS LOS NUEVOS"""
         question_lower = self._clean_question(question)
         
-        # DETECCIÓN PRIORITARIA PARA TEMPLATES CRÍTICOS
+        print(f"🔍 TEMPLATE DETECTION para: '{question_lower[:50]}...'")
+        logger.info(f"Template detection iniciada para: '{question}'")
+        
+        # DETECCIÓN PRIORITARIA PARA TEMPLATES CRÍTICOS (MULTIIDIOMA)
         priority_templates = {
-            "tne_primera_vez": [r'cómo.*saco.*tne', r'obtener.*tne', r'sacar.*tne'],
-            "tne_reposicion_perdida_danada": [r'tne.*pierde', r'tne.*pérdida', r'tne.*dañada'],
-            "programa_emergencia_que_es": [r'qué.*es.*programa.*emergencia'],
-            "programa_emergencia_requisitos": [r'requisitos.*programa.*emergencia'],
-            "ubicaciones_deportivas": [r'en.*qué.*lugar.*ubicados', r'dónde.*están.*talleres'],
-            "talleres_tienen_nota": [
-                r'talleres.*tienen.*nota', r'nota.*taller',
-                # Variantes que incluyen la palabra "optativos" o que invierten el orden
-                r'(?:talleres|optativos|optativo).*(?:tienen.*nota|tienen.*calific|con nota|con calificación)',
-                r'(?:tienen.*nota|tienen.*calific|con nota|con calificación).*?(?:talleres|optativos|optativo)'
+            # TNE TEMPLATES CON SOPORTE MULTIIDIOMA
+            "tne_primera_vez": [
+                r'c[óo]mo.*saco.*tne', r'obtener.*tne', r'sacar.*tne',  # español
+                r'how.*do.*i.*get.*tne', r'how.*to.*get.*tne', r'obtain.*tne',  # inglés
+                r'get.*my.*tne', r'how.*get.*student.*card', r'how.*obtain.*student.*card',
+                r'comment.*obtenir.*tne', r'comment.*avoir.*tne', r'obtenir.*ma.*tne'  # francés
             ],
-            "talleres_tienen_asistencia": [r'tienen.*asistencia'],
-            "desinscripcion_talleres": [r'cómo.*puedo.*des.*inscribirme'],
-            "ubicaciones_deportivas": [r'en.*qué.*lugar.*ubicados', r'dónde.*están.*talleres',r'ubicación.*deportes', r'lugar.*taller'
-                                       r'dónde.*están.*las.*canchas', r'ubicación.*canchas',r'dónde.*están.*los.*campos', r'lugar.*de.*entrenamiento',
-                                       r'dónde.*entrenan', r'dónde.*se.*hacen.*deportes',r'dónde.*están.*las.*canchas', r'ubicación.*canchas',
-                                        r'dónde.*están.*los.*campos', r'lugar.*de.*entrenamiento',
-                                        r'dónde.*entrenan', r'dónde.*se.*hacen.*deportes',
-                                        r'ubicación.*deportiva', r'dónde.*practicar'],
-            "desinscripcion_talleres": [r'cómo.*puedo.*des.*inscribirme', r'retirarme.*taller',r'cancelar.*inscripción', r'dejar.*taller'],
-            "inscripcion_optativos_deportivos": [r'cómo.*inscribo.*optativos', r'inscripción.*deportivos',
-                                                 r'tomar.*taller.*deporte', r'proceso.*inscripción.*deportes'],
-            "que_es_desarrollo_laboral": [r'qué.*es.*desarrollo.*laboral', r'definición.*desarrollo.*laboral',
-                                          r'qué.*significa.*desarrollo.*laboral', r'para.*qué.*sirve.*desarrollo.*laboral'],
-            "mejorar_curriculum": [r'cómo.*me.*pueden.*ayudar.*mejorar.*currículum', r'mejorar.*cv',
-                                   r'asesoría.*curriculum', r'revisión.*cv', r'ayuda.*con.*mi.*currículum'],
-            "beneficios_titulados_desarrollo_laboral": [r'beneficios.*titulados.*desarrollo.*laboral', 
-                                                        r'qué.*beneficios.*titulados', r'ventajas.*titulados.*empleo', r'beneficios.*egresados.*laboral'],
-            "crear_cv_duoclaboral": [r'cómo.*creo.*mi.*cv.*duoclaboral', r'crear.*cv.*duoclaboral',r'hacer.*cv.*duoclaboral', r'formato.*cv.*duoclaboral'],
-            "talleres_deportivos": [r'qué.*deportes.*puedo.*practicar', r'qué.*deportes.*hay',r'hay.*fútbol', r'hay.*basquetbol', r'hay.*voleibol', r'hay.*natación',
-                                    r'qué.*actividades.*deportivas', r'qué.*puedo.*practicar',r'deportes.*disponibles', r'oferta.*deportiva'],
-            "horarios_talleres": [r'a.*qué.*hora.*son.*entrenamientos', r'horario.*entrenamientos',
-                                  r'cuándo.*son.*prácticas', r'horario.*de.*deportes',r'a.*qué.*hora.*practicar', r'cuándo.*son.*clases'],
-            "gimnasio_caf": [r'puedo.*usar.*el.*gimnasio', r'acceder.*gimnasio',r'uso.*del.*gimnasio', r'entrar.*al.*gimnasio',
-                            r'gimnasio.*disponible', r'caf.*abierto',r'instalaciones.*deportivas', r'acceso.*gimnasio'],
-            "selecciones_deportivas": [r'cómo.*entro.*al.*equipo', r'equipo.*de.*básquetbol',r'selección.*deportiva', r'equipo.*representativo',r'probar.*para.*equipo', r'entrar.*al.*equipo',
-                                        r'formar.*parte.*del.*equipo', r'pruebas.*deportivas'],
-            "deportes_colectivos": [r'qué.*deportes.*colectivos.*hay', r'oferta.*deportes.*colectivos', r'practicar.*deportes.*colectivos'],
-            "practicas_profesionales": [r'prácticas.*profesionales', r'practica.*profesional',r'experiencia.*laboral', 
-                                        r'inserción.*laboral',r'practicar(?!.*deporte)',
-                                       r'trabajo.*graduado', r'empleo.*egresado'],
-            # BIENESTAR - PATRONES MEJORADOS
-            "apoyo_psicologico": [r'ansiedad.*académica', r'estrés.*universitario',r'apoyo.*psicológico', 
-                                  r'necesito.*ayuda.*psicológica',r'dónde.*busco.*ayuda', r'apoyo.*emocional',r'crisis.*emocional', r'salud.*mental'],
-
-            # Nueva categoría punto_estudiantil - Patrones para templates específicos
-            "asuntos_estudiantiles_contacto": [r'contacto.*asuntos.*estudiantiles', r'natalia.*varela', r'nvarelam'],
-            "desarrollo_laboral_contacto": [r'contacto.*desarrollo.*laboral', r'claudia.*cortes', r'ccortesn'],
-            "pf_caf_contacto": [r'contacto.*caf', r'contacto.*pf', r'nicolas.*leiva', r'nleivas'],
-            "deportes_actividad_fisica_contacto": [r'contacto.*deportes', r'cesar.*pino', r'jefe.*deportes'],
-            "bienestar_estudiantil_contacto": [r'contacto.*bienestar.*estudiantil', r'adriana.*vasquez', r'avasquezm'],
-            "pastoral_contacto": [r'contacto.*pastoral', r'camila.*celedon', r'gestor.*pastoral'],
-            "punto_estudiantil_general": [r'contacto.*punto.*estudiantil', r'resumen.*áreas', r'miembros.*punto.*estudiantil'],
+            "tne_seguimiento": [
+                r'c[óo]mo.*revalido.*tne', r'renovar.*tne', r'seguimiento.*tne',  # español
+                r'how.*do.*i.*renew.*tne', r'how.*renew.*my.*tne', r'tne.*renewal',  # inglés
+                r'revalidate.*tne', r'how.*to.*renew.*student.*card',
+                r'comment.*renouveler.*tne', r'renouveler.*ma.*tne', r'revalidation.*tne'  # francés
+            ],
             
+            # PROGRAMA EMERGENCIA - MULTIIDIOMA EXPANDIDO
+            "programa_emergencia": [
+                r'programa.*emergencia', r'emergencia.*programa', r'qu[eé].*es.*programa.*emergencia',  # español
+                r'categorías.*emergencia', r'cu[aá]ndo.*emergencia', r'ayuda.*emergencia',
+                r'emergency.*program', r'program.*emergency', r'what.*emergency.*program',  # inglés
+                r'emergency.*support', r'financial.*aid.*emergency', r'when.*apply.*emergency',
+                r'programme.*urgence', r'urgence.*programme', r'programme.*d.*urgence',  # francés
+                r'aide.*urgence', r'soutien.*urgence', r'quand.*programme.*urgence'
+            ],
+            "programa_emergencia_requisitos": [
+                r'requisitos.*emergencia', r'conditions.*emergencia', r'qu[eé].*requisitos',  # español
+                r'requirements.*emergency', r'emergency.*requirements', r'apply.*emergency',  # inglés
+                r'application.*categories.*emergency', r'what.*are.*requirements',
+                r'conditions.*programme.*urgence', r'requisitos.*programme.*urgence',  # francés
+                r'conditions.*postuler.*urgence', r'quelles.*conditions'
+            ],
             
+            # PROGRAMAS DE APOYO - MULTIIDIOMA
+            "programas_apoyo_estudiante": [
+                r'programas.*apoyo.*estudiante', r'información.*apoyo', r'apoyo.*al.*estudiante',  # español
+                r'student.*support.*programs', r'information.*student.*support',  # inglés
+                r'how.*get.*information.*support', r'support.*programs.*information',
+                r'programmes.*soutien.*étudiants', r'informations.*programmes.*soutien',  # francés
+                r'comment.*obtenir.*informations.*soutien', r'soutien.*aux.*étudiants'
+            ],
+            
+            # SEGURO - MULTIIDIOMA EXPANDIDO  
+            "seguro_cobertura": [
+                r'c[óo]mo.*funciona.*seguro', r'seguro.*estudiantil', r'cobertura.*seguro',  # español
+                r'how.*insurance.*work', r'how.*does.*insurance.*work', r'student.*insurance',  # inglés
+                r'insurance.*coverage', r'does.*insurance.*work',
+                r'comment.*assurance.*fonctionne', r'comment.*fonctionne.*assurance',  # francés
+                r'assurance.*étudiante', r'couverture.*assurance'
+            ],
+            "tne_reposicion_perdida_danada": [
+                r'tne.*pierde', r'tne.*p[ée]rdida', r'tne.*da[ñn]ada',  # español
+                r'lost.*tne', r'damaged.*tne', r'tne.*lost.*damaged',  # inglés
+                r'if.*tne.*lost', r'if.*tne.*damaged', r'lost.*student.*card',
+                r'tne.*perdue', r'tne.*endommagée', r'si.*tne.*perdue.*endommagée'  # francés
+            ],
+            # SEGURO TEMPLATES
+            "seguro_cobertura": [
+                r'c[óo]mo.*funciona.*seguro', r'seguro.*cobertura', r'informaci[óo]n.*seguro',  # español
+                r'how.*does.*insurance.*work', r'insurance.*coverage', r'insurance.*information',  # inglés
+                r'how.*insurance.*works', r'student.*insurance.*work',
+                r'comment.*fonctionne.*assurance', r'assurance.*couverture', r'information.*assurance'  # francés
+            ],
+            # PROGRAMA EMERGENCIA
+            "programa_emergencia_requisitos": [
+                r'requisitos.*programa.*emergencia',  # español
+                r'emergency.*program.*requirements', r'requirements.*emergency.*program',  # inglés
+                r'what.*requirements.*emergency', r'apply.*emergency.*program',
+                r'conditions.*programme.*urgence', r'exigences.*programme.*urgence'  # francés
+            ],
+            "programa_emergencia_que_es": [
+                r'qu[ée].*es.*programa.*emergencia',  # español
+                r'what.*emergency.*program', r'emergency.*program.*categories',  # inglés
+                r'application.*categories.*emergency', r'when.*apply.*emergency',
+                r'quest.*ce.*que.*programme.*urgence', r'catégories.*programme.*urgence'  # francés
+            ]
         }
+
+        for template_id, patterns in priority_templates.items():
+            for pattern in patterns:
+                if re.search(pattern, question_lower):
+                    logger.info(f"PRIORITY TEMPLATE: '{question}' -> {template_id}")
+                    return template_id
+        
+        # PATRONES ESPECÍFICOS PARA TEMPLATES - MULTIIDIOMA COMPLETOS
+        # (La definición real está más abajo con soporte multilingual completo)
 
         for template_id, patterns in priority_templates.items():
             for pattern in patterns:
@@ -310,20 +355,141 @@ class QuestionClassifier:
         
         # PATRONES ESPECÍFICOS PARA TEMPLATES - COMPLETAMENTE EXPANDIDOS
         template_patterns = {
-            # NUEVOS TEMPLATES CRÍTICOS
-            
-            "licencias_medicas_psicologicas": [
-                r'psicólogo.*virtual.*licencia.*médica',r'psicólogo.*puede.*otorgar.*licencia',
-                r'licencia.*médica.*psicólogo',r'psicólogo.*da.*licencia',
-                r'permiso.*médico.*psicólogo',r'incapacidad.*psicológico',
-                r'psicólogo.*virtual.*puede.*dar.*licencia',r'otorga.*licencia.*psicólogo'
-            ],
-            
+            # TEMPLATES BIENESTAR ESTUDIANTIL - MULTIIDIOMA
             "apoyos_salud_mental": [
-                r'qué.*apoyos.*salud.*mental',r'apoyos.*salud.*mental.*existen',
-                r'servicios.*salud.*mental.*duoc',r'qué.*servicios.*salud.*mental',
-                r'recursos.*salud.*mental.*duoc',r'qué.*ofrece.*duoc.*salud.*mental',r'qué.*ofrece.*duoc.*salud.*mental',
-                r'apoyo.*psicológico.*disponible',r'qué.*hay.*para.*salud.*mental'
+                # ESPAÑOL
+                r'qué.*apoyos.*salud.*mental', r'apoyos.*salud.*mental.*existen',
+                r'servicios.*salud.*mental.*duoc', r'qué.*servicios.*salud.*mental',
+                r'recursos.*salud.*mental.*duoc', r'qué.*ofrece.*duoc.*salud.*mental',
+                r'apoyo.*psicológico.*disponible', r'qué.*hay.*para.*salud.*mental',
+                # INGLÉS
+                r'what.*mental.*health.*supports?.*exist', r'mental.*health.*supports?.*exist',
+                r'what.*mental.*health.*services', r'mental.*health.*services.*available',
+                r'what.*does.*duoc.*offer.*mental.*health', r'psychological.*support.*available',
+                r'what.*is.*available.*mental.*health',
+                # FRANCÉS  
+                r'quels.*soutiens.*santé.*mentale', r'soutiens.*santé.*mentale.*existent',
+                r'quels.*services.*santé.*mentale', r'services.*santé.*mentale.*disponibles',
+                r'que.*offre.*duoc.*santé.*mentale', r'soutien.*psychologique.*disponible'
+            ],
+            "atencion_presencial_psicologica": [
+                # ESPAÑOL
+                r'atención.*psicológica.*presencial', r'psicólogo.*presencial',
+                r'existe.*atención.*presencial', r'hay.*psicólogo.*presencial',
+                r'consultorio.*psicológico', r'atención.*en.*persona',
+                # INGLÉS
+                r'in-person.*psychological.*care', r'psychological.*care.*in.*person',
+                r'is.*there.*in-person.*psychological', r'face.*to.*face.*psychological',
+                r'on-site.*psychological.*care',
+                # FRANCÉS
+                r'soins.*psychologiques.*présentiel', r'existe.*soins.*présentiel',
+                r'psychologue.*en.*personne', r'soins.*en.*personne'
+            ],
+            "agendar_psicologico": [
+                # ESPAÑOL
+                r'agendar.*atención.*psicológica', r'reservar.*hora.*psicólogo',
+                r'programar.*sesión.*psicológica', r'cómo.*agendar.*psicólogo',
+                r'no.*encuentro.*horas.*disponibles', r'horas.*psicólogo',
+                # INGLÉS
+                r'schedule.*psychological.*care', r'book.*appointment.*psychologist',
+                r'make.*appointment.*psychological', r'tried.*to.*schedule.*psychological',
+                r'can\'t.*find.*available.*appointments', r'no.*available.*appointments',
+                # FRANCÉS
+                r'prendre.*rendez-vous.*soins.*psychologiques', r'programmer.*séance.*psychologique',
+                r'réserver.*rendez-vous.*psychologue', r'pas.*créneaux.*disponibles'
+            ],
+            "sesiones_psicologicas": [
+                # ESPAÑOL
+                r'cuántas.*sesiones.*psicológicas', r'sesiones.*por.*año',
+                r'máximo.*sesiones.*psicológicas', r'límite.*sesiones',
+                r'8.*sesiones.*psicológicas', r'número.*sesiones',
+                # INGLÉS
+                r'how.*many.*psychological.*sessions', r'sessions.*per.*year',
+                r'maximum.*psychological.*sessions', r'limit.*sessions',
+                r'8.*psychological.*sessions', r'number.*of.*sessions',
+                # FRANCÉS
+                r'combien.*sessions.*psychologiques', r'sessions.*par.*an',
+                r'maximum.*sessions.*psychologiques', r'limite.*sessions',
+                r'nombre.*sessions.*psychologiques'
+            ],
+            "licencias_medicas_psicologicas": [
+                # ESPAÑOL
+                r'psicólogo.*virtual.*licencia.*médica', r'psicólogo.*puede.*otorgar.*licencia',
+                r'licencia.*médica.*psicólogo', r'psicólogo.*da.*licencia',
+                r'permiso.*médico.*psicólogo', r'incapacidad.*psicológico',
+                # INGLÉS
+                r'virtual.*psychologist.*provide.*medical.*leave', r'psychologist.*medical.*leave',
+                r'can.*psychologist.*provide.*leave', r'psychological.*medical.*certificate',
+                r'sick.*leave.*psychologist',
+                # FRANCÉS
+                r'psychologue.*virtuel.*arrêt.*maladie', r'psychologue.*peut.*fournir.*arrêt',
+                r'arrêt.*maladie.*psychologue', r'certificat.*médical.*psychologique'
+            ],
+            "apoyo_companeros": [
+                # ESPAÑOL
+                r'compañero.*está.*pasando.*mal.*momento', r'ayudar.*compañero.*no.*quiere',
+                r'qué.*hacer.*si.*compañero', r'apoyo.*compañeros',
+                r'ayuda.*entre.*estudiantes', r'estudiante.*mal.*momento',
+                # INGLÉS
+                r'classmate.*going.*through.*difficult.*time', r'what.*can.*i.*do.*if.*classmate',
+                r'classmate.*doesn\'t.*want.*ask.*for.*help', r'help.*classmate.*difficult',
+                r'peer.*support', r'fellow.*student.*hard.*time',
+                # FRANCÉS
+                r'camarade.*traverse.*mauvais.*moment', r'que.*faire.*si.*camarade',
+                r'camarade.*ne.*veut.*pas.*demander.*aide', r'soutien.*entre.*étudiants',
+                r'entraide.*étudiante'
+            ],
+            "apoyo_discapacidad": [
+                # ESPAÑOL
+                r'apoyo.*estudiantes.*discapacidad', r'existe.*apoyo.*discapacidad',
+                r'programa.*discapacidad', r'paedis', r'inclusión.*estudiantil',
+                r'estudiantes.*necesidades.*especiales', r'adaptaciones.*académicas',
+                # INGLÉS
+                r'support.*students.*disabilities', r'support.*for.*students.*with.*disabilities',
+                r'disability.*support.*program', r'special.*needs.*students',
+                r'academic.*accommodations.*disabilities', r'inclusive.*education',
+                # FRANCÉS
+                r'soutien.*étudiants.*handicapés', r'programme.*handicap',
+                r'étudiants.*besoins.*spéciaux', r'adaptations.*académiques',
+                r'inclusion.*étudiante'
+            ],
+            "curso_embajadores_avance": [
+                # ESPAÑOL
+                r'curso.*embajadores.*no.*puedo.*avanzar', r'embajadores.*siguiente.*módulo',
+                r'bloqueado.*embajadores', r'no.*avanzo.*embajadores',
+                r'módulo.*embajadores', r'85%.*embajadores',
+                # INGLÉS
+                r'ambassadors.*course.*can\'t.*advance', r'started.*ambassadors.*course.*can\'t',
+                r'ambassadors.*next.*module', r'blocked.*ambassadors.*course',
+                r'can\'t.*progress.*ambassadors',
+                # FRANCÉS
+                r'cours.*ambassadeurs.*ne.*peux.*pas.*avancer', r'ambassadeurs.*module.*suivant',
+                r'bloqué.*cours.*ambassadeurs', r'n\'avance.*pas.*ambassadeurs'
+            ],
+            "curso_embajadores_finalizacion": [
+                # ESPAÑOL
+                r'cómo.*sé.*terminé.*curso.*embajadores', r'finalicé.*embajadores',
+                r'terminé.*curso.*embajadores', r'completé.*embajadores',
+                r'curso.*embajadores.*finalizado', r'embajadores.*terminado',
+                # INGLÉS
+                r'how.*know.*if.*finished.*ambassadors.*course', r'completed.*ambassadors.*course',
+                r'finished.*ambassadors.*course', r'how.*tell.*ambassadors.*done',
+                # FRANCÉS
+                r'comment.*savoir.*terminé.*cours.*ambassadeurs', r'fini.*cours.*ambassadeurs',
+                r'terminé.*cours.*ambassadeurs', r'comment.*savoir.*ambassadeurs.*fini'
+            ],
+            "curso_embajadores_salud_mental": [
+                # ESPAÑOL
+                r'responsabilidad.*adicional.*curso.*embajadores', r'embajadores.*en.*salud.*mental',
+                r'compromiso.*embajadores', r'tareas.*embajadores',
+                r'responsabilidades.*embajadores', r'qué.*implica.*ser.*embajador',
+                # INGLÉS
+                r'additional.*responsibility.*ambassadors.*course', r'ambassadors.*mental.*health',
+                r'responsibility.*after.*completing.*ambassadors', r'duties.*ambassadors',
+                r'what.*does.*being.*ambassador.*involve',
+                # FRANCÉS
+                r'responsabilité.*supplémentaire.*ambassadeurs', r'ambassadeurs.*santé.*mentale',
+                r'responsabilité.*après.*ambassadeurs', r'devoirs.*ambassadeurs'
             ],
             "programa_emergencia_que_es": [
                 r'qué.*es.*programa.*emergencia', r'programa.*emergencia.*qué.*es',
@@ -725,16 +891,142 @@ class QuestionClassifier:
                 r'contacto.*áreas', r'teléfonos.*específicos', r'contacto.*especializado',
                 r'áreas.*contacto', r'departamentos.*contacto', r'contacto.*directo',
                 r'números.*directos', r'email.*específico'
+            ],
+            
+            # === TEMPLATES FALTANTES DESARROLLO LABORAL ===
+            "bolsa_empleo": [
+                r'bolsa.*empleo', r'bolsa.*trabajo', r'ofertas.*empleo', r'buscar.*trabajo',
+                r'duoclaboral', r'portal.*empleo', r'ofertas.*laborales'
+            ],
+            "simulaciones_entrevistas": [
+                r'simulación.*entrevista', r'simulacro.*entrevista', r'práctica.*entrevista',
+                r'entrevista.*simulada', r'preparación.*entrevista'
+            ],
+            "talleres_empleabilidad": [
+                r'talleres.*empleabilidad', r'taller.*empleo', r'empleabilidad',
+                r'habilidades.*laborales', r'competencias.*laborales'
+            ],
+            "ferias_laborales": [
+                r'ferias.*laborales', r'feria.*trabajo', r'feria.*empleo',
+                r'evento.*laboral', r'encuentro.*laboral'
+            ],
+            "mentoria_profesional": [
+                r'mentoría.*profesional', r'mentor.*laboral', r'asesoría.*profesional',
+                r'guía.*profesional', r'coaching.*laboral'
+            ],
+            "linkedin_optimizacion": [
+                r'linkedin', r'linkedin.*optimización', r'perfil.*linkedin',
+                r'optimizar.*linkedin', r'mejorar.*linkedin'
+            ],
+            
+            # === TEMPLATES FALTANTES DEPORTES ===
+            "talleres_tienen_asistencia": [
+                r'asistencia.*talleres', r'talleres.*asistencia', r'control.*asistencia',
+                r'attendance.*workshops', r'asistencia.*deportes'
+            ],
+            "desinscripcion_talleres": [
+                r'desinscripción.*talleres', r'cancelar.*talleres', r'retirarme.*taller',
+                r'unsubscribe.*workshops', r'dejar.*taller'
+            ],
+            "becas_deportivas": [
+                r'becas.*deportivas', r'beca.*deporte', r'sports.*scholarships',
+                r'beca.*deportiva', r'apoyo.*deportista'
+            ],
+            
+            # === TEMPLATES FALTANTES PASTORAL ===
+            "pastoral_informacion_general": [
+                r'pastoral.*información', r'qué.*es.*pastoral', r'pastoral.*general',
+                r'área.*pastoral', r'servicios.*pastoral'
+            ],
+            "voluntariado": [
+                r'voluntariado', r'volunteer.*work', r'trabajo.*voluntario',
+                r'actividades.*solidarias', r'servicio.*comunitario'
+            ],
+            "retiros_espirituales": [
+                r'retiros.*espirituales', r'spiritual.*retreats', r'retiro.*religioso',
+                r'actividad.*espiritual', r'encuentro.*espiritual'
+            ],
+            "grupos_oracion": [
+                r'grupos.*oración', r'prayer.*groups', r'grupo.*religioso',
+                r'oración.*grupal', r'encuentro.*oración'
+            ],
+            "celebraciones_liturgicas": [
+                r'celebraciones.*litúrgicas', r'liturgical.*celebrations',
+                r'misa', r'celebración.*religiosa', r'evento.*litúrgico'
+            ],
+            "solidaridad_ayuda_social": [
+                r'solidaridad', r'ayuda.*social', r'solidarity.*social.*help',
+                r'acción.*solidaria', r'apoyo.*social'
+            ],
+            
+            # === TEMPLATES FALTANTES TNE ===
+            "tne_informacion_general": [
+                r'información.*general.*tne', r'qué.*es.*tne', r'general.*information.*tne',
+                r'what.*is.*tne', r'información.*tarjeta.*estudiante'
+            ],
+            
+            # === TEMPLATES FALTANTES VARIOS ===
+            "programa_emergencia_categorias": [
+                r'categorías.*programa.*emergencia', r'emergency.*program.*categories',
+                r'tipos.*ayuda.*emergencia', r'modalidades.*emergencia'
+            ],
+            "seguro_funcionamiento": [
+                r'funcionamiento.*seguro', r'how.*insurance.*works',
+                r'proceso.*seguro', r'cómo.*usar.*seguro'
+            ],
+            "horarios_atencion": [
+                r'horarios.*atención', r'horario.*punto.*estudiantil', 
+                r'schedule.*attention', r'hours.*attention'
+            ],
+            "informacion_contacto": [
+                r'información.*contacto', r'contact.*information',
+                r'datos.*contacto', r'contacto.*general'
+            ],
+            "saludo_inicial": [
+                r'hola', r'buenos.*días', r'buenas.*tardes', r'hello',
+                r'good.*morning', r'hi', r'hey'
+            ],
+            "calendario_academico": [
+                r'calendario.*académico', r'academic.*calendar',
+                r'fechas.*importantes', r'cronograma.*académico'
+            ],
+            "biblioteca_recursos": [
+                r'biblioteca.*recursos', r'library.*resources',
+                r'recursos.*biblioteca', r'servicios.*biblioteca'
+            ],
+            "becas_beneficios": [
+                r'becas.*beneficios', r'scholarships.*benefits',
+                r'beneficios.*estudiantiles', r'ayudas.*estudiantiles'
+            ],
+            
+            # === PATRONES ADICIONALES CRÍTICOS FALTANTES ===
+            "talleres_deportivos": [
+                r'qu[ée].*deportes.*puedo.*practicar', r'qu[ée].*deportes.*hay',
+                r'qu[ée].*actividades.*deportivas', r'deportes.*disponibles',
+                r'oferta.*deportiva', r'talleres.*deportivos', r'actividades.*deportivas'
+            ],
+            "mejorar_curriculum": [
+                r'c[óo]mo.*mejoro.*mi.*curriculum', r'c[óo]mo.*mejoro.*curr[íi]culum',
+                r'mejorar.*curr[íi]culum', r'optimizar.*cv', r'ayuda.*curriculum',
+                r'asesor[íi]a.*curriculum', r'revisi[óo]n.*cv', r'c[óo]mo.*mejorar.*cv'
+            ],
+            "apoyo_psicologico_principal": [
+                r'necesito.*apoyo.*psicologico', r'necesito.*ayuda.*psicol[óo]gica',
+                r'apoyo.*psicol[óo]gico', r'atenci[óo]n.*psicol[óo]gica',
+                r'ayuda.*emocional', r'necesito.*psic[óo]logo'
             ]
         }
         
         for template_id, patterns in template_patterns.items():
             for pattern in patterns:
                 if re.search(pattern, question_lower):
+                    print(f"✅ TEMPLATE MATCH ENCONTRADO: '{question}' -> {template_id}")
                     logger.info(f"TEMPLATE MATCH: '{question}' -> {template_id}")
                     self.stats['template_matches'] += 1
                     return template_id
         
+        print(f"❌ NO TEMPLATE MATCH para: '{question_lower[:50]}...'")
+        logger.info(f"No template match para: '{question}'")
         return None
     
     def _keyword_classification(self, question: str) -> Tuple[str, float]:
@@ -744,19 +1036,38 @@ class QuestionClassifier:
         """
         question_lower = self._clean_question(question)
         
-        # DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
-        emergency_words = ['crisis', 'urgencia', 'emergencia', 'línea ops', 'me siento mal', 'ayuda urgente']
+        # DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS - MULTILINGUAL
+        emergency_words = [
+            # ESPAÑOL
+            'crisis', 'urgencia', 'emergencia', 'línea ops', 'me siento mal', 'ayuda urgente',
+            # INGLÉS  
+            'crisis', 'emergency', 'urgent', 'feel unwell', 'urgent help', 'immediate help',
+            # FRANCÉS
+            'crise', 'urgence', 'aide urgente', 'me sens mal', 'urgente'
+        ]
         if any(word in question_lower for word in emergency_words):
             logger.warning(f"URGENCIA DETECTADA en clasificación: {question}")
             return "bienestar_estudiantil", 0.95  # Alta confianza para urgencias
         
-        # DETECCIÓN ESPECÍFICA PARA CONSULTAS PROBLEMÁTICAS
+        # DETECCIÓN ESPECÍFICA PARA CONSULTAS PROBLEMÁTICAS - MULTILINGUAL
         specific_patterns = {
-            "bienestar_estudiantil": [  # AÑADIR MÁS PATRONES AQUÍ
+            "bienestar_estudiantil": [  # PATRONES MULTIIDIOMA EXPANDIDOS
+                # ESPAÑOL
                 r'compañero.*mal.*momento', r'amigo.*no.*quiere.*ayuda',
                 r'ayudar.*compañero.*problemas', r'persona.*deprimida.*qué.*hacer',
                 r'embajadores.*no.*puedo.*avanzar', r'curso.*embajadores.*terminé',
-                r'responsabilidad.*embajadores', r'módulo.*embajadores.*bloqueado'
+                r'responsabilidad.*embajadores', r'módulo.*embajadores.*bloqueado',
+                r'apoyo.*salud.*mental', r'atención.*psicológica', r'sesiones.*psicológicas',
+                r'psicólogo.*virtual', r'apoyo.*discapacidad',
+                # INGLÉS
+                r'mental.*health.*support', r'psychological.*care', r'classmate.*difficult.*time',
+                r'ambassadors.*course', r'psychological.*session', r'virtual.*psychologist', 
+                r'support.*disabilities', r'crisis.*feel.*unwell', r'schedule.*psychological',
+                r'many.*sessions.*year', r'medical.*leave', r'in-person.*psychological',
+                # FRANCÉS 
+                r'soutien.*santé.*mentale', r'soins.*psychologiques', r'camarade.*mauvais.*moment',
+                r'cours.*ambassadeurs', r'sessions.*psychologiques', r'psychologue.*virtuel',
+                r'soutien.*handicap', r'crise.*campus', r'rendez-vous.*psychologique'
             ],
 
             "asuntos_estudiantiles": [
@@ -852,9 +1163,44 @@ class QuestionClassifier:
         
         return best_category, confidence
     
-    def _fallback_classify(self, question: str) -> str:
+    def get_classification_info(self, question: str) -> Dict:
+        """
+        Obtiene información completa de clasificación incluyendo idioma detectado
+        """
+        try:
+            from app.topic_classifier import TopicClassifier
+            topic_classifier = TopicClassifier()
+            
+            # Obtener clasificación completa del topic_classifier
+            topic_result = topic_classifier.classify_topic(question)
+            
+            # Obtener categoría con el método principal
+            category = self.classify_question(question)
+            
+            return {
+                "category": category,
+                "language": topic_result.get("language", "es"),
+                "confidence": topic_result.get("confidence", 0.7),
+                "matched_keywords": topic_result.get("matched_keywords", []),
+                "is_institutional": topic_result.get("is_institutional", True),
+                "source": "enhanced_classifier"
+            }
+            
+        except Exception as e:
+            logger.error(f"Error obteniendo información de clasificación: {e}")
+            return {
+                "category": self.classify_question(question),
+                "language": "es",
+                "confidence": 0.5,
+                "matched_keywords": [],
+                "is_institutional": True,
+                "source": "fallback"
+            }
+    
+    def _fallback_classify(self, question: str) -> Dict:
         """
         Clasificación de respaldo usando el nuevo sistema de filtros
+        Retorna diccionario con categoría, idioma y detalles adicionales
         """
         try:
             from app.topic_classifier import TopicClassifier
@@ -862,14 +1208,32 @@ class QuestionClassifier:
             
             topic_result = topic_classifier.classify_topic(question)
             
-            if topic_result["is_institutional"]:
-                return topic_result["category"]
+            if topic_result.get("is_institutional", False):
+                return {
+                    "category": topic_result["category"],
+                    "language": topic_result.get("language", "es"),
+                    "confidence": topic_result.get("confidence", 0.7),
+                    "matched_keywords": topic_result.get("matched_keywords", []),
+                    "source": "topic_classifier"
+                }
             else:
-                return "otros"
+                return {
+                    "category": "otros", 
+                    "language": topic_result.get("language", "es"),
+                    "confidence": 0.3,
+                    "matched_keywords": [],
+                    "source": "fallback"
+                }
                 
         except Exception as e:
             logger.error(f"Error en fallback classification: {e}")
-            return "otros"
+            return {
+                "category": "otros",
+                "language": "es", 
+                "confidence": 0.1,
+                "matched_keywords": [],
+                "source": "error"
+            }
     
     def _manage_semantic_cache(self, question: str, category: str):
         """Gestiona cache SEMÁNTICO (normalizado)"""
@@ -912,7 +1276,8 @@ class QuestionClassifier:
                 return keyword_category
             
             # 3. Usar el nuevo sistema de filtros como respaldo
-            fallback_category = self._fallback_classify(question)
+            fallback_result = self._fallback_classify(question)
+            fallback_category = fallback_result["category"] if isinstance(fallback_result, dict) else fallback_result
             self.stats['category_counts'][fallback_category] += 1
             self._manage_semantic_cache(question, fallback_category)
             
@@ -923,7 +1288,8 @@ class QuestionClassifier:
             logger.error(f"Error en clasificación para pregunta '{question}': {e}")
             
             # Fallback final
-            final_category = self._fallback_classify(question)
+            final_result = self._fallback_classify(question)
+            final_category = final_result["category"] if isinstance(final_result, dict) else final_result
             self.stats['category_counts'][final_category] += 1
             self._manage_semantic_cache(question, final_category)
             
