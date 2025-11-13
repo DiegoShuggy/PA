@@ -380,7 +380,13 @@ class TopicClassifier:
             'programa', 'programas', 'apoyo', 'ayuda', 'información', 'requisitos', 'postular', 'solicitar',
             'obtener', 'conseguir', 'sacar', 'renovar', 'revalidar', 'primera', 'vez', 'tiempo',
             'seguro', 'cobertura', 'emergencia', 'urgencia', 'emergencias', 'urgencias', 
-            'cuáles', 'cuales', 'dañada', 'pierde', 'perdida', 'perdido', 'categorías', 'categorias'
+            'cuáles', 'cuales', 'dañada', 'pierde', 'perdida', 'perdido', 'categorías', 'categorias',
+            # PALABRAS CRÍTICAS AGREGADAS PARA MEJORAR DETECCIÓN
+            'agendar', 'atención', 'psicológica', 'pero', 'no', 'encuentro', 'horas', 'disponibles',
+            'intenté', 'intento', 'tratando', 'busco', 'encontrar', 'necesito', 'quiero', 'quisiera',
+            'sesiones', 'citas', 'horarios', 'disponibilidad', 'turnos', 'consulta', 'consultas',
+            'virtual', 'presencial', 'línea', 'online', 'telemedicina', 'apoyo', 'bienestar',
+            'salud', 'mental', 'psicólogo', 'psicóloga', 'profesional', 'especialista'
         ]
         
         # Palabras indicadoras de inglés - EXPANDIDAS Y ESPECÍFICAS
@@ -396,17 +402,18 @@ class TopicClassifier:
             'insurance', 'coverage', 'emergency', 'requirements', 'apply', 'obtain', 'renew', 'first', 'lost', 'damaged'
         ]
         
-        # Palabras indicadoras de francés - EXPANDIDAS Y ESPECÍFICAS  
+        # Palabras indicadoras de francés - FILTRADAS PARA EVITAR CONFLICTOS
         french_indicators = [
-            'comment', 'quand', 'où', 'est', 'sont', 'peut', 'faire', 'le', 'la', 'dans', 'pour', 'avec',
+            'comment', 'quand', 'où', 'sont', 'peut', 'faire', 'dans', 'pour', 'avec',
             'soutien', 'aide', 'services', 'santé', 'mentale', 'soins', 'psychologiques', 'psychologue',
-            'crise', 'campus', 'essayé', 'prendre', 'rendez-vous', 'créneaux', 'disponibles', 'combien',
+            'crise', 'campus', 'essayé', 'prendre', 'rendez-vous', 'créneaux', 'combien',
             'sessions', 'virtuel', 'fournir', 'arrêt', 'maladie', 'savoir', 'camarade', 'traverse',
             'mauvais', 'moment', 'handicapés', 'commencé', 'cours', 'ambassadeurs', 'peux', 'passer',
             'module', 'suivant', 'terminé', 'responsabilité', 'supplémentaire', 'après', 'avoir', 'réalisé',
-            'quels', 'existe', 'puis', 'obtenir', 'ma', 'mon', 'mes', 'étudiant', 'étudiants', 'université',
+            'quels', 'puis', 'ma', 'mon', 'mes', 'étudiant', 'étudiants', 'université',
             'programme', 'programmes', 'assurance', 'couverture', 'urgence', 'conditions', 'postuler', 'renouveler',
             'première', 'fois', 'perdue', 'endommagée', 'catégories', 'postulation'
+            # REMOVIDAS: 'est', 'le', 'la', 'disponibles', 'existe', 'obtenir' (ambiguas con español)
         ]
         
         # Contar coincidencias de manera más inteligente
@@ -416,25 +423,24 @@ class TopicClassifier:
         
         print(f"🔍 Language detection: ES={spanish_count}, EN={english_count}, FR={french_count} para '{question_lower[:50]}...'")
         
-        # Lógica mejorada de decisión con prioridad al español
+        # Lógica mejorada de decisión con PRIORIDAD FUERTE AL ESPAÑOL
+        # Si español tiene 2+ palabras y es igual o mayor que otros idiomas
         if spanish_count >= 2 and spanish_count >= max(english_count, french_count):
             print(f"   🇪🇸 DETECTED: SPANISH (score: {spanish_count})")
             return 'es'
-        elif english_count >= 2 and english_count > max(spanish_count, french_count):
+        # Si español tiene al menos 1 palabra y empata con otros, priorizar español
+        elif spanish_count >= 1 and spanish_count >= max(english_count, french_count):
+            print(f"   🇪🇸 DETECTED: SPANISH (priority tie: {spanish_count})")
+            return 'es'
+        # Solo si inglés supera claramente en 2+ palabras al español
+        elif english_count >= 2 and english_count > spanish_count + 1:
             print(f"   🇺🇸 DETECTED: ENGLISH (score: {english_count})")
             return 'en'
-        elif french_count >= 2 and french_count > max(spanish_count, english_count):
+        # Solo si francés supera claramente en 2+ palabras al español
+        elif french_count >= 2 and french_count > spanish_count + 1:
             print(f"   🇫🇷 DETECTED: FRENCH (score: {french_count})")
             return 'fr'
-        elif spanish_count > 0 and spanish_count >= max(english_count, french_count):
-            print(f"   🇪🇸 DETECTED: SPANISH (low score: {spanish_count})")
-            return 'es'
-        elif english_count > 0 and english_count > french_count:
-            print(f"   🇺🇸 DETECTED: ENGLISH (low score: {english_count})")
-            return 'en'
-        elif french_count > 0:
-            print(f"   🇫🇷 DETECTED: FRENCH (low score: {french_count})")
-            return 'fr'
+        # En cualquier otro caso, default a español
         else:
             print(f"   🇪🇸 DETECTED: SPANISH (default, ES:{spanish_count}, EN:{english_count}, FR:{french_count})")
             return 'es'

@@ -127,18 +127,27 @@ class EnhancedTopicClassifier:
         if self.should_derive(query):
             return [query]
         
-        # PATRONES MÁS INTELIGENTES PARA DIVISIÓN
-        split_patterns = [
-            r'\s+y\s+',          # " y "
-            r'\s+también\s+',    # " también "
-            r'\s+además\s+',     # " además "
-            r'\s+por otro lado\s+', # " por otro lado "
-            r'\s+asimismo\s+',   # " asimismo "
-            r',\s*',             # Comas
-            r';\s*',             # Puntos y coma
+        # EVITAR DIVIDIR CONSULTAS FRANCESAS VÁLIDAS
+        french_indicators = [
+            "j'ai essayé", "mais je ne", "que dois-je faire", "comment savoir",
+            "ai-je une", "existe-t-il", "puis-je", "ne trouve pas",
+            "cours d'ambassadeurs", "responsabilité supplémentaire"
         ]
         
-        # Intentar dividir por patrones
+        for indicator in french_indicators:
+            if indicator in query_lower:
+                return [query]  # No dividir consultas francesas
+        
+        # PATRONES MÁS RESTRICTIVOS PARA DIVISIÓN
+        split_patterns = [
+            r'\s+y\s+además\s+',     # " y además "
+            r'\s+también\s+quiero\s+', # " también quiero "
+            r'\s+por otro lado\s+',  # " por otro lado "
+            r'\s+asimismo\s+',       # " asimismo "
+            r';\s*',                 # Puntos y coma
+        ]
+        
+        # Intentar dividir por patrones MÁS RESTRICTIVOS
         for pattern in split_patterns:
             parts = re.split(pattern, query_lower)
             if len(parts) > 1:
@@ -146,43 +155,14 @@ class EnhancedTopicClassifier:
                 valid_parts = []
                 for part in parts:
                     part_clean = part.strip()
-                    # CRITERIOS MÁS FLEXIBLES
+                    # CRITERIOS MÁS ESTRICTOS
                     words = part_clean.split()
-                    if (len(words) >= 2 or 
-                        any(keyword in part_clean for keyword in ['tne', 'deporte', 'taller', 'gimnasio', 'certificado', 'psicológico', 'práctica'])):
+                    if len(words) >= 4:  # Mínimo 4 palabras
                         valid_parts.append(part_clean)
                 
                 if len(valid_parts) > 1:
-                    logger.info(f"Consulta múltiple detectada por patrón: {valid_parts}")
+                    logger.info(f"Consulta múltiple detectada: {valid_parts}")
                     return valid_parts
-        
-        # DETECCIÓN POR PALABRAS CLAVE CONJUNTAS
-        topic_combinations = [
-            ('tne', 'deporte'), ('tne', 'taller'), ('certificado', 'deporte'),
-            ('beca', 'deporte'), ('psicológico', 'deporte'), ('tne', 'certificado'),
-            ('deporte', 'taller'), ('práctica', 'deporte')
-        ]
-        
-        for combo in topic_combinations:
-            if combo[0] in query_lower and combo[1] in query_lower:
-                # Extraer partes basadas en palabras clave con contexto
-                parts = []
-                for keyword in combo:
-                    if keyword in query_lower:
-                        # Buscar contexto alrededor de la palabra clave
-                        keyword_pos = query_lower.find(keyword)
-                        # Contexto más amplio para mejor comprensión
-                        start = max(0, keyword_pos - 30)
-                        end = min(len(query_lower), keyword_pos + len(keyword) + 40)
-                        context = query_lower[start:end].strip()
-                        # Limpiar y validar
-                        context = re.sub(r'^\W+', '', context)  # Remover puntuación inicial
-                        if len(context.split()) >= 2:
-                            parts.append(context)
-                
-                if len(parts) > 1:
-                    logger.info(f"Combo detectado: {parts}")
-                    return parts
         
         return [query]
     
@@ -470,6 +450,24 @@ class RAGEngine:
         """Detecta el idioma de la consulta basándose en palabras clave"""
         query_lower = query.lower()
         
+        # PATRONES ESPECÍFICOS FRANCESES DE ALTA PRIORIDAD
+        french_patterns = [
+            r'existe.*t.*il', r'qu\'est.*ce', r'comment.*savoir', r'que.*dois.*je.*faire',
+            r'j\'ai.*essayé', r'combien.*de', r'puis.*je.*avoir', r'ne.*trouve.*pas',
+            r'créneaux.*disponibles', r'soins.*psychologiques', r'en.*présentiel',
+            r'mais.*je.*ne', r'après.*avoir.*réalisé', r'responsabilité.*supplémentaire',
+            # Nuevos patrones críticos para mejor detección
+            r'ai.*je.*une', r'peut.*il.*fournir', r'le.*psychologue.*virtuel',
+            r'cours.*d\'ambassadeurs', r'peux.*pas.*passer', r'module.*suivant',
+            r'j\'ai.*commencé', r'comment.*savoir.*si', r'j\'ai.*terminé'
+        ]
+        
+        # Si encuentra patrones franceses específicos, es francés
+        for pattern in french_patterns:
+            if re.search(pattern, query_lower):
+                print(f"🇫🇷 PATTERN MATCH FRANCÉS: '{pattern}' en '{query_lower[:50]}...'")
+                return 'fr'
+        
         # Palabras indicadoras de inglés - ESPECÍFICAS Y EXPANDIDAS
         english_words = [
             'how', 'what', 'when', 'where', 'why', 'the', 'and', 'student', 'card', 'insurance', 
@@ -485,50 +483,97 @@ class RAGEngine:
             'completing', 'if', 'is', 'any', 'do', 'have'
         ]
         
-        # Palabras indicadoras de francés - EXPANDIDAS
+        # Palabras indicadoras de francés - EXPANDIDAS Y PRIORIZADAS
         french_words = [
-            # Interrogativos franceses
-            'comment', 'quest', 'quand', 'quelles', 'pourquoi', 'combien', 'que',
-            # Específicos franceses
+            # Interrogativos franceses (PESO ALTO)
+            'comment', 'quest', 'quand', 'quelles', 'pourquoi', 'combien', 'que', 'puis',
+            # Específicos franceses únicos  
+            'dois', 'faire', 'sais', 'camarade', 'traverse', 'mauvais', 'moment', 'veut', 'demander',
             'étudiant', 'étudiants', 'carte', 'assurance', 'fonctionne', 'obtenir', 
             'renouveler', 'perdue', 'endommagée', 'programme', 'urgence', 'conditions', 
-            'postuler', 'information', 'puis-je', 'puis', 'soutien', 
+            'postuler', 'information', 'puis-je', 'soutien', 'sens', 'mal', 'campus',
             # Términos de salud mental en francés
             'psychologue', 'santé', 'mentale', 'bien-être', 'soins', 'psychologiques',
             'sessions', 'thérapie', 'conseil', 'crise', 'aide', 'arrêt', 'maladie',
-            'camarade', 'traverse', 'mauvais', 'moment', 'handicapés', 'ambassadeurs',
-            'existe-t-il', 'présentiel', 'créneaux', 'disponibles', 'responsabilité',
-            'supplémentaire', 'terminé', 'cours', 'avancer', 'module', 'suivant',
+            'handicapés', 'ambassadeurs', 'existe-t-il', 'présentiel', 'créneaux', 
+            'disponibles', 'responsabilité', 'supplémentaire', 'terminé', 'cours', 
+            'avancer', 'module', 'suivant', 'commencé', 'peux', 'passer',
             # Conectores franceses únicos
             'mais', 'avec', 'pour', 'dans', 'sur', 'après', 'avoir', 'être',
-            'fournir', 'faire', 'savoir', 'passer', 'commencé', 'peux', 'veut',
-            'demander', 'réalisé'
+            'fournir', 'savoir', 'réalisé', 'ai-je', 'une', 'des', 'les', 'le', 'la',
+            'essayé', 'prendre', 'rendez', 'vous', 'trouve', 'pas', 'ne',
+            # Palabras francesas con acentos que confirman idioma
+            'élève', 'étudiante', 'créneaux', 'ça', 'où', 'déjà',
+            # Nuevos indicadores críticos franceses
+            'peut-il', 'virtuel', 'fournir', 'arrêt', 'maladie', 'soutien', 'handicapés',
+            'ambassadeurs', 'responsabilité', 'supplémentaire', 'réalisé', 'terminé'
         ]
         
-        # Contar coincidencias
-        english_score = sum(1 for word in english_words if word in query_lower)
-        french_score = sum(1 for word in french_words if word in query_lower)
+        # Palabras únicas del español que no aparecen en francés - MÁS ESPECÍFICAS
+        spanish_words = [
+            # Palabras exclusivamente españolas
+            'psicológico', 'psicólogo', 'psicóloga', 'médica', 'cómo', 'qué', 'cuándo', 'dónde',
+            'cuántas', 'máximo', 'número', 'año', 'sesiones', 'atención', 'cuántas',
+            'agendar', 'hora', 'reservar', 'solicitar', 'programar', 'necesito',
+            'apoyo', 'compañero', 'estudiante', 'discapacidad', 'puedo', 'tengo',
+            'emergencia', 'línea', 'teléfono', 'disponible', 'asistencia', 'debo',
+            'universitario', 'académico', 'solicitud', 'trámite', 'documentos', 'requisitos',
+            # Específicamente españolas que no son francesas
+            'quisiera', 'necesitaría', 'podría', 'debería', 'estaría', 'haría'
+        ]
+        
+        # Contar coincidencias con peso MEJORADO
+        english_score = sum(2 if word in query_lower else 0 for word in english_words if word in query_lower)  # Peso 2 para inglés específico
+        french_score = sum(3 if word in query_lower else 0 for word in french_words if word in query_lower)    # Peso 3 para francés
+        spanish_score = sum(2 if word in query_lower else 0 for word in spanish_words if word in query_lower)   # Peso 2 para español específico
+        
+        # BONUS ESPECIAL para construcciones francesas típicas
+        french_constructions = ['t-il', '-je', '-vous', 'd\'ambassadeurs', 'puis-je', 'dois-je', 'ai-je']
+        for construction in french_constructions:
+            if construction in query_lower:
+                french_score += 5  # Bonus alto para construcciones únicas francesas
+                print(f"   🎯 French construction detected: '{construction}' +5 points")
+        
+        # BONUS para acentos franceses (solo si no es claramente español)
+        accent_bonus = 0
+        french_accents = ['à', 'é', 'è', 'ê', 'ç', 'ô', 'ù', 'û', 'î', 'ï', 'ë', 'ü']
+        for char in french_accents:
+            if char in query_lower:
+                accent_bonus += 2
+        
+        # Aplicar bonus de acentos con lógica mejorada
+        if accent_bonus > 0:
+            if spanish_score <= 2:  # Si no hay fuerte indicación española
+                french_score += accent_bonus
+            elif french_score >= 3:  # Si ya hay indicadores franceses, aplicar parcialmente
+                french_score += accent_bonus // 2
         
         # Logging detallado para debugging
-        print(f"🔍 Análisis de idioma para: '{query_lower[:50]}...'")
-        print(f"   📊 Puntuación inglés: {english_score} palabras")
-        print(f"   📊 Puntuación francés: {french_score} palabras")
+        print(f"🔍 Language detection: ES={spanish_score}, EN={english_score}, FR={french_score} para '{query_lower[:50]}...'")
+        if accent_bonus > 0:
+            print(f"   ✨ Bonus acentos franceses: +{accent_bonus}")
         
-        # Determinación de idioma - LÓGICA MEJORADA
-        if english_score >= 2 and english_score > french_score:
-            print(f"   🇺🇸 RESULTADO: INGLÉS (score: {english_score})")
-            return 'en'
-        elif french_score >= 2 and french_score > english_score:
-            print(f"   🇫🇷 RESULTADO: FRANCÉS (score: {french_score})")
+        # Determinación de idioma - LÓGICA MEJORADA CON PRIORIDAD FRANCESA
+        if french_score >= 6:  # ALTA CONFIANZA FRANCÉS (aumentado por mejor scoring)
+            print(f"   🇫🇷 DETECTED: FRENCH (score: {french_score})")
             return 'fr'
-        elif english_score > 0 and english_score > french_score:
-            print(f"   🇺🇸 RESULTADO: INGLÉS (score bajo: {english_score})")
+        elif english_score >= 6 and english_score > french_score and spanish_score <= 3:
+            print(f"   🇺🇸 DETECTED: ENGLISH (score: {english_score})")
             return 'en'
-        elif french_score > 0:
-            print(f"   🇫🇷 RESULTADO: FRANCÉS (score bajo: {french_score})")
+        elif spanish_score >= 4 and spanish_score > french_score:
+            print(f"   🇪🇸 DETECTED: SPANISH (score: {spanish_score})")
+            return 'es'
+        elif french_score >= 3:  # CONFIANZA MEDIA FRANCÉS
+            print(f"   🇫🇷 DETECTED: FRENCH (score: {french_score})")
             return 'fr'
+        elif english_score >= 4 and english_score > spanish_score:
+            print(f"   🇺🇸 DETECTED: ENGLISH (score: {english_score})")
+            return 'en'
+        elif spanish_score >= 2:
+            print(f"   🇪🇸 DETECTED: SPANISH (score: {spanish_score})")
+            return 'es'
         else:
-            print(f"   🇪🇸 RESULTADO: ESPAÑOL (por defecto, en:{english_score}, fr:{french_score})")
+            print(f"   🇪🇸 DETECTED: SPANISH (default)")
             return 'es'  # Por defecto español
     
     def generate_template_response(self, processing_info: Dict) -> Dict:
@@ -553,20 +598,41 @@ class RAGEngine:
         # CARGAR TEMPLATES - PRIORIDAD AL SISTEMA MULTIIDIOMA
         try:
             template_response = None
-            template_category = None
+            template_category = processing_info.get('category', 'asuntos_estudiantiles')
             
-            # PRIMERO: Intentar con templates multiidioma nuevos
-            from app.templates import MULTILINGUAL_TEMPLATES, get_multilingual_template
-            
-            multilingua_response = get_multilingual_template(template_id, detected_language)
-            if multilingua_response:
-                template_response = multilingua_response
-                template_category = processing_info.get('category', 'asuntos_estudiantiles')
-                print(f"✅ Template multiidioma encontrado: {template_id} en {template_category} ({detected_language})")
-                logger.info(f"✅ Template multiidioma '{template_id}' encontrado en '{template_category}' idioma '{detected_language}'")
-            else:
-                print(f"❌ Template multiidioma NO encontrado: {template_id} en {template_category} ({detected_language})")
-                logger.warning(f"❌ Template multiidioma '{template_id}' NO encontrado en '{template_category}' idioma '{detected_language}'")
+            # PRIMERO: Intentar con nuevo template_manager (RECOMENDADO)
+            try:
+                from app.template_manager.templates_manager import template_manager, detect_area_from_query
+                
+                # Detectar área desde la query para tener el área correcta
+                detected_area_tuple = detect_area_from_query(original_query)
+                detected_area = detected_area_tuple[0] if isinstance(detected_area_tuple, tuple) else detected_area_tuple
+                
+                # Usar template_manager directamente
+                template_response = template_manager.get_template(detected_area, template_id, detected_language)
+                template_category = detected_area
+                
+                if template_response:
+                    print(f"✅ Template multiidioma encontrado: {template_id} en {template_category} ({detected_language})")
+                    logger.info(f"✅ Template multiidioma '{template_id}' encontrado en '{template_category}' idioma '{detected_language}'")
+                else:
+                    print(f"❌ Template multiidioma NO encontrado: {template_id} en {template_category} ({detected_language})")
+                    logger.warning(f"❌ Template multiidioma '{template_id}' NO encontrado en '{template_category}' idioma '{detected_language}'")
+                
+            except Exception as tm_error:
+                logger.warning(f"Error en template_manager: {tm_error}")
+                
+                # SEGUNDO: Fallback a sistema MULTILINGUAL_TEMPLATES
+                from app.templates import MULTILINGUAL_TEMPLATES, get_multilingual_template
+                
+                multilingua_response = get_multilingual_template(template_id, detected_language)
+                if multilingua_response:
+                    template_response = multilingua_response
+                    print(f"✅ Template multiidioma (fallback) encontrado: {template_id} en {template_category} ({detected_language})")
+                    logger.info(f"✅ Template multiidioma fallback '{template_id}' encontrado en '{template_category}' idioma '{detected_language}'")
+                else:
+                    print(f"❌ Template multiidioma (fallback) NO encontrado: {template_id} en {template_category} ({detected_language})")
+                    logger.warning(f"❌ Template multiidioma fallback '{template_id}' NO encontrado en '{template_category}' idioma '{detected_language}'")
             
             # SEGUNDO: Si no se encontró, usar sistema anterior
             if not template_response:

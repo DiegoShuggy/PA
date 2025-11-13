@@ -326,10 +326,45 @@ def detect_area_from_query(query: str) -> tuple:
             "validar", "renovar", "revalidar", "postular", "requisitos", "tramites", "inscripcion"
         ],
         "bienestar_estudiantil": [
+            # Español
             "psicologico", "psicologo", "ansiedad", "estres", "embajadores", "salud mental", 
             "apoyo", "sesiones", "crisis", "ops", "linea ops", "discapacidad", "bienestar", 
             "atencion", "8 sesiones", "paedis", "inclusion", "urgencia", "emergencia psicologica",
-            "adriana vasquez", "agendar", "cita", "consulta psicologica"
+            "adriana vasquez", "agendar", "cita", "consulta psicologica",
+            # English
+            "psychological", "psychologist", "anxiety", "stress", "ambassadors", "mental health",
+            "support", "sessions", "crisis", "ops", "ops line", "disability", "wellbeing", "welfare",
+            "attention", "8 sessions", "paedis", "inclusion", "urgency", "psychological emergency",
+            "adriana vasquez", "schedule", "appointment", "psychological consultation",
+            "student welfare", "student wellbeing", "mental support", "counseling", "counselling",
+            "therapy", "therapist", "emotional support", "psychological help", "mental care",
+            "wellness", "student support", "campus crisis", "emergency help", "psychological aid",
+            "classmate", "difficult time", "help", "peer support", "peer help", "helping others",
+            "friend in need", "supporting friends", "mental health awareness", "emotional help",
+            # Français - Keywords exactas de las consultas
+            "psychologique", "psychologue", "anxiete", "stress", "ambassadeurs", "sante mentale",
+            "soutien", "sessions", "crise", "ops", "ligne ops", "handicap", "bien-etre",
+            "attention", "8 sessions", "paedis", "inclusion", "urgence", "urgence psychologique",
+            "adriana vasquez", "programmer", "rendez-vous", "consultation psychologique",
+            "bien-etre etudiant", "soutien mental", "conseil", "therapie", "aide emotionnelle",
+            "aide psychologique", "soins mentaux", "bien-etre", "soutien etudiant", "crise campus",
+            "aide urgence", "aide psychologique", "camarade", "moment difficile", "aide",
+            "soutien entre pairs", "entraide", "aider les autres", "ami en difficulte",
+            "soutenir amis", "sensibilisation sante mentale", "aide emotionnelle", "soins psychologiques",
+            "cours ambassadeurs", "responsabilite supplementaire", "arret maladie", "licencia medica",
+            "creneaux disponibles", "prendre rendez-vous", "soins presentiels", "handicapes",
+            # Keywords específicas de las consultas problemáticas
+            "quels soutiens", "santé mentale", "existent", "duoc uc", "existe-t-il", "soins psychologiques",
+            "présentiel", "que dois-je faire", "me sens mal", "campus", "j'ai essayé", 
+            "créneaux disponibles", "combien", "puis-je avoir", "par an", "peut-il fournir",
+            "arrêt maladie", "camarade traverse", "mauvais moment", "ne veut pas demander",
+            "étudiants handicapés", "cours ambassadeurs", "module suivant", "responsabilité supplémentaire",
+            "après avoir réalisé", "comment savoir", "terminé", "ai-je une", "virtualuel",
+            "virtuel", "soutiens en", "mental", "duoc", "uc",
+            # Palabras específicamente francesas para mejorar detección
+            "existe-t-il", "présentiel", "dois-je", "j'ai", "puis-je", "créneaux",
+            "arrêt", "maladie", "camarade", "traverse", "étudiants", "handicapés",
+            "ambassadeurs", "supplémentaire", "réalisé", "terminé", "responsabilité"
         ],
         "desarrollo_laboral": [
             "practica profesional", "practicas", "empleo", "trabajo", "curriculum", "cv",
@@ -360,8 +395,33 @@ def detect_area_from_query(query: str) -> tuple:
             r'\b(validar|renovar|revalidar).*tne\b', r'\bseguro.*estudiantil\b'
         ],
         "bienestar_estudiantil": [
+            # Español
             r'\b(apoyo|atencion).*psicolog', r'\bsalud.*mental\b', r'\bcrisis.*emocional\b',
-            r'\blinea.*ops\b', r'\b8.*sesiones\b', r'\bcurso.*embajadores\b'
+            r'\blinea.*ops\b', r'\b8.*sesiones\b', r'\bcurso.*embajadores\b',
+            # English
+            r'\b(support|attention).*psycholog', r'\bmental.*health\b', r'\bmental.*care\b',
+            r'\bcrisis.*emotional\b', r'\bops.*line\b', r'\b8.*sessions\b', 
+            r'\bambassadors.*course\b', r'\bstudent.*welfare\b', r'\bstudent.*wellbeing\b',
+            r'\bpsychological.*support\b', r'\bmental.*support\b', r'\bcounseling\b', r'\bcounselling\b',
+            r'\btherapy\b', r'\bwellness.*support\b', r'\bemergency.*help\b', r'\bcampus.*crisis\b',
+            r'\bclassmate.*difficult\b', r'\bfriend.*help\b', r'\bpeer.*support\b', r'\bhelping.*others\b',
+            r'\bsupporting.*friend\b', r'\bdifficult.*time\b',
+            # Français - Patterns específicos
+            r'\b(soutien|attention).*psycholog', r'\bsante.*mentale\b', r'\bsoins.*mentaux\b',
+            r'\bcrise.*emotionnelle\b', r'\bligne.*ops\b', r'\b8.*sessions\b',
+            r'\bcours.*ambassadeurs\b', r'\bbien-etre.*etudiant\b', r'\bsoutien.*etudiant\b',
+            r'\bsoutien.*psychologique\b', r'\bsoutien.*mental\b', r'\bconseil\b', r'\btherapie\b',
+            r'\bbien-etre.*soutien\b', r'\baide.*urgence\b', r'\bcrise.*campus\b',
+            r'\bcamarade.*difficile\b', r'\bami.*aide\b', r'\bsoutien.*pairs\b', r'\baider.*autres\b',
+            r'\bsoutenir.*ami\b', r'\bmoment.*difficile\b', r'\bsoins.*psychologiques\b',
+            r'\barret.*maladie\b', r'\bcreneaux.*disponibles\b', r'\bprendre.*rendez-vous\b',
+            r'\bsoins.*presentiels\b', r'\bhandicapes\b', r'\bresponsabilite.*supplementaire\b',
+            # Patterns específicos para las consultas problemáticas  
+            r'\bquels.*soutiens.*sante.*mentale\b', r'\bexiste.*soins.*psychologiques\b',
+            r'\bque.*dois.*faire.*crise\b', r'\bcombien.*sessions.*psychologiques\b',
+            r'\bpsychologue.*virtuel.*arret\b', r'\bcamarade.*traverse.*mauvais\b',
+            r'\bsoutien.*etudiants.*handicapes\b', r'\bcours.*ambassadeurs.*module\b',
+            r'\bresponsabilite.*apres.*ambassadeurs\b', r'\bcomment.*savoir.*termine\b'
         ],
         "desarrollo_laboral": [
             r'\bpractica.*profesional\b', r'\bduoclaboral\b', r'\bmejorar.*cv\b',
@@ -384,15 +444,17 @@ def detect_area_from_query(query: str) -> tuple:
     area_matches = {}
     
     for area, keywords in area_keywords.items():
-        # Puntuación por palabras clave
-        keyword_score = sum(2 if keyword in query_lower else 0 for keyword in keywords)
+        # Puntuación por palabras clave (más peso para francés en bienestar)
+        keyword_weight = 3 if area == "bienestar_estudiantil" else 2
+        keyword_score = sum(keyword_weight if keyword in query_lower else 0 for keyword in keywords)
         
         # Puntuación por patrones regex (mayor peso)
         pattern_score = 0
         if area in area_patterns:
+            pattern_weight = 8 if area == "bienestar_estudiantil" else 5
             for pattern in area_patterns[area]:
                 if re.search(pattern, query_lower):
-                    pattern_score += 5
+                    pattern_score += pattern_weight
         
         total_score = keyword_score + pattern_score
         

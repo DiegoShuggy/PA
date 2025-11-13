@@ -95,4 +95,106 @@ TEMPLATES_EN = {
 🔗 **Help center:** https://centroayuda.duoc.cl
 💡 *Contact to learn about specific requirements and available benefits*
 """,
+
+    "apoyo_crisis": """
+🚨 **Crisis or Feeling Unwell on Campus - Immediate Support:**
+**If you're experiencing a crisis or feeling unwell while at campus:**
+
+🆘 **IMMEDIATE ACTIONS:**
+• **First aid room:** First floor, next to cashier
+• **Internal phone:** +56 2 2999 3005
+• **Security:** Contact campus security immediately
+
+📞 **24/7 EMERGENCY LINES:**
+• **OPS Line:** +56 2 2820 3450 (Psychological emergencies)
+• **Medical emergencies:** 131 (SAMU)
+• **General emergencies:** 133 (Firefighters)
+
+🏥 **PROFESSIONAL SUPPORT:**
+• Virtual psychological care available
+• Schedule at: https://eventos.duoc.cl
+• 8 free sessions annually
+
+💙 **You are not alone - Help is always available**
+""",
+
+    # TEMPLATES ADICIONALES PARA BIENESTAR ESTUDIANTIL
+
+    "apoyos_salud_mental": """
+🧠 **What mental health supports exist at Duoc UC?**
+**1. 🚨 Urgent psychological support:**
+• **OPS Line 24/7:** +56 2 2820 3450
+• Free and confidential
+• Psychological emergencies
+**2. 💻 Virtual psychological support:**
+• **Platform:** https://eventos.duoc.cl
+• Free online sessions
+• Institutional user @duocuc.cl
+**3. 🏥 Crisis support within campus:**
+• **First aid room:** First floor, next to cashier
+• **Phone:** +56 2 2999 3005
+🔗 **Talks and workshops:** Available at eventos.duoc.cl
+💡 *Free services for all regular students*
+""",
+
+    "atencion_presencial_psicologica": """
+🏥 **Is in-person psychological care available?**
+**No.** Currently Duoc UC exclusively offers **virtual psychological care**
+✅ **Available:**
+• Weekends
+• Holidays
+• Flexible schedules
+🔗 **Schedule virtual:** https://eventos.duoc.cl
+📞 **Campus support:** +56 2 2999 3005 (First aid)
+💡 *Virtual care maintains the same quality and confidentiality*
+""",
+
+    "licencias_medicas_psicologicas": """
+🏥 **Can the virtual psychologist issue medical leave?**
+**No.** Psychologists are not authorized to issue medical leave.
+✅ **Alternatives:**
+• **General physician:** For medical leave
+• **Psychiatrist:** For mental health conditions requiring leave
+• **Health centers:** Clinics and hospitals
+🔗 **Health Response:** 600 360 7777
+💡 *Psychologists provide therapeutic support, not medical leave*
+""",
+
+    "apoyo_companeros": """
+🤝 **What can I do if I know a classmate is going through a tough time but doesn't want to ask for help?**
+**Recommended actions:**
+1. **Encourage them** to request virtual psychological care
+2. **Remind them** it's confidential and free
+3. **Offer support** in the process
+🎓 **"Mental Health Ambassadors" Course:**
+• **Access:** https://embajadores.duoc.cl
+• **You learn:** Strategies to provide adequate support
+• **No commitments** afterwards
+💙 *Your support can make a difference in a classmate's life*
+""",
+
+    "curso_embajadores_avance": """
+🎯 **I started the Ambassadors course, but I can't advance to the next module**
+**Requirement to advance:**
+• **85% or more** correct answers in each activity
+✅ **If you don't reach 85%:**
+• The platform won't allow you to continue
+• Review incorrect answers
+• Retry the module
+🔗 **Course access:** https://embajadores.duoc.cl
+💡 *Make sure you understand each content well before advancing*
+""",
+
+    "curso_embajadores_finalizacion": """
+🎓 **How do I know if I finished the Ambassadors course?**
+**Upon successful completion:**
+• The platform will show the message: **"You are an ambassador"**
+• This confirms you completed all training
+✅ **No additional responsibilities:**
+• No subsequent tasks involved
+• No mandatory commitments
+• Purpose: empathetic and supportive community
+🔗 **Course:** https://embajadores.duoc.cl
+💡 *Training to strengthen mutual support in the Duoc UC community*
+""",
 }

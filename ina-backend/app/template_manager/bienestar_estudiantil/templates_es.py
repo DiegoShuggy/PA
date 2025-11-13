@@ -95,4 +95,84 @@ TEMPLATES_ES = {
 🔗 **Centro ayuda:** https://centroayuda.duoc.cl
 💡 *Contacta para conocer requisitos específicos y beneficios disponibles*
 """,
+
+    # TEMPLATES ADICIONALES PARA BIENESTAR ESTUDIANTIL
+
+    "apoyos_salud_mental": """
+🧠 **¿Qué apoyos en salud mental existen en Duoc UC?**
+**1. 🚨 Acompañamiento psicológico urgente:**
+• **Línea OPS 24/7:** +56 2 2820 3450
+• Gratuito y confidencial
+• Urgencias psicológicas
+**2. 💻 Acompañamiento psicológico virtual:**
+• **Plataforma:** https://eventos.duoc.cl
+• Sesiones online gratuitas
+• Usuario institucional @duocuc.cl
+**3. 🏥 Apoyo en crisis dentro de la sede:**
+• **Sala primeros auxilios:** Primer piso, junto a caja
+• **Teléfono:** +56 2 2999 3005
+🔗 **Charlas y talleres:** Disponibles en eventos.duoc.cl
+💡 *Servicios gratuitos para todos los estudiantes regulares*
+""",
+
+    "atencion_presencial_psicologica": """
+🏥 **¿Existe atención psicológica presencial?**
+**No.** Actualmente Duoc UC ofrece exclusivamente **atención psicológica virtual**
+✅ **Disponible:**
+• Fines de semana
+• Días festivos
+• Horarios flexibles
+🔗 **Agendar virtual:** https://eventos.duoc.cl
+📞 **Apoyo en sede:** +56 2 2999 3005 (Primeros auxilios)
+💡 *La atención virtual mantiene la misma calidad y confidencialidad*
+""",
+
+    "licencias_medicas_psicologicas": """
+🏥 **¿El psicólogo virtual puede otorgar licencia médica?**
+**No.** Los psicólogos no están facultados para emitir licencias médicas.
+✅ **Alternativas:**
+• **Médico general:** Para licencias médicas
+• **Psiquiatra:** Para condiciones de salud mental que requieran licencia
+• **Centros de salud:** Consultorios y hospitales
+🔗 **Salud Responde:** 600 360 7777
+💡 *Los psicólogos brindan apoyo terapéutico, no licencias médicas*
+""",
+
+    "apoyo_companeros": """
+🤝 **¿Qué puedo hacer si sé que un/a compañero/a está pasando por un mal momento pero no quiere pedir ayuda?**
+**Acciones recomendadas:**
+1. **Motivarle** a solicitar atención psicológica virtual
+2. **Recordarle** que es confidencial y gratuito
+3. **Ofrecer acompañamiento** en el proceso
+🎓 **Curso "Embajadores en Salud Mental":**
+• **Acceso:** https://embajadores.duoc.cl
+• **Aprendes:** Estrategias para acompañar adecuadamente
+• **Sin compromisos** posteriores
+💙 *Tu apoyo puede marcar la diferencia en la vida de un compañero*
+""",
+
+    "curso_embajadores_avance": """
+🎯 **Comencé el curso de Embajadores, pero no puedo avanzar al siguiente módulo**
+**Requisito para avanzar:**
+• **85% o más** de respuestas correctas en cada actividad
+✅ **Si no alcanzas el 85%:**
+• La plataforma no te permitirá continuar
+• Revisa las respuestas incorrectas
+• Reintenta el módulo
+🔗 **Acceso al curso:** https://embajadores.duoc.cl
+💡 *Asegúrate de comprender bien cada contenido antes de avanzar*
+""",
+
+    "curso_embajadores_finalizacion": """
+🎓 **¿Cómo sé si terminé el curso de Embajadores?**
+**Al finalizar exitosamente:**
+• La plataforma mostrará el mensaje: **"Eres un embajador"**
+• Esto confirma que completaste toda la formación
+✅ **Sin responsabilidades adicionales:**
+• No implica tareas posteriores
+• Sin compromisos obligatorios
+• Propósito: comunidad empática y solidaria
+🔗 **Curso:** https://embajadores.duoc.cl
+💡 *Formación para fortalecer el apoyo mutuo en la comunidad Duoc UC*
+""",
 }
