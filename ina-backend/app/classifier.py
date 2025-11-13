@@ -121,31 +121,50 @@ class QuestionClassifier:
             "deportes": [
                 # Talleres deportivos - EXPANDIDO
                 r'\b(taller.*deportivo|actividad.*deportiva|deporte)\b',
+                r'\b(talleres.*deportivos|qué.*talleres|talleres.*tienen|tipos.*talleres)\b',  # NUEVO
                 r'\b(fútbol.*masculino|futbolito.*damas|voleibol.*mixto)\b',
                 r'\b(basquetbol.*mixto|natación.*mixta|tenis.*mesa.*mixto)\b',
                 r'\b(ajedrez.*mixto|entrenamiento.*funcional|boxeo.*mixto)\b',
                 r'\b(powerlifting.*mixto|deportes|actividad.*física)\b',
-                 r'\b(gimnasio|caf|centro.*acondicionamiento)\b',
-                 r'\b(selección.*deportiva|equipo.*deportivo)\b',
+                
+                # Gimnasio y CAF - EXPANDIDO
+                r'\b(gimnasio|caf|centro.*acondicionamiento)\b',
+                r'\b(inscribirme.*gimnasio|acceso.*gimnasio|usar.*gimnasio)\b',  # NUEVO
+                r'\b(horario.*gimnasio|disponible.*gimnasio|ocupar.*gimnasio)\b',  # NUEVO
+                
+                # Selecciones deportivas
+                r'\b(selección.*deportiva|equipo.*deportivo)\b',
+                r'\b(selecciones.*deportivas|representar.*duoc|competir)\b',  # NUEVO
                 
                 # Instalaciones y ubicaciones - EXPANDIDO
                 r'\b(complejo.*maiclub|gimnasio.*entretiempo|piscina.*acquatiempo)\b',
                 r'\b(caf|centro.*bienestar|acondicionamiento.*físico)\b',
                 r'\b(ubicación.*deportes|lugar.*taller|instalación.*deportiva)\b',
-                r'\b(en.*qué.*lugar|dónde.*están|dónde.*se.*hacen)\b',  # NUEVO
+                r'\b(en.*qué.*lugar|dónde.*están|dónde.*se.*hacen)\b',
+                r'\b(están.*ubicados|ubicación.*talleres|lugar.*entrenamientos)\b',  # NUEVO
                 
                 # Horarios deportivos - EXPANDIDO
                 r'\b(horario.*taller|horario.*deporte|cuándo.*taller)\b',
+                r'\b(horarios.*talleres.*2025|horario.*deportivos|programa.*horarios)\b',  # NUEVO
                 r'\b(día.*entrenamiento|cuándo.*entrenar|horario.*clase)\b',
                 r'\b(qué días|qué horarios|calendarización)\b',
+                r'\b(cualquier.*horario|ir.*horario|flexibilidad.*horarios)\b',  # NUEVO
                 
-                # Inscripción y optativos - NUEVO
+                # Ausencias y evaluación - NUEVO
+                r'\b(falto.*talleres|ausencias.*deportes|faltar.*entrenamientos)\b',
+                r'\b(talleres.*tienen.*nota|evaluación.*deportes|nota.*actividades)\b',
+                r'\b(optativos.*tienen.*nota|calificación.*deportes)\b',
+                r'\b(los.*talleres.*tienen.*nota|tienen.*nota.*talleres|nota.*talleres)\b',
+                
+                # Inscripción y optativos - EXPANDIDO
                 r'\b(inscribir.*deportivo|optativo.*deporte|tomar.*taller)\b',
-                r'\b(inscripción.*deportes|solicitud.*en línea|vivo duoc)\b',
+                r'\b(inscribirme.*optativos|inscripción.*deportes|solicitud.*en línea)\b',
+                r'\b(cómo.*inscribo|proceso.*inscripción|vivo.*duoc|des.*inscribirme)\b',  # NUEVO
                 
                 # Selecciones y becas - EXPANDIDO
                 r'\b(selección.*deportiva|equipo.*deportivo|futsal|rugby)\b',
                 r'\b(beca.*deportiva|postular.*beca|reclutamiento.*deportivo)\b',
+                r'\b(becas.*deportivas|apoyo.*deportistas|beneficio.*deporte)\b',  # NUEVO
                 r'\b(competencia.*deportiva|campeonato|torneo)\b',
                 
                 # Gimnasio CAF - NUEVO
@@ -154,30 +173,42 @@ class QuestionClassifier:
             ],
             
             "desarrollo_profesional": [
-                # Prácticas y empleo - EXPANDIDO
+                # DuocLaboral y desarrollo laboral - EXPANDIDO
+                r'\b(desarrollo.*laboral|qué.*es.*desarrollo.*laboral)\b',
+                r'\b(duoclaboral|bolsa.*empleo|bolsa.*trabajo)\b',
+                r'\b(plataforma.*laboral|portal.*empleo|acceder.*bolsa)\b',
+                r'\b(dónde.*acceder.*bolsa|crear.*cv.*duoclaboral)\b',
+                
+                # Prácticas profesionales - EXPANDIDO
                 r'\b(práctica profesional|práctica|practica|practicas profesionales)\b',
-                r'\b(bolsa.*trabajo|empleo|trabajo|duoclaboral|duoclaboral\.cl)\b',
-                r'\b(oferta laboral|empleador|convenio.*empresa)\b',
                 r'\b(buscar.*práctica|encontrar.*práctica|proceso.*práctica)\b',
+                r'\b(oferta.*práctica|convenio.*empresa|empresa.*práctica)\b',
+                r'\b(apoyo.*prácticas|ayuda.*prácticas|buscar.*prácticas)\b',
                 
-                # CV y entrevistas - EXPANDIDO
+                # CV y curriculum - EXPANDIDO
                 r'\b(curriculum|cv|hoja.*vida|currículum vitae)\b',
-                r'\b(entrevista.*laboral|simulación.*entrevista)\b',
-                r'\b(mejorar.*curriculum|asesoría.*curricular)\b',
-                r'\b(preparación.*entrevista|consejos.*entrevista)\b',
+                r'\b(mejorar.*curriculum|asesoría.*curricular|ayuda.*cv)\b',
                 r'\b(modelo curriculum|formato cv|cv duoc|curriculum duoc)\b',
+                r'\b(crear.*cv|actualizar.*cv|revisar.*cv)\b',
                 
-                # Talleres y habilidades - EXPANDIDO
-                r'\b(taller.*empleabilidad|taller.*cv|taller.*entrevista)\b',
-                r'\b(marca personal|comunicación efectiva|liderazgo)\b',
-                r'\b(habilidades blandas|habilidades laborales|soft skills)\b',
-                r'\b(desarrollo laboral|claudia cortés|ccortesn)\b',
-                r'\b(coordinadora desarrollo laboral)\b',
+                # Entrevistas laborales - EXPANDIDO
+                r'\b(entrevista.*laboral|simulación.*entrevista|simulaciones.*entrevistas)\b',
+                r'\b(preparación.*entrevista|consejos.*entrevista|práctica.*entrevista)\b',
+                r'\b(ofrecen.*simulaciones|entrenar.*entrevistas)\b',
                 
-                # Titulación y egresados - EXPANDIDO
-                r'\b(titulación|egresados|titulados|beneficios.*titulados)\b',
-                r'\b(ceremonia.*titulación|diploma|certificado.*titulación)\b',
-                r'\b(proceso.*titulación|fecha.*titulación|egresar|graduación)\b',
+                # Talleres de empleabilidad - EXPANDIDO
+                r'\b(taller.*empleabilidad|talleres.*empleabilidad|tipo.*talleres)\b',
+                r'\b(taller.*cv|taller.*entrevista|taller.*linkedin)\b',
+                r'\b(marca personal|comunicación efectiva|habilidades.*laborales)\b',
+                r'\b(soft skills|habilidades.*blandas|desarrollo.*profesional)\b',
+                
+                # Beneficios titulados - NUEVO
+                r'\b(beneficios.*titulados|apoyo.*titulados|servicios.*titulados)\b',
+                r'\b(qué.*beneficios.*titulados|ventajas.*titulados)\b',
+                
+                # Personal y contacto - EXPANDIDO
+                r'\b(claudia.*cortés|ccortesn|coordinadora.*desarrollo)\b',
+                r'\b(desarrollo laboral|equipo.*desarrollo.*laboral)\b',
             ],
             
             "institucionales": [
@@ -529,7 +560,7 @@ class QuestionClassifier:
                 r'elizabeth.*domínguez', r'coordinadora.*plaza.*norte'
             ],
 
-            "beneficios_titulados_corregido": [
+            "beneficios_titulados": [
                 r'beneficios.*titulados', r'titulados.*beneficios',
                 r'qué.*beneficios.*titulados', r'ventajas.*titulado',
                 r'después.*titular.*beneficios', r'egresados.*beneficios'
@@ -761,6 +792,11 @@ class QuestionClassifier:
                 r'cómo.*puedo.*des.*inscribirme', r'retirarme.*taller',
                 r'cancelar.*inscripción', r'dejar.*taller', r'abandonar.*optativo'
             ],
+            "optativos_deportivos_nota": [
+                r'tienen.*nota.*los.*optativos.*deportivos', r'optativos.*deportivos.*tienen.*nota',
+                r'nota.*optativos.*deportivos', r'calificación.*optativos.*deportivos',
+                r'evalúan.*optativos.*deportivos', r'tienen.*calificación.*optativos'
+            ],
             "gimnasio_caf_horarios": [
                 r'horario.*gimnasio', r'cuándo.*abre.*caf', r'puedo.*ir.*cualquier.*horario',
                 r'disponibilidad.*gimnasio', r'horarios.*caf'
@@ -844,6 +880,11 @@ class QuestionClassifier:
                 r'optimizar.*linkedin', r'perfil.*linkedin', r'linkedin.*profesional',
                 r'mejorar.*linkedin', r'linkedin.*optimización', r'perfil.*linkedin.*mejorar',
                 r'consejos.*linkedin', r'linkedin.*cv'
+            ],
+            "que_es_desarrollo_laboral": [
+                r'qué.*es.*desarrollo.*laboral', r'desarrollo.*laboral.*duoc',
+                r'qué.*hace.*desarrollo.*laboral', r'información.*desarrollo.*laboral',
+                r'definición.*desarrollo.*laboral', r'desarrollo.*laboral.*en.*duoc'
             ],
             
             # INSTITUCIONALES
@@ -1014,6 +1055,17 @@ class QuestionClassifier:
                 r'necesito.*apoyo.*psicologico', r'necesito.*ayuda.*psicol[óo]gica',
                 r'apoyo.*psicol[óo]gico', r'atenci[óo]n.*psicol[óo]gica',
                 r'ayuda.*emocional', r'necesito.*psic[óo]logo'
+            ],
+            "talleres_tienen_nota": [
+                r'los.*talleres.*tienen.*nota', r'tienen.*nota.*talleres',
+                r'talleres.*deportivos.*tienen.*nota', r'nota.*talleres',
+                r'evaluaci[óo]n.*talleres.*deportivos', r'calificaci[óo]n.*deportes'
+            ],
+            "simulaciones_entrevistas": [
+                r'simulaci[óo]n.*entrevista', r'simulaciones.*entrevistas',
+                r'ofrecen.*simulaciones', r'simulaci[óo]n.*laboral',
+                r'pr[áa]ctica.*entrevista', r'entrenar.*entrevistas',
+                r'preparaci[óo]n.*entrevista.*laboral'
             ]
         }
         

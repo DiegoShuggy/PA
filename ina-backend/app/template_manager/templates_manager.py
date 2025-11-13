@@ -5,7 +5,8 @@ Reemplaza el sistema anterior de templates.py con una estructura más organizada
 """
 
 import logging
-from typing import Dict, Optional, Union
+import re
+from typing import Dict, Optional, Union, List
 
 # Importar templates por área e idioma
 from .asuntos_estudiantiles.templates_es import TEMPLATES_ES as ASUNTOS_ES
@@ -79,6 +80,10 @@ class TemplateManager:
         
         # Templates combinados para compatibilidad con código existente
         self.combined_templates = self._create_combined_templates()
+        
+        # Validar y registrar templates cargados
+        self._validate_templates()
+        logger.info(f"TemplateManager inicializado: {self.get_template_statistics()}")
     
     def _create_combined_templates(self) -> Dict[str, Dict[str, str]]:
         """
@@ -97,7 +102,7 @@ class TemplateManager:
     
     def get_template(self, area: str, template_key: str, lang: str = "es") -> Optional[str]:
         """
-        Obtiene un template específico por área, clave y idioma.
+        Obtiene un template específico por área, clave y idioma con fallback inteligente.
         
         Args:
             area: Área del template (asuntos_estudiantiles, bienestar_estudiantil, etc.)
@@ -105,10 +110,27 @@ class TemplateManager:
             lang: Idioma (es, en, fr)
             
         Returns:
-            Template content o None si no existe
+            Template content o None si no existe en ningún idioma
         """
         try:
-            return self.templates.get(area, {}).get(lang, {}).get(template_key)
+            # Intentar obtener en el idioma solicitado
+            template = self.templates.get(area, {}).get(lang, {}).get(template_key)
+            
+            if template:
+                logger.debug(f"Template encontrado: {area}.{template_key}.{lang}")
+                return template
+            
+            # Fallback a español si no existe en el idioma solicitado
+            if lang != "es":
+                template = self.templates.get(area, {}).get("es", {}).get(template_key)
+                if template:
+                    logger.info(f"Fallback a español: {area}.{template_key} ({lang}→es)")
+                    return template
+            
+            # Si no existe en ningún idioma
+            logger.warning(f"Template no encontrado: {area}.{template_key} en idiomas disponibles")
+            return None
+            
         except Exception as e:
             logger.error(f"Error obteniendo template {area}.{template_key}.{lang}: {e}")
             return None
@@ -176,6 +198,80 @@ class TemplateManager:
         Solo español por compatibilidad.
         """
         return self.combined_templates
+    
+    def _validate_templates(self) -> Dict[str, Dict[str, int]]:
+        """
+        Valida que todas las áreas tengan templates en español y cuenta templates por idioma.
+        
+        Returns:
+            Diccionario con estadísticas de templates por área e idioma
+        """
+        validation_results = {}
+        
+        for area, idiomas in self.templates.items():
+            validation_results[area] = {}
+            for lang in ["es", "en", "fr"]:
+                count = len(idiomas.get(lang, {}))
+                validation_results[area][lang] = count
+                
+                # Advertir si no hay templates en español
+                if lang == "es" and count == 0:
+                    logger.warning(f"¡ÁREA SIN TEMPLATES EN ESPAÑOL!: {area}")
+                elif count == 0:
+                    logger.info(f"No hay templates en {lang} para {area}")
+        
+        return validation_results
+    
+    def get_template_statistics(self) -> str:
+        """
+        Genera un resumen estadístico de los templates disponibles.
+        
+        Returns:
+            String con estadísticas legibles
+        """
+        validation = self._validate_templates()
+        stats = []
+        
+        total_es, total_en, total_fr = 0, 0, 0
+        
+        for area, counts in validation.items():
+            es_count = counts.get('es', 0)
+            en_count = counts.get('en', 0) 
+            fr_count = counts.get('fr', 0)
+            
+            total_es += es_count
+            total_en += en_count
+            total_fr += fr_count
+            
+            stats.append(f"{area}: ES={es_count}, EN={en_count}, FR={fr_count}")
+        
+        summary = f"TOTAL: ES={total_es}, EN={total_en}, FR={fr_count} | " + " | ".join(stats)
+        return summary
+    
+    def find_template_by_partial_key(self, partial_key: str, area: str = None, lang: str = "es") -> List[tuple]:
+        """
+        Busca templates cuya clave contenga el texto parcial especificado.
+        
+        Args:
+            partial_key: Texto parcial a buscar en las claves
+            area: Área específica donde buscar (opcional)
+            lang: Idioma donde buscar
+            
+        Returns:
+            Lista de tuplas (area, template_key, content)
+        """
+        matches = []
+        partial_lower = partial_key.lower()
+        
+        areas_to_search = [area] if area else self.templates.keys()
+        
+        for search_area in areas_to_search:
+            if search_area in self.templates and lang in self.templates[search_area]:
+                for template_key, content in self.templates[search_area][lang].items():
+                    if partial_lower in template_key.lower():
+                        matches.append((search_area, template_key, content))
+        
+        return matches
 
 # Instancia global del gestor
 template_manager = TemplateManager()
@@ -209,45 +305,121 @@ def get_template_by_user_preference(area: str, template_key: str, user_lang: str
     # Fallback a español
     return template_manager.get_template(area, template_key, "es") or "Template no encontrado"
 
-def detect_area_from_query(query: str) -> str:
+def detect_area_from_query(query: str) -> tuple:
     """
     Detecta el área más probable basándose en palabras clave de la consulta.
+    
+    Args:
+        query: Consulta del usuario
+        
+    Returns:
+        Tupla (area, confidence_score, matched_keywords)
     """
     query_lower = query.lower()
     
-    # Palabras clave por área
+    # Palabras clave expandidas y mejoradas por área
     area_keywords = {
         "asuntos_estudiantiles": [
-            "tne", "certificado", "alumno regular", "programa emergencia", "seguro estudiantil",
-            "documentos", "beneficio", "beca alimentacion", "transporte", "materiales"
+            "tne", "tarjeta nacional estudiantil", "certificado", "alumno regular", "constancia",
+            "programa emergencia", "ayuda economica", "beneficio", "seguro estudiantil", "documentos",
+            "beca alimentacion", "beca transporte", "materiales", "arancel", "matricula", "pago",
+            "validar", "renovar", "revalidar", "postular", "requisitos", "tramites", "inscripcion"
         ],
         "bienestar_estudiantil": [
-            "psicologico", "ansiedad", "estres", "embajadores", "salud mental", "apoyo",
-            "sesiones", "crisis", "ops", "discapacidad", "bienestar", "atencion"
+            "psicologico", "psicologo", "ansiedad", "estres", "embajadores", "salud mental", 
+            "apoyo", "sesiones", "crisis", "ops", "linea ops", "discapacidad", "bienestar", 
+            "atencion", "8 sesiones", "paedis", "inclusion", "urgencia", "emergencia psicologica",
+            "adriana vasquez", "agendar", "cita", "consulta psicologica"
         ],
         "desarrollo_laboral": [
-            "practica profesional", "empleo", "trabajo", "curriculum", "cv", "entrevista",
-            "duoclaboral", "empleabilidad", "feria laboral", "linkedin", "simulacion"
+            "practica profesional", "practicas", "empleo", "trabajo", "curriculum", "cv",
+            "entrevista", "duoclaboral", "empleabilidad", "feria laboral", "linkedin",
+            "simulacion", "bolsa trabajo", "claudia cortes", "buscar empleo", "postular trabajo",
+            "mejorar cv", "asesoría curricular", "talleres empleabilidad", "competencias laborales"
         ],
         "deportes": [
-            "deportivos", "talleres", "gimnasio", "caf", "futbol", "basquet", "voleibol",
-            "natacion", "seleccion", "beca deportiva", "entrenamiento", "boxing"
+            "deportivos", "talleres deportivos", "gimnasio", "caf", "centro acondicionamiento",
+            "futbol", "basquetbol", "voleibol", "natacion", "tenis mesa", "ajedrez", "boxeo",
+            "seleccion deportiva", "beca deportiva", "entrenamiento", "maiclub", "entretiempo",
+            "acquatiempo", "powerlifting", "funcional", "inscripcion deportiva", "horarios",
+            "desinscripcion", "des inscribir", "desinscribir", "dar de baja", "cancelar inscripcion",
+            "retiro taller", "abandonar taller", "salir taller", "baja deportivo"
         ],
         "pastoral": [
-            "pastoral", "espiritual", "voluntariado", "retiros", "oracion", "eucaristia",
-            "solidaridad", "ayuda social", "grupos", "celebraciones", "fe"
+            "pastoral", "espiritual", "espiritualidad", "voluntariado", "retiros", "oracion",
+            "eucaristia", "solidaridad", "ayuda social", "grupos", "celebraciones", "fe",
+            "misa", "capilla", "servicio comunitario", "valores", "crecimiento personal",
+            "neocatecumenal", "jovenes y fe", "contemplativa", "liturgica"
         ]
     }
     
-    # Contar coincidencias por área
+    # Patrones específicos (regex) para mayor precisión
+    area_patterns = {
+        "asuntos_estudiantiles": [
+            r'\btne\b', r'\bcertificado.*alumno', r'\bprograma.*emergencia\b',
+            r'\b(validar|renovar|revalidar).*tne\b', r'\bseguro.*estudiantil\b'
+        ],
+        "bienestar_estudiantil": [
+            r'\b(apoyo|atencion).*psicolog', r'\bsalud.*mental\b', r'\bcrisis.*emocional\b',
+            r'\blinea.*ops\b', r'\b8.*sesiones\b', r'\bcurso.*embajadores\b'
+        ],
+        "desarrollo_laboral": [
+            r'\bpractica.*profesional\b', r'\bduoclaboral\b', r'\bmejorar.*cv\b',
+            r'\bsimulacion.*entrevista\b', r'\bbolsa.*trabajo\b'
+        ],
+        "deportes": [
+            r'\btalleres.*deportivos\b', r'\bgimnasio.*caf\b', r'\bseleccion.*deportiva\b',
+            r'\bmaiclub\b', r'\bentretiempo\b', r'\bacquatiempo\b',
+            r'\bdes.*inscrib', r'\bdesinscrib', r'\bdar.*de.*baja\b', r'\bcancel.*inscripcion\b',
+            r'\bretir.*taller\b', r'\babandon.*taller\b', r'\bsalir.*taller\b'
+        ],
+        "pastoral": [
+            r'\bretiros.*espirituales\b', r'\bvoluntariado\b', r'\bgrupos.*oracion\b',
+            r'\bcelebraciones.*liturgicas\b', r'\bservicio.*comunitario\b'
+        ]
+    }
+    
+    # Calcular puntuaciones por área
     area_scores = {}
+    area_matches = {}
+    
     for area, keywords in area_keywords.items():
-        score = sum(1 for keyword in keywords if keyword in query_lower)
-        if score > 0:
-            area_scores[area] = score
+        # Puntuación por palabras clave
+        keyword_score = sum(2 if keyword in query_lower else 0 for keyword in keywords)
+        
+        # Puntuación por patrones regex (mayor peso)
+        pattern_score = 0
+        if area in area_patterns:
+            for pattern in area_patterns[area]:
+                if re.search(pattern, query_lower):
+                    pattern_score += 5
+        
+        total_score = keyword_score + pattern_score
+        
+        if total_score > 0:
+            area_scores[area] = total_score
+            # Guardar palabras clave que hicieron match
+            matched_keywords = [kw for kw in keywords if kw in query_lower]
+            area_matches[area] = matched_keywords
     
-    # Retornar área con más coincidencias, o asuntos_estudiantiles por defecto
+    # Determinar mejor área
     if area_scores:
-        return max(area_scores, key=area_scores.get)
+        best_area = max(area_scores, key=area_scores.get)
+        confidence = min(area_scores[best_area] / 10.0, 1.0)  # Normalizar a 0-1
+        matched_keywords = area_matches.get(best_area, [])
+        
+        logger.info(f"Área detectada: {best_area} (confianza: {confidence:.2f}, keywords: {matched_keywords[:3]})")
+        return best_area, confidence, matched_keywords
     
-    return "asuntos_estudiantiles"  # Default
+    # Fallback
+    logger.info(f"No se detectó área específica para: '{query[:50]}...', usando asuntos_estudiantiles")
+    return "asuntos_estudiantiles", 0.1, []
+
+# Función simplificada para compatibilidad
+def detect_area_from_query_simple(query: str) -> str:
+    """
+    Versión simplificada que solo retorna el nombre del área.
+    Mantiene compatibilidad con código existente.
+    """
+    area, _, _ = detect_area_from_query(query)
+    return area
