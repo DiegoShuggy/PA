@@ -1218,35 +1218,47 @@ class QuestionClassifier:
     def get_classification_info(self, question: str) -> Dict:
         """
         Obtiene información completa de clasificación incluyendo idioma detectado
+        SIEMPRE detecta idioma independientemente del cache
         """
         try:
             from app.topic_classifier import TopicClassifier
             topic_classifier = TopicClassifier()
             
-            # Obtener clasificación completa del topic_classifier
-            topic_result = topic_classifier.classify_topic(question)
+            # SIEMPRE detectar idioma independientemente del cache
+            detected_language = topic_classifier._detect_simple_language(question)
             
             # Obtener categoría con el método principal
             category = self.classify_question(question)
             
+            # Obtener clasificación completa del topic_classifier para confidence
+            topic_result = topic_classifier.classify_topic(question)
+            
             return {
                 "category": category,
-                "language": topic_result.get("language", "es"),
+                "language": detected_language,  # PRIORIZAR idioma detectado directamente
                 "confidence": topic_result.get("confidence", 0.7),
                 "matched_keywords": topic_result.get("matched_keywords", []),
                 "is_institutional": topic_result.get("is_institutional", True),
-                "source": "enhanced_classifier"
+                "source": "enhanced_classifier_with_language"
             }
             
         except Exception as e:
             logger.error(f"Error obteniendo información de clasificación: {e}")
+            # En caso de error, SIEMPRE intentar detectar idioma
+            try:
+                from app.topic_classifier import TopicClassifier
+                topic_classifier = TopicClassifier()
+                detected_language = topic_classifier._detect_simple_language(question)
+            except:
+                detected_language = "es"
+                
             return {
                 "category": self.classify_question(question),
-                "language": "es",
+                "language": detected_language,
                 "confidence": 0.5,
                 "matched_keywords": [],
                 "is_institutional": True,
-                "source": "fallback"
+                "source": "fallback_with_language"
             }
     
     def _fallback_classify(self, question: str) -> Dict:

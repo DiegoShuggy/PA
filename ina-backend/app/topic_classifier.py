@@ -371,6 +371,18 @@ class TopicClassifier:
         """Detección mejorada de idioma basada en palabras clave específicas"""
         question_lower = question.lower()
         
+        # Palabras indicadoras de español - ESPECÍFICAS Y ÚNICAS
+        spanish_indicators = [
+            'cómo', 'como', 'qué', 'cuándo', 'cuando', 'dónde', 'donde', 'por', 'para', 'con', 'sin', 'de', 'del', 'la', 'el', 'los', 'las',
+            'soy', 'es', 'son', 'está', 'están', 'puedo', 'puede', 'pueden', 'hacer', 'tengo', 'tiene', 'tienen',
+            'mi', 'mis', 'su', 'sus', 'yo', 'él', 'ella', 'nosotros', 'ustedes', 'ellos', 'ellas',
+            'funciona', 'trabajo', 'trabaja', 'estudios', 'estudiante', 'estudiantes', 'universidad', 'instituto',
+            'programa', 'programas', 'apoyo', 'ayuda', 'información', 'requisitos', 'postular', 'solicitar',
+            'obtener', 'conseguir', 'sacar', 'renovar', 'revalidar', 'primera', 'vez', 'tiempo',
+            'seguro', 'cobertura', 'emergencia', 'urgencia', 'emergencias', 'urgencias', 
+            'cuáles', 'cuales', 'dañada', 'pierde', 'perdida', 'perdido', 'categorías', 'categorias'
+        ]
+        
         # Palabras indicadoras de inglés - EXPANDIDAS Y ESPECÍFICAS
         english_indicators = [
             'how', 'what', 'when', 'where', 'why', 'is', 'are', 'can', 'do', 'does', 'the', 'and',
@@ -379,33 +391,44 @@ class TopicClassifier:
             'find', 'available', 'appointments', 'many', 'sessions', 'year', 'virtual', 'psychologist',
             'provide', 'medical', 'leave', 'know', 'classmate', 'going', 'through', 'difficult', 'time',
             'disabilities', 'started', 'ambassadors', 'course', 'advance', 'next', 'module', 'finished',
-            'additional', 'responsibility', 'after', 'completing', 'if', 'any', 'have'
+            'additional', 'responsibility', 'after', 'completing', 'if', 'any', 'have', 'get', 'my', 'your',
+            'work', 'works', 'student', 'students', 'university', 'institute', 'program', 'programs',
+            'insurance', 'coverage', 'emergency', 'requirements', 'apply', 'obtain', 'renew', 'first', 'lost', 'damaged'
         ]
         
         # Palabras indicadoras de francés - EXPANDIDAS Y ESPECÍFICAS  
         french_indicators = [
-            'comment', 'que', 'quand', 'où', 'est', 'sont', 'peut', 'faire', 'le', 'la', 'dans', 'pour', 'avec',
+            'comment', 'quand', 'où', 'est', 'sont', 'peut', 'faire', 'le', 'la', 'dans', 'pour', 'avec',
             'soutien', 'aide', 'services', 'santé', 'mentale', 'soins', 'psychologiques', 'psychologue',
             'crise', 'campus', 'essayé', 'prendre', 'rendez-vous', 'créneaux', 'disponibles', 'combien',
             'sessions', 'virtuel', 'fournir', 'arrêt', 'maladie', 'savoir', 'camarade', 'traverse',
             'mauvais', 'moment', 'handicapés', 'commencé', 'cours', 'ambassadeurs', 'peux', 'passer',
             'module', 'suivant', 'terminé', 'responsabilité', 'supplémentaire', 'après', 'avoir', 'réalisé',
-            'quels', 'existe', 'puis'
+            'quels', 'existe', 'puis', 'obtenir', 'ma', 'mon', 'mes', 'étudiant', 'étudiants', 'université',
+            'programme', 'programmes', 'assurance', 'couverture', 'urgence', 'conditions', 'postuler', 'renouveler',
+            'première', 'fois', 'perdue', 'endommagée', 'catégories', 'postulation'
         ]
         
         # Contar coincidencias de manera más inteligente
+        spanish_count = sum(1 for word in spanish_indicators if word in question_lower)
         english_count = sum(1 for word in english_indicators if word in question_lower)
         french_count = sum(1 for word in french_indicators if word in question_lower)
         
-        print(f"🔍 Language detection: EN={english_count}, FR={french_count} para '{question_lower[:50]}...'")
+        print(f"🔍 Language detection: ES={spanish_count}, EN={english_count}, FR={french_count} para '{question_lower[:50]}...'")
         
-        # Lógica mejorada de decisión
-        if english_count >= 2 and english_count > french_count:
+        # Lógica mejorada de decisión con prioridad al español
+        if spanish_count >= 2 and spanish_count >= max(english_count, french_count):
+            print(f"   🇪🇸 DETECTED: SPANISH (score: {spanish_count})")
+            return 'es'
+        elif english_count >= 2 and english_count > max(spanish_count, french_count):
             print(f"   🇺🇸 DETECTED: ENGLISH (score: {english_count})")
             return 'en'
-        elif french_count >= 2 and french_count > english_count:
+        elif french_count >= 2 and french_count > max(spanish_count, english_count):
             print(f"   🇫🇷 DETECTED: FRENCH (score: {french_count})")
             return 'fr'
+        elif spanish_count > 0 and spanish_count >= max(english_count, french_count):
+            print(f"   🇪🇸 DETECTED: SPANISH (low score: {spanish_count})")
+            return 'es'
         elif english_count > 0 and english_count > french_count:
             print(f"   🇺🇸 DETECTED: ENGLISH (low score: {english_count})")
             return 'en'
@@ -413,7 +436,7 @@ class TopicClassifier:
             print(f"   🇫🇷 DETECTED: FRENCH (low score: {french_count})")
             return 'fr'
         else:
-            print(f"   🇪🇸 DETECTED: SPANISH (default, EN:{english_count}, FR:{french_count})")
+            print(f"   🇪🇸 DETECTED: SPANISH (default, ES:{spanish_count}, EN:{english_count}, FR:{french_count})")
             return 'es'
     
     def _find_category_match_by_language(self, question: str, terms: List[str]) -> List[str]:

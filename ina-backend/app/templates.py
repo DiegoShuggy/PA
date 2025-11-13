@@ -255,6 +255,33 @@ Résumé rapide:
 
 ⚡ **Urgence:** Toujours porter votre credential étudiant
 💡 *Rappelez-vous: La couverture est automatique et gratuite pour tous les étudiants inscrits*
+""",
+        'es': """🛡️ **Seguro Estudiantil — Cobertura y Procedimientos**
+
+Resumen rápido:
+- El seguro de accidentes cubre actividades educativas y traslados
+- Activo durante clases, prácticas y trayectos
+- Activación automática para estudiantes matriculados  
+- Cobertura gratuita con protección integral
+
+🏥 **La cobertura incluye:**
+• Emergencias médicas durante clases
+• Accidentes en trayecto hacia/desde la institución
+• Cobertura de incidentes en el campus
+• Transporte médico si es necesario
+
+📋 **Cómo usar:**
+1. **Emergencia:** Presentar ID de estudiante en centro de salud
+2. **Accidente:** Reportar inmediatamente a Servicios Estudiantiles
+3. **Reclamos:** Presentar documentación dentro de 24 horas
+4. **Cobertura:** Mostrar este QR para atención directa
+
+🌐 **Más información:**
+- Portal estudiantes: https://centroayuda.duoc.cl
+- Portal institución: https://www.duoc.cl/alumnos/
+
+⚡ **Emergencia:** Siempre porta tu credencial estudiantil
+💡 *Recuerda: La cobertura es automática y gratuita para todos los estudiantes matriculados*
 """
     },
     

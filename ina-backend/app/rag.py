@@ -543,9 +543,12 @@ class RAGEngine:
         detected_language = processing_info.get('detected_language', None)
         if not detected_language:
             detected_language = self.detect_language(original_query)
+            logger.warning(f"⚠️ Usando detección de idioma de respaldo para: '{original_query}'")
+        else:
+            logger.info(f"✅ Idioma ya detectado en processing_info: '{detected_language}'")
         
-        print(f"🗣️ Idioma detectado: {detected_language} para '{original_query[:50]}...'")
-        logger.info(f"🌍 Idioma detectado: '{detected_language}' para query: '{original_query}'")
+        print(f"🗣️ Idioma FINAL usado: {detected_language} para '{original_query[:50]}...'")
+        logger.info(f"🌍 Idioma FINAL: '{detected_language}' para query: '{original_query}'")
         
         # CARGAR TEMPLATES - PRIORIDAD AL SISTEMA MULTIIDIOMA
         try:
