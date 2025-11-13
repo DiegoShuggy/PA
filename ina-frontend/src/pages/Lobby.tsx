@@ -80,18 +80,6 @@ function Lobby() {
         setAreaActiva(area);
         // Activar lectura automática cuando se cambia de área
         autoReadEnabledRef.current = true;
-        // Reproducir sonido al cambiar de área
-        const playAreaChangeSound = async () => {
-            try {
-                const changeSound = new Audio('/sounds/kronii-gwakk.mp3');
-                changeSound.volume = 0.2;
-                await changeSound.play();
-                console.log('🔊 Sonido de cambio de área reproducido');
-            } catch (error) {
-                console.log('❌ No se pudo reproducir el sonido de cambio de área:', error);
-            }
-        };
-        playAreaChangeSound();
     };
 const isReturningRef = useRef(false);
    // Función para volver al área general
@@ -269,7 +257,7 @@ if (areaActiva === 'general' && !isReturning) {
                 const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
                 utterance.rate = 0.75;
-                utterance.pitch = 1.2;
+                utterance.pitch = 1;
                 utterance.volume = 1;
 
                 // Seleccionar voz adecuada (código existente de selección de voz)

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import '../css/Chat.css';
 import microIcon from '../img/Micro.png';
 import { useNavigate, useLocation } from 'react-router-dom';
-import '../css/Chat.css';
 
 interface Message {
   text: string;
