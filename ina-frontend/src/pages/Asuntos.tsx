@@ -57,6 +57,7 @@ export function Asuntos() {
                 }
             };
 
+            // Recargar voces cuando cambie el idioma
             speechSynthesisRef.current.onvoiceschanged = loadVoices;
             loadVoices();
 
@@ -69,7 +70,7 @@ export function Asuntos() {
         return () => {
             stopReading();
         };
-    }, [stopReading]);
+    }, [stopReading, i18n.language]);
 
     // Función para leer texto en voz alta
     const readText = useCallback((text: string, isAutoRead = false) => {
@@ -95,6 +96,12 @@ export function Asuntos() {
         // Pequeña pausa antes de empezar nueva lectura
         setTimeout(() => {
             try {
+                            // FORZAR RECARGA DE VOCES ANTES DE CADA LECTURA
+                if (speechSynthesisRef.current) {
+                    // Trigger the onvoiceschanged handler with a synthetic Event to satisfy TS signature
+                    const ev = new Event('voiceschanged');
+                    speechSynthesisRef.current.onvoiceschanged?.(ev);
+                }
                 // Configurar idioma
                 const ttsLang = i18n.language === 'es' ? 'es-ES' :
                     i18n.language === 'fr' ? 'fr-FR' : 'en-US';
@@ -108,6 +115,11 @@ export function Asuntos() {
 
                 // Seleccionar voz adecuada
                 const voices = speechSynthesisRef.current?.getVoices() || [];
+                // Filtrar voces por el idioma específico
+                const langVoices = voices.filter(voice => 
+                    voice.lang.toLowerCase().includes(ttsLang.toLowerCase())
+                );
+                console.log(`Voces encontradas para ${ttsLang}:`, langVoices.map(v => v.name));
                 let preferredVoice = null;
 
                 // Buscar voces femeninas
@@ -141,80 +153,61 @@ export function Asuntos() {
                     }
                 }
 
-                // Si no encuentra voz femenina, usar cualquier voz no masculina
-                if (!preferredVoice) {
-                    for (let voice of voices) {
-                        const voiceName = voice.name.toLowerCase();
-                        const voiceLang = voice.lang.toLowerCase();
+               // Si no encuentra voz femenina, usar cualquier voz del idioma
+      if (!preferredVoice && langVoices.length > 0) {
+        preferredVoice = langVoices[0];
+        console.log('Usando primera voz disponible:', preferredVoice.name);
+      }
 
-                        if (!voiceLang.startsWith(ttsLang.substring(0, 2))) continue;
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+        console.log('Voz seleccionada:', preferredVoice.name, preferredVoice.lang);
+      } else {
+        console.warn('No se encontró voz para el idioma:', ttsLang);
+        // Forzar el idioma aunque no haya voz específica
+        utterance.lang = ttsLang;
+      }
 
-                        const isMale = maleVoiceNames.some(maleName =>
-                            voiceName.includes(maleName.toLowerCase())
-                        );
+      utterance.onstart = () => {
+        setIsReading(true);
+        console.log('Lectura iniciada con voz:', utterance.voice?.name, 'idioma:', utterance.lang);
+        resetInactivityTimer();
+      };
 
-                        if (!isMale) {
-                            preferredVoice = voice;
-                            break;
-                        }
-                    }
-                }
+      utterance.onend = () => {
+        console.log('Lectura finalizada');
+        setIsReading(false);
+        currentUtteranceRef.current = null;
 
-                // Si todavía no hay voz, usar la primera disponible del idioma
-                if (!preferredVoice) {
-                    preferredVoice = voices.find(voice =>
-                        voice.lang.startsWith(ttsLang.substring(0, 2))
-                    );
-                }
+        if (!isAutoRead) {
+          isManualStopRef.current = false;
+        }
+      };
 
-                if (preferredVoice) {
-                    utterance.voice = preferredVoice;
-                }
+      utterance.onerror = (event) => {
+        console.error('Error en lectura:', event.error);
+        setIsReading(false);
+        currentUtteranceRef.current = null;
 
-                utterance.onstart = () => {
-                    setIsReading(true);
-                    console.log(t('app.readStart'), utterance.voice?.name);
-                    // Reiniciar temporizador de inactividad cuando empieza la lectura
-                    resetInactivityTimer();
-                };
+        if (!isAutoRead) {
+          isManualStopRef.current = false;
+        }
+      };
 
-                utterance.onend = () => {
-                    console.log(t('app.readFinished'));
-                    setIsReading(false);
-                    currentUtteranceRef.current = null;
+      currentUtteranceRef.current = utterance;
 
-                    // Resetear flag de detención manual cuando termina naturalmente
-                    if (!isAutoRead) {
-                        isManualStopRef.current = false;
-                    }
-                };
+      setTimeout(() => {
+        if (speechSynthesisRef.current && currentUtteranceRef.current === utterance) {
+          speechSynthesisRef.current.speak(utterance);
+        }
+      }, 100);
 
-                utterance.onerror = (event) => {
-                    console.error(t('app.readError'), event.error);
-                    setIsReading(false);
-                    currentUtteranceRef.current = null;
-
-                    // Resetear flag de detención manual en caso de error
-                    if (!isAutoRead) {
-                        isManualStopRef.current = false;
-                    }
-                };
-
-                currentUtteranceRef.current = utterance;
-
-                // Pequeño delay antes de empezar
-                setTimeout(() => {
-                    if (speechSynthesisRef.current && currentUtteranceRef.current === utterance) {
-                        speechSynthesisRef.current.speak(utterance);
-                    }
-                }, 100);
-
-            } catch (error) {
-                console.error(t('app.readEmpty'), error);
-                setIsReading(false);
-            }
-        }, 50);
-    }, [i18n.language, t, isTtsSupported, stopReading]);
+    } catch (error) {
+      console.error('Error en readText:', error);
+      setIsReading(false);
+    }
+  }, 50);
+}, [i18n.language, t, isTtsSupported, stopReading]);
 
     // Función para leer todo el contenido de la página
     const readPageContent = () => {

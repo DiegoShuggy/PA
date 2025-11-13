@@ -192,7 +192,7 @@ const findBestMatch = (command: string, commandMap: { [key: string]: any }): str
     }
 
     // Si no hay coincidencias, mostrar mensaje
-    setSearchResults([t('VoiceSearch.noResults') || 'No se encontraron resultados']);
+    setSearchResults([t('VoiceSearch.noResults')]);
     setShowResults(true);
     
     // Llamar al callback si existe
@@ -222,7 +222,7 @@ const findBestMatch = (command: string, commandMap: { [key: string]: any }): str
   if (!hasRecognitionSupport) {
     return (
       <div className="voice-search-unsupported">
-        <p>{t('VoiceSearch.notSupported') || 'El reconocimiento de voz no es compatible con tu navegador'}</p>
+        <p>{t('VoiceSearch.notSupported')}</p>
       </div>
     );
   }
@@ -233,39 +233,39 @@ const findBestMatch = (command: string, commandMap: { [key: string]: any }): str
         onClick={toggleListening}
         className={`voice-search-button ${isListening ? 'listening' : ''}`}
         aria-label={isListening ? 
-          (t('VoiceSearch.stopListening') || 'Detener escucha') : 
-          (t('VoiceSearch.startListening') || 'Iniciar escucha por voz')
+          (t('VoiceSearch.stopListening')) : 
+          (t('VoiceSearch.startListening'))
         }
       >
         {isListening ? (
           <>
             <span className="pulse-animation"></span>
-            🎤 {t('VoiceSearch.listening') || 'Escuchando...'}
+            🎤 {t('VoiceSearch.listening')}
           </>
         ) : (
           <>
-            🎤 {t('VoiceSearch.talk') || 'Habla ahora'}
+            🎤 {t('VoiceSearch.talk')}
           </>
         )}
       </button>
 
       {transcript && (
         <div className="voice-transcript">
-          <strong>{t('VoiceSearch.recognized') || 'Reconocido'}:</strong> {transcript}
+          <strong>{t('VoiceSearch.recognized')}:</strong> {transcript}
         </div>
       )}
 
       {autoNavigate && (
         <div className="voice-auto-navigate">
           <div className="navigating-message">
-            ✅ {t('VoiceSearch.navigatingTo') || 'Navegando a'}: "{autoNavigate}"
+            ✅ {t('VoiceSearch.navigatingTo')}: "{autoNavigate}"
           </div>
         </div>
       )}
 
       {showResults && searchResults.length > 0 && (
         <div className="voice-results">
-          <h4>{t('VoiceSearch.results') || 'Resultados'}:</h4>
+          <h4>{t('VoiceSearch.results')}:</h4>
           <ul>
             {searchResults.map((result, index) => (
               <li key={index} className="voice-result-item">

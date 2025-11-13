@@ -20,7 +20,6 @@
   },
   "chat": {
     "title": "Chat Assistant",
-    "quickTips": "← Utilisez le menu ☰ pour des questions rapides",
     "inputPlaceholder": "Tapez votre question ou requête...",
     "listeningPlaceholder": "Écoute... Parlez maintenant",
     "send": "Envoyer",
@@ -82,7 +81,10 @@
     "stopReading": "Arrêter la lecture",
     "ttsPermission": "Permission de synthèse vocale refusée"
   },
-  "consultas": {
+  "punto": {
+    "Bienvenido": "Bienvenue dans la zone de requêtes de l'institution académique. Cette plateforme vous permet d'accéder aux différents services et départements universitaires.",
+    "Instrucciones": "Instructions d'utilisation : Pour sélectionner une zone, cliquez simplement sur la carte correspondante. Si vous avez besoin d'assistance supplémentaire, utilisez le bouton de lecture à voix haute pour répéter cette information.",
+    "opcion": "Option",
     "title": "Espace Point Étudiant",
     "areas": {
       "bienestar": {
