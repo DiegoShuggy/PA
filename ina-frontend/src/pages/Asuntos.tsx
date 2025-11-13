@@ -110,7 +110,7 @@ export function Asuntos() {
                 const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
                 utterance.rate = 0.75;
-                utterance.pitch = 1.2;
+                utterance.pitch = 1;
                 utterance.volume = 1;
 
                 // Seleccionar voz adecuada
