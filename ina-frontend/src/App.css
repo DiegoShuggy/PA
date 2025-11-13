@@ -817,3 +817,425 @@ body {
 .reading-guide-line {
     z-index: 9998;
 }
+
+/* Estilos específicos para cada tema */
+
+/* Tema Claro */
+.theme-light {
+  --theme-primary: #0038A8;
+  --theme-secondary: #0056b3;
+  --theme-background: #ffffff;
+  --theme-text: #333333;
+  --theme-surface: #f8f9fa;
+  --theme-border: #e1e5e9;
+  --theme-accent: #007bff;
+}
+
+/* Tema Oscuro */
+.theme-dark {
+  --theme-primary: #4d7cfe;
+  --theme-secondary: #6c98ff;
+  --theme-background: #1a1a1a;
+  --theme-text: #ffffff;
+  --theme-surface: #2d2d2d;
+  --theme-border: #404040;
+  --theme-accent: #4d7cfe;
+}
+
+/* Modo Lectura */
+.theme-reading {
+  --theme-primary: #2e7d32;
+  --theme-secondary: #4caf50;
+  --theme-background: #fefefe;
+  --theme-text: #2e2e2e;
+  --theme-surface: #f5f5f5;
+  --theme-border: #d4d4d4;
+  --theme-accent: #2e7d32;
+}
+
+/* Aplicar temas a componentes específicos */
+
+/* NavBar */
+.theme-dark .nav-bar {
+  background-color: var(--theme-surface);
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.theme-reading .nav-bar {
+  background-color: #f8f6f0;
+  border-bottom: 1px solid #e0dcd0;
+}
+
+/* Botones de tema en el menú de accesibilidad */
+.theme-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.theme-btn {
+  flex: 1;
+  padding: 12px 8px;
+  border: 2px solid var(--theme-border);
+  background: var(--theme-surface);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-btn:hover {
+  border-color: var(--theme-primary);
+  background: var(--theme-surface);
+  transform: translateY(-2px);
+}
+
+.theme-btn.active {
+  border-color: var(--theme-primary);
+  background: var(--theme-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Ajustes para el modo oscuro */
+.theme-dark .user-message {
+  background: linear-gradient(135deg, var(--theme-primary) 0%, #3a5fc9 100%);
+  color: white;
+}
+
+.theme-dark .ai-message {
+  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  color: #e2e8f0;
+  border-left: 4px solid var(--theme-primary);
+}
+
+.theme-dark .chat-container {
+  background: var(--theme-surface);
+}
+
+.theme-dark .chat-input {
+  background: var(--theme-surface);
+  border-top: 1px solid var(--theme-border);
+}
+
+/* Ajustes para modo lectura */
+.theme-reading .user-message {
+  background: linear-gradient(135deg, var(--theme-primary) 0%, #4caf50 100%);
+  color: white;
+}
+
+.theme-reading .ai-message {
+  background: linear-gradient(135deg, #f0f7f0 0%, #e8f5e8 100%);
+  color: #2e2e2e;
+  border-left: 4px solid var(--theme-primary);
+}
+
+.theme-reading body {
+  background: color-mix(in srgb, var(--theme-primary) 10%, var(--theme-background) 100%);
+}
+
+/* Ajustes para componentes de lobby */
+.theme-dark .lobby-container {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+.theme-dark .lobby-item {
+  background: var(--theme-surface);
+  border: 1px solid var(--theme-border);
+  color: var(--theme-text);
+}
+
+.theme-dark .lobby-item:hover {
+  background: #3a3a3a;
+  border-color: var(--theme-primary);
+}
+
+.theme-reading .lobby-container {
+  background: var(--theme-background);
+}
+
+.theme-reading .lobby-item {
+  background: #f8f6f0;
+  border: 1px solid #e0dcd0;
+  color: #2e2e2e;
+}
+
+.theme-reading .lobby-item:hover {
+  background: #f0ede0;
+  border-color: var(--theme-primary);
+}
+
+/* Ajustes para menús desplegables */
+.theme-dark .language-dropdown-menu,
+.theme-dark .accessibility-menu {
+  background: var(--theme-surface);
+  border: 1px solid var(--theme-border);
+  color: var(--theme-text);
+}
+
+.theme-dark .language-option:hover,
+.theme-dark .accessibility-option:hover {
+  background: #3a3a3a;
+}
+
+.theme-reading .language-dropdown-menu,
+.theme-reading .accessibility-menu {
+  background: #f8f6f0;
+  border: 1px solid #e0dcd0;
+}
+
+/* Botones en diferentes temas */
+.theme-dark button {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  border: 1px solid var(--theme-border);
+}
+
+.theme-dark button:hover {
+  background: #3a3a3a;
+}
+
+.theme-reading button {
+  background: #f0ede0;
+  color: #2e2e2e;
+  border: 1px solid #d4d0c0;
+}
+
+/* Inputs y textareas */
+.theme-dark input,
+.theme-dark textarea {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  border: 1px solid var(--theme-border);
+}
+
+.theme-reading input,
+.theme-reading textarea {
+  background: #f8f6f0;
+  color: #2e2e2e;
+  border: 1px solid #d4d0c0;
+}
+
+/* Ajustes específicos para el seguidor de lectura en diferentes temas */
+.theme-dark .reading-guide-line {
+  background: var(--theme-primary);
+  box-shadow: 0 0 10px rgba(77, 124, 254, 0.5);
+}
+
+.theme-reading .reading-guide-line {
+  background: var(--theme-primary);
+  box-shadow: 0 0 10px rgba(46, 125, 50, 0.5);
+}
+
+/* Mejoras de contraste para modo lectura */
+.theme-reading .lobby-container h2,
+.theme-reading .lobby-container h3 {
+  color: #1b5e20;
+  font-weight: 600;
+}
+
+.theme-reading .lobby-item span {
+  color: #2e2e2e;
+  font-weight: 500;
+}
+
+/* Transiciones suaves para cambios de tema */
+.app,
+.lobby-container,
+.chat-container,
+.nav-bar,
+button,
+input,
+textarea {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Ajustes para alto contraste con temas */
+.high-contrast.theme-dark {
+  --theme-background: #000000;
+  --theme-text: #ffffff;
+  --theme-surface: #000000;
+  --theme-border: #ffffff;
+}
+
+.high-contrast.theme-reading {
+  --theme-background: #ffffff;
+  --theme-text: #000000;
+  --theme-surface: #ffffff;
+  --theme-border: #000000;
+}
+
+/* Ajustes para escala de grises con temas */
+.grayscale.theme-dark {
+  filter: grayscale(100%) brightness(0.8);
+}
+
+.grayscale.theme-reading {
+  filter: grayscale(100%) brightness(1.1);
+}
+/* ===== MEJORAS PARA MODO OSCURO EN MENÚ DE ACCESIBILIDAD ===== */
+
+/* Aplicar colores de texto blanco en modo oscuro para el menú de accesibilidad */
+.theme-dark .accessibility-menu {
+  background: var(--theme-surface);
+  color: #ffffff;
+}
+
+.theme-dark .accessibility-header {
+  background: #2d2d2d;
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.theme-dark .accessibility-header h4 {
+  color: #ffffff;
+}
+
+.theme-dark .accessibility-option label {
+  color: #ffffff;
+}
+
+.theme-dark .close-menu {
+  color: #cccccc;
+}
+
+.theme-dark .close-menu:hover {
+  color: #ffffff;
+  background: #404040;
+}
+
+/* Botones en modo oscuro */
+.theme-dark .font-size-btn,
+.theme-dark .line-height-btn,
+.theme-dark .text-spacing-btn,
+.theme-dark .theme-btn {
+  background: #3a3a3a;
+  color: #ffffff;
+  border: 2px solid #555555;
+}
+
+.theme-dark .font-size-btn:hover,
+.theme-dark .line-height-btn:hover,
+.theme-dark .text-spacing-btn:hover,
+.theme-dark .theme-btn:hover {
+  background: #4a4a4a;
+  border-color: var(--theme-primary);
+  color: #ffffff;
+}
+
+.theme-dark .font-size-btn.active,
+.theme-dark .line-height-btn.active,
+.theme-dark .text-spacing-btn.active,
+.theme-dark .theme-btn.active {
+  background: var(--theme-primary);
+  color: #ffffff;
+  border-color: var(--theme-primary);
+}
+
+/* Toggle switches en modo oscuro */
+.theme-dark .toggle-label {
+  color: #ffffff;
+}
+
+.theme-dark .toggle-slider {
+  background: #555555;
+}
+
+.theme-dark .toggle-label input:checked + .toggle-slider {
+  background: var(--theme-primary);
+}
+
+/* Botón de reset en modo oscuro */
+.theme-dark .reset-button {
+  background: #555555;
+  color: #ffffff;
+  border: 1px solid #666666;
+}
+
+.theme-dark .reset-button:hover {
+  background: #666666;
+  color: #ffffff;
+}
+
+/* Texto de los botones de tema en modo oscuro */
+.theme-dark .theme-btn {
+  color: #ffffff;
+}
+
+.theme-dark .theme-btn.active {
+  color: #ffffff;
+}
+
+/* Asegurar que todos los textos sean visibles en modo oscuro */
+.theme-dark .accessibility-options {
+  color: #ffffff;
+}
+
+.theme-dark .accessibility-option {
+  color: #ffffff;
+}
+
+/* Estados hover mejorados para modo oscuro */
+.theme-dark .font-size-btn:not(.active):hover,
+.theme-dark .line-height-btn:not(.active):hover,
+.theme-dark .text-spacing-btn:not(.active):hover {
+  background: #4a4a4a;
+  color: #ffffff;
+}
+
+/* Iconos en modo oscuro */
+.theme-dark .accessibility-icon-img {
+  filter: brightness(0.9);
+}
+
+/* Mejorar contraste de los textos en los botones de tamaño */
+.theme-dark .font-size-btn {
+  font-weight: 600;
+}
+
+/* Asegurar que los botones de tema tengan buen contraste en modo oscuro */
+.theme-dark .theme-btn:not(.active) {
+  background: #3a3a3a;
+  color: #e0e0e0;
+}
+
+.theme-dark .theme-btn:not(.active):hover {
+  background: #4a4a4a;
+  color: #ffffff;
+}
+
+/* Estilos específicos para el modo lectura en el menú */
+.theme-reading .accessibility-menu {
+  background: #f8f6f0;
+  color: #2e2e2e;
+}
+
+.theme-reading .accessibility-header {
+  background: #f0ede0;
+  border-bottom: 1px solid #d4d0c0;
+}
+
+.theme-reading .accessibility-header h4 {
+  color: #2e7d32;
+}
+
+.theme-reading .accessibility-option label {
+  color: #2e2e2e;
+  font-weight: 500;
+}
+
+/* Transiciones suaves para los cambios de color */
+.accessibility-menu,
+.accessibility-header,
+.accessibility-option label,
+.font-size-btn,
+.line-height-btn,
+.text-spacing-btn,
+.theme-btn,
+.toggle-label,
+.reset-button {
+  transition: all 0.3s ease;
+}

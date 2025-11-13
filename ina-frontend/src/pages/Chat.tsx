@@ -124,7 +124,7 @@ const cleanTextForTTS = (text: string): string => {
     .replace(/~~(.*?)~~/g, '$1')     // ~~tachado~~ → tachado
 
     // ELIMINAR EMOJIS COMPLETAMENTE (no convertirlos a texto)
-    .replace(/[🎯 📋 📍 ⏰ 📞 🔗 💡🔄 🆕 🏦 🛡️ 🚑 🆘 💰✅ 📅 🚌 🖌️ 📄 🎯 💻📹 🧠 📱 👩‍💼 🚨 🏥 ♿ 🌟 📋 🎓 🏀 ⚽ 👟 🏐🏊 🏓 ♟️ 💪 🥊 🏋️ ⏰ 🏆 📧 💼 🌐 📝 🎤 📊🎓 👋 📍 🌐 💬]/gu, ' ')
+    .replace(/[🆕📋📍⏰📞🔗💡📊🔄🆕📧💳🛡️🚑🎫📅💰✅📋🩺✝️🚪🙏🎯💻📹🍽️🤝🏢🎫💰📧💳🧠📱🚨🏥❌🤝♿🎯🎓🌟⏰📞💙💻📚🏅📍⏰❌📊📝🏋️⏰🏆💰👩‍💼👨‍💼🏢🙏🤝🌄🕯️⛪❤️]/gu, ' ')
 
     // Eliminar cualquier otro emoji (rango Unicode completo)
     .replace(/[\u{1F600}-\u{1F64F}]/gu, ' ')  // Emoticones
@@ -195,7 +195,6 @@ const Chat: React.FC = () => {
   const isStartingRef = useRef(false);
   const silenceTimerRef = useRef<number | null>(null);
   const restartTimerRef = useRef<number | null>(null);
-
 
   // Referencias para el lector de texto
   const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
