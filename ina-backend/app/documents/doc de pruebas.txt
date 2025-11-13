@@ -1,0 +1,697 @@
+←[32mINFO←[0m:     Will watch for changes in these directories: ['C:\\Users\\Jorge Arias\\Documents\\GitHub\\Proyecto_InA\\ina-backend']
+←[32mINFO←[0m:     Uvicorn running on ←[1mhttp://127.0.0.1:8000←[0m (Press CTRL+C to quit)
+←[32mINFO←[0m:     Started reloader process [←[36m←[1m14276←[0m] using ←[36m←[1mWatchFiles←[0m
+Failed to send telemetry event ClientStartEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.metrics_tracker:✅ Tablas de métricas verificadas/creadas
+TELEMETRÍA DE CHROMADB DESACTIVADA / SILENCIADA (si estaba activa)
+INFO:app.main:Router de ingest incluido y disponible en /ingest (beautifulsoup4 instalado)
+INFO:app.qr_generator:✅ QR Generator inicializado con detección mejorada de URLs
+INFO:app.training_data_loader:INICIANDO CARGA COMPLETA
+INFO:app.training_data_loader:Cargando conocimiento base corregido...
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionAddEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.training_data_loader:Base: 11 ítems
+INFO:app.training_data_loader:6 documentos Word encontrados
+INFO:app.training_data_loader:Procesando: Paginas y descripcion.docx
+INFO:app.training_data_loader:Extrayendo: Paginas y descripcion.docx
+INFO:app.training_data_loader:Paginas y descripcion.docx: 22 fragmentos útiles
+INFO:app.training_data_loader:Paginas y descripcion.docx: 22/22 agregados
+INFO:app.training_data_loader:Procesando: Preguntas frecuenes - Asuntos Estudiantiles.docx
+INFO:app.training_data_loader:Extrayendo: Preguntas frecuenes - Asuntos Estudiantiles.docx
+INFO:app.training_data_loader:Preguntas frecuenes - Asuntos Estudiantiles.docx: 64 fragmentos útiles
+INFO:app.training_data_loader:Preguntas frecuenes - Asuntos Estudiantiles.docx: 64/64 agregados
+INFO:app.training_data_loader:Procesando: Preguntas frecuentes BE.docx
+INFO:app.training_data_loader:Extrayendo: Preguntas frecuentes BE.docx
+INFO:app.training_data_loader:Preguntas frecuentes BE.docx: 2 fragmentos útiles
+INFO:app.training_data_loader:Preguntas frecuentes BE.docx: 2/2 agregados
+INFO:app.training_data_loader:Procesando: Preguntas Frecuentes Deportes y Activididad Física (1).docx
+INFO:app.training_data_loader:Extrayendo: Preguntas Frecuentes Deportes y Activididad Física (1).docx
+INFO:app.training_data_loader:Preguntas Frecuentes Deportes y Activididad Física (1).docx: 69 fragmentos útiles
+INFO:app.training_data_loader:Preguntas Frecuentes Deportes y Activididad Física (1).docx: 69/69 agregados
+INFO:app.training_data_loader:Procesando: PREGUNTAS FRECUENTES DL.docx
+INFO:app.training_data_loader:Extrayendo: PREGUNTAS FRECUENTES DL.docx
+INFO:app.training_data_loader:PREGUNTAS FRECUENTES DL.docx: 24 fragmentos útiles
+INFO:app.training_data_loader:PREGUNTAS FRECUENTES DL.docx: 24/24 agregados
+INFO:app.training_data_loader:Procesando: RESUMEN AREAS DDE.docx
+INFO:app.training_data_loader:Extrayendo: RESUMEN AREAS DDE.docx
+INFO:app.training_data_loader:RESUMEN AREAS DDE.docx: 24 fragmentos útiles
+INFO:app.training_data_loader:RESUMEN AREAS DDE.docx: 24/24 agregados
+INFO:app.training_data_loader:TOTAL RAG: 205 documentos
+INFO:app.training_data_loader:CARGA COMPLETA FINALIZADA
+✅ RAG cargado con toda la información de documentos Word
+Device set to use cpu
+INFO:app.sentiment_analyzer:Analizador de sentimiento inicializado correctamente
+INFO:     Started server process [27288]
+INFO:     Waiting for application startup.
+INFO:app.models:✅ Tablas de base de datos creadas/verificadas
+INFO:app.training_data_loader:INICIANDO CARGA COMPLETA
+INFO:app.training_data_loader:CARGA COMPLETA FINALIZADA
+INFO:app.main:✅ Base de datos y conocimiento histórico cargados
+INFO:app.main:✅ Sistema de filtros de contenido inicializado
+INFO:app.main:✅ Sistema de emails Gmail configurado y listo
+INFO:app.main:✅ Generador de QR inicializado y listo
+INFO:app.main:🔄 Iniciando ingesta automática desde C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\urls.txt (11 URLs)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/vida-estudiantil/titulados/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/admision/financiamiento/becas-estatales/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/sedes/info-tne/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/alumnos/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/test-oficina-de-titulos-y-certificados/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 4 chunks desde https://www.duoc.cl/vida-estudiantil/titulados/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/alumnos/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 11 chunks desde https://www.duoc.cl/admision/financiamiento/becas-estatales/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:✅ Añadidos 2/3 chunks desde https://www.duoc.cl/ (1 omitidos por deduplicación)
+INFO:app.async_ingest:⚠️  Todos los 5 chunks desde https://www.duoc.cl/sedes/info-tne/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/alumnos/seguro/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 9 chunks desde https://www.duoc.cl/test-oficina-de-titulos-y-certificados/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 5 chunks desde https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/sedes/plaza-norte/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 8 chunks desde https://www.duoc.cl/alumnos/seguro/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/beneficios/salud-autocuidado/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/sedes/plaza-norte/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://bibliotecas.duoc.cl/inicio/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 44 chunks desde https://www.duoc.cl/beneficios/salud-autocuidado/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 2 chunks desde https://bibliotecas.duoc.cl/inicio/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:Total chunks añadidos: 2
+INFO:app.main:✅ Ingesta automática completada: 2 fragmentos nuevos añadidos desde urls.txt
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/alumnos/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/test-oficina-de-titulos-y-certificados/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/vida-estudiantil/titulados/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/sedes/info-tne/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/admision/financiamiento/becas-estatales/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/alumnos/seguro/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/beneficios/salud-autocuidado/
+INFO:app.main: - Ingestada URL: https://bibliotecas.duoc.cl/inicio/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/sedes/plaza-norte/
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionGetEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.main:✅ Ingesta web detectada: 1 URLs indexadas en la colección
+INFO:app.main: - URL ingestada: https://www.duoc.cl/
+INFO:app.main:📦 Resumen RAG al inicio: total_documents=26891
+INFO:     Application startup complete.
+INFO:     127.0.0.1:60058 - "OPTIONS /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: que tal el clima ina
+INFO:app.main:✅ Pregunta aprobada por filtros: que tal el clima ina - Categoría: institucionales
+INFO:app.classifier:Keyword classification - Pregunta: 'que tal el clima ina' -> 'institucionales' (confianza: 0.50)
+INFO:app.main:Categoría detectada: institucionales
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'institucionales'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:04<00:00,  4.88s/it]
+INFO:app.rag:Procesamiento: 'que tal el clima ina' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'que tal el clima ina'
+INFO:app.rag:No se encontraron documentos para: que tal el clima ina
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 67 caracteres
+INFO:app.qr_generator:❓ Pregunta original: que tal el clima ina
+INFO:app.qr_generator:🔍 Buscando URLs en texto: La información sobre el clima no es proporcionada en este contexto....
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 24.04s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 67 caracteres
+INFO:app.main:📊 Métricas trackeadas: 24.30s para categoría 'institucionales'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 5b5747d6-ccb4-4ae7-ba0b-dc735cfe6047
+INFO:     127.0.0.1:60058 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:PRIORIDAD ALTA - Pregunta institucional: que otras areas hay en el punto estudiantil?
+INFO:app.main:✅ Pregunta aprobada por filtros: que otras areas hay en el punto estudiantil? - Categoría: asuntos_estudiantiles
+INFO:app.classifier:Fallback to topic classifier - Pregunta: 'que otras areas hay en el punto estudiantil?' -> 'asuntos_estudiantiles'
+INFO:app.main:Categoría detectada: asuntos_estudiantiles
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  5.96it/s]
+INFO:app.rag:Procesamiento: 'que otras areas hay en el punto estudiantil?' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'que otras areas hay en el punto estudiantil?'
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 129 caracteres
+INFO:app.qr_generator:❓ Pregunta original: que otras areas hay en el punto estudiantil?
+INFO:app.qr_generator:🔍 Buscando URLs en texto: Consulta en Punto Estudiantil para obtener más información sobre las áreas adicionales que se encuen...
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 7.08s
+INFO:app.main:🔍 Fuentes utilizadas: 1
+INFO:app.main:📝 Longitud respuesta: 129 caracteres
+INFO:app.main:📊 Métricas trackeadas: 7.26s para categoría 'asuntos_estudiantiles'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 5132afcc-5b7d-4a9b-a9a4-506adaf39670
+INFO:     127.0.0.1:60244 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: que otras cosas haces?
+INFO:app.main:❓ Tema desconocido/off-topic: que otras cosas haces?
+INFO:     127.0.0.1:60245 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Tema desconocido/off-topic: que opinas de league of legends?
+INFO:app.main:✅ Pregunta aprobada por filtros: que opinas de league of legends? - Categoría: institucionales
+INFO:app.classifier:Fallback to topic classifier - Pregunta: 'que opinas de league of legends?' -> 'institucionales'
+INFO:app.main:Categoría detectada: institucionales
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'institucionales'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  6.72it/s]
+INFO:app.rag:Procesamiento: 'que opinas de league of legends?' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'que opinas de league of legends?'
+INFO:app.rag:No se encontraron documentos para: que opinas de league of legends
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 352 caracteres
+INFO:app.qr_generator:❓ Pregunta original: que opinas de league of legends?
+INFO:app.qr_generator:🔍 Buscando URLs en texto: La información proporcionada no contiene una opinión sobre League of Legends. Soy un asistente infor...
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 13.54s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 352 caracteres
+INFO:app.main:📊 Métricas trackeadas: 13.71s para categoría 'institucionales'
+INFO:app.response_feedback:Nueva sesión de feedback creada: 8762e011-1ff2-4913-aaa3-26634f63fc47
+INFO:     127.0.0.1:60252 - "POST /chat HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app\content_filter.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [27288]
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 313, in _bootstrap
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\_subprocess.py", line 78, in subprocess_started
+    target(sockets=sockets)
+    ~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+WARNING:  WatchFiles detected changes in 'app\content_filter.py'. Reloading...
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from multiprocessing.spawn import spawn_main; spawn_main(parent_pid=14276, pipe_handle=584)
+                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 132, in _main
+    self = reduction.pickle.load(from_parent)
+  File "C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\__init__.py", line 2, in <module>
+    from uvicorn.main import Server, main, run
+  File "C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\main.py", line 31, in <module>
+    from uvicorn.server import Server, ServerState  # noqa: F401  # Used to be defined here.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\server.py", line 13, in <module>
+    from email.utils import formatdate
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\email\utils.py", line 29, in <module>
+    import urllib.parse
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\urllib\parse.py", line 40, in <module>
+    import ipaddress
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1118, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1217, in get_data
+KeyboardInterrupt
+WARNING:  WatchFiles detected changes in 'tests_multiidioma\test_verificar_logging.py', 'app\template_manager\deportes\templates_en.py', 'app\template_manager\pastoral\templates_en.py', 'app\template_manager\bienestar_estudiantil\templates_fr.py', 'tests_multiidioma\test_end_to_end_multiidioma.py', 'app\template_manager\desarrollo_laboral\__init__.py', 'tests_multiidioma\test_insurance_patterns.py', 'app\template_manager\deportes\__init__.py', 'app\template_manager\desarrollo_laboral\templates_en.py', 'app\template_manager\deportes\templates_fr.py', 'app\topic_classifier.py', 'test_bienestar_multilingue.py', 'tests_multiidioma\test_sistema_multilingue.py', 'app\template_manager\pastoral\__init__.py', 'app\classifier.py', 'tests_multiidioma\test_templates_simple.py', 'test_multilingual_fix.py', 'app\template_manager\templates_manager.py', 'tests_multiidioma\test_final_multiidioma.py', 'tests_multiidioma\test_sistema_real.py', 'app\template_manager\pastoral\templates_es.py', 'app\template_manager\__init__.py', 'app\template_manager\asuntos_estudiantiles\__init__.py', 'app\template_manager\asuntos_estudiantiles\templates_fr.py', 'simple_test.py', 'app\template_manager\asuntos_estudiantiles\templates_es.py', 'app\template_manager\asuntos_estudiantiles\templates_en.py', 'app\template_manager\pastoral\templates_fr.py', 'tests_multiidioma\test_sistema_completo.py', 'app\content_filter.py', 'app\template_manager\desarrollo_laboral\templates_es.py', 'tests_multiidioma\test_asuntos_estudiantiles.py', 'tests_multiidioma\test_multilingual_patterns.py', 'tests_multiidioma\test_templates.py', 'app\templates.py', 'tests_multiidioma\resumen_multiidioma.py', 'app\template_manager\deportes\templates_es.py', 'app\template_manager\desarrollo_laboral\templates_fr.py', 'app\template_manager\bienestar_estudiantil\__init__.py', 'app\template_manager\bienestar_estudiantil\templates_en.py', 'app\main.py', 'app\template_manager\bienestar_estudiantil\templates_es.py', 'app\rag.py'. Reloading...
+Failed to send telemetry event ClientStartEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.metrics_tracker:✅ Tablas de métricas verificadas/creadas
+TELEMETRÍA DE CHROMADB DESACTIVADA / SILENCIADA (si estaba activa)
+INFO:app.main:Router de ingest incluido y disponible en /ingest (beautifulsoup4 instalado)
+INFO:app.qr_generator:✅ QR Generator inicializado con detección mejorada de URLs
+INFO:app.training_data_loader:INICIANDO CARGA COMPLETA
+INFO:app.training_data_loader:Cargando conocimiento base corregido...
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionAddEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.training_data_loader:Base: 11 ítems
+INFO:app.training_data_loader:6 documentos Word encontrados
+INFO:app.training_data_loader:Procesando: Paginas y descripcion.docx
+INFO:app.training_data_loader:Extrayendo: Paginas y descripcion.docx
+INFO:app.training_data_loader:Paginas y descripcion.docx: 22 fragmentos útiles
+INFO:app.training_data_loader:Paginas y descripcion.docx: 22/22 agregados
+INFO:app.training_data_loader:Procesando: Preguntas frecuenes - Asuntos Estudiantiles.docx
+INFO:app.training_data_loader:Extrayendo: Preguntas frecuenes - Asuntos Estudiantiles.docx
+INFO:app.training_data_loader:Preguntas frecuenes - Asuntos Estudiantiles.docx: 64 fragmentos útiles
+INFO:app.training_data_loader:Preguntas frecuenes - Asuntos Estudiantiles.docx: 64/64 agregados
+INFO:app.training_data_loader:Procesando: Preguntas frecuentes BE.docx
+INFO:app.training_data_loader:Extrayendo: Preguntas frecuentes BE.docx
+INFO:app.training_data_loader:Preguntas frecuentes BE.docx: 2 fragmentos útiles
+INFO:app.training_data_loader:Preguntas frecuentes BE.docx: 2/2 agregados
+INFO:app.training_data_loader:Procesando: Preguntas Frecuentes Deportes y Activididad Física (1).docx
+INFO:app.training_data_loader:Extrayendo: Preguntas Frecuentes Deportes y Activididad Física (1).docx
+INFO:app.training_data_loader:Preguntas Frecuentes Deportes y Activididad Física (1).docx: 69 fragmentos útiles
+INFO:app.training_data_loader:Preguntas Frecuentes Deportes y Activididad Física (1).docx: 69/69 agregados
+INFO:app.training_data_loader:Procesando: PREGUNTAS FRECUENTES DL.docx
+INFO:app.training_data_loader:Extrayendo: PREGUNTAS FRECUENTES DL.docx
+INFO:app.training_data_loader:PREGUNTAS FRECUENTES DL.docx: 24 fragmentos útiles
+INFO:app.training_data_loader:PREGUNTAS FRECUENTES DL.docx: 24/24 agregados
+INFO:app.training_data_loader:Procesando: RESUMEN AREAS DDE.docx
+INFO:app.training_data_loader:Extrayendo: RESUMEN AREAS DDE.docx
+INFO:app.training_data_loader:RESUMEN AREAS DDE.docx: 24 fragmentos útiles
+INFO:app.training_data_loader:RESUMEN AREAS DDE.docx: 24/24 agregados
+INFO:app.training_data_loader:TOTAL RAG: 205 documentos
+INFO:app.training_data_loader:CARGA COMPLETA FINALIZADA
+✅ RAG cargado con toda la información de documentos Word
+Device set to use cpu
+INFO:app.sentiment_analyzer:Analizador de sentimiento inicializado correctamente
+INFO:     Started server process [27216]
+INFO:     Waiting for application startup.
+INFO:app.models:✅ Tablas de base de datos creadas/verificadas
+INFO:app.training_data_loader:INICIANDO CARGA COMPLETA
+INFO:app.training_data_loader:CARGA COMPLETA FINALIZADA
+INFO:app.main:✅ Base de datos y conocimiento histórico cargados
+INFO:app.main:✅ Sistema de filtros de contenido inicializado
+INFO:app.main:✅ Sistema de emails Gmail configurado y listo
+INFO:app.main:✅ Generador de QR inicializado y listo
+INFO:app.main:🔄 Iniciando ingesta automática desde C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\urls.txt (11 URLs)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/test-oficina-de-titulos-y-certificados/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/sedes/info-tne/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/admision/financiamiento/becas-estatales/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/alumnos/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/vida-estudiantil/titulados/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 11 chunks desde https://www.duoc.cl/admision/financiamiento/becas-estatales/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:✅ Añadidos 2/3 chunks desde https://www.duoc.cl/ (1 omitidos por deduplicación)
+INFO:app.async_ingest:⚠️  Todos los 9 chunks desde https://www.duoc.cl/test-oficina-de-titulos-y-certificados/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 5 chunks desde https://www.duoc.cl/sedes/info-tne/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/alumnos/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 4 chunks desde https://www.duoc.cl/vida-estudiantil/titulados/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/alumnos/seguro/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/beneficios/salud-autocuidado/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/sedes/plaza-norte/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 5 chunks desde https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 8 chunks desde https://www.duoc.cl/alumnos/seguro/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/sedes/plaza-norte/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 44 chunks desde https://www.duoc.cl/beneficios/salud-autocuidado/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://bibliotecas.duoc.cl/inicio/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 2 chunks desde https://bibliotecas.duoc.cl/inicio/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:Total chunks añadidos: 2
+INFO:app.main:✅ Ingesta automática completada: 2 fragmentos nuevos añadidos desde urls.txt
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/alumnos/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/test-oficina-de-titulos-y-certificados/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/vida-estudiantil/titulados/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/sedes/info-tne/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/admision/financiamiento/becas-estatales/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/alumnos/seguro/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/beneficios/salud-autocuidado/
+INFO:app.main: - Ingestada URL: https://bibliotecas.duoc.cl/inicio/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/sedes/plaza-norte/
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionGetEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.main:✅ Ingesta web detectada: 1 URLs indexadas en la colección
+INFO:app.main: - URL ingestada: https://www.duoc.cl/
+INFO:app.main:📦 Resumen RAG al inicio: total_documents=27141
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\starlette\routing.py", line 741, in lifespan
+    await receive()
+  File "C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Process SpawnProcess-3:
+Traceback (most recent call last):
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 313, in _bootstrap
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\_subprocess.py", line 78, in subprocess_started
+    target(sockets=sockets)
+    ~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\venv\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\Jorge Arias\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+Failed to send telemetry event ClientStartEvent: capture() takes 1 positional argument but 3 were given
+Failed to send telemetry event ClientCreateCollectionEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.metrics_tracker:✅ Tablas de métricas verificadas/creadas
+TELEMETRÍA DE CHROMADB DESACTIVADA / SILENCIADA (si estaba activa)
+INFO:app.main:Router de ingest incluido y disponible en /ingest (beautifulsoup4 instalado)
+INFO:app.qr_generator:✅ QR Generator inicializado con detección mejorada de URLs
+INFO:app.training_data_loader:INICIANDO CARGA COMPLETA
+INFO:app.training_data_loader:Cargando conocimiento base corregido...
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionAddEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.training_data_loader:Base: 11 ítems
+INFO:app.training_data_loader:6 documentos Word encontrados
+INFO:app.training_data_loader:Procesando: Paginas y descripcion.docx
+INFO:app.training_data_loader:Extrayendo: Paginas y descripcion.docx
+INFO:app.training_data_loader:Paginas y descripcion.docx: 22 fragmentos útiles
+INFO:app.training_data_loader:Paginas y descripcion.docx: 22/22 agregados
+INFO:app.training_data_loader:Procesando: Preguntas frecuenes - Asuntos Estudiantiles.docx
+INFO:app.training_data_loader:Extrayendo: Preguntas frecuenes - Asuntos Estudiantiles.docx
+INFO:app.training_data_loader:Preguntas frecuenes - Asuntos Estudiantiles.docx: 64 fragmentos útiles
+INFO:app.training_data_loader:Preguntas frecuenes - Asuntos Estudiantiles.docx: 64/64 agregados
+INFO:app.training_data_loader:Procesando: Preguntas frecuentes BE.docx
+INFO:app.training_data_loader:Extrayendo: Preguntas frecuentes BE.docx
+INFO:app.training_data_loader:Preguntas frecuentes BE.docx: 2 fragmentos útiles
+INFO:app.training_data_loader:Preguntas frecuentes BE.docx: 2/2 agregados
+INFO:app.training_data_loader:Procesando: Preguntas Frecuentes Deportes y Activididad Física (1).docx
+INFO:app.training_data_loader:Extrayendo: Preguntas Frecuentes Deportes y Activididad Física (1).docx
+INFO:app.training_data_loader:Preguntas Frecuentes Deportes y Activididad Física (1).docx: 69 fragmentos útiles
+INFO:app.training_data_loader:Preguntas Frecuentes Deportes y Activididad Física (1).docx: 69/69 agregados
+INFO:app.training_data_loader:Procesando: PREGUNTAS FRECUENTES DL.docx
+INFO:app.training_data_loader:Extrayendo: PREGUNTAS FRECUENTES DL.docx
+INFO:app.training_data_loader:PREGUNTAS FRECUENTES DL.docx: 24 fragmentos útiles
+INFO:app.training_data_loader:PREGUNTAS FRECUENTES DL.docx: 24/24 agregados
+INFO:app.training_data_loader:Procesando: RESUMEN AREAS DDE.docx
+INFO:app.training_data_loader:Extrayendo: RESUMEN AREAS DDE.docx
+INFO:app.training_data_loader:RESUMEN AREAS DDE.docx: 24 fragmentos útiles
+INFO:app.training_data_loader:RESUMEN AREAS DDE.docx: 24/24 agregados
+INFO:app.training_data_loader:TOTAL RAG: 205 documentos
+INFO:app.training_data_loader:CARGA COMPLETA FINALIZADA
+✅ RAG cargado con toda la información de documentos Word
+Device set to use cpu
+INFO:app.sentiment_analyzer:Analizador de sentimiento inicializado correctamente
+INFO:     Started server process [2328]
+INFO:     Waiting for application startup.
+INFO:app.models:✅ Tablas de base de datos creadas/verificadas
+INFO:app.training_data_loader:INICIANDO CARGA COMPLETA
+INFO:app.training_data_loader:CARGA COMPLETA FINALIZADA
+INFO:app.main:✅ Base de datos y conocimiento histórico cargados
+INFO:app.main:✅ Sistema de filtros de contenido inicializado
+INFO:app.main:✅ Sistema de emails Gmail configurado y listo
+INFO:app.main:✅ Generador de QR inicializado y listo
+INFO:app.main:🔄 Iniciando ingesta automática desde C:\Users\Jorge Arias\Documents\GitHub\Proyecto_InA\ina-backend\urls.txt (11 URLs)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/alumnos/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/test-oficina-de-titulos-y-certificados/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/admision/financiamiento/becas-estatales/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/alumnos/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/sedes/info-tne/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/vida-estudiantil/titulados/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 9 chunks desde https://www.duoc.cl/test-oficina-de-titulos-y-certificados/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 11 chunks desde https://www.duoc.cl/admision/financiamiento/becas-estatales/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/ "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/beneficios/salud-autocuidado/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 5 chunks desde https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/alumnos/seguro/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 4 chunks desde https://www.duoc.cl/vida-estudiantil/titulados/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 5 chunks desde https://www.duoc.cl/sedes/info-tne/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 44 chunks desde https://www.duoc.cl/beneficios/salud-autocuidado/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://www.duoc.cl/sedes/plaza-norte/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 8 chunks desde https://www.duoc.cl/alumnos/seguro/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:⚠️  Todos los 3 chunks desde https://www.duoc.cl/sedes/plaza-norte/ fueron omitidos (ya indexados previamente)
+INFO:httpx:HTTP Request: GET https://bibliotecas.duoc.cl/inicio/ "HTTP/1.1 200 OK"
+INFO:app.async_ingest:⚠️  Todos los 2 chunks desde https://bibliotecas.duoc.cl/inicio/ fueron omitidos (ya indexados previamente)
+INFO:app.async_ingest:Total chunks añadidos: 0
+WARNING:app.main:⚠️  Ingesta automática completada pero 0 fragmentos nuevos añadidos. Posible causa: contenido ya indexado previamente.
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/alumnos/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/test-oficina-de-titulos-y-certificados/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/vida-estudiantil/titulados/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/sedes/info-tne/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/admision/financiamiento/becas-estatales/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/alumnos/seguro/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/beneficios/salud-autocuidado/
+INFO:app.main: - Ingestada URL: https://bibliotecas.duoc.cl/inicio/
+INFO:app.main: - Ingestada URL: https://www.duoc.cl/sedes/plaza-norte/
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionGetEvent: capture() takes 1 positional argument but 3 were given
+INFO:app.main:✅ Ingesta web detectada: 1 URLs indexadas en la colección
+INFO:app.main: - URL ingestada: https://www.duoc.cl/
+INFO:app.main:📦 Resumen RAG al inicio: total_documents=27389
+INFO:     Application startup complete.
+INFO:app.content_filter:Permitiendo consulta por defecto: que hace el punto?
+🔍 Language detection: EN=0, FR=1 para 'que hace el punto?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.main:✅ Pregunta aprobada por filtros: que hace el punto? - Categoría: institucionales
+
+================================================================================
+🌐 NUEVA CONSULTA RECIBIDA - 2025-11-13 14:17:19
+📝 Texto: 'que hace el punto?'
+✅ Pregunta aprobada por filtros - Categoría: institucionales
+INFO:app.main:✅ Pregunta aprobada por filtros: que hace el punto? - Categoría: institucionales
+🔍 Language detection: EN=0, FR=1 para 'que hace el punto?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.classifier:Fallback to topic classifier - Pregunta: 'que hace el punto?' -> 'otros'
+📂 Categoría detectada: otros
+INFO:app.main:Categoría detectada: otros
+ERROR:chromadb.telemetry.product.posthog:Failed to send telemetry event CollectionQueryEvent: capture() takes 1 positional argument but 3 were given
+🔍 Contexto encontrado: 3 resultados
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'otros'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.32it/s]
+🔍 Language detection: EN=0, FR=1 para 'que hace el punto?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.classifier:Semantic Cache hit - Pregunta: 'que hace el punto?' -> 'otros'
+🌍 Idioma detectado: fr, Categoría: otros, Confianza: 0.30
+INFO:app.rag:CLASIFICACIÓN COMPLETA: 'que hace el punto?' -> otros (fr) conf:0.30
+🌍 Idioma detectado: fr
+🔍 TEMPLATE DETECTION para: 'que hace el punto?...'
+INFO:app.classifier:Template detection iniciada para: 'que hace el punto?'
+❌ NO TEMPLATE MATCH para: 'que hace el punto?...'
+INFO:app.classifier:No template match para: 'que hace el punto?'
+🔍 Language detection: EN=0, FR=1 para 'que hace el punto?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+🔍 Language detection: EN=0, FR=1 para 'que hace el punto?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.rag:DERIVACIÓN DETECTADA: que hace el punto? -> unknown
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 267 caracteres
+INFO:app.qr_generator:❓ Pregunta original: que hace el punto?
+INFO:app.qr_generator:🔍 Buscando URLs en texto:
+Esta consulta no corresponde al Punto Estudiantil. Te sugiero acercarte a **Atención General** para...
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+🎯 RESPUESTA GENERADA
+🗣️  Estrategia: derivation
+📊 Tiempo: 0.42s
+🔍 Fuentes: 0
+📝 Longitud: 265 caracteres
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: derivation
+INFO:app.main:📊 Tiempo total: 0.42s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 265 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.71s para categoría 'otros'
+INFO:app.response_feedback:Nueva sesión de feedback creada: a125409d-58ff-49dc-b5cb-04a0ef5bfc43
+✅ CONSULTA COMPLETADA EXITOSAMENTE
+================================================================================
+
+INFO:     127.0.0.1:60324 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Permitiendo consulta por defecto: en que aportas?
+🔍 Language detection: EN=0, FR=1 para 'en que aportas?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.main:✅ Pregunta aprobada por filtros: en que aportas? - Categoría: institucionales
+
+================================================================================
+🌐 NUEVA CONSULTA RECIBIDA - 2025-11-13 14:18:27
+📝 Texto: 'en que aportas?'
+✅ Pregunta aprobada por filtros - Categoría: institucionales
+INFO:app.main:✅ Pregunta aprobada por filtros: en que aportas? - Categoría: institucionales
+🔍 Language detection: EN=0, FR=1 para 'en que aportas?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.classifier:Fallback to topic classifier - Pregunta: 'en que aportas?' -> 'otros'
+📂 Categoría detectada: otros
+INFO:app.main:Categoría detectada: otros
+🔍 Contexto encontrado: 3 resultados
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'otros'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  7.05it/s]
+🔍 Language detection: EN=0, FR=1 para 'en que aportas?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.classifier:Semantic Cache hit - Pregunta: 'en que aportas?' -> 'otros'
+🌍 Idioma detectado: fr, Categoría: otros, Confianza: 0.30
+INFO:app.rag:CLASIFICACIÓN COMPLETA: 'en que aportas?' -> otros (fr) conf:0.30
+🌍 Idioma detectado: fr
+🔍 TEMPLATE DETECTION para: 'en que aportas?...'
+INFO:app.classifier:Template detection iniciada para: 'en que aportas?'
+❌ NO TEMPLATE MATCH para: 'en que aportas?...'
+INFO:app.classifier:No template match para: 'en que aportas?'
+🔍 Language detection: EN=0, FR=1 para 'en que aportas?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+🔍 Language detection: EN=0, FR=1 para 'en que aportas?...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.rag:DERIVACIÓN DETECTADA: en que aportas? -> unknown
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 267 caracteres
+INFO:app.qr_generator:❓ Pregunta original: en que aportas?
+INFO:app.qr_generator:🔍 Buscando URLs en texto:
+Esta consulta no corresponde al Punto Estudiantil. Te sugiero acercarte a **Atención General** para...
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: []
+INFO:app.qr_generator:🔄 Usando URLs por defecto: ['https://www.duoc.cl/alumnos/', 'https://ayuda.duoc.cl/']
+INFO:app.qr_generator:📱 Generando QR para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:📱 Generando QR para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://ayuda.duoc.cl/
+INFO:app.qr_generator:✅ QR agregado por defecto: https://ayuda.duoc.cl/
+INFO:app.qr_generator:🎊 Generación de QR completada: 2 códigos creados
+INFO:app.qr_generator:   📱 QR: https://www.duoc.cl/alumnos/
+INFO:app.qr_generator:   📱 QR: https://ayuda.duoc.cl/
+🎯 RESPUESTA GENERADA
+🗣️  Estrategia: derivation
+📊 Tiempo: 0.27s
+🔍 Fuentes: 0
+📝 Longitud: 265 caracteres
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: derivation
+INFO:app.main:📊 Tiempo total: 0.27s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 265 caracteres
+INFO:app.main:📊 Métricas trackeadas: 0.58s para categoría 'otros'
+INFO:app.response_feedback:Nueva sesión de feedback creada: c0707eac-e455-4e3b-8667-3272b8290da4
+✅ CONSULTA COMPLETADA EXITOSAMENTE
+================================================================================
+
+INFO:     127.0.0.1:60373 - "POST /chat HTTP/1.1" 200 OK
+INFO:app.content_filter:Permitiendo consulta por defecto: como es el proceso de matriculas
+🔍 Language detection: EN=0, FR=1 para 'como es el proceso de matriculas...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.main:✅ Pregunta aprobada por filtros: como es el proceso de matriculas - Categoría: institucionales
+
+================================================================================
+🌐 NUEVA CONSULTA RECIBIDA - 2025-11-13 14:18:47
+📝 Texto: 'como es el proceso de matriculas'
+✅ Pregunta aprobada por filtros - Categoría: institucionales
+INFO:app.main:✅ Pregunta aprobada por filtros: como es el proceso de matriculas - Categoría: institucionales
+🔍 Language detection: EN=0, FR=1 para 'como es el proceso de matriculas...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.classifier:Fallback to topic classifier - Pregunta: 'como es el proceso de matriculas' -> 'asuntos_estudiantiles'
+📂 Categoría detectada: asuntos_estudiantiles
+INFO:app.main:Categoría detectada: asuntos_estudiantiles
+🔍 Contexto encontrado: 3 resultados
+INFO:app.main:Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  6.46it/s]
+🔍 Language detection: EN=0, FR=1 para 'como es el proceso de matriculas...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.classifier:Semantic Cache hit - Pregunta: 'como es el proceso de matriculas' -> 'asuntos_estudiantiles'
+🌍 Idioma detectado: es, Categoría: asuntos_estudiantiles, Confianza: 0.90
+INFO:app.rag:CLASIFICACIÓN COMPLETA: 'como es el proceso de matriculas' -> asuntos_estudiantiles (es) conf:0.90
+🌍 Idioma detectado: es
+🔍 TEMPLATE DETECTION para: 'como es el proceso de matriculas...'
+INFO:app.classifier:Template detection iniciada para: 'como es el proceso de matriculas'
+❌ NO TEMPLATE MATCH para: 'como es el proceso de matriculas...'
+INFO:app.classifier:No template match para: 'como es el proceso de matriculas'
+🔍 Language detection: EN=0, FR=1 para 'como es el proceso de matriculas...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+🔍 Language detection: EN=0, FR=1 para 'como es el proceso de matriculas...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+🔍 Language detection: EN=0, FR=1 para 'como es el proceso de matriculas...'
+   🇫🇷 DETECTED: FRENCH (low score: 1)
+INFO:app.rag:Procesamiento: 'como es el proceso de matriculas' -> Estrategia: standard_rag
+INFO:app.rag:RAG Cache MISS para: 'como es el proceso de matriculas'
+INFO:app.rag:No se encontraron documentos para: como es el proceso de matriculas
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+INFO:app.qr_generator:🎯 Procesando respuesta para generación de QR
+INFO:app.qr_generator:📝 Longitud respuesta: 325 caracteres
+INFO:app.qr_generator:❓ Pregunta original: como es el proceso de matriculas
+INFO:app.qr_generator:🔍 Buscando URLs en texto: En general, el proceso de matrícula en la Universidad DuocUC Plaza Norte puede variar según el tipo ...
+INFO:app.qr_generator:📊 Total URLs encontradas: 0
+INFO:app.qr_generator:🔑 Claves relevantes detectadas: ['inscripciones']
+INFO:app.qr_generator:📱 Generando QR para: https://inscripciones.duoc.cl/IA/
+INFO:app.qr_generator:✅ QR generado exitosamente para: https://inscripciones.duoc.cl/IA/
+INFO:app.qr_generator:✅ QR agregado desde contexto: https://inscripciones.duoc.cl/IA/
+INFO:app.qr_generator:🎊 Generación de QR completada: 1 códigos creados
+INFO:app.qr_generator:   📱 QR: https://inscripciones.duoc.cl/IA/
+🎯 RESPUESTA GENERADA
+🗣️  Estrategia: standard_rag
+📊 Tiempo: 16.81s
+🔍 Fuentes: 0
+📝 Longitud: 325 caracteres
+INFO:app.main:🎯 RESPUESTA GENERADA - Estrategia: standard_rag
+INFO:app.main:📊 Tiempo total: 16.81s
+INFO:app.main:🔍 Fuentes utilizadas: 0
+INFO:app.main:📝 Longitud respuesta: 325 caracteres
+INFO:app.main:📊 Métricas trackeadas: 16.93s para categoría 'asuntos_estudiantiles'
+INFO:app.response_feedback:Nueva sesión de feedback creada: e2ddf527-faff-4553-9ba0-41b67a51dd46
+✅ CONSULTA COMPLETADA EXITOSAMENTE
+================================================================================
+
+INFO:     127.0.0.1:60374 - "POST /chat HTTP/1.1" 200 OK
