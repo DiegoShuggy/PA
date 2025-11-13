@@ -224,7 +224,7 @@ export function Pastoral() {
 
         // Usar los elementos ocultos para pronunciación
         const correoPronunciacion = `${t('Asuntos.correoE')} ${document.querySelector('.sr-only:nth-of-type(1)')?.textContent || ''}`;
-        const descripcion = document.querySelector('.desc')?.textContent || '';
+        const descripcion = document.querySelector('.desc')?.textContent  '';
         const questions = Array.from(document.querySelectorAll('.Coordinador-item span'))
             .map(span => span.textContent)
             .filter(Boolean)

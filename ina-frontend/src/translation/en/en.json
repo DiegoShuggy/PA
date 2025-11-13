@@ -20,7 +20,6 @@
   },
   "chat": {
     "title": "Assistant Chat",
-    "quickTips": "← Use the ☰ menu for quick questions",
     "inputPlaceholder": "Type your question or query...",
     "listeningPlaceholder": "Listening... Speak now",
     "send": "Send",
@@ -82,7 +81,10 @@
     "stopReading": "Stop reading",
     "ttsPermission": "Voice synthesis permission denied"
   },
-  "consultas": {
+  "punto": {
+    "Bienvenido": "Welcome to the academic institution query area. This platform allows you to access different university services and departments.",
+    "Instrucciones": "Usage instructions: To select any area, simply click on the corresponding card. If you need additional assistance, use the read aloud button to repeat this information.",
+    "opcion": "Option",
     "title": "Student Point Area",
     "areas": {
       "bienestar": {

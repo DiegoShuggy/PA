@@ -268,7 +268,7 @@ if (areaActiva === 'general' && !isReturning) {
                 const processedText = text.replace(/\//g, ' ');
                 const utterance = new SpeechSynthesisUtterance(processedText);
                 utterance.lang = ttsLang;
-                utterance.rate = 1;
+                utterance.rate = 0.75;
                 utterance.pitch = 1.2;
                 utterance.volume = 1;
 

@@ -86,7 +86,7 @@ function Punto() {
         }
 
         if (!speechSynthesisRef.current || !isTtsSupported) {
-            alert(t('consultas.ttsNotSupported') );
+            alert(t('app.ttsNotSupported') );
             return;
         }
 
@@ -223,71 +223,28 @@ function Punto() {
         }, 50);
     }, [i18n.language, t, isTtsSupported, stopReading]);
 
-    // TEXTO ADICIONAL PARA LA LECTURA - Todo incluido en el JavaScript
-    const getPageContentWithDescriptions = () => {
-        // Texto descriptivo adicional que no está visible en la pantalla
-        const pageIntroduction = "Página de Área de Consultas Universitarias. En esta sección podrá acceder a diferentes departamentos y servicios de la institucion academica.";
-        
-        const navigationInstructions = "Para navegar a cualquier área, haga clic en la tarjeta correspondiente. Cada tarjeta representa un departamento universitario especializado.";
-        
-        const areasDescriptions = {
-            asuntos: "Asuntos Estudiantiles: Departamento encargado de trámites administrativos, certificados, y gestión documental estudiantil.",
-            consultasFrecuentes: "Consultas Frecuentes: Respuestas a las preguntas más comunes sobre procesos universitarios y servicios.",
-            desarrollo: "Desarrollo Profesional y Titulados: Servicios de orientación laboral, bolsa de trabajo, y seguimiento a graduados.",
-            bienestar: "Bienestar Estudiantil: Área dedicada a la salud mental, apoyo psicológico, y bienestar integral del estudiante.",
-            deportes: "Deportes: Información sobre actividades deportivas, equipos universitarios, y instalaciones deportivas.",
-            pastoral: "Pastoral: Servicios espirituales, actividades de reflexión, y apoyo en valores humanos y cristianos."
-        };
-
-        const closingInstructions = "Si desea volver a la página anterior, utilice el botón de retroceso ubicado en la parte superior izquierda de la pantalla.";
-
-        // Combinar todo el contenido
-        const fullContent = `
-            ${pageIntroduction}
-            ${navigationInstructions}
-            
-            Áreas disponibles:
-            
-            1. ${areasDescriptions.asuntos}
-            
-            2. ${areasDescriptions.consultasFrecuentes}
-            
-            3. ${areasDescriptions.desarrollo}
-            
-            4. ${areasDescriptions.bienestar}
-            
-            5. ${areasDescriptions.deportes}
-            
-            6. ${areasDescriptions.pastoral}
-            
-            ${closingInstructions}
-        `;
-
-        return fullContent;
-    };
-
     // Función para leer todo el contenido de la página con descripciones extendidas
     const readPageContent = () => {
-        const pageTitle = ` ${document.querySelector('h2')?.textContent || 'Área de Consultas'}`;
+        const pageTitle = ` ${document.querySelector('h2')?.textContent}`;
         
         // Obtener los nombres reales de las áreas desde la página
         const areaElements = Array.from(document.querySelectorAll('.consultas-item span'));
         const areaNames = areaElements.map(span => span.textContent).filter(Boolean);
         
         // Crear texto combinado con nombres reales y descripciones adicionales
-        const areasWithDescriptions = areaNames.map((name, index) => {
+        const areas = areaNames.map((name, index) => {
             
-            return `Opción ${index + 1}: ${name}.`;
+            return `${t('punto.opcion')} ${index + 1}: ${name}.`;
         }).join(' ');
 
         const fullText = `
             ${pageTitle}.
             
-            Bienvenido al área de consultas de la Institucion academica. Esta plataforma le permite acceder a los diferentes servicios y departamentos universitarios.
+            ${t('punto.Bienvenido')}
             
-            ${areasWithDescriptions}
+            ${areas}
             
-            Instrucciones de uso: Para seleccionar cualquier área, simplemente haga clic en la tarjeta correspondiente. Si necesita asistencia adicional, utilice el botón de lectura en voz alta para repetir esta información.
+            ${t('Asuntos.Instrucciones')}
             
         `;
 
@@ -402,7 +359,7 @@ function Punto() {
             <button
                 className="back-button"
                 onClick={handleGoBack}
-                title={t('app.backButton', 'Volver atrás')}
+                title={t('app.backButton')}
             >
                 <span className="back-arrow">←</span>
                 {t('app.back')}
@@ -412,14 +369,14 @@ function Punto() {
             <div className="accessibility-controls">
                 <button 
                     onClick={toggleReading}
-                    aria-label={isReading ? t('consultas.stopReading') : t('consultas.readPage')}
+                    aria-label={isReading ? t('punto.stopReading') : t('punto.readPage')}
                     className={isReading ? 'reading-active' : ''}
                 >
                     {isReading ? '⏹️' : '🔊'}
                 </button>
             </div>
 
-            <h2>{t('consultas.title', 'Área de Consultas')}</h2>
+            <h2>{t('punto.title', 'Área de Consultas')}</h2>
 
             <div className="areas-grid">
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
@@ -428,10 +385,10 @@ function Punto() {
                         <div className="consultas-item uno">
                             <img
                                 src={ina1}
-                                alt={t('consultas.areas.bienestar.alt', 'Asuntos Estudiantiles')}
+                                alt={t('punto.areas.bienestar.alt', 'Asuntos Estudiantiles')}
                                 className="imagen1"
                             />
-                            <span>{t('consultas.areas.bienestar.title', 'Asuntos Estudiantiles')}</span>
+                            <span>{t('punto.areas.bienestar.title', 'Asuntos Estudiantiles')}</span>
                         </div>
                     </Link>
                 </div>
@@ -442,10 +399,10 @@ function Punto() {
                         <div className="consultas-item dos">
                             <img
                                 src={ina2}
-                                alt={t('consultas.areas.ConsultasFrecuentes.alt', 'Consultas Frecuentes')}
+                                alt={t('punto.areas.ConsultasFrecuentes.alt', 'Consultas Frecuentes')}
                                 className="imagen2"
                             />
-                            <span>{t('consultas.areas.ConsultasFrecuentes.title', 'Consultas Frecuentes')}</span>
+                            <span>{t('punto.areas.ConsultasFrecuentes.title', 'Consultas Frecuentes')}</span>
                         </div>
                     </Link>
                 </div>
@@ -456,10 +413,10 @@ function Punto() {
                         <div className="consultas-item tres">
                             <img
                                 src={ina3}
-                                alt={t('consultas.areas.professionalDevelopment.alt', 'Desarrollo Profesional y Titulados')}
+                                alt={t('punto.areas.professionalDevelopment.alt', 'Desarrollo Profesional y Titulados')}
                                 className="imagen3"
                             />
-                            <span>{t('consultas.areas.professionalDevelopment.title', 'Desarrollo Profesional y Titulados')}</span>
+                            <span>{t('punto.areas.professionalDevelopment.title', 'Desarrollo Profesional y Titulados')}</span>
                         </div>
                     </Link>
                 </div>
@@ -470,10 +427,10 @@ function Punto() {
                         <div className="consultas-item cuatro">
                             <img
                                 src={ina4}
-                                alt={t('consultas.areas.studentWelfare.alt', 'Bienestar Estudiantil')}
+                                alt={t('punto.areas.studentWelfare.alt', 'Bienestar Estudiantil')}
                                 className="imagen4"
                             />
-                            <span>{t('consultas.areas.studentWelfare.title', 'Bienestar Estudiantil')}</span>
+                            <span>{t('punto.areas.studentWelfare.title', 'Bienestar Estudiantil')}</span>
                         </div>
                     </Link>
                 </div>
@@ -484,10 +441,10 @@ function Punto() {
                         <div className="consultas-item cinco">
                             <img
                                 src={ina5}
-                                alt={t('consultas.areas.sports.alt', 'Deportes')}
+                                alt={t('punto.areas.sports.alt', 'Deportes')}
                                 className="imagen5"
                             />
-                            <span>{t('consultas.areas.sports.title', 'Deportes')}</span>
+                            <span>{t('punto.areas.sports.title', 'Deportes')}</span>
                         </div>
                     </Link>
                 </div>
@@ -498,10 +455,10 @@ function Punto() {
                         <div className="consultas-item seis">
                             <img
                                 src={ina6}
-                                alt={t('consultas.areas.pastoral.alt', 'Pastoral')}
+                                alt={t('punto.areas.pastoral.alt', 'Pastoral')}
                                 className="imagen6"
                             />
-                            <span>{t('consultas.areas.pastoral.title', 'Pastoral')}</span>
+                            <span>{t('punto.areas.pastoral.title', 'Pastoral')}</span>
                         </div>
                     </Link>
                 </div>

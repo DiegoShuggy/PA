@@ -331,7 +331,7 @@ const Chat: React.FC = () => {
       // Limpiar el set de mensajes leídos
       hasBeenReadRef.current.clear();
     };
-  }, [stopReading]);
+  }, [stopReading, i18n.language]);
 
   // Función para leer un mensaje en voz alta
   const readMessage = useCallback((text: string, messageIndex: number, isAutoRead = false) => {
@@ -381,7 +381,7 @@ const Chat: React.FC = () => {
         const utterance = new SpeechSynthesisUtterance(processedText);
         utterance.lang = ttsLang;
         utterance.rate = 0.75;
-        utterance.pitch = 1.4;
+        utterance.pitch = 1;
         utterance.volume = 1;
 
         // BUSCAR Y SELECCIONAR UNA VOZ FEMENINA ESPECÍFICA
@@ -1570,8 +1570,8 @@ useEffect(() => {
               onClick={() => toggleReading(msg, index)}
               type="button"
               title={isCurrentMessageReading ?
-                (t('chat.stopReading') || 'Detener lectura') :
-                (t('chat.readAloud') || 'Leer en voz alta')}
+                (t('chat.stopReading')) :
+                (t('chat.readAloud'))}
             >
               {isCurrentMessageReading ? '⏹️' : '🔊'}
             </button>

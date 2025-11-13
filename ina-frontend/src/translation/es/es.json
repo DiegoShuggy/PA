@@ -81,7 +81,10 @@
     "stopReading": "Detener lectura",
     "ttsPermission": "Permiso de síntesis de voz denegado"
   },
-  "consultas": {
+  "punto": {
+    "Bienvenido": "Bienvenido al área de consultas de la Institución academica. Esta plataforma le permite acceder a los diferentes servicios y departamentos universitarios.",
+    "Instrucciones": "Instrucciones de uso: Para seleccionar cualquier área, simplemente haga clic en la tarjeta correspondiente. Si necesita asistencia adicional, utilice el botón de lectura en voz alta para repetir esta información.",
+    "opcion": "Opción",
     "title": "Área del Punto Estudiantil",
     "areas": {
       "bienestar": {
