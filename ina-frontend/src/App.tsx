@@ -16,9 +16,64 @@ import NavBar from './components/NavBar';
 import ojoAbierto from './img/ojo-abierto.png';
 import ojoCerrado from './img/ojo-cerrado.png';
 
+// Definir tipos de temas
+type ThemeType = 'light' | 'dark' | 'reading';
+
+interface ThemeConfig {
+  name: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    background: string;
+    text: string;
+    surface: string;
+    border: string;
+    accent: string;
+  };
+}
+
+const themes: Record<ThemeType, ThemeConfig> = {
+  light: {
+    name: 'light',
+    colors: {
+      primary: '#0038A8',
+      secondary: '#0056b3',
+      background: '#ffffff',
+      text: '#333333',
+      surface: '#f8f9fa',
+      border: '#e1e5e9',
+      accent: '#007bff'
+    }
+  },
+  dark: {
+    name: 'dark',
+    colors: {
+      primary: '#4d7cfe',
+      secondary: '#6c98ff',
+      background: '#1a1a1a',
+      text: '#ffffff',
+      surface: '#2d2d2d',
+      border: '#404040',
+      accent: '#4d7cfe'
+    }
+  },
+  reading: {
+    name: 'reading',
+    colors: {
+      primary: '#2e7d32',
+      secondary: '#4caf50',
+      background: '#fefefe',
+      text: '#2e2e2e',
+      surface: '#f5f5f5',
+      border: '#d4d4d4',
+      accent: '#2e7d32'
+    }
+  }
+};
+
 function App() {
     const { i18n, t } = useTranslation();
-     const [isHovering, setIsHovering] = useState(false);
+    const [isHovering, setIsHovering] = useState(false);
     const [fontSize, setFontSize] = useState<'small' | 'normal' | 'large'>('normal');
     const [lineHeight, setLineHeight] = useState<'normal' | 'large' | 'x-large'>('normal');
     const [textSpacing, setTextSpacing] = useState<'normal' | 'large' | 'x-large'>('normal');
@@ -31,15 +86,52 @@ function App() {
     const [isDragging, setIsDragging] = useState(false);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [isCursorInViewport, setIsCursorInViewport] = useState(true);
+    
+    // NUEVO: Estado para el tema actual
+    const [currentTheme, setCurrentTheme] = useState<ThemeType>('light');
+    
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const guideLineRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement>(null);
 
-        useEffect(() => {
+    // Efecto para aplicar el tema seleccionado
+    useEffect(() => {
+        const root = document.documentElement;
+        const theme = themes[currentTheme];
+        
+        // Aplicar variables CSS del tema
+        root.style.setProperty('--theme-primary', theme.colors.primary);
+        root.style.setProperty('--theme-secondary', theme.colors.secondary);
+        root.style.setProperty('--theme-background', theme.colors.background);
+        root.style.setProperty('--theme-text', theme.colors.text);
+        root.style.setProperty('--theme-surface', theme.colors.surface);
+        root.style.setProperty('--theme-border', theme.colors.border);
+        root.style.setProperty('--theme-accent', theme.colors.accent);
+        
+        // Aplicar clase del tema al body
+        document.body.className = `theme-${currentTheme}`;
+        
+    }, [currentTheme]);
+
+    // Efecto para persistir el tema en localStorage
+    useEffect(() => {
+        // Cargar tema guardado al iniciar
+        const savedTheme = localStorage.getItem('app-theme') as ThemeType;
+        if (savedTheme && themes[savedTheme]) {
+            setCurrentTheme(savedTheme);
+        }
+    }, []);
+
+    // Función para cambiar tema
+    const changeTheme = (theme: ThemeType) => {
+        setCurrentTheme(theme);
+        localStorage.setItem('app-theme', theme);
+    };
+
+    useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            // Si el menú está abierto y el clic fue fuera del menú y fuera del botón de accesibilidad
             if (showAccessibilityMenu && 
                 menuRef.current && 
                 !menuRef.current.contains(event.target as Node) &&
@@ -52,51 +144,54 @@ function App() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showAccessibilityMenu]);
-    // Aplicar los estilos de accesibilidad
-        useEffect(() => {
-            const root = document.documentElement;
-    
-            // Aplicar tamaño de fuente
-            root.classList.remove('font-small', 'font-normal', 'font-large');
-            root.classList.add(`font-${fontSize}`);
-    
-            // Aplicar altura de línea
-            root.classList.remove('line-height-normal', 'line-height-large', 'line-height-x-large');
-            root.classList.add(`line-height-${lineHeight}`);
-    
-            // Aplicar espaciado de texto
-            root.classList.remove('text-spacing-normal', 'text-spacing-large', 'text-spacing-x-large');
-            root.classList.add(`text-spacing-${textSpacing}`);
-    
-            // Aplicar alto contraste
-            if (highContrast) {
-                root.classList.add('high-contrast');
-            } else {
-                root.classList.remove('high-contrast');
-            }
-    
-            // Aplicar escala de grises
-            if (grayscale) {
-                root.classList.add('grayscale');
-            } else {
-                root.classList.remove('grayscale');
-            }
-            // Aplicar fuente para disléxicos
-            if (dyslexicFont) {
-                root.classList.add('dyslexic-font');
-            } else {
-                root.classList.remove('dyslexic-font');
-            }
-            // Aplicar seguidor de cursor
-            if (readingGuide) {
-                root.classList.add('reading-guide-active');
-            } else {
-                root.classList.remove('reading-guide-active');
-            }
-    
-        }, [fontSize, lineHeight, highContrast, grayscale, dyslexicFont, textSpacing, readingGuide]);
-    
-// Efecto para el seguidor de curso - SEPARADO Y MEJORADO
+
+    // Aplicar los estilos de accesibilidad (actualizado para incluir temas)
+    useEffect(() => {
+        const root = document.documentElement;
+
+        // Aplicar tamaño de fuente
+        root.classList.remove('font-small', 'font-normal', 'font-large');
+        root.classList.add(`font-${fontSize}`);
+
+        // Aplicar altura de línea
+        root.classList.remove('line-height-normal', 'line-height-large', 'line-height-x-large');
+        root.classList.add(`line-height-${lineHeight}`);
+
+        // Aplicar espaciado de texto
+        root.classList.remove('text-spacing-normal', 'text-spacing-large', 'text-spacing-x-large');
+        root.classList.add(`text-spacing-${textSpacing}`);
+
+        // Aplicar alto contraste
+        if (highContrast) {
+            root.classList.add('high-contrast');
+        } else {
+            root.classList.remove('high-contrast');
+        }
+
+        // Aplicar escala de grises
+        if (grayscale) {
+            root.classList.add('grayscale');
+        } else {
+            root.classList.remove('grayscale');
+        }
+        
+        // Aplicar fuente para disléxicos
+        if (dyslexicFont) {
+            root.classList.add('dyslexic-font');
+        } else {
+            root.classList.remove('dyslexic-font');
+        }
+        
+        // Aplicar seguidor de cursor
+        if (readingGuide) {
+            root.classList.add('reading-guide-active');
+        } else {
+            root.classList.remove('reading-guide-active');
+        }
+
+    }, [fontSize, lineHeight, highContrast, grayscale, dyslexicFont, textSpacing, readingGuide]);
+
+    // Efecto para el seguidor de cursor
     useEffect(() => {
         if (!readingGuide) return;
 
@@ -158,7 +253,6 @@ function App() {
             setIsDragging(false);
         };
 
-        // Agregar event listeners al documento completo
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseleave', handleMouseLeave);
         document.addEventListener('mouseenter', handleMouseEnter);
@@ -170,7 +264,6 @@ function App() {
         document.addEventListener('touchend', handleTouchEnd);
 
         return () => {
-            // Limpiar event listeners
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseleave', handleMouseLeave);
             document.removeEventListener('mouseenter', handleMouseEnter);
@@ -182,7 +275,8 @@ function App() {
             document.removeEventListener('touchend', handleTouchEnd);
         };
     }, [readingGuide, isDragging]);
-    // Resetear todas las opciones de accesibilidad
+
+    // Resetear todas las opciones de accesibilidad (actualizado)
     const resetAccessibility = () => {
         setFontSize('normal');
         setLineHeight('normal');
@@ -191,23 +285,24 @@ function App() {
         setGrayscale(false);
         setDyslexicFont(false);
         setReadingGuide(false);
+        setCurrentTheme('light');
+        localStorage.setItem('app-theme', 'light');
+        // NO resetear el tema - mantener la preferencia del usuario
     };
-    
 
-        
-   
-    
- const changeLanguage = (lng: string) => {
+    const changeLanguage = (lng: string) => {
         i18n.changeLanguage(lng);
         setIsLanguageMenuOpen(false);
     };
+
     return (
-        <div className="app">
+        <div className={`app theme-${currentTheme}`}>
             <div>
                 <NavBar />
+                
                 {/* Botón flotante de accesibilidad */}
-            <div className="accessibility-floating-button">
-                <button
+                <div className="accessibility-floating-button">
+                    <button
                         className="accessibility-toggle"
                         onClick={() => setShowAccessibilityMenu(!showAccessibilityMenu)}
                         onMouseEnter={() => setIsHovering(true)}
@@ -223,176 +318,191 @@ function App() {
                         />
                     </button>
 
-                {/* Menú desplegable de accesibilidad */}
-                {showAccessibilityMenu && (
-                    <div className="accessibility-menu" ref={menuRef}>
-                        <div className="accessibility-header">
-                            <h4>{t('Accesibilidad.titulo')}</h4>
-                            <button
-                                className="close-menu"
-                                onClick={() => setShowAccessibilityMenu(false)}
-                            >
-                                ×
-                            </button>
-                        </div>
-
-                        <div className="accessibility-options">
-
-                            {/* Tamaño de fuente */}
-                            <div className="accessibility-option">
-                                <label>{t('Accesibilidad.tamaño')}</label>
-                                <div className="font-size-buttons">
-                                    <button
-                                        className={`font-size-btn ${fontSize === 'small' ? 'active' : ''}`}
-                                        onClick={() => setFontSize('small')}
-                                    >
-                                        a
-                                    </button>
-                                    <button
-                                        className={`font-size-btn ${fontSize === 'normal' ? 'active' : ''}`}
-                                        onClick={() => setFontSize('normal')}
-                                    >
-                                        A
-                                    </button>
-                                    <button
-                                        className={`font-size-btn ${fontSize === 'large' ? 'active' : ''}`}
-                                        onClick={() => setFontSize('large')}
-                                    >
-                                        A+
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Altura de línea */}
-                            <div className="accessibility-option">
-                                <label>{t('Accesibilidad.altura')}</label>
-                                <div className="line-height-buttons">
-                                    <button
-                                        className={`line-height-btn ${lineHeight === 'normal' ? 'active' : ''}`}
-                                        onClick={() => setLineHeight('normal')}
-                                    >
-                                        ─
-                                    </button>
-                                    <button
-                                        className={`line-height-btn ${lineHeight === 'large' ? 'active' : ''}`}
-                                        onClick={() => setLineHeight('large')}
-                                    >
-                                        ──
-                                    </button>
-                                    <button
-                                        className={`line-height-btn ${lineHeight === 'x-large' ? 'active' : ''}`}
-                                        onClick={() => setLineHeight('x-large')}
-                                    >
-                                        ───
-                                    </button>
-                                </div>
-                            </div>
-                            {/* Espaciado de texto */}
-                            <div className="accessibility-option">
-                                <label>{t('Accesibilidad.espaciado')}</label>
-                                <div className="text-spacing-buttons">
-                                    <button
-                                        className={`text-spacing-btn ${textSpacing === 'normal' ? 'active' : ''}`}
-                                        onClick={() => setTextSpacing('normal')}
-                                    >
-                                        Aa
-                                    </button>
-                                    <button
-                                        className={`text-spacing-btn ${textSpacing === 'large' ? 'active' : ''}`}
-                                        onClick={() => setTextSpacing('large')}
-                                        title="Espaciado amplio"
-                                    >
-                                        A a
-                                    </button>
-                                    <button
-                                        className={`text-spacing-btn ${textSpacing === 'x-large' ? 'active' : ''}`}
-                                        onClick={() => setTextSpacing('x-large')}
-                                    >
-                                        A  a
-                                    </button>
-                                </div>
-                            </div>
-                            {/* Seguidor de curso */}
-                            <div className="accessibility-option">
-                                <label className="toggle-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={readingGuide}
-                                        onChange={(e) => setReadingGuide(e.target.checked)}
-                                    />
-                                    <span className="toggle-slider"></span>
-                                    {t('Accesibilidad.tracker')}
-                                </label>
-                                {readingGuide && (
-                                    <div
-                                        className="reading-guide-line"
-                                        ref={guideLineRef}
-                                        style={{ top: `${readingPosition}px` }}
-                                    >
-                                        <div
-                                            className="guide-handle"
-                                            style={{
-                                                left: `${cursorPosition.x}px`,
-                                                opacity: isCursorInViewport ? 1 : 0
-                                            }}
-                                        >
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                            {/* Fuente para Dyslexia */}
-                            <div className="accessibility-option">
-                                <label className="toggle-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={dyslexicFont}
-                                        onChange={(e) => setDyslexicFont(e.target.checked)}
-                                    />
-                                    <span className="toggle-slider"></span>
-                                    {t('Accesibilidad.dyslexia')}
-                                </label>
-                            </div>
-
-
-                            {/* Alto contraste */}
-                            <div className="accessibility-option">
-                                <label className="toggle-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={highContrast}
-                                        onChange={(e) => setHighContrast(e.target.checked)}
-                                    />
-                                    <span className="toggle-slider"></span>
-                                    {t('Accesibilidad.contraste')}
-                                </label>
-                            </div>
-
-                            {/* Escala de grises */}
-                            <div className="accessibility-option">
-                                <label className="toggle-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={grayscale}
-                                        onChange={(e) => setGrayscale(e.target.checked)}
-                                    />
-                                    <span className="toggle-slider"></span>
-                                    {t('Accesibilidad.saturacion')}
-                                </label>
-                            </div>
-
-                            {/* Botón de reset */}
-                            <div className="accessibility-option">
+                    {/* Menú desplegable de accesibilidad - ACTUALIZADO CON TEMAS */}
+                    {showAccessibilityMenu && (
+                        <div className="accessibility-menu" ref={menuRef}>
+                            <div className="accessibility-header">
+                                <h4>{t('Accesibilidad.titulo')}</h4>
                                 <button
-                                    className="reset-button"
-                                    onClick={resetAccessibility}
+                                    className="close-menu"
+                                    onClick={() => setShowAccessibilityMenu(false)}
                                 >
-                                    {t('Accesibilidad.restablecer')}
+                                    ×
                                 </button>
                             </div>
+
+                            <div className="accessibility-options">
+
+                                {/* NUEVO: Selector de Temas */}
+                                <div className="accessibility-option">
+                                    <label>{t('Accesibilidad.tema', 'Tema de color')}</label>
+                                    <div className="theme-buttons">
+                                        <button
+                                            className={`theme-btn ${currentTheme === 'light' ? 'active' : ''}`}
+                                            onClick={() => changeTheme('light')}
+                                            title={t('Accesibilidad.temaClaro', 'Tema claro')}
+                                        >
+                                            🌞
+                                        </button>
+                                        <button
+                                            className={`theme-btn ${currentTheme === 'dark' ? 'active' : ''}`}
+                                            onClick={() => changeTheme('dark')}
+                                            title={t('Accesibilidad.temaOscuro', 'Tema oscuro')}
+                                        >
+                                            🌙
+                                        </button>
+                                        <button
+                                            className={`theme-btn ${currentTheme === 'reading' ? 'active' : ''}`}
+                                            onClick={() => changeTheme('reading')}
+                                            title={t('Accesibilidad.modoLectura', 'Modo lectura')}
+                                        >
+                                            📖
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Tamaño de fuente */}
+                                <div className="accessibility-option">
+                                    <label>{t('Accesibilidad.tamaño')}</label>
+                                    <div className="font-size-buttons">
+                                        <button
+                                            className={`font-size-btn ${fontSize === 'small' ? 'active' : ''}`}
+                                            onClick={() => setFontSize('small')}
+                                        >
+                                            a
+                                        </button>
+                                        <button
+                                            className={`font-size-btn ${fontSize === 'normal' ? 'active' : ''}`}
+                                            onClick={() => setFontSize('normal')}
+                                        >
+                                            A
+                                        </button>
+                                        <button
+                                            className={`font-size-btn ${fontSize === 'large' ? 'active' : ''}`}
+                                            onClick={() => setFontSize('large')}
+                                        >
+                                            A+
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Altura de línea */}
+                                <div className="accessibility-option">
+                                    <label>{t('Accesibilidad.altura')}</label>
+                                    <div className="line-height-buttons">
+                                        <button
+                                            className={`line-height-btn ${lineHeight === 'normal' ? 'active' : ''}`}
+                                            onClick={() => setLineHeight('normal')}
+                                        >
+                                            ─
+                                        </button>
+                                        <button
+                                            className={`line-height-btn ${lineHeight === 'large' ? 'active' : ''}`}
+                                            onClick={() => setLineHeight('large')}
+                                        >
+                                            ──
+                                        </button>
+                                        <button
+                                            className={`line-height-btn ${lineHeight === 'x-large' ? 'active' : ''}`}
+                                            onClick={() => setLineHeight('x-large')}
+                                        >
+                                            ───
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Espaciado de texto */}
+                                <div className="accessibility-option">
+                                    <label>{t('Accesibilidad.espaciado')}</label>
+                                    <div className="text-spacing-buttons">
+                                        <button
+                                            className={`text-spacing-btn ${textSpacing === 'normal' ? 'active' : ''}`}
+                                            onClick={() => setTextSpacing('normal')}
+                                        >
+                                            Aa
+                                        </button>
+                                        <button
+                                            className={`text-spacing-btn ${textSpacing === 'large' ? 'active' : ''}`}
+                                            onClick={() => setTextSpacing('large')}
+                                            title="Espaciado amplio"
+                                        >
+                                            A a
+                                        </button>
+                                        <button
+                                            className={`text-spacing-btn ${textSpacing === 'x-large' ? 'active' : ''}`}
+                                            onClick={() => setTextSpacing('x-large')}
+                                        >
+                                            A  a
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Seguidor de curso */}
+                                <div className="accessibility-option">
+                                    <label className="toggle-label">
+                                        <input
+                                            type="checkbox"
+                                            checked={readingGuide}
+                                            onChange={(e) => setReadingGuide(e.target.checked)}
+                                        />
+                                        <span className="toggle-slider"></span>
+                                        {t('Accesibilidad.tracker')}
+                                    </label>
+                                </div>
+
+                                {/* Fuente para Dyslexia */}
+                                <div className="accessibility-option">
+                                    <label className="toggle-label">
+                                        <input
+                                            type="checkbox"
+                                            checked={dyslexicFont}
+                                            onChange={(e) => setDyslexicFont(e.target.checked)}
+                                        />
+                                        <span className="toggle-slider"></span>
+                                        {t('Accesibilidad.dyslexia')}
+                                    </label>
+                                </div>
+
+                                {/* Alto contraste */}
+                                <div className="accessibility-option">
+                                    <label className="toggle-label">
+                                        <input
+                                            type="checkbox"
+                                            checked={highContrast}
+                                            onChange={(e) => setHighContrast(e.target.checked)}
+                                        />
+                                        <span className="toggle-slider"></span>
+                                        {t('Accesibilidad.contraste')}
+                                    </label>
+                                </div>
+
+                                {/* Escala de grises */}
+                                <div className="accessibility-option">
+                                    <label className="toggle-label">
+                                        <input
+                                            type="checkbox"
+                                            checked={grayscale}
+                                            onChange={(e) => setGrayscale(e.target.checked)}
+                                        />
+                                        <span className="toggle-slider"></span>
+                                        {t('Accesibilidad.saturacion')}
+                                    </label>
+                                </div>
+
+                                {/* Botón de reset */}
+                                <div className="accessibility-option">
+                                    <button
+                                        className="reset-button"
+                                        onClick={resetAccessibility}
+                                    >
+                                        {t('Accesibilidad.restablecer')}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
+
                 {/* Selector de idiomas global */}
                 <div className="language-selector-global" ref={languageMenuRef}>
                     <button
@@ -436,23 +546,24 @@ function App() {
                         </div>
                     )}
                 </div>
-                {/* Seguidor de cursor FUERA del menú para que funcione siempre */}
-            {readingGuide && (
-                <div
-                    className="reading-guide-line"
-                    ref={guideLineRef}
-                    style={{ top: `${readingPosition}px` }}
-                >
+
+                {/* Seguidor de cursor */}
+                {readingGuide && (
                     <div
-                        className="guide-handle"
-                        style={{
-                            left: `${cursorPosition.x}px`,
-                            opacity: isCursorInViewport ? 1 : 0
-                        }}
+                        className="reading-guide-line"
+                        ref={guideLineRef}
+                        style={{ top: `${readingPosition}px` }}
                     >
+                        <div
+                            className="guide-handle"
+                            style={{
+                                left: `${cursorPosition.x}px`,
+                                opacity: isCursorInViewport ? 1 : 0
+                            }}
+                        >
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
                 <main className='main-content'>
                     <Routes>

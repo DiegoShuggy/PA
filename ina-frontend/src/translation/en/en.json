@@ -18,6 +18,23 @@
     "readFinished": "✅ Reading finished",
     "readEmpty":"No text to read"
   },
+  
+  "navbar": {
+    "Lobby": "Lobby",
+    "Chat": "Chat",
+    "Punto": "Student Point",
+    "Reporte": "Report",
+    "InA": "InA - Duoc UC Virtual Assistant",
+    "poweredBy": "Powered by Mistral 7B",
+    "secretAccess": "Secret Access",
+    "secretPassword": "Secret Password",
+    "passwordPlaceholder": "Enter the secret password",
+    "cancel": "Cancel",
+    "access": "Access",
+    "error": {
+      "incorrectPassword": "Incorrect password"
+    }
+  },
   "chat": {
     "title": "Assistant Chat",
     "inputPlaceholder": "Type your question or query...",

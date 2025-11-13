@@ -18,6 +18,22 @@
     "readFinished": "✅ Lecture terminée",
     "readEmpty":"Aucun texte à lire"
   },
+  "navbar": {
+    "Lobby": "Lobby",
+    "Chat": "Chat",
+    "Punto": "Point Étudiant",
+    "Reporte": "Rapport",
+    "InA": "InA - Assistant Virtuel Duoc UC",
+    "poweredBy": "Propulsé par Mistral 7B",
+    "secretAccess": "Accès Secret",
+    "secretPassword": "Mot de Passe Secret",
+    "passwordPlaceholder": "Entrez le mot de passe secret",
+    "cancel": "Annuler",
+    "access": "Accéder",
+    "error": {
+      "incorrectPassword": "Mot de passe incorrect"
+    }
+  },
   "chat": {
     "title": "Chat Assistant",
     "inputPlaceholder": "Tapez votre question ou requête...",
