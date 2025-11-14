@@ -108,9 +108,19 @@ class EnhancedTopicClassifier:
         
         # Consultas que SIEMPRE deben derivarse
         derivation_keywords = [
+            # ESPAÑOL
             'contraseña', 'password', 'mi duoc', 'plataforma', 'correo institucional',
             'wifi', 'acceso denegado', 'bloqueado', 'login', 'portal', 'olvidé contraseña',
-            'recuperar contraseña', 'no puedo entrar', 'error acceso'
+            'recuperar contraseña', 'no puedo entrar', 'error acceso',
+            # INGLÉS 
+            'password', 'my duoc', 'platform', 'institutional email',
+            'wifi', 'access denied', 'blocked', 'login', 'portal', 'forgot password',
+            'recover password', 'cannot enter', 'access error',
+            # FRANCÉS
+            'mot de passe', 'mon duoc', 'plateforme', 'email institutionnel',
+            'wifi', 'accès refusé', 'bloqué', 'connexion', 'portail', 'oublié mot de passe',
+            'récupérer mot de passe', 'ne peux pas entrer', 'erreur accès',
+            'courrier électronique institutionnel', 'e-mail institutionnel'
         ]
         
         query_lower = query.lower()
@@ -447,134 +457,231 @@ class RAGEngine:
         return response_info
 
     def detect_language(self, query: str) -> str:
-        """Detecta el idioma de la consulta basándose en palabras clave"""
+        """Detecta el idioma con prioridad correcta para español"""
         query_lower = query.lower()
         
-        # PATRONES ESPECÍFICOS FRANCESES DE ALTA PRIORIDAD
-        french_patterns = [
-            r'existe.*t.*il', r'qu\'est.*ce', r'comment.*savoir', r'que.*dois.*je.*faire',
-            r'j\'ai.*essayé', r'combien.*de', r'puis.*je.*avoir', r'ne.*trouve.*pas',
-            r'créneaux.*disponibles', r'soins.*psychologiques', r'en.*présentiel',
-            r'mais.*je.*ne', r'après.*avoir.*réalisé', r'responsabilité.*supplémentaire',
-            # Nuevos patrones críticos para mejor detección
-            r'ai.*je.*une', r'peut.*il.*fournir', r'le.*psychologue.*virtuel',
-            r'cours.*d\'ambassadeurs', r'peux.*pas.*passer', r'module.*suivant',
-            r'j\'ai.*commencé', r'comment.*savoir.*si', r'j\'ai.*terminé'
+        # ================================================================
+        # PASO 1: DETECCIÓN DIRECTA DE CONSULTAS FRANCESAS INEQUÍVOCAS
+        # ================================================================
+        ultra_specific_french_queries = [
+            'comment fonctionne l\'assurance',
+            'comment fonctionne assurance',
+            'comment renouveler ma tne',
+            'comment obtenir ma tne',
+            'quelles sont les catégories',
+            'programme d\'urgence',
+            'quand puis-je postuler',
+            'informations sur les programmes',
+            'conditions pour postuler',
+            'elle est perdue ou endommagée',
+            'programmes de soutien aux étudiants'
         ]
         
-        # Si encuentra patrones franceses específicos, es francés
-        for pattern in french_patterns:
-            if re.search(pattern, query_lower):
-                print(f"🇫🇷 PATTERN MATCH FRANCÉS: '{pattern}' en '{query_lower[:50]}...'")
+        # RETORNO INMEDIATO solo para consultas 100% francesas
+        for direct_query in ultra_specific_french_queries:
+            if direct_query in query_lower:
+                print(f"   🔥 ULTRA-SPECIFIC FRENCH MATCH: '{direct_query}' -> FORCING FRENCH")
                 return 'fr'
         
-        # Palabras indicadoras de inglés - ESPECÍFICAS Y EXPANDIDAS
-        english_words = [
-            'how', 'what', 'when', 'where', 'why', 'the', 'and', 'student', 'card', 'insurance', 
-            'work', 'does', 'get', 'my', 'renew', 'lost', 'damaged', 'emergency',
-            'requirements', 'apply', 'information', 'coverage', 'application', 'categories',
-            'support', 'programs', 'there', 'can', 'should', 'will', 'would', 'could',
-            'mental', 'health', 'supports', 'exist', 'person', 'care', 'crisis', 'feel',
-            'unwell', 'campus', 'tried', 'schedule', 'find', 'available', 'appointments',
-            'many', 'sessions', 'year', 'virtual', 'psychologist', 'provide', 'medical',
-            'leave', 'know', 'classmate', 'going', 'through', 'difficult', 'time',
-            'help', 'disabilities', 'started', 'ambassadors', 'course', 'advance',
-            'next', 'module', 'finished', 'additional', 'responsibility', 'after',
-            'completing', 'if', 'is', 'any', 'do', 'have'
-        ]
+        # ================================================================
+        # PASO 2: IDENTIFICADORES ESPAÑOLES FUERTES (PRIORIDAD MÁXIMA)
+        # ================================================================
+        strong_spanish_indicators = {
+            # Signos de puntuación españoles
+            '¿': 50,    # Pregunta española - INDICADOR MÁS FUERTE
+            '¡': 40,    # Exclamación española
+            
+            # Interrogativos españoles específicos
+            'qué': 25,      # Con acento español
+            'cómo': 25,     # Con acento español
+            'cuándo': 25,   # Con acento español
+            'dónde': 25,    # Con acento español
+            'cuáles': 25,   # Con acento español
+            'cuántos': 25,  # Con acento español
+            'cuántas': 25,  # Con acento español
+            
+            # Verbos españoles comunes
+            'puedo': 20,    # Primera persona singular
+            'debo': 20,     # Primera persona singular
+            'tengo': 20,    # Primera persona singular
+            'necesito': 20, # Primera persona singular
+            'quiero': 20,   # Primera persona singular
+            'sé': 15,       # Sé con acento
+            'está': 15,     # Está con acento
+            'estás': 15,    # Estás con acento
+            
+            # Contexto institucional español
+            'duoc uc': 30,      # Nombre institución
+            'en duoc': 30,      # En la institución
+            'estudiante': 25,   # Sin s final (vs étudiants)
+            'psicólogo': 25,    # Término académico español
+            'atención': 20,     # Servicio español
+            'sesiones': 20,     # Plural español
+            'apoyo': 20,        # Servicio español
+            'curso': 15,        # Educativo español
+            'embajadores': 20,  # Programa específico
+            
+            # Artículos y conectores españoles
+            ' de la ': 15, ' del ': 15, ' con el ': 15,
+            ' al ': 10, ' para ': 10, ' por ': 10,
+        }
         
-        # Palabras indicadoras de francés - EXPANDIDAS Y PRIORIZADAS
-        french_words = [
-            # Interrogativos franceses (PESO ALTO)
-            'comment', 'quest', 'quand', 'quelles', 'pourquoi', 'combien', 'que', 'puis',
-            # Específicos franceses únicos  
-            'dois', 'faire', 'sais', 'camarade', 'traverse', 'mauvais', 'moment', 'veut', 'demander',
-            'étudiant', 'étudiants', 'carte', 'assurance', 'fonctionne', 'obtenir', 
-            'renouveler', 'perdue', 'endommagée', 'programme', 'urgence', 'conditions', 
-            'postuler', 'information', 'puis-je', 'soutien', 'sens', 'mal', 'campus',
-            # Términos de salud mental en francés
-            'psychologue', 'santé', 'mentale', 'bien-être', 'soins', 'psychologiques',
-            'sessions', 'thérapie', 'conseil', 'crise', 'aide', 'arrêt', 'maladie',
-            'handicapés', 'ambassadeurs', 'existe-t-il', 'présentiel', 'créneaux', 
-            'disponibles', 'responsabilité', 'supplémentaire', 'terminé', 'cours', 
-            'avancer', 'module', 'suivant', 'commencé', 'peux', 'passer',
-            # Conectores franceses únicos
-            'mais', 'avec', 'pour', 'dans', 'sur', 'après', 'avoir', 'être',
-            'fournir', 'savoir', 'réalisé', 'ai-je', 'une', 'des', 'les', 'le', 'la',
-            'essayé', 'prendre', 'rendez', 'vous', 'trouve', 'pas', 'ne',
-            # Palabras francesas con acentos que confirman idioma
-            'élève', 'étudiante', 'créneaux', 'ça', 'où', 'déjà',
-            # Nuevos indicadores críticos franceses
-            'peut-il', 'virtuel', 'fournir', 'arrêt', 'maladie', 'soutien', 'handicapés',
-            'ambassadeurs', 'responsabilité', 'supplémentaire', 'réalisé', 'terminé'
-        ]
+        # ================================================================
+        # PASO 3: IDENTIFICADORES FRANCESES ESPECÍFICOS
+        # ================================================================
+        specific_french_indicators = {
+            # Interrogativos franceses únicos
+            'comment': 20,  # Cómo en francés
+            'quelles': 20,  # Plural femenino francés
+            'quand': 15,    # Cuándo en francés
+            'puis-je': 30,  # Construcción única francesa
+            
+            # Verbos franceses específicos
+            'fonctionne': 25, # Funciona en francés
+            'renouveler': 25, # Renovar en francés
+            'obtenir': 20,    # Obtener en francés
+            'postuler': 20,   # Postular en francés
+            
+            # Sustantivos franceses únicos
+            'assurance': 20,     # Seguro en francés
+            'programme': 15,     # Sin acento (vs programa)
+            'urgence': 15,       # Urgencia en francés
+            'informations': 15,  # Plural francés
+            'soutien': 20,       # Apoyo en francés
+            'étudiants': 25,     # Con acento francés y plural
+            
+            # Construcciones francesas específicas
+            'd\'urgence': 30,    # Ultra-específico francés
+            'l\'assurance': 30,  # Ultra-específico francés
+            'aux étudiants': 30, # A los estudiantes francés
+            
+            # Artículos y conectores franceses
+            'pour': 8,  # Para en francés (BAJO - puede confundirse)
+            'sur': 8,   # Sobre en francés (BAJO)
+            'des': 10,  # De los/las en francés
+            'sont': 15, # Son/están en francés
+        }
         
-        # Palabras únicas del español que no aparecen en francés - MÁS ESPECÍFICAS
-        spanish_words = [
-            # Palabras exclusivamente españolas
-            'psicológico', 'psicólogo', 'psicóloga', 'médica', 'cómo', 'qué', 'cuándo', 'dónde',
-            'cuántas', 'máximo', 'número', 'año', 'sesiones', 'atención', 'cuántas',
-            'agendar', 'hora', 'reservar', 'solicitar', 'programar', 'necesito',
-            'apoyo', 'compañero', 'estudiante', 'discapacidad', 'puedo', 'tengo',
-            'emergencia', 'línea', 'teléfono', 'disponible', 'asistencia', 'debo',
-            'universitario', 'académico', 'solicitud', 'trámite', 'documentos', 'requisitos',
-            # Específicamente españolas que no son francesas
-            'quisiera', 'necesitaría', 'podría', 'debería', 'estaría', 'haría'
-        ]
+        # ================================================================
+        # PASO 4: IDENTIFICADORES INGLESES
+        # ================================================================
+        english_indicators = {
+            'how': 15, 'what': 15, 'when': 15, 'where': 12, 'why': 12,
+            'student': 15, 'insurance': 15, 'emergency': 15, 'support': 12,
+            'programs': 12, 'information': 12, 'categories': 12,
+            'apply': 12, 'obtain': 12, 'renew': 15, 'can': 8, 'should': 8,
+        }
         
-        # Contar coincidencias con peso MEJORADO
-        english_score = sum(2 if word in query_lower else 0 for word in english_words if word in query_lower)  # Peso 2 para inglés específico
-        french_score = sum(3 if word in query_lower else 0 for word in french_words if word in query_lower)    # Peso 3 para francés
-        spanish_score = sum(2 if word in query_lower else 0 for word in spanish_words if word in query_lower)   # Peso 2 para español específico
+        # ================================================================
+        # PASO 5: CÁLCULO DE SCORES CORREGIDO
+        # ================================================================
+        spanish_score = 0
+        french_score = 0
+        english_score = 0
         
-        # BONUS ESPECIAL para construcciones francesas típicas
-        french_constructions = ['t-il', '-je', '-vous', 'd\'ambassadeurs', 'puis-je', 'dois-je', 'ai-je']
-        for construction in french_constructions:
-            if construction in query_lower:
-                french_score += 5  # Bonus alto para construcciones únicas francesas
-                print(f"   🎯 French construction detected: '{construction}' +5 points")
+        # Calcular puntuación española
+        for indicator, weight in strong_spanish_indicators.items():
+            if indicator in query_lower:
+                spanish_score += weight
+                print(f"   🇪🇸 SPANISH KEYWORD: '{indicator}' +{weight} points")
         
-        # BONUS para acentos franceses (solo si no es claramente español)
-        accent_bonus = 0
-        french_accents = ['à', 'é', 'è', 'ê', 'ç', 'ô', 'ù', 'û', 'î', 'ï', 'ë', 'ü']
-        for char in french_accents:
-            if char in query_lower:
-                accent_bonus += 2
+        # Calcular puntuación francesa
+        for indicator, weight in specific_french_indicators.items():
+            if indicator in query_lower:
+                french_score += weight
+                print(f"   🇫🇷 FRENCH KEYWORD: '{indicator}' +{weight} points")
         
-        # Aplicar bonus de acentos con lógica mejorada
-        if accent_bonus > 0:
-            if spanish_score <= 2:  # Si no hay fuerte indicación española
+        # Calcular puntuación inglesa
+        for indicator, weight in english_indicators.items():
+            if indicator in query_lower:
+                english_score += weight
+                print(f"   🇺🇸 ENGLISH KEYWORD: '{indicator}' +{weight} points")
+        
+        # ================================================================
+        # PASO 6: MANEJO ESPECIAL DE ACENTOS (PROBLEMA PRINCIPAL)
+        # ================================================================
+        # Los acentos españoles NO deben dar puntos al francés
+        spanish_accents = ['ó', 'á', 'í', 'ú', 'ñ']  # Acentos típicamente españoles
+        french_accents = ['è', 'ê', 'à', 'ù', 'ç', 'ô', 'î', 'ï', 'ë', 'ü']  # Acentos típicamente franceses
+        
+        # Solo contar acentos franceses si NO hay indicadores españoles fuertes
+        if spanish_score < 20:  # Solo si no hay indicadores españoles claros
+            french_accent_count = sum(1 for char in french_accents if char in query_lower)
+            if french_accent_count > 0:
+                accent_bonus = french_accent_count * 5  # REDUCIDO de 8 a 5
                 french_score += accent_bonus
-            elif french_score >= 3:  # Si ya hay indicadores franceses, aplicar parcialmente
-                french_score += accent_bonus // 2
+                print(f"   ✨ FRENCH ACCENTS: {french_accent_count} accents +{accent_bonus} points")
         
-        # Logging detallado para debugging
+        # Bonus por acentos españoles
+        spanish_accent_count = sum(1 for char in spanish_accents if char in query_lower)
+        if spanish_accent_count > 0:
+            spanish_accent_bonus = spanish_accent_count * 10
+            spanish_score += spanish_accent_bonus
+            print(f"   🇪🇸 SPANISH ACCENTS: {spanish_accent_count} accents +{spanish_accent_bonus} points")
+        
+        # ================================================================
+        # PASO 7: PENALIZACIONES POR CONFUSIÓN
+        # ================================================================
+        # Si detectamos "é" en contexto español, penalizar francés
+        if 'é' in query_lower and any(esp_word in query_lower for esp_word in ['qué', 'psicólog', 'médi']):
+            french_penalty = 15
+            french_score -= french_penalty
+            print(f"   ⛔ FRENCH PENALTY FOR SPANISH CONTEXT: -{french_penalty} points")
+        
+        # Si detectamos "est" en contexto español (como "existe"), penalizar francés
+        if 'est' in query_lower and any(esp_word in query_lower for esp_word in ['exist', 'cuest', 'contest']):
+            french_penalty = 10
+            french_score -= french_penalty
+            print(f"   ⛔ FRENCH 'EST' PENALTY IN SPANISH CONTEXT: -{french_penalty} points")
+        
+        # Si detectamos "les" en contexto español (como "disponibles"), penalizar francés
+        if 'les' in query_lower and any(esp_word in query_lower for esp_word in ['disponib', 'posib', 'terrib']):
+            french_penalty = 8
+            french_score -= french_penalty
+            print(f"   ⛔ FRENCH 'LES' PENALTY IN SPANISH CONTEXT: -{french_penalty} points")
+        
+        # ================================================================
+        # PASO 8: LOGGING Y DECISIÓN FINAL
+        # ================================================================
         print(f"🔍 Language detection: ES={spanish_score}, EN={english_score}, FR={french_score} para '{query_lower[:50]}...'")
-        if accent_bonus > 0:
-            print(f"   ✨ Bonus acentos franceses: +{accent_bonus}")
         
-        # Determinación de idioma - LÓGICA MEJORADA CON PRIORIDAD FRANCESA
-        if french_score >= 6:  # ALTA CONFIANZA FRANCÉS (aumentado por mejor scoring)
-            print(f"   🇫🇷 DETECTED: FRENCH (score: {french_score})")
-            return 'fr'
-        elif english_score >= 6 and english_score > french_score and spanish_score <= 3:
-            print(f"   🇺🇸 DETECTED: ENGLISH (score: {english_score})")
-            return 'en'
-        elif spanish_score >= 4 and spanish_score > french_score:
-            print(f"   🇪🇸 DETECTED: SPANISH (score: {spanish_score})")
+        # REGLAS DE DECISIÓN CORREGIDAS
+        
+        # 1. Si hay indicadores españoles fuertes (¿, qué, puedo, etc.)
+        if spanish_score >= 20:
+            print(f"   🇪🇸 DETECTED: SPANISH (STRONG INDICATORS: {spanish_score})")
             return 'es'
-        elif french_score >= 3:  # CONFIANZA MEDIA FRANCÉS
-            print(f"   🇫🇷 DETECTED: FRENCH (score: {french_score})")
+        
+        # 2. Si hay indicadores franceses MUY específicos sin confusión española
+        if french_score >= 35 and spanish_score < 10:
+            print(f"   🇫🇷 DETECTED: FRENCH (VERY SPECIFIC: {french_score} vs ES:{spanish_score})")
             return 'fr'
-        elif english_score >= 4 and english_score > spanish_score:
-            print(f"   🇺🇸 DETECTED: ENGLISH (score: {english_score})")
-            return 'en'
-        elif spanish_score >= 2:
-            print(f"   🇪🇸 DETECTED: SPANISH (score: {spanish_score})")
+        
+        # 3. Si español domina claramente
+        if spanish_score > french_score and spanish_score > english_score:
+            print(f"   🇪🇸 DETECTED: SPANISH (DOMINANT: {spanish_score} vs FR:{french_score} EN:{english_score})")
             return 'es'
+        
+        # 4. Si inglés domina claramente
+        if english_score >= 15 and english_score > spanish_score and english_score > french_score:
+            print(f"   🇺🇸 DETECTED: ENGLISH (DOMINANT: {english_score} vs ES:{spanish_score} FR:{french_score})")
+            return 'en'
+        
+        # 5. Si francés tiene puntaje moderado SIN confusión
+        if french_score >= 20 and spanish_score < 5 and english_score < french_score:
+            print(f"   🇫🇷 DETECTED: FRENCH (MODERATE CLEAN: {french_score} vs ES:{spanish_score} EN:{english_score})")
+            return 'fr'
+        
+        # 6. Fallback: Priorizar español por defecto
+        if spanish_score > 0:
+            print(f"   🇪🇸 DETECTED: SPANISH (FALLBACK: {spanish_score})")
+            return 'es'
+        elif english_score > 0:
+            print(f"   🇺🇸 DETECTED: ENGLISH (FALLBACK: {english_score})")
+            return 'en'
         else:
-            print(f"   🇪🇸 DETECTED: SPANISH (default)")
-            return 'es'  # Por defecto español
+            print(f"   🇪🇸 DETECTED: SPANISH (DEFAULT)")
+            return 'es'
     
     def generate_template_response(self, processing_info: Dict) -> Dict:
         """GENERAR RESPUESTA DESDE TEMPLATE CON QR CODES CORREGIDO CON SOPORTE MULTIIDIOMA"""
@@ -618,6 +725,23 @@ class RAGEngine:
                 else:
                     print(f"❌ Template multiidioma NO encontrado: {template_id} en {template_category} ({detected_language})")
                     logger.warning(f"❌ Template multiidioma '{template_id}' NO encontrado en '{template_category}' idioma '{detected_language}'")
+                    
+                    # BÚSQUEDA AGRESIVA: Si no se encuentra en el área detectada, buscar en TODAS las áreas
+                    print(f"🔍 BÚSQUEDA AGRESIVA: Buscando template '{template_id}' en todas las áreas...")
+                    all_areas = ['asuntos_estudiantiles', 'bienestar_estudiantil', 'desarrollo_laboral', 'deportes', 'pastoral']
+                    
+                    for search_area in all_areas:
+                        if search_area != detected_area:  # No buscar en el área ya probada
+                            try:
+                                aggressive_template = template_manager.get_template(search_area, template_id, detected_language)
+                                if aggressive_template:
+                                    template_response = aggressive_template
+                                    template_category = search_area
+                                    print(f"✅ Template encontrado en búsqueda agresiva: {template_id} en {search_area} ({detected_language})")
+                                    logger.info(f"✅ Template agresivo '{template_id}' encontrado en '{search_area}' idioma '{detected_language}'")
+                                    break
+                            except Exception as search_error:
+                                continue  # Continuar búsqueda en otras áreas
                 
             except Exception as tm_error:
                 logger.warning(f"Error en template_manager: {tm_error}")

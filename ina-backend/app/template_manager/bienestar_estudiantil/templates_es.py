@@ -175,4 +175,313 @@ TEMPLATES_ES = {
 🔗 **Curso:** https://embajadores.duoc.cl
 💡 *Formación para fortalecer el apoyo mutuo en la comunidad Duoc UC*
 """,
+
+    "apoyo_crisis": """
+🚨 **Crisis o Malestar en el Campus - Apoyo Inmediato:**
+**Si estás pasando por una crisis o te sientes mal mientras estás en el campus:**
+
+🆘 **ACCIONES INMEDIATAS:**
+• **Sala primeros auxilios:** Primer piso, junto a caja
+• **Teléfono interno:** +56 2 2999 3005
+• **Seguridad:** Contacta seguridad del campus inmediatamente
+
+📞 **LÍNEAS DE EMERGENCIA 24/7:**
+• **Línea OPS:** +56 2 2820 3450 (Emergencias psicológicas)
+• **Emergencias médicas:** 131 (SAMU)
+• **Emergencias generales:** 133 (Bomberos)
+
+🏥 **APOYO PROFESIONAL:**
+• Atención psicológica virtual disponible
+• Agenda en: https://eventos.duoc.cl
+• 8 sesiones gratuitas anuales
+
+💙 **No estás solo/a - La ayuda siempre está disponible**
+""",
+
+    "programa_emergencia": """
+🆘 **Programa de Emergencia Duoc UC:**
+**Ayuda financiera inmediata** para situaciones imprevistas que afectan tu estabilidad económica.
+
+💰 **Monto máximo:** $200.000
+
+✅ **Requisitos:**
+• Estudiante regular con carga académica
+• Registro Social de Hogares (vigencia 6 meses)
+• Cuenta RUT activa
+• No tener suspensión/renuncia activa
+
+📋 **Categorías de postulación:**
+• Urgencias médicas
+• Pérdidas laborales familiares
+• Catástrofes naturales
+• Situaciones familiares críticas
+
+📅 **Postulaciones 2025:**
+• **1er semestre:** 28 abril - 31 julio
+• **2do semestre:** 1 septiembre - 22 diciembre
+
+📞 **Cómo postular:**
+• En línea: https://beneficios.duoc.cl
+• Información: https://centroayuda.duoc.cl
+• Formularios: https://certificados.duoc.cl
+• Ayuda personalizada en Punto Estudiante
+
+⏰ **Plazos:** Respetar estrictamente fechas de apertura
+
+💡 *Ayuda para superar dificultades económicas temporales*
+""",
+
+    "talleres_bienestar": """
+🎯 **Talleres de Bienestar Estudiantil:**
+**Desarrolla habilidades** para tu crecimiento personal y académico.
+✅ **Talleres Disponibles:**
+• **Manejo de Ansiedad:** Herramientas prácticas para estrés académico
+• **Técnicas de Estudio:** Métodos efectivos y organización
+• **Inteligencia Emocional:** Gestión emociones y relaciones
+• **Mindfulness:** Atención plena y relajación
+📅 **Inscripción:** https://eventos.duoc.cl
+🔗 **Centro Virtual de Aprendizaje:** https://cva.duoc.cl
+💡 *Invierte en tu desarrollo personal - ¡es gratuito!*
+""",
+
+    "programas_apoyo_estudiante": """
+🎓 **Programas de Apoyo al Estudiante:**
+
+**Servicios disponibles:**
+• Apoyo académico y tutorías
+• Orientación psicológica
+• Programas de bienestar estudiantil
+• Becas y financiamiento
+• Apoyo en situaciones de emergencia
+
+📋 **Áreas de apoyo:**
+• Rendimiento académico
+• Bienestar emocional
+• Integración social
+• Desarrollo personal
+• Orientación vocacional
+
+📞 **Contacto:**
+- Portal estudiantes: https://www.duoc.cl/alumnos/
+- Centro de ayuda: https://centroayuda.duoc.cl
+
+💡 *Estamos aquí para apoyarte en tu experiencia universitaria*
+""",
+
+    # TEMPLATES FALTANTES DETECTADOS EN EL LOG
+
+    "prevencion_suicidio": """
+🆘 **Prevención del Suicidio - Apoyo Inmediato Disponible:**
+**Si estás atravesando una crisis o tienes pensamientos suicidas**, hay ayuda profesional disponible.
+
+📞 **Contacto Inmediato:**
+• **Línea OPS 24/7:** +56 2 2820 3450
+• **Emergencias médicas:** 133
+• **Salud Responde:** 600 360 7777
+
+🏥 **Apoyo en Sede:**
+• **Primeros auxilios:** Primer piso, junto a caja
+• **Teléfono interno:** +56 2 2999 3005
+
+✅ **Servicios Disponibles:**
+• Intervención psicológica inmediata
+• Seguimiento profesional gratuito
+• Apoyo familiar cuando sea necesario
+• Protocolos de protección
+
+💙 *Tu vida tiene valor - buscar ayuda es un acto de valentía*
+""",
+
+    "apoyo_duelo": """
+💙 **Apoyo en Duelo - Acompañamiento Profesional:**
+**Atravesar un duelo es un proceso difícil** que requiere apoyo y tiempo.
+
+✅ **Apoyo Disponible:**
+• **Sesiones psicológicas gratuitas** especializadas en duelo
+• **8 sesiones anuales** con profesionales experimentados
+• **Talleres grupales** para procesamiento del duelo
+• **Recursos bibliográficos** y guías
+
+📅 **Agendar Apoyo:** https://eventos.duoc.cl
+📞 **Urgencias Emocionales:** +56 2 2820 3450
+👩‍💼 **Coordinadora:** Adriana Vásquez - avasquezm@duoc.cl
+
+🕯️ **Proceso Respetado:**
+• Cada duelo es único y personal
+• Sin presión de tiempos
+• Confidencialidad completa garantizada
+
+💜 *Te acompañamos en este proceso con respeto y profesionalismo*
+""",
+
+    "recursos_autoayuda": """
+📚 **Recursos de Autoayuda - Herramientas para tu Bienestar:**
+
+🔗 **Centro Virtual de Aprendizaje (CVA):**
+• **Acceso:** https://cva.duoc.cl
+• Guías de manejo de estrés y ansiedad
+• Técnicas de relajación y mindfulness
+• Estrategias de estudio y organización
+
+📱 **Aplicaciones Recomendadas:**
+• Meditación y atención plena
+• Seguimiento de estado de ánimo y emociones
+• Organización y planificación académica
+
+📖 **Material Bibliográfico:**
+• Libros de desarrollo personal disponibles
+• Guías prácticas de bienestar estudiantil
+• Artículos científicos accesibles
+
+✅ **Talleres de Autogestión:**
+• **Inscripción:** https://eventos.duoc.cl
+• Sesiones prácticas e interactivas
+• Herramientas aplicables de inmediato
+
+💡 *Desarrolla tu autonomía emocional con recursos profesionales*
+""",
+
+    "grupo_apoyo": """
+👥 **Grupos de Apoyo - Comunidad de Bienestar:**
+
+🤝 **Grupos Disponibles:**
+• **Manejo de Ansiedad Académica**
+• **Adaptación Universitaria**
+• **Desarrollo Personal**
+• **Habilidades Sociales**
+
+✅ **Beneficios:**
+• Compartir experiencias similares
+• Aprendizaje mutuo
+• Apoyo emocional de pares
+• Estrategias prácticas colectivas
+
+📅 **Inscripción Grupos:**
+• **Plataforma:** https://eventos.duoc.cl
+• Sesiones semanales
+• Modalidad presencial y virtual
+
+👩‍💼 **Facilitación Profesional:**
+• Psicólogos especializados
+• Ambiente seguro y confidencial
+• Técnicas terapéuticas grupales
+
+💙 *No estás solo/a - la fuerza del grupo potencia el crecimiento personal*
+""",
+
+    "manejo_estres": """
+😌 **Manejo del Estrés - Técnicas Prácticas:**
+
+🧘‍♀️ **Técnicas Inmediatas:**
+• **Respiración Profunda:** 4-7-8 (inhalar-retener-exhalar)
+• **Relajación Muscular Progresiva**
+• **Mindfulness de 5 minutos**
+• **Ejercicio físico corto**
+
+📚 **Talleres Disponibles:**
+• **Inscripción:** https://eventos.duoc.cl
+• Técnicas anti-estrés académico
+• Organización y planificación
+• Manejo eficiente del tiempo
+
+💻 **Recursos en Línea:**
+• **CVA:** https://cva.duoc.cl
+• Guías prácticas descargables
+• Videos de técnicas de relajación
+• Audios de meditación guiada
+
+✅ **Apoyo Profesional:**
+• Sesiones individuales disponibles
+• Talleres grupales especializados
+• Seguimiento personalizado según necesidad
+
+🌟 *Maneja el estrés de forma saludable y potencia tu rendimiento académico*
+""",
+
+    "terapia_individual": """
+🧠 **Terapia Individual - Apoyo Personalizado:**
+
+✅ **Modalidad Disponible:**
+• **8 sesiones gratuitas** anuales
+• **Atención virtual** exclusiva
+• **Confidencialidad absoluta** garantizada
+• **Profesionales especializados** en salud mental estudiantil
+
+📅 **Agendar Terapia:**
+• **Plataforma:** https://eventos.duoc.cl
+• Usa correo institucional @duocuc.cl
+• Horarios flexibles (fines de semana y festivos)
+
+👩‍💼 **Contacto Directo:**
+• **Coordinadora:** Adriana Vásquez
+• **Email:** avasquezm@duoc.cl
+
+🎯 **Enfoque Terapéutico:**
+• Ansiedad y estrés académico
+• Adaptación universitaria
+• Desarrollo personal
+• Gestión emocional
+
+💡 *Espacio profesional y seguro para trabajar en tu crecimiento personal*
+""",
+
+    "capacitacion_primeros_auxilios": """
+🚑 **Capacitación en Primeros Auxilios Psicológicos:**
+
+🎓 **Curso "Embajadores en Salud Mental":**
+• **Acceso:** https://embajadores.duoc.cl
+• Formación en apoyo emocional básico
+• Identificación de situaciones de riesgo
+• Técnicas de escucha activa
+
+✅ **Contenido Capacitación:**
+• Reconocimiento de señales de alerta
+• Cómo ofrecer apoyo inicial
+• Cuándo y cómo derivar a profesionales
+• Autocuidado para quien ayuda
+
+🏥 **Primeros Auxilios Sede:**
+• **Ubicación:** Primer piso, junto a caja
+• **Contacto:** +56 2 2999 3005
+• Personal entrenado en manejo de crisis
+
+📞 **Urgencias Psicológicas:**
+• **Línea OPS 24/7:** +56 2 2820 3450
+• Intervención profesional inmediata
+
+💙 *Capacítate para ser un apoyo efectivo en tu comunidad*
+""",
+
+    "seguimiento_casos": """
+📋 **Seguimiento de Casos - Acompañamiento Continuo:**
+
+✅ **Modalidades de Seguimiento:**
+• **Sesiones programadas regulares**
+• **Seguimiento post-crisis** profesional
+• **Monitoreo bienestar** académico
+• **Coordinación con equipo multidisciplinario**
+
+👩‍💼 **Equipo Profesional:**
+• **Coordinadora:** Adriana Vásquez - avasquezm@duoc.cl
+• Psicólogos especializados
+• Personal de apoyo académico
+
+📅 **Programación Seguimiento:**
+• **Plataforma:** https://eventos.duoc.cl
+• Sesiones según necesidad individual
+• Flexibilidad horaria
+
+🎯 **Objetivos Seguimiento:**
+• Evolución positiva del bienestar
+• Estabilidad académica
+• Desarrollo de herramientas personales
+• Prevención de nuevas crisis
+
+🔄 **Evaluación Continua:**
+• Progresos regulares documentados
+• Ajustes según evolución
+• Comunicación con apoyos académicos
+
+💡 *Acompañamiento profesional sostenido hasta tu estabilidad completa*
+""",
 }

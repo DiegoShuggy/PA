@@ -104,6 +104,19 @@ Pour les étudiants qui entrent pour la première fois ou qui n'ont jamais eu de
 💡 *Nécessaire pour les procédures comme TNE, prestations étudiantes, etc.*
 """,
 
+    "tne_seguimiento": """
+📊 **Suivi du Statut TNE:**
+**Consulter le statut de votre TNE:**
+1. **Site officiel:** https://www.tne.cl
+2. **Portail étudiant:** https://portal.duoc.cl
+📋 **Ce que vous pouvez consulter:**
+• Statut de la demande
+• Statut de livraison
+• Processus de revalidation
+• Validation de carte
+⚡ **Délai de traitement:** 15-20 jours ouvrables
+""",
+
     "seguro_estudiantil": """
 🛡️ **Assurance Étudiante Duoc UC:**
 **Couverture complète:** 365 jours/an, 24h/24, dans et hors campus

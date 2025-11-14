@@ -143,4 +143,19 @@ Contact and resources:
 
 If you need more specific information (for example, steps to use insurance, coverage abroad or how to file a claim), let me know and I'll provide the details or indicate the appropriate contact.
 """,
+
+    "tne_seguimiento": """
+📊 **TNE Status Tracking:**
+**Check your TNE status:**
+1. **Official website:** https://www.tne.cl
+2. **Student portal:** https://portal.duoc.cl
+
+📋 **What you can check:**
+• Application status
+• Delivery status
+• Renewal process
+• Card validation
+
+⚡ **Processing time:** 15-20 business days
+""",
 }

@@ -423,21 +423,21 @@ class QuestionClassifier:
                 r'existe.*t.*il.*des.*soins', r'des.*soins.*psychologiques.*en.*présentiel',
                 r'soins.*psychologiques.*en.*présentiel', r'psychologue.*présentiel'
             ],
-            "agendar_psicologico": [
+            # NUEVO TEMPLATE PARA APOYO A COMPAÑEROS
+            # NUEVO TEMPLATE PARA APOYO DISCAPACIDAD
+            "apoyo_discapacidad": [
                 # ESPAÑOL
-                r'agendar.*atención.*psicológica', r'reservar.*hora.*psicólogo',
-                r'programar.*sesión.*psicológica', r'cómo.*agendar.*psicólogo',
-                r'no.*encuentro.*horas.*disponibles', r'horas.*psicólogo',
+                r'apoyo.*estudiantes.*discapacidad', r'paedis', r'estudiantes.*situación.*handicap',
+                r'programa.*acompañamiento.*estudiantes.*discapacidad',
                 # INGLÉS
-                r'schedule.*psychological.*care', r'book.*appointment.*psychologist',
-                r'make.*appointment.*psychological', r'tried.*to.*schedule.*psychological',
-                r'can\'t.*find.*available.*appointments', r'no.*available.*appointments',
-                # FRANCÉS - EXPANDIDO
-                r"j'ai.*essayé.*de.*prendre.*rendez.*vous", r'prendre.*rendez.*vous.*soins.*psychologiques',
-                r'programmer.*séance.*psychologique', r'réserver.*rendez.*vous.*psychologue',
-                r'pas.*créneaux.*disponibles', r'ne.*trouve.*pas.*de.*créneaux',
-                r'créneaux.*disponibles', r'rendez.*vous.*pour.*des.*soins',
-                r'je.*ne.*trouve.*pas.*de.*créneaux', r'mais.*je.*ne.*trouve.*pas'
+                r'support.*students.*disability', r'disabled.*students.*support',
+                # FRANCÉS
+                r'existe.*t.*il.*un.*soutien.*pour.*les.*étudiants.*handicapés',
+                r'soutien.*pour.*les.*étudiants.*handicapés',
+                r'soutien.*pour.*étudiants.*handicapés',
+                r'existe.*t.*il.*un.*soutien.*pour.*les.*étudiants',
+                r'un.*soutien.*pour.*les.*étudiants.*handicapés',
+                r'aide.*pour.*étudiants.*handicapés'
             ],
             "sesiones_psicologicas": [
                 # ESPAÑOL
@@ -455,6 +455,7 @@ class QuestionClassifier:
                 r'nombre.*sessions.*psychologiques', r'combien.*sessions.*psychologiques.*puis.*je',
                 r'sessions.*psychologiques.*puis.*je.*avoir'
             ],
+
             "licencias_medicas_psicologicas": [
                 # ESPAÑOL
                 r'psicólogo.*virtual.*licencia.*médica', r'psicólogo.*puede.*otorgar.*licencia',
@@ -468,36 +469,8 @@ class QuestionClassifier:
                 r'psychologue.*virtuel.*arrêt.*maladie', r'psychologue.*peut.*fournir.*arrêt',
                 r'arrêt.*maladie.*psychologue', r'certificat.*médical.*psychologique'
             ],
-            "apoyo_companeros": [
-                # ESPAÑOL
-                r'compañero.*está.*pasando.*mal.*momento', r'ayudar.*compañero.*no.*quiere',
-                r'qué.*hacer.*si.*compañero', r'apoyo.*compañeros',
-                r'ayuda.*entre.*estudiantes', r'estudiante.*mal.*momento',
-                # INGLÉS
-                r'classmate.*going.*through.*difficult.*time', r'what.*can.*i.*do.*if.*classmate',
-                r'classmate.*doesn\'t.*want.*ask.*for.*help', r'help.*classmate.*difficult',
-                r'peer.*support', r'fellow.*student.*hard.*time',
-                # FRANCÉS - EXPANDIDO
-                r'que.*puis.*je.*faire.*si.*camarade', r'camarade.*traverse.*mauvais.*moment',
-                r'que.*faire.*si.*camarade', r'un.*camarade.*traverse.*un.*mauvais',
-                r'camarade.*ne.*veut.*pas.*demander.*aide', r'soutien.*entre.*étudiants',
-                r'entraide.*étudiante', r'mais.*ne.*veut.*pas.*demander'
-            ],
-            "apoyo_discapacidad": [
-                # ESPAÑOL
-                r'apoyo.*estudiantes.*discapacidad', r'existe.*apoyo.*discapacidad',
-                r'programa.*discapacidad', r'paedis', r'inclusión.*estudiantil',
-                r'estudiantes.*necesidades.*especiales', r'adaptaciones.*académicas',
-                # INGLÉS
-                r'support.*students.*disabilities', r'support.*for.*students.*with.*disabilities',
-                r'disability.*support.*program', r'special.*needs.*students',
-                r'academic.*accommodations.*disabilities', r'inclusive.*education',
-                # FRANCÉS - EXPANDIDO
-                r'existe.*t.*il.*soutien.*étudiants.*handicapés', r'soutien.*étudiants.*handicapés',
-                r'soutien.*pour.*les.*étudiants.*handicapés', r'programme.*handicap',
-                r'étudiants.*besoins.*spéciaux', r'adaptations.*académiques',
-                r'inclusion.*étudiante', r'un.*soutien.*pour.*les.*étudiants'
-            ],
+
+
             "curso_embajadores_avance": [
                 # ESPAÑOL
                 r'curso.*embajadores.*no.*puedo.*avanzar', r'embajadores.*siguiente.*módulo',
@@ -507,8 +480,9 @@ class QuestionClassifier:
                 r'ambassadors.*course.*can\'t.*advance', r'started.*ambassadors.*course.*can\'t',
                 r'ambassadors.*next.*module', r'blocked.*ambassadors.*course',
                 r'can\'t.*progress.*ambassadors',
-                # FRANCÉS - EXPANDIDO
-                r"j'ai.*commencé.*cours.*ambassadeurs", r'cours.*ambassadeurs.*ne.*peux.*pas',
+                # FRANCÉS - MEJORADO ESPECÍFICO
+                r"j'ai.*commencé.*le.*cours.*d?'?ambassadeurs.*mais.*je.*ne.*peux.*pas",
+                r'cours.*d?\'?ambassadeurs.*ne.*peux.*pas.*passer',
                 r'ambassadeurs.*module.*suivant', r'ne.*peux.*pas.*passer.*au.*module',
                 r'bloqué.*cours.*ambassadeurs', r"n'avance.*pas.*ambassadeurs",
                 r"cours.*d'ambassadeurs.*mais.*je.*ne", r'commencé.*le.*cours.*ambassadeurs',
@@ -522,8 +496,9 @@ class QuestionClassifier:
                 # INGLÉS
                 r'how.*know.*if.*finished.*ambassadors.*course', r'completed.*ambassadors.*course',
                 r'finished.*ambassadors.*course', r'how.*tell.*ambassadors.*done',
-                # FRANCÉS - EXPANDIDO
-                r'comment.*savoir.*si.*terminé.*cours.*ambassadeurs', r'comment.*savoir.*terminé.*cours',
+                # FRANCÉS - MEJORADO ESPECÍFICO
+                r'comment.*savoir.*si.*j?\'?ai.*terminé.*le.*cours.*d?\'?ambassadeurs',
+                r'comment.*savoir.*terminé.*cours.*ambassadeurs', r'comment.*savoir.*terminé.*cours',
                 r'fini.*cours.*ambassadeurs', r'terminé.*cours.*ambassadeurs',
                 r'comment.*savoir.*ambassadeurs.*fini', r"si.*j'ai.*terminé.*le.*cours",
                 r"j'ai.*terminé.*le.*cours.*ambassadeurs", r'savoir.*si.*terminé.*ambassadeurs',
@@ -538,8 +513,9 @@ class QuestionClassifier:
                 r'additional.*responsibility.*ambassadors.*course', r'ambassadors.*mental.*health',
                 r'responsibility.*after.*completing.*ambassadors', r'duties.*ambassadors',
                 r'what.*does.*being.*ambassador.*involve',
-                # FRANCÉS - EXPANDIDO
-                r"ai.*je.*une.*responsabilité.*supplémentaire", r'responsabilité.*supplémentaire.*ambassadeurs',
+                # FRANCÉS - MEJORADO PARA CAPTURAR CONSULTAS ESPECÍFICAS
+                r"ai.*je.*une.*responsabilité.*supplémentaire.*après.*avoir.*réalisé",
+                r'responsabilité.*supplémentaire.*après.*avoir.*réalisé.*cours',
                 r'ambassadeurs.*santé.*mentale', r'après.*avoir.*réalisé.*cours.*ambassadeurs',
                 r'responsabilité.*après.*ambassadeurs', r'devoirs.*ambassadeurs',
                 r'une.*responsabilité.*supplémentaire.*après', r'responsabilité.*supplémentaire.*après.*avoir',
@@ -676,51 +652,29 @@ class QuestionClassifier:
             ],
             
             # BIENESTAR ESTUDIANTIL - EXPANDIDO
-            "curso_embajadores_avance": [
-                # ESPAÑOL - EXPANDIDO
-                r'comencé.*curso.*embajadores.*no.*puedo.*avanzar',
-                r'no.*puedo.*avanzar.*siguiente.*módulo.*embajadores',
-                r'curso.*embajadores.*no.*avanzo', r'módulo.*embajadores.*bloqueado',
-                r'85%.*embajadores', r'avanzar.*curso.*embajadores',
-                r'embajadores.*siguiente.*módulo', r'no.*puedo.*pasar.*embajadores',
-                r'bloqueado.*embajadores', r'no.*avanza.*embajadores',
-                # INGLÉS - EXPANDIDO
-                r'started.*ambassadors.*course.*can\'t.*advance',
-                r'can\'t.*advance.*next.*module.*ambassadors',
-                r'ambassadors.*course.*not.*progressing', r'ambassadors.*module.*blocked',
-                r'85%.*ambassadors', r'advance.*ambassadors.*course',
-                r'ambassadors.*next.*module', r'can\'t.*pass.*ambassadors',
-                r'blocked.*ambassadors', r'not.*advancing.*ambassadors'
-            ],
-            "curso_embajadores_finalizacion": [
-                # ESPAÑOL - EXPANDIDO
-                r'cómo.*sé.*si.*terminé.*curso.*embajadores',
-                r'cómo.*saber.*si.*terminé.*embajadores',
-                r'finalizar.*curso.*embajadores', r'soy.*embajador.*confirmación',
-                r'mensaje.*eres.*embajador', r'completé.*curso.*embajadores',
-                r'cómo.*sé.*que.*terminé', r'confirmación.*finalización.*embajadores',
-                r'certificación.*embajadores', r'terminé.*embajadores.*qué.*sigue',
-                # INGLÉS - EXPANDIDO
-                r'how.*do.*i.*know.*if.*i.*finished.*ambassadors.*course',
-                r'how.*know.*if.*finished.*ambassadors',
-                r'finish.*ambassadors.*course', r'am.*i.*ambassador.*confirmation',
-                r'message.*you.*are.*ambassador', r'completed.*ambassadors.*course',
-                r'how.*do.*i.*know.*i.*finished', r'confirmation.*finishing.*ambassadors',
-                r'ambassadors.*certification', r'finished.*ambassadors.*what.*next'
-            ],
+
             "curso_embajadores_salud_mental": [
-                # ESPAÑOL - EXPANDIDO
+                # ESPAÑOL - CONSOLIDADO
+                r'responsabilidad.*adicional.*curso.*embajadores', r'embajadores.*en.*salud.*mental',
+                r'compromiso.*embajadores', r'tareas.*embajadores',
+                r'responsabilidades.*embajadores', r'qué.*implica.*ser.*embajador',
                 r'tengo.*alguna.*responsabilidad.*adicional.*embajadores',
-                r'responsabilidad.*embajadores', r'compromiso.*embajadores',
-                r'tareas.*embajadores', r'obligaciones.*embajadores',
-                r'curso.*embajadores.*responsabilidad', r'embajadores.*tareas.*posteriores',
-                r'compromisos.*embajadores', r'qué.*debo.*hacer.*después.*embajadores',
-                # INGLÉS - EXPANDIDO
+                r'obligaciones.*embajadores', r'curso.*embajadores.*responsabilidad',
+                # INGLÉS - CONSOLIDADO
+                r'additional.*responsibility.*ambassadors.*course', r'ambassadors.*mental.*health',
+                r'responsibility.*after.*completing.*ambassadors', r'duties.*ambassadors',
+                r'what.*does.*being.*ambassador.*involve',
                 r'do.*i.*have.*any.*additional.*responsibility.*ambassadors',
-                r'responsibility.*ambassadors', r'commitment.*ambassadors',
                 r'ambassadors.*tasks', r'ambassadors.*obligations',
-                r'ambassadors.*course.*responsibility', r'ambassadors.*future.*tasks',
-                r'ambassadors.*commitments', r'what.*should.*i.*do.*after.*ambassadors'
+                # FRANCÉS - CONSOLIDADO MEJORADO
+                r"ai.*je.*une.*responsabilité.*supplémentaire.*après.*avoir.*réalisé",
+                r'responsabilité.*supplémentaire.*après.*avoir.*réalisé.*cours',
+                r'ambassadeurs.*santé.*mentale', r'après.*avoir.*réalisé.*cours.*ambassadeurs',
+                r'responsabilité.*après.*ambassadeurs', r'devoirs.*ambassadeurs',
+                r'une.*responsabilité.*supplémentaire.*après', r'responsabilité.*supplémentaire.*après.*avoir',
+                r'après.*avoir.*réalisé.*le.*cours', r'réalisé.*le.*cours.*ambassadeurs',
+                r'ai.*je.*une.*responsabilité.*supplémentaire.*ambassadeurs',
+                r'responsabilité.*ambassadeurs', r'engagement.*ambassadeurs'
             ],
             "sesiones_psicologicas": [
                 # ESPAÑOL - EXPANDIDO
@@ -730,34 +684,67 @@ class QuestionClassifier:
                 # INGLÉS - EXPANDIDO
                 r'how.*many.*sessions', r'psychological.*sessions', r'maximum.*sessions',
                 r'8.*sessions', r'sessions.*included', r'sessions.*limit',
-                r'how.*many.*times.*psychologist', r'number.*sessions'
+                r'how.*many.*times.*psychologist', r'number.*sessions',
+                # FRANCÉS - EXPANDIDO
+                r'combien.*de.*sessions', r'sessions.*psychologiques', r'maximum.*de.*sessions',
+                r'8.*sessions', r'sessions.*comprises', r'limite.*sessions',
+                r'combien.*fois.*psychologue', r'nombre.*sessions',
+                r'sessions.*incluses', r'limite.*de.*sessions.*psychologiques'
             ],
-            # MEJORAR DETECCIÓN DE APOYO A COMPAÑEROS
+            # TEMPLATES PARA DETECTAR CONSULTAS FRANCESAS FALTANTES
+            "apoyo_discapacidad": [
+                # FRANCÉS - PATRONES PARA APOYO A ESTUDIANTES CON DISCAPACIDAD
+                r'existe.*t.*il.*un.*soutien.*pour.*les.*étudiants.*handicapés',
+                r'soutien.*pour.*étudiants.*handicapés',
+                r'aide.*pour.*étudiants.*en.*situation.*de.*handicap',
+                r'accompagnement.*étudiants.*handicapés',
+                r'services.*pour.*personnes.*handicapées',
+                r'programme.*paedis.*français',
+                r'soutien.*spécialisé.*handicap'
+            ],
             "apoyo_companeros": [
                 # ESPAÑOL - EXPANDIDO
                 r'qué.*puedo.*hacer.*si.*sé.*que.*compañero.*pasando.*mal.*momento',
                 r'compañero.*mal.*momento.*no.*quiere.*ayuda',
+                r'amigo.*mal.*no.*quiere.*pedir.*ayuda',
+                r'compañero.*problema.*rechaza.*ayuda',
+                r'cómo.*ayudar.*compañero.*deprimido',
                 r'ayudar.*compañero.*problemas.*emocionales',
-                r'amigo.*no.*quiere.*pedir.*ayuda', r'qué.*hacer.*compañero.*triste',
-                r'compañero.*deprimido.*qué.*hacer', r'persona.*mal.*momento.*ayudar',
-                r'cómo.*apoyar.*compañero.*problemas', r'ayudar.*amigo.*emocional',
-                # INGLÉS - EXPANDIDO
-                r'what.*can.*i.*do.*if.*i.*know.*classmate.*going.*through.*difficult',
-                r'classmate.*difficult.*time.*doesn\'t.*want.*help',
+                r'qué.*hacer.*compañero.*triste',
+                # INGLÉS - EXPANDIDO  
+                r'what.*can.*i.*do.*if.*i.*know.*classmate.*going.*through.*bad.*time',
+                r'what.*can.*i.*do.*if.*i.*know.*classmate.*going.*through.*difficult.*time',
+                r'friend.*bad.*time.*doesn.*t.*want.*help',
+                r'classmate.*struggling.*refuses.*help',
+                r'how.*help.*friend.*who.*won.*t.*ask.*for.*help',
                 r'help.*classmate.*emotional.*problems',
                 r'friend.*doesn\'t.*want.*ask.*for.*help', r'what.*to.*do.*classmate.*sad',
                 r'classmate.*depressed.*what.*do', r'person.*difficult.*time.*help',
-                r'how.*support.*classmate.*problems', r'help.*friend.*emotional'
+                r'how.*support.*classmate.*problems', r'help.*friend.*emotional',
+                # FRANCÉS - EXPANDIDO (INTEGRADO)
+                r'que.*puis.*je.*faire.*si.*je.*sais.*qu.*un.*camarade.*traverse.*(mauvais|difficile).*moment',
+                r'camarade.*(mauvais|difficile).*moment.*ne.*veut.*pas.*(aide|demander)',
+                r'aider.*camarade.*problèmes.*émotionnels',
+                r'ami.*ne.*veut.*pas.*demander.*aide', r'que.*faire.*camarade.*triste',
+                r'camarade.*déprimé.*que.*faire', r'personne.*(moment|difficile).*aider',
+                r'comment.*soutenir.*camarade.*problèmes', r'aider.*ami.*émotionnel'
             ],
             "agendar_psicologico": [
                 # ESPAÑOL - EXPANDIDO
                 r'cómo.*agendar.*psicológico', r'agendar.*atención', r'pedir.*hora.*psicológico',
                 r'conseguir.*sesión', r'eventos\.duoc\.cl', r'solicitar.*psicólogo',
                 r'cómo.*saco.*hora.*psicólogo', r'reservar.*sesión', r'agendar.*psicologo',
+                r'intenté.*agendar', r'no.*encuentro.*horas', r'no.*hay.*horas.*disponibles',
                 # INGLÉS - EXPANDIDO
                 r'how.*schedule.*psychological', r'schedule.*appointment', r'request.*psychological.*appointment',
                 r'get.*session', r'eventos\.duoc\.cl', r'request.*psychologist',
-                r'how.*get.*psychologist.*appointment', r'book.*session', r'schedule.*psychologist'
+                r'how.*get.*psychologist.*appointment', r'book.*session', r'schedule.*psychologist',
+                r'tried.*to.*schedule', r'can\'t.*find.*available.*appointments', r'no.*available.*appointments',
+                # FRANCÉS - EXPANDIDO (NUEVO)
+                r'comment.*prendre.*rendez.*vous.*psychologique', r'prendre.*rendez.*vous',
+                r'j\'ai.*essayé.*de.*prendre.*rendez.*vous', r'je.*ne.*trouve.*pas.*de.*créneaux',
+                r'créneaux.*disponibles', r'programmer.*séance', r'réserver.*session',
+                r'comment.*obtenir.*rendez.*vous', r'soins.*psychologiques.*rendez.*vous'
             ],
             "agendar_atencion_psicologica": [
                 r'agendar.*atención.*psicológica', r'cómo.*pedir.*hora', r'proceso.*agendar',
@@ -767,11 +754,20 @@ class QuestionClassifier:
                 # ESPAÑOL - EXPANDIDO
                 r'discapacidad', r'paedis', r'elizabeth.*domínguez', r'estudiantes.*discapacidad',
                 r'inclusión', r'edominguezs', r'coordinadora.*inclusión', r'accesibilidad',
-                r'necesidades.*especiales', r'apoyo.*discapacidad',
+                r'necesidades.*especiales', r'apoyo.*discapacidad', r'apoyo.*estudiantes.*discapacidad',
+                r'existe.*apoyo.*discapacidad', r'programa.*discapacidad', r'inclusión.*estudiantil',
+                r'adaptaciones.*académicas',
                 # INGLÉS - EXPANDIDO
                 r'disability', r'paedis', r'elizabeth.*domínguez', r'students.*disabilities',
                 r'inclusion', r'edominguezs', r'inclusion.*coordinator', r'accessibility',
-                r'special.*needs', r'disability.*support'
+                r'special.*needs', r'disability.*support', r'support.*students.*disabilities',
+                r'support.*for.*students.*with.*disabilities', r'disability.*support.*program',
+                r'special.*needs.*students', r'academic.*accommodations.*disabilities', r'inclusive.*education',
+                # FRANCÉS - EXPANDIDO  
+                r'existe.*t.*il.*soutien.*étudiants.*handicapés', r'soutien.*étudiants.*handicapés',
+                r'soutien.*pour.*les.*étudiants.*handicapés', r'programme.*handicap',
+                r'étudiants.*besoins.*spéciaux', r'adaptations.*académiques',
+                r'inclusion.*étudiante', r'un.*soutien.*pour.*les.*étudiants'
             ],
             "linea_ops_emergencia": [
                 # ESPAÑOL
@@ -782,24 +778,6 @@ class QuestionClassifier:
                 r'ops.*line', r'psychological.*emergency', r'psychological.*crisis',
                 r'emotional.*emergency', r'2820.*3450', r'ops.*duoc',
                 r'immediate.*attention', r'mental.*health.*crisis'
-            ],
-            "atencion_presencial_psicologica": [
-                # ESPAÑOL - EXPANDIDO
-                r'atención.*presencial', r'psicólogo.*presencial', r'consultorio',
-                r'sesión.*presencial', r'cara.*a.*cara', r'presencial.*psicólogo',
-                # INGLÉS - EXPANDIDO
-                r'in-person.*care', r'psychologist.*in-person', r'counseling.*office',
-                r'face.*to.*face.*session', r'face.*to.*face', r'in-person.*psychologist'
-            ],
-            "curso_embajadores_salud_mental": [
-                # ESPAÑOL - OTRA SECCIÓN
-                r'curso.*embajadores', r'embajadores.*salud.*mental', r'herramientas.*apoyo',
-                r'apoyar.*compañeros', r'comunidad.*empática', r'embajadores\.duoc\.cl',
-                r'85%.*correctas', r'módulo.*embajadores',
-                # INGLÉS - OTRA SECCIÓN
-                r'ambassadors.*course', r'ambassadors.*mental.*health', r'support.*tools',
-                r'support.*classmates', r'empathetic.*community', r'embajadores\.duoc\.cl',
-                r'85%.*correct', r'ambassadors.*module'
             ],
             "talleres_bienestar": [
                 r'talleres.*bienestar', r'taller.*bienestar', r'actividades.*bienestar',
