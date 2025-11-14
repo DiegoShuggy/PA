@@ -818,8 +818,20 @@ class QuestionClassifier:
                 r'necesito.*información.*talleres.*deportes',
                 r'info.*sobre.*deportes', r'qué.*hay.*de.*deportes',
                 r'qué.*actividades.*deportivas', r'oferta.*deportiva',
-                r'actividades.*deportivas.*disponibles'
-                
+                r'actividades.*deportivas.*disponibles',
+                # ENGLISH PATTERNS
+                r'what.*sports.*workshops.*do.*you.*have', r'what.*sports.*workshops',
+                r'sports.*workshops.*available', r'what.*sports.*activities',
+                r'available.*sports.*workshops', r'sports.*programs.*available',
+                r'what.*sports.*do.*you.*offer', r'list.*of.*sports.*workshops',
+                r'sports.*activities.*offered', r'what.*sports.*are.*available',
+                r'what.*sports.*workshops.*do.*you.*have\?', r'what.*workshops.*do.*you.*have',
+                # FRENCH PATTERNS
+                r'quels.*ateliers.*sportifs.*avez.*vous', r'quels.*ateliers.*sportifs',
+                r'ateliers.*sportifs.*disponibles', r'quelles.*activités.*sportives',
+                r'activités.*sportives.*disponibles', r'sports.*disponibles',
+                r'que.*proposez.*vous.*comme.*sports', r'liste.*ateliers.*sportifs',
+                r'quels.*ateliers.*sportifs.*avez.*vous\?', r'quels.*ateliers.*avez.*vous'
             ],
             "horarios_talleres_2025": [
                 r'horarios.*talleres', r'horario.*deportes', r'cuándo.*son.*talleres',
@@ -827,14 +839,33 @@ class QuestionClassifier:
             ],
             "ausencias_talleres": [
                 r'qué.*pasa.*si.*falto', r'inasistencias.*taller', r'faltar.*taller',
-                r'consecuencias.*falta', r'reglamento.*asistencia', r'no.*puedo.*ir.*taller'
+                r'consecuencias.*falta', r'reglamento.*asistencia', r'no.*puedo.*ir.*taller',
+                # ENGLISH PATTERNS
+                r'what.*happens.*if.*i.*miss.*one.*or.*more.*workshops',
+                r'what.*happens.*if.*i.*miss.*workshops', r'miss.*workshops',
+                r'absence.*from.*workshops', r'missing.*sports.*workshops',
+                r'what.*if.*i.*miss.*sessions', r'consequences.*missing.*workshops',
+                r'attendance.*policy.*workshops', r'skip.*workshops',
+                # FRENCH PATTERNS
+                r'que.*se.*passe.*t.*il.*si.*je.*manque.*un.*ou.*plusieurs.*ateliers',
+                r'que.*se.*passe.*si.*je.*manque.*ateliers', r'manquer.*ateliers',
+                r'absence.*ateliers', r'si.*je.*manque.*sessions',
+                r'conséquences.*manquer.*ateliers', r'politique.*présence'
             ],
             "horarios_talleres": [
                 r'horario.*taller', r'horario.*deporte', r'cuándo.*taller',
                 r'horario.*entrenamientos', r'cuándo.*entrenan',
                 r'día.*entrenamiento', r'qué.*horarios', r'calendarización.*deportes',
                 r'programación.*talleres', r'cuándo.*son.*los.*talleres',
-                r'qué.*días.*deporte', r'horas.*de.*práctica'
+                r'qué.*días.*deporte', r'horas.*de.*práctica',
+                # ENGLISH PATTERNS
+                r'2025.*workshop.*schedule', r'workshop.*schedule', r'sports.*schedule',
+                r'training.*schedule', r'when.*are.*workshops', r'workshop.*times',
+                r'sports.*workshop.*hours', r'class.*schedule.*sports',
+                # FRENCH PATTERNS
+                r'horaires.*des.*ateliers.*2025', r'horaires.*ateliers', r'horaire.*sport',
+                r'quand.*sont.*les.*ateliers', r'programme.*ateliers',
+                r'heures.*des.*ateliers', r'calendrier.*sportif'
             ],
             "gimnasio_caf": [
                 r'gimnasio', r'caf', r'centro.*bienestar', r'acondicionamiento.*físico',
@@ -842,7 +873,12 @@ class QuestionClassifier:
                 r'horario.*gimnasio', r'cómo.*entrenar', r'centro.*deportivo',
                 r'tomar.*taller.*deporte', r'cómo.*me.*inscribo.*deporte',
                 r'cómo.*inscribo.*optativos', r'inscripción.*deportivos',
-                r'proceso.*inscripción.*deportes'
+                r'proceso.*inscripción.*deportes',
+                # ENGLISH PATTERNS
+                r'how.*can.*i.*enroll.*in.*the.*gym', r'how.*can.*i.*enroll.*in.*gym',
+                r'caf.*gym', r'gym.*enrollment', r'how.*to.*register.*gym',
+                r'physical.*conditioning.*center', r'gym.*registration.*process',
+                r'enroll.*caf', r'gym.*caf', r'fitness.*center.*registration'
             ],
             "gimnasio_caf_inscripcion": [
                 r'cómo.*inscribirme.*gimnasio', r'gimnasio.*caf', 
@@ -851,32 +887,85 @@ class QuestionClassifier:
             "inscripcion_optativos_deportivos": [
                 r'inscribir.*deportivo', r'optativo.*deporte', r'tomar.*taller',
                 r'inscripción.*deportes', r'solicitud.*en.*línea', r'vivo.*duoc',
-                r'cómo.*me.*inscribo', r'proceso.*inscripción'
+                r'cómo.*me.*inscribo', r'proceso.*inscripción',
+                # ENGLISH PATTERNS
+                r'how.*do.*i.*enroll.*in.*sports.*electives', r'sports.*electives.*registration',
+                r'how.*to.*register.*sports.*workshops', r'enroll.*sports.*electives',
+                r'sports.*electives.*enrollment', r'register.*for.*sports.*workshops',
+                r'how.*to.*sign.*up.*sports', r'sports.*registration.*process',
+                # FRENCH PATTERNS
+                r'comment.*inscrire.*les.*options.*sportives', r'inscription.*options.*sportives',
+                r'comment.*s.*inscrire.*ateliers.*sportifs', r'inscrire.*ateliers',
+                r'processus.*inscription.*sport', r'inscription.*activités.*sportives'
             ],
             "selecciones_deportivas": [
                 r'selección.*deportiva', r'equipo.*deportivo', r'futsal', r'rugby',
                 r'representar.*duoc', r'competir.*duoc', r'deporte.*competitivo',
                 r'selecciones.*deportivas', r'equipos.*representativos',
                 r'deporte.*competitivo', r'representar.*duoc', r'probar.*selección',
-                r'reclutamiento', r'probar.*selección'
+                r'reclutamiento', r'probar.*selección',
+                # ENGLISH PATTERNS
+                r'sports.*teams', r'sports.*team', r'competitive.*sports',
+                r'represent.*duoc', r'sports.*selection', r'team.*tryouts',
+                r'sports.*competitions', r'varsity.*sports', r'athletic.*teams',
+                # FRENCH PATTERNS
+                r'équipes.*sportives', r'équipe.*sportive', r'sports.*compétitifs',
+                r'représenter.*duoc', r'sélection.*sportive', r'essais.*équipe',
+                r'compétitions.*sportives', r'équipes.*représentatives'
             ],
             "desinscripcion_optativos": [
                 r'cómo.*puedo.*des.*inscribirme', r'retirarme.*taller',
-                r'cancelar.*inscripción', r'dejar.*taller', r'abandonar.*optativo'
+                r'cancelar.*inscripción', r'dejar.*taller', r'abandonar.*optativo',
+                # ENGLISH PATTERNS
+                r'how.*can.*i.*unenroll', r'how.*to.*withdraw.*from.*workshop',
+                r'cancel.*sports.*registration', r'withdraw.*sports.*elective',
+                r'how.*to.*drop.*sports.*workshop', r'unenroll.*from.*sports',
+                r'leave.*sports.*workshop', r'cancel.*sports.*enrollment',
+                # FRENCH PATTERNS
+                r'comment.*puis.*je.*me.*désinscrire', r'me.*désinscrire.*atelier',
+                r'annuler.*inscription.*sportive', r'arrêter.*atelier',
+                r'quitter.*option.*sportive', r'désinscription.*sport'
             ],
             "optativos_deportivos_nota": [
                 r'tienen.*nota.*los.*optativos.*deportivos', r'optativos.*deportivos.*tienen.*nota',
                 r'nota.*optativos.*deportivos', r'calificación.*optativos.*deportivos',
-                r'evalúan.*optativos.*deportivos', r'tienen.*calificación.*optativos'
+                r'evalúan.*optativos.*deportivos', r'tienen.*calificación.*optativos',
+                # ENGLISH PATTERNS
+                r'do.*workshops.*have.*grades', r'do.*sports.*electives.*have.*grades',
+                r'sports.*workshops.*graded', r'are.*sports.*workshops.*graded',
+                r'grades.*in.*sports.*workshops', r'sports.*electives.*grades',
+                r'evaluation.*sports.*workshops', r'grading.*system.*sports',
+                # FRENCH PATTERNS
+                r'les.*ateliers.*ont.*ils.*des.*notes', r'les.*options.*sportives.*ont.*elles.*des.*notes',
+                r'notes.*pour.*ateliers.*sportifs', r'évaluation.*ateliers',
+                r'système.*notation.*sport', r'ateliers.*sportifs.*notés'
             ],
             "gimnasio_caf_horarios": [
                 r'horario.*gimnasio', r'cuándo.*abre.*caf', r'puedo.*ir.*cualquier.*horario',
-                r'disponibilidad.*gimnasio', r'horarios.*caf'
+                r'disponibilidad.*gimnasio', r'horarios.*caf',
+                # ENGLISH PATTERNS
+                r'can.*i.*go.*at.*any.*time', r'gym.*schedule', r'caf.*hours',
+                r'gym.*opening.*hours', r'when.*is.*gym.*open', r'gym.*availability',
+                r'can.*i.*use.*gym.*anytime', r'gym.*operating.*hours',
+                r'free.*time.*gym', r'gym.*hours.*schedule',
+                # FRENCH PATTERNS
+                r'puis.*je.*y.*aller.*à.*n.*importe.*quel.*horaire', r'horaires.*gymnase',
+                r'heures.*d.*ouverture.*caf', r'quand.*gymnase.*ouvert',
+                r'disponibilité.*gymnase', r'horaire.*centre.*sportif'
             ],
             "becas_deportivas": [
                 r'beca.*deportiva', r'postular.*beca.*deporte', r'beneficio.*deportivo',
                 r'apoyo.*deportivo', r'financiamiento.*deporte', r'requisitos.*beca.*deporte',
-                r'beneficio.*deportivo', r'apoyo.*económico.*deporte'
+                r'beneficio.*deportivo', r'apoyo.*económico.*deporte',
+                # ENGLISH PATTERNS
+                r'sports.*scholarships', r'sports.*scholarship', r'athletic.*scholarships',
+                r'sports.*financial.*aid', r'scholarship.*for.*athletes',
+                r'sports.*funding', r'athletic.*financial.*support',
+                # FRENCH PATTERNS
+                r'bourses.*sportives', r'bourse.*sportive', r'aide.*financière.*sport',
+                r'soutien.*financier.*athlètes', r'financement.*sport',
+                r'bourse.*pour.*athlètes', r'aide.*économique.*sport',
+                r'\bbourses\b.*\bsportives\b', r'bourses.*sportives\b'
             ],
             "torneos_internos": [
                 r'torneos.*internos', r'competencia.*interna', r'torneo.*deportivo',
@@ -896,7 +985,16 @@ class QuestionClassifier:
             "ubicaciones_deportivas": [
                 r'dónde.*están.*talleres', r'ubicación.*deportes', r'en.*qué.*lugar',
                 r'lugar.*taller', r'dónde.*se.*hacen', r'complejo.*maiclub',
-                r'gimnasio.*entretiempo', r'piscina.*acquatiempo', r'en.*qué.*lugar.*ubicados'
+                r'gimnasio.*entretiempo', r'piscina.*acquatiempo', r'en.*qué.*lugar.*ubicados',
+                # ENGLISH PATTERNS
+                r'where.*are.*you.*located', r'where.*are.*sports.*facilities',
+                r'location.*of.*sports.*workshops', r'where.*are.*workshops.*held',
+                r'sports.*facilities.*location', r'where.*do.*workshops.*take.*place',
+                r'gym.*location', r'sports.*complex.*location',
+                # FRENCH PATTERNS
+                r'où.*êtes.*vous.*situés', r'où.*se.*trouvent.*installations.*sportives',
+                r'localisation.*ateliers', r'où.*ont.*lieu.*ateliers',
+                r'emplacement.*gymnase', r'où.*sont.*installations'
             ],
             "talleres_tienen_asistencia": [
                 r'tienen.*asistencia', r'asistencia.*taller', r'control.*asistencia',
@@ -906,6 +1004,19 @@ class QuestionClassifier:
                 r'cómo.*puedo.*des.*inscribirme', r'retirarme.*taller',
                 r'cancelar.*inscripción', r'dejar.*taller', r'abandonar.*optativo',
                 r'cómo.*me.*doy.*de.*baja'
+            ],
+            "gimnasio_caf_libre": [
+                r'si.*tengo.*tiempo.*libre.*y.*no.*hay.*profesores.*puedo.*usar.*el.*gimnasio',
+                r'uso.*libre.*gimnasio', r'gimnasio.*sin.*profesor', r'entrenar.*solo',
+                r'acceso.*libre.*caf', r'gimnasio.*independiente',
+                # ENGLISH PATTERNS
+                r'if.*i.*have.*free.*time.*and.*there.*are.*no.*teachers.*can.*i.*use.*the.*gym',
+                r'gym.*without.*teachers', r'free.*access.*gym', r'independent.*gym.*use',
+                r'use.*gym.*without.*instructor', r'solo.*gym.*training',
+                # FRENCH PATTERNS
+                r'si.*j.*ai.*du.*temps.*libre.*et.*qu.*il.*n.*y.*a.*pas.*de.*professeurs.*puis.*je.*utiliser.*la.*salle.*de.*sport',
+                r'utilisation.*libre.*gymnase', r'gymnase.*sans.*professeur',
+                r'accès.*libre.*salle.*sport', r'entraînement.*indépendant'
             ],
             
             # DESARROLLO PROFESIONAL - EXPANDIDO
@@ -1116,7 +1227,37 @@ class QuestionClassifier:
             "talleres_deportivos": [
                 r'qu[ée].*deportes.*puedo.*practicar', r'qu[ée].*deportes.*hay',
                 r'qu[ée].*actividades.*deportivas', r'deportes.*disponibles',
-                r'oferta.*deportiva', r'talleres.*deportivos', r'actividades.*deportivas'
+                r'oferta.*deportiva', r'talleres.*deportivos', r'actividades.*deportivas',
+                # ENGLISH PATTERNS
+                r'what.*sports.*workshops.*do.*you.*have', r'what.*sports.*workshops',
+                r'what.*workshops.*do.*you.*have', r'what.*sports.*activities',
+                # FRENCH PATTERNS  
+                r'quels.*ateliers.*sportifs.*avez.*vous', r'quels.*ateliers.*sportifs',
+                r'quels.*ateliers.*avez.*vous'
+            ],
+            "becas_deportivas": [
+                r'beca.*deportiva', r'becas.*deportivas', r'beneficio.*deportivo',
+                # ENGLISH PATTERNS
+                r'sports.*scholarships', r'sports.*scholarship',
+                # FRENCH PATTERNS
+                r'bourses.*sportives', r'bourse.*sportive'
+            ],
+            "optativos_deportivos_nota": [
+                r'tienen.*nota.*los.*optativos.*deportivos', r'optativos.*deportivos.*tienen.*nota',
+                # ENGLISH PATTERNS
+                r'do.*workshops.*have.*grades', r'workshops.*have.*grades',
+                r'do.*sports.*electives.*have.*grades', r'sports.*electives.*have.*grades',
+                # FRENCH PATTERNS
+                r'les.*ateliers.*ont.*ils.*des.*notes', r'ateliers.*ont.*notes',
+                r'les.*options.*sportives.*ont.*elles.*des.*notes', r'options.*sportives.*ont.*notes'
+            ],
+            "ubicaciones_deportivas": [
+                r'd[óo]nde.*est[aá]n.*ubicados', r'ubicaci[óo]n.*deportes',
+                r'en.*qu[eé].*lugar.*est[aá]n.*ubicados', r'qu[eé].*lugar.*est[aá]n.*ubicados',
+                # ENGLISH PATTERNS
+                r'where.*are.*you.*located', r'sports.*location',
+                # FRENCH PATTERNS
+                r'o[ùu].*[eê]tes.*vous.*situ[eé]s', r'localisation.*sport'
             ],
             "mejorar_curriculum": [
                 r'c[óo]mo.*mejoro.*mi.*curriculum', r'c[óo]mo.*mejoro.*curr[íi]culum',

@@ -145,7 +145,27 @@ class TopicClassifier:
                 "profesores gimnasio", "si tengo horario disponible",
                 "en qué lugar están ubicados", "dónde están ubicados", "ubicación de los talleres",
                 "cómo puedo des inscribirme", "des inscribirme", "retirarme del taller",
-                "cancelar inscripción deportes", "darme de baja taller"
+                "cancelar inscripción deportes", "darme de baja taller",
+                # ENGLISH KEYWORDS FOR TOPIC DETECTION
+                "sports workshops", "sports electives", "sports activities", "sports programs",
+                "athletic workshops", "sports classes", "gym caf", "sports teams",
+                "sports scholarships", "sports training", "physical conditioning",
+                "sports enrollment", "sports registration", "sports facilities",
+                "sports schedule", "workshop grades", "sports grades", "athletic teams",
+                "sports location", "gym location", "where are you located", "workshops location",
+                "sports workshops have grades", "miss workshops", "unenroll sports",
+                "free time gym", "gym without teachers", "independent gym use",
+                # FRENCH KEYWORDS FOR TOPIC DETECTION
+                "ateliers sportifs", "options sportives", "activités sportives", "programmes sportifs",
+                "ateliers athlétiques", "cours sportifs", "gymnase caf", "équipes sportives",
+                "bourses sportives", "entraînement sportif", "conditionnement physique",
+                "inscription sportive", "inscription activités", "installations sportives",
+                "horaires sport", "notes ateliers", "notes sport", "équipes athlétiques",
+                "localisation sport", "où situés", "emplacement ateliers", "lieu ateliers",
+                "ateliers ont notes", "manquer ateliers", "désinscrire sport",
+                "temps libre gymnase", "gymnase sans professeurs", "utilisation indépendante gymnase",
+                "quels ateliers", "comment inscrire", "comment désinscrire", "où êtes-vous",
+                "salle de sport", "centre sportif", "activité physique", "équipe représentative"
             ],
             "pastoral": [
                 "pastoral", "voluntariado", "voluntario", "actividades solidarias", "retiros",
@@ -224,7 +244,13 @@ class TopicClassifier:
                 r"v[oó]leibol", r"nataci[oó]n", r"boxeo", r"powerlifting", r"selecci[oó]n.*deport",
                 r"beca.*deport", r"complejo.*maiclub", r"gimnasio.*entretiempo", r"piscina.*acquatiempo",
                 r"caf", r"actividad.*f[ií]sica", r"ejercicio", r"deporte.*recreativo", r"clase.*deporte",
-                r"pr[aá]ctica.*deporte", r"entrenamiento.*deportivo", r"equipo.*deportivo"
+                r"pr[aá]ctica.*deporte", r"entrenamiento.*deportivo", r"equipo.*deportivo",
+                # ENGLISH PATTERNS FOR TOPIC DETECTION
+                r"sports.*workshop", r"sports.*elective", r"sports.*activit", r"sports.*program",
+                r"athletic.*workshop", r"sports.*class", r"gym.*caf", r"sport.*team",
+                r"sports.*scholarship", r"sports.*training", r"physical.*conditioning",
+                r"sports.*enrollment", r"sports.*registration", r"sports.*facility",
+                r"sports.*schedule", r"workshop.*grade", r"sports.*grade", r"athletic.*team"
             ],
             "bienestar": [
                 r"psicol[oó]g", r"salud.mental", r"bienestar", r"crisis", r"angustia",
@@ -467,6 +493,9 @@ class TopicClassifier:
             # Sustantivos franceses únicos
             'assurance': 25,     # Seguro en francés
             'programme': 20,     # Sin acento (vs programa)
+            'bourses': 30,       # Becas en francés - ADDED
+            'bourse': 25,        # Beca singular en francés - ADDED
+            'sportives': 25,     # Deportivas en francés - ADDED
             'urgence': 20,       # Urgencia en francés
             'informations': 20,  # Plural francés
             'soutien': 25,       # Apoyo en francés
@@ -537,6 +566,16 @@ class TopicClassifier:
             'which': 25,
             'who': 25,
             
+            # Auxiliares ingleses (CRÍTICOS)
+            'do': 30,           # Crítico para diferencias inglés - AUMENTADO
+            'does': 25,
+            'did': 25,
+            'will': 25,
+            'would': 20,
+            'could': 20,
+            'should': 20,
+            'must': 20,
+            
             # Estructuras inglesas
             'is there': 30,
             'are there': 30,
@@ -581,7 +620,24 @@ class TopicClassifier:
             'apply': 12, 
             'obtain': 12, 
             'renew': 15, 
-            'can': 8
+            'can': 8,
+            # SPORTS-SPECIFIC ENGLISH WORDS
+            'workshops': 20,     # Talleres en inglés
+            'grades': 18,        # Notas en inglés  
+            'electives': 20,     # Optativos en inglés
+            'unenroll': 25,      # Des-inscribirse en inglés
+            'schedule': 18,      # Horario en inglés
+            'teams': 15,         # Equipos en inglés
+            'team': 15,          # Equipo en inglés
+            'scholarships': 20,  # Becas en inglés
+            'scholarship': 20,   # Beca en inglés
+            'miss': 15,          # Faltar en inglés
+            'gym': 15,           # Gimnasio en inglés
+            'enroll': 18,        # Inscribirse en inglés
+            'located': 15,       # Ubicado en inglés
+            'sports': 15,        # Deportes en inglés
+            'time': 10,          # Tiempo en inglés
+            'teachers': 12       # Profesores en inglés
         }
         
         # ================================================================

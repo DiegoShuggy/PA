@@ -133,4 +133,135 @@ TEMPLATES_EN = {
 🔗 **Apply:** https://beneficios.duoc.cl/deportes
 💡 *Combine studies and sports with institutional support*
 """,
+
+    "ausencias_talleres": """
+⚠️ **What happens if I miss workshops?**
+**Attendance policy and consequences.**
+✅ **Attendance Requirements:**
+• **Minimum attendance:** 85% required to pass
+• **Maximum absences:** 3 sessions per semester
+• **Justified absences:** Medical certificate required
+📋 **If you exceed absences:**
+• **Automatic withdrawal** from workshop
+• **No certification** or academic credit
+• **Can re-register** next semester
+✅ **Recovery options:**
+• Make-up sessions available if space permits
+• Coordinate with workshop instructor
+• Maximum 2 recoveries per semester
+📞 **Contact:** deportes_pnorte@duoc.cl
+🔗 **Full regulations:** https://deportes.duoc.cl/reglamento
+💡 *Consistency is key to your sports development*
+""",
+
+    "desinscripcion_optativos": """
+🚪 **How to Unenroll from Sports Electives**
+**Process to withdraw from workshops.**
+✅ **Unenrollment steps:**
+1. **Go to Vivo Duoc:** https://vivo.duoc.cl
+2. **Select "My Registrations"**
+3. **Find your sports workshop**
+4. **Click "Withdraw"**
+5. **Confirm withdrawal**
+⏰ **Important deadlines:**
+• **Before 3rd session:** 100% refund (if paid)
+• **After 3rd session:** No refund possible
+• **Emergency withdrawal:** Medical justification required
+📋 **After withdrawal:**
+• Lose access to facilities
+• Cannot return same semester
+• Can re-register next semester
+🔗 **Platform:** https://vivo.duoc.cl
+💡 *Consider carefully - spots are limited*
+""",
+
+    "optativos_deportivos_nota": """
+📊 **Do Sports Electives have grades?**
+**Evaluation system for sports workshops.**
+✅ **Evaluation system:**
+• **No numerical grade** (traditional)
+• **Pass/Fail system:** Based on 85% attendance
+• **Qualitative assessment:** Participation and progress
+• **Certification:** Approved/Not Approved
+📋 **Approval criteria:**
+• Attendance and punctuality (85%)
+• Active participation in sessions
+• Respect for safety rules
+• Improvement in sports skills
+✅ **Benefits of passing:**
+• Elective credits (depending on major)
+• Participation certificate
+• Priority in future registrations
+• Possible access to sports teams
+📞 **Contact:** deportes_pnorte@duoc.cl
+💡 *Focus is on your personal and physical development*
+""",
+
+    "gimnasio_caf_horarios": """
+⏰ **CAF Gym Schedule - Can I go at any time?**
+**Availability for free use and classes.**
+✅ **General schedule:**
+• **Monday to Friday:** 8:00-20:00
+• **Saturday:** 9:00-14:00
+• **Sunday/Holidays:** Closed
+🏋️ **Free access:**
+• During all open hours
+• No need to book in advance
+• Trainer supervision available
+📅 **Group classes:**
+• **Spinning:** Mon/Wed/Fri 18:00
+• **Yoga:** Tue/Thu 17:00
+• **Functional:** Daily 16:00
+✅ **Requirements:**
+• Valid registration in Vivo Duoc
+• Medical certificate up to date
+• Appropriate sports clothing
+🔗 **Register:** https://vivo.duoc.cl
+💡 *Yes, you can come during any open hours!*
+""",
+
+    "ubicaciones_deportivas": """
+📍 **Where are sports facilities located?**
+**Sports facilities locations - Plaza Norte Campus.**
+✅ **Main locations:**
+• **Maiclub Complex:** Soccer, Small-sided soccer, Volleyball, Basketball
+  - Address: Av. Principal 123, Huechuraba
+  - Hours: M-F 16:00-22:00 / Sat 9:00-14:00
+• **Entretiempo Gym:** Functional Training, Boxing, Powerlifting
+  - Address: Calle Secundaria 456, Conchalí
+  - Hours: M-F 17:00-21:00 / Sat 9:00-13:00
+• **Acquatiempo Pool:** Swimming
+  - Address: Av. Aquática 789, Huechuraba
+  - Hours: M-F 18:00-21:00
+• **CAF Gym:** Free training
+  - Location: Floor -1, Plaza Norte Campus
+  - Hours: M-F 8:00-20:00 / Sat 9:00-14:00
+📱 **Transportation:** Metro Line 2 + Bus connections
+🔗 **Interactive map:** https://deportes.duoc.cl/ubicaciones
+💡 *Check availability before attending*
+""",
+
+    "gimnasio_caf_libre": """
+🏋️ **Free gym access without teachers - Is it allowed?**
+**Policy for independent training.**
+✅ **Free access policy:**
+• **Always supervised:** Physical trainers present during hours
+• **Independent training:** Allowed with basic induction
+• **Safety first:** Trainers available for guidance
+📋 **Requirements for free use:**
+• Valid CAF registration
+• Complete initial assessment
+• Basic safety orientation
+• Follow gym rules and protocols
+⏰ **Supervised hours:**
+• **Monday to Friday:** 8:00-20:00
+• **Trainers available:** All operating hours
+• **Emergency support:** Always present
+🚫 **Not allowed:**
+• Use without registration
+• Access outside operating hours
+• Ignoring safety protocols
+🔗 **Register:** https://vivo.duoc.cl
+💡 *Trainers are there to help you train safely!*
+""",
 }

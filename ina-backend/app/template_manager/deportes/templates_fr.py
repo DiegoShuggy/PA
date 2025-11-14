@@ -133,4 +133,140 @@ TEMPLATES_FR = {
 🔗 **Postuler:** https://beneficios.duoc.cl/deportes
 💡 *Combinez études et sport avec soutien institutionnel*
 """,
+
+    "ausencias_talleres": """
+⚠️ **Que se passe-t-il si je manque des ateliers ?**
+**Politique d'absences dans les activités sportives.**
+✅ **Exigence de Présence:**
+• **Minimum:** 85% de présence (jusqu'à 3 absences par semestre)
+• **Maximum d'absences:** 3 sessions sur 20
+• Plus de 3 absences = exclusion de l'atelier
+📋 **Types d'Absences Justifiées:**
+• Maladie avec certificat médical
+• Motifs académiques (examens, présentations)
+• Situations familiales graves
+• Représentation institutionnelle
+✅ **Procédure pour Justifier:**
+1. **Informer l'entraîneur** avant l'absence
+2. **Présenter justification** dans les 48h
+3. **Envoyer email à:** deportes_pnorte@duoc.cl
+💡 **Recommandation:** Maintenir communication constante avec l'équipe d'entraîneurs
+🔗 **Règlement complet:** https://deportes.duoc.cl/reglamento
+⚠️ *La constance et l'engagement sont fondamentaux pour votre développement sportif*
+""",
+
+    "desinscripcion_optativos": """
+❌ **Comment me désinscrire d'un Atelier Sportif ?**
+**Processus de désinscription des options sportives.**
+✅ **Délais Autorisés:**
+• **3 premières semaines** du semestre uniquement
+• Après cette période: désinscription non autorisée
+• Exception: raisons médicales graves
+📋 **Méthodes de Désinscription:**
+1. **Via Vivo Duoc:** https://vivo.duoc.cl (recommandé)
+2. **Email à:** deportes_pnorte@duoc.cl
+3. **En personne:** Bureau des Sports, Campus Plaza Norte
+⚠️ **Important à Savoir:**
+• Aucun remboursement après désinscription
+• Place libérée pour liste d'attente
+• Affecte l'historique sportif étudiant
+✅ **Documentation Requise:**
+• Motif de désinscription
+• Numéro d'étudiant
+• Signature (si en personne)
+💡 *Réfléchissez bien avant de vous désinscrire - le sport améliore votre bien-être*
+""",
+
+    "optativos_deportivos_nota": """
+📊 **Les Ateliers Sportifs ont-ils des notes ?**
+**Système d'évaluation des options sportives.**
+✅ **Type d'Évaluation:**
+• **Notation:** P (Réussi) / R (Échoué) - Pas de note numérique
+• **Critères:** Présence (85%) + Participation active
+• **Certification:** Crédit académique électif
+📋 **Ce qui est Évalué:**
+• **Présence:** 85% minimum obligatoire
+• **Participation:** Engagement dans les activités
+• **Attitude:** Respect et travail d'équipe
+• **Progression:** Amélioration des compétences
+⚠️ **Pour Obtenir "P" (Réussi):**
+• Assister à 85% des sessions minimum
+• Participation active et positive
+• Respect du règlement de l'atelier
+🔗 **Consultation notes:** Mon Duoc > Académique > Notes
+💡 *L'objectif est de promouvoir la santé et le bien-être, pas la compétition académique*
+""",
+
+    "gimnasio_caf_horarios": """
+🕐 **Horaires du Gymnase CAF 2025**
+**Centre de Conditionnement Physique - Horaires d'attention.**
+✅ **Horaires Réguliers:**
+**Lundi à Vendredi:**
+• **Matin:** 8h00 - 12h00
+• **Après-midi:** 13h00 - 17h00
+• **Soir:** 17h30 - 20h00
+**Samedis:**
+• **Matin seulement:** 9h00 - 14h00
+**Dimanches:** FERMÉ
+📅 **Horaires Spéciaux:**
+• **Vacances d'hiver:** 10h00-16h00 (lun-ven)
+• **Vacances d'été:** 9h00-15h00 (lun-ven)
+• **Jours fériés:** Fermé
+✅ **Services par Horaire:**
+• **8h00-12h00:** Entraînement libre + évaluation
+• **13h00-17h00:** Cours de groupe + libre
+• **17h30-20h00:** Haute demande, toutes activités
+📍 **Localisation:** Étage -1, Campus Plaza Norte
+💡 *Arrivez tôt pour éviter les heures de pointe (18h00-19h00)*
+""",
+
+    "ubicaciones_deportivas": """
+📍 **Où sommes-nous situés ? - Installations Sportives**
+**Localisation des espaces sportifs Duoc UC Plaza Norte.**
+🏢 **Campus Principal:**
+**Adresse:** Av. Plaza Norte 501, Huechuraba, Santiago
+**Métro:** Plaza de Puente Alto (Ligne 4) + Transport en commun
+✅ **Installations par Étage:**
+**Étage -1:**
+• Gymnase CAF (Conditionnement Physique)
+• Vestiaires masculins et féminins
+• Bureau de coordination sportive
+**Étage 1:**
+• Terrains de tennis de table
+• Salle d'échecs multiusage
+**Extérieur:**
+• Terrain de football (Maiclub - externe)
+• Piscine (Acquatiempo - externe)
+🚌 **Comment Arriver:**
+• **Métro + Bus:** Ligne 4 + 506, 507, 515
+• **Voiture:** Parking gratuit pour étudiants
+📞 **Contact Installations:** deportes_pnorte@duoc.cl
+🔗 **Plan du campus:** https://duoc.cl/sedes/plaza-norte
+💡 *Toutes les installations disposent d'accès pour personnes à mobilité réduite*
+""",
+
+    "gimnasio_caf_libre": """
+🆓 **Puis-je utiliser le Gymnase CAF librement ?**
+**Politique d'utilisation libre des installations.**
+✅ **Utilisation Libre Autorisée:**
+• **Avec inscription** au Gymnase CAF via Vivo Duoc
+• **Horaires libres:** Quand il n'y a pas de cours
+• **Supervision:** Toujours avec entraîneur présent
+📋 **Exigences pour Accès Libre:**
+1. **Inscription active** Gymnase CAF
+2. **Certificat médical** valide
+3. **Carte d'accès** Duoc
+4. **Respecter** les règles d'utilisation
+⚠️ **Restrictions:**
+• Interdit pendant les cours de groupe
+• Capacité limitée (max 15 personnes)
+• Respect des horaires d'attention
+✅ **Inclus dans l'Accès Libre:**
+• Machines cardiovasculaires
+• Poids et haltères
+• Tapis de yoga/étirement
+• Orientation basique d'entraîneurs
+🔗 **Réservation créneaux:** https://vivo.duoc.cl
+💡 *L'accès libre vous permet de vous entraîner selon votre propre rythme et horaire*
+""",
 }
