@@ -7,12 +7,12 @@ Includes TNE, certificates, financial benefits, emergency program, etc.
 TEMPLATES_EN = {
     "tne_documentos_primera_vez": """
 📋 **Documents for first-time TNE:**
-• **Identity card** (original and copy)
-• **Regular student certificate** (current)
-• **ID photo** (recent, white background)
-• **Payment receipt** ($2,700)
-📍 **Location:** Student Point, main building
-⏰ **Hours:** Monday to Friday 8:30-19:00
+• **Identity card** (original and copy).
+• **Regular student certificate** (current).
+• **ID photo** (recent, white background).
+• **Payment receipt** ($2,700).
+📍 **Location:** Student Point, main building.
+⏰ **Hours:** Monday to Friday 8:30-19:00.
 📞 **Contact:** +56 2 2360 6400
 🔗 **TNE Tracking:** https://www.tne.cl
 🔗 **Duoc Portal:** https://portal.duoc.cl
@@ -29,10 +29,10 @@ For students entering for the first time or who have never had a TNE:
 • Identity card (original + copy)
 • Regular student certificate (current)
 • Recent photo (white background)
-• Payment receipt ($2,700)
+• Payment receipt (2,700 pesos)
 
 **Process:**
-1. Pay $2,700 at campus cashier or online
+1. Pay 2,700 pesos at campus cashier or online
 2. Gather required documents
 3. Go to Student Point with all documents
 4. Complete application (15-20 minutes)
@@ -137,7 +137,7 @@ Typical coverage:
 - Does not cover elective treatments or pre-existing conditions unrelated to the accident.
 
 Contact and resources:
-- DOC DUOC: 600 362 3862
+- DOC DUOC: 600 362 3862.
 - Duoc Help Center: https://centroayuda.duoc.cl
 - Student Portal: https://www.duoc.cl/alumnos/
 

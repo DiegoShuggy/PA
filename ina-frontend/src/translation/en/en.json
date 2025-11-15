@@ -59,6 +59,8 @@
     "feedbackpos": "positive",
     "feedbackneg": "negative",
     "feedbacksnet": "sent successfully",
+    "puntuacion": "dot",
+    "pesos": "chilean pesos",
     "menu": {
       "quickQuestions": "- Quick questions",
       "tools": "- Tools",

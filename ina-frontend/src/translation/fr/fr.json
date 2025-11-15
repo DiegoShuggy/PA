@@ -58,6 +58,8 @@
     "feedbackpos": "positif",
     "feedbackneg": "négatif",
     "feedbacksnet": "envoyé avec succès",
+    "puntuacion": "point",
+    "pesos": "pesos chiliens",
     "menu": {
       "quickQuestions": "- Questions rapides",
       "tools": "- Outils",

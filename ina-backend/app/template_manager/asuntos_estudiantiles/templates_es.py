@@ -24,13 +24,13 @@ TEMPLATES_ES = {
 🆕 **¿Cómo saco mi TNE por primera vez?**
 **Para estudiantes que ingresan por primera vez a la Educación Superior**
 📋 **Pasos a seguir:**
-1. **Realizar pago:** $2.700 en caja de sede o portal de pago
+1. **Realizar pago:** $2.700 en caja de sede o portal de pago.
 2. **Enviar comprobante** a: Puntoestudiantil_pnorte@duoc.cl
-3. **Actualización de datos** en sistema
-4. **Recibir instrucciones** para captura de fotografías
+3. **Actualización de datos** en sistema.
+4. **Recibir instrucciones** para captura de fotografías.
 💳 **Pagos online:** https://portal.duoc.cl
 📧 **Email envío:** Puntoestudiantil_pnorte@duoc.cl
-📞 **Confirmación:** +56 2 2360 6400
+📞 **Confirmación:** +56 2 2360 6400.
 🔗 **Portal TNE:** https://www.tne.cl
 💡 *Proceso exclusivo para primer ingreso a educación superior*
 """,
@@ -41,39 +41,39 @@ TEMPLATES_ES = {
 1. **Web oficial:** https://www.tne.cl
 2. **Portal estudiante:** https://portal.duoc.cl
 📋 **Qué puedes consultar:**
-• Estado de la postulación
-• Estado de entrega
-• Proceso de revalidación
-• Validación de tarjeta
+• Estado de la postulación.
+• Estado de entrega.
+• Proceso de revalidación.
+• Validación de tarjeta.
 ⚡ **Tiempo de procesamiento:** 15-20 días hábiles
 """,
 
     "seguro_cobertura": """
-🛡️ **Seguro Estudiantil — Cobertura y Procedimientos**
+🛡️ **Seguro Estudiantil — Cobertura y Procedimientos.**
 
 Resumen rápido:
 - El seguro de accidentes cubre actividades educativas y traslados
 - Activo durante clases, prácticas y trayectos
 - Activación automática para estudiantes matriculados  
-- Cobertura gratuita con protección integral
+- Cobertura gratuita con protección integral.
 
 🏥 **La cobertura incluye:**
-• Emergencias médicas durante clases
-• Accidentes en trayecto hacia/desde la institución
-• Cobertura de incidentes en el campus
-• Transporte médico si es necesario
+• Emergencias médicas durante clases.
+• Accidentes en trayecto hacia/desde la institución.
+• Cobertura de incidentes en el campus.
+• Transporte médico si es necesario.
 
 📋 **Cómo usar:**
-1. **Emergencia:** Presentar ID de estudiante en centro de salud
-2. **Accidente:** Reportar inmediatamente a Servicios Estudiantiles
-3. **Reclamos:** Presentar documentación dentro de 24 horas
-4. **Cobertura:** Mostrar este QR para atención directa
+1. **Emergencia:** Presentar ID de estudiante en centro de salud.
+2. **Accidente:** Reportar inmediatamente a Servicios Estudiantiles.
+3. **Reclamos:** Presentar documentación dentro de 24 horas.
+4. **Cobertura:** Mostrar este QR para atención directa.
 
 🌐 **Más información:**
 - Portal estudiantes: https://centroayuda.duoc.cl
 - Portal institución: https://www.duoc.cl/alumnos/
 
-⚡ **Emergencia:** Siempre porta tu credencial estudiantil
+⚡ **Emergencia:** Siempre porta tu credencial estudiantil.
 💡 *Recuerda: La cobertura es automática y gratuita para todos los estudiantes matriculados*
 """,
 

@@ -58,6 +58,8 @@
     "feedbackpos": "positivo",
     "feedbackneg": "negativo",
     "feedbacksnet": "enviado exitosamente",
+    "puntuacion": "punto",
+    "pesos": "pesos",
     "menu": {
       "quickQuestions": "- Preguntas rápidas",
       "tools": "- Herramientas",

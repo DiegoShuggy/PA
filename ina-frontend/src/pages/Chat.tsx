@@ -59,93 +59,6 @@ declare global {
   }
 }
 
-// FUNCIÓN MEJORADA DE LIMPIEZA - SOLO INTERVIENE CUANDO HAY PATRONES CLARAMENTE PROBLEMÁTICOS
-const cleanRepeatedCharacters = (text: string): string => {
-  if (!text) return text;
-
-  // DEBUG: Mostrar el texto original para diagnóstico
-  console.log('🔍 Texto original recibido:', text.substring(0, 100) + '...');
-
-  // Buscar patrones específicamente problemáticos
-  const problematicPatterns = [
-    /(.)\1{5,}/g, // Cualquier carácter repetido 6+ veces
-    /([!?¡¿])\1{4,}/g, // Signos de puntuación repetidos 5+ veces
-    /(\s)\1{5,}/g, // Espacios repetidos 6+ veces
-    /(\.{4,})/g, // Puntos suspensivos excesivos
-    /(,{4,})/g, // Comas excesivas
-  ];
-
-  let hasProblems = false;
-  problematicPatterns.forEach(pattern => {
-    if (pattern.test(text)) {
-      hasProblems = true;
-      console.log('🚨 Patrón problemático detectado:', text.match(pattern));
-    }
-  });
-
-  // Si no hay problemas claros, devolver el texto original
-  if (!hasProblems) {
-    return text;
-  }
-
-  console.log('🔧 Aplicando limpieza a respuesta con patrones problemáticos');
-
-  // Aplicar limpieza específica solo a los patrones problemáticos
-  let cleanedText = text;
-
-  // Limpiar caracteres especiales repetidos excesivamente
-  cleanedText = cleanedText.replace(/([!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¿¡])\1{4,}/g, '$1$1');
-
-  // Limpiar emojis repetidos excesivamente (más de 3 veces)
-  cleanedText = cleanedText.replace(/([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}])\1{3,}/gu, '$1$1');
-
-  // Limpiar espacios excesivos
-  cleanedText = cleanedText.replace(/\s{6,}/g, '   ');
-
-  // Limpiar saltos de línea excesivos
-  cleanedText = cleanedText.replace(/\n{4,}/g, '\n\n');
-
-  console.log('✅ Texto después de limpieza:', cleanedText.substring(0, 100) + '...');
-
-  return cleanedText;
-};
-// Función específica para limpiar texto para TTS (Text-to-Speech)
-const cleanTextForTTS = (text: string): string => {
-  if (!text) return text;
-
-  console.log('🔊 Limpiando texto para TTS:', text.substring(0, 100) + '...');
-
-  let cleanText = text
-    // Eliminar markdown y formato
-    .replace(/\*\*(.*?)\*\*/g, '$1') // **negrita** → negrita
-    .replace(/\*(.*?)\*/g, '$1')     // *cursiva* → cursiva
-    .replace(/_(.*?)_/g, '$1')       // _subrayado_ → subrayado
-    .replace(/`(.*?)`/g, '$1')       // `código` → código
-    .replace(/~~(.*?)~~/g, '$1')     // ~~tachado~~ → tachado
-
-    // ELIMINAR EMOJIS COMPLETAMENTE (no convertirlos a texto)
-    .replace(/[🆕📋📍⏰📞🔗💡📊🔄🆕📧💳🛡️🚑🎫📅💰✅📋🩺✝️🚪🙏🎯💻📹🍽️🤝🏢🎫💰📧💳🧠📱🚨🏥❌🤝♿🎯🎓🌟⏰📞💙💻📚🏅📍⏰❌📊📝🏋️⏰🏆💰👩‍💼👨‍💼🏢🙏🤝🌄🕯️⛪❤️]/gu, ' ')
-
-    // Eliminar cualquier otro emoji (rango Unicode completo)
-    .replace(/[\u{1F600}-\u{1F64F}]/gu, ' ')  // Emoticones
-    .replace(/[\u{1F300}-\u{1F5FF}]/gu, ' ')  // Símbolos y pictogramas
-    .replace(/[\u{1F680}-\u{1F6FF}]/gu, ' ')  // Transporte y símbolos
-    .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, ' ')  // Banderas
-
-    // Limpiar URLs y formatos técnicos
-    .replace(/https?:\/\/[^\s]+/g, ' ') // URLs → espacio
-    .replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' ') // Emails → espacio
-
-    // Limpiar caracteres especiales repetidos
-    .replace(/([!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¿¡])\1{2,}/g, '$1')
-
-    // Normalizar espacios (múltiples espacios → un solo espacio)
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  console.log('✅ Texto limpio para TTS:', cleanText.substring(0, 100) + '...');
-  return cleanText;
-};
 
 const Chat: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -202,8 +115,147 @@ const Chat: React.FC = () => {
 
   // Obtener la pregunta predefinida del estado de navegación
   const abortControllerRef = useRef<AbortController | null>(null);
+// Agregar un key que cambie con el idioma para forzar recreación
+  const [languageKey, setLanguageKey] = useState(i18n.language);
 
+  // Efecto para actualizar el key cuando cambia el idioma
+  useEffect(() => {
+    setLanguageKey(i18n.language);
+    console.log('🌐 Idioma cambiado a:', i18n.language);
+  }, [i18n.language]);
+// FUNCIÓN MEJORADA DE LIMPIEZA - MEMOIZADA
+const cleanRepeatedCharacters = useCallback((text: string): string => {
+  if (!text) return text;
 
+  // DEBUG: Mostrar el texto original para diagnóstico
+  console.log('🔍 Texto original recibido:', text.substring(0, 100) + '...');
+
+  // Buscar patrones específicamente problemáticos
+  const problematicPatterns = [
+    /(.)\1{5,}/g, // Cualquier carácter repetido 6+ veces
+    /([!?¡¿])\1{4,}/g, // Signos de puntuación repetidos 5+ veces
+    /(\s)\1{5,}/g, // Espacios repetidos 6+ veces
+    /(\.{4,})/g, // Puntos suspensivos excesivos
+    /(,{4,})/g, // Comas excesivas
+  ];
+
+  let hasProblems = false;
+  problematicPatterns.forEach(pattern => {
+    if (pattern.test(text)) {
+      hasProblems = true;
+      console.log('🚨 Patrón problemático detectado:', text.match(pattern));
+    }
+  });
+
+  // Si no hay problemas claros, devolver el texto original
+  if (!hasProblems) {
+    return text;
+  }
+
+  console.log('🔧 Aplicando limpieza a respuesta con patrones problemáticos');
+
+  // Aplicar limpieza específica solo a los patrones problemáticos
+  let cleanedText = text;
+
+  // Limpiar caracteres especiales repetidos excesivamente
+  cleanedText = cleanedText.replace(/([!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¿¡])\1{4,}/g, '$1$1');
+
+  // Limpiar emojis repetidos excesivamente (más de 3 veces)
+  cleanedText = cleanedText.replace(/([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}])\1{3,}/gu, '$1$1');
+
+  // Limpiar espacios excesivos
+  cleanedText = cleanedText.replace(/\s{6,}/g, '   ');
+
+  // Limpiar saltos de línea excesivos
+  cleanedText = cleanedText.replace(/\n{4,}/g, '\n\n');
+
+  console.log('✅ Texto después de limpieza:', cleanedText.substring(0, 100) + '...');
+
+  return cleanedText;
+}, []); // Sin dependencias ya que es una función pura
+
+const cleanTextForTTS = useCallback((text: string): string => {
+  if (!text) return text;
+
+   console.log('🔊 Limpiando texto para TTS - Idioma actual:', i18n.language);
+  // Obtener las traducciones una sola vez
+  const getCurrencyText = () => {
+    switch(i18n.language) {
+      case 'es': return 'pesos';
+      case 'en': return 'chilean pesos';
+      case 'fr': return 'pesos chiliens';
+      default: return 'pesos';
+    }
+  };
+
+  const getDecimalSeparator = () => {
+    switch(i18n.language) {
+      case 'es': return 'punto';
+      case 'en': return 'point';
+      case 'fr': return 'virgule';
+      default: return 'point';
+    }
+  };
+  const currencyText = getCurrencyText();
+  const decimalSeparator = getDecimalSeparator();
+
+  console.log('🔍 Mapeo de moneda:', { 
+      language: i18n.language, 
+      currencyText, 
+      decimalSeparator 
+    });
+
+  let cleanText = text
+    // CONVERTIR FORMATOS DE MONEDA ANTES de otras limpiezas
+    .replace(/\$?(\d{1,3}(?:\.\d{3})*(?:,\d+)?)/g, (match) => {
+      // Si es un formato de moneda como $2.700, $1.500, $10.000, etc.
+      if (match.includes('.')) {
+        // Remover el signo $ si está presente y los puntos
+        const numberWithoutDots = match.replace(/\$|\./g, '');
+        
+        // Si tiene decimales después de coma (ej: $2.700,50)
+        if (numberWithoutDots.includes(',')) {
+          const parts = numberWithoutDots.split(',');
+          const integerPart = parts[0];
+          const decimalPart = parts[1];
+          return `${integerPart} ${decimalSeparator} ${decimalPart} ${currencyText}`;
+        }
+        
+        // Si es solo número entero (ej: $2.700)
+        return `${numberWithoutDots} ${currencyText}`;
+      }
+      return match;
+    })
+    // Eliminar markdown y formato
+    .replace(/\*\*(.*?)\*\*/g, '$1') // **negrita** → negrita
+    .replace(/\*(.*?)\*/g, '$1')     // *cursiva* → cursiva
+    .replace(/_(.*?)_/g, '$1')       // _subrayado_ → subrayado
+    .replace(/`(.*?)`/g, '$1')       // `código` → código
+    .replace(/~~(.*?)~~/g, '$1')     // ~~tachado~~ → tachado
+
+    // ELIMINAR EMOJIS COMPLETAMENTE (no convertirlos a texto)
+    .replace(/[🆕📋📍⏰📞🔗💡📊🔄🆕📧💳🛡️🚑🎫📅💰✅📋🩺✝️🚪🙏🎯💻📹🍽️🤝🏢🎫💰📧💳🧠📱🚨🏥❌🤝♿🎯🎓🌟⏰📞💙💻📚🏅📍⏰❌📊📝🏋️⏰🏆💰👩‍💼👨‍💼🏢🙏🤝🌄🕯️⛪❤️⚡]/gu, ' ')
+
+    // Eliminar cualquier otro emoji (rango Unicode completo)
+    .replace(/[\u{1F600}-\u{1F64F}]/gu, ' ')  // Emoticones
+    .replace(/[\u{1F300}-\u{1F5FF}]/gu, ' ')  // Símbolos y pictogramas
+    .replace(/[\u{1F680}-\u{1F6FF}]/gu, ' ')  // Transporte y símbolos
+    .replace(/[\u{1F1E0}-\u{1F1FF}]/gu, ' ')  // Banderas
+
+    // Limpiar URLs y formatos técnicos
+    .replace(/https?:\/\/[^\s]+/g, ' ') // URLs → espacio
+    .replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' ') // Emails → espacio
+
+    // Limpiar caracteres especiales repetidos
+    .replace(/([!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¿¡])\1{2,}/g, '$1')
+
+    // Normalizar espacios (múltiples espacios → un solo espacio)
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  console.log('✅ Texto limpio para TTS:', cleanText.substring(0, 100) + '...');
+  return cleanText;
+}, [i18n.language, languageKey]); // AGREGAR t COMO DEPENDENCIA
   // Función para volver a la página anterior
   const handleGoBack = () => {
     navigate(-1);
@@ -1421,7 +1473,6 @@ useEffect(() => {
 useEffect(() => {
   // No leer si hay una detención manual o si está cargando una nueva respuesta
   if (isManualStopRef.current || isLoading) {
-    console.log('🚫 Lectura automática bloqueada - carga en progreso o detención manual');
     return;
   }
 
@@ -1451,20 +1502,15 @@ useEffect(() => {
 
      // Solo leer si es un mensaje nuevo de IA que no ha sido leído
   if (lastAIMessageIndex !== -1 && !hasBeenRead && isTtsSupported) {
-    console.log('🔊 Condiciones para lectura automática cumplidas:', {
-      index: lastAIMessageIndex,
-      isMostRecent: isMostRecentMessage,
-      hasBeenRead: hasBeenRead,
-      isLoading: isLoading
-    });
+    console.log('🔊 Iniciando lectura automática - Idioma:', i18n.language);
 
     const autoReadTimer = setTimeout(() => {
       readMessage(lastAIMessage.text, lastAIMessageIndex, true);
-    }, 1000);
+    }, 1500);
 
     return () => clearTimeout(autoReadTimer);
   }
-}, [messages, isTtsSupported, readMessage, isLoading]); // AGREGAR isLoading COMO DEPENDENCIA
+}, [messages, isTtsSupported, readMessage, isLoading, i18n.language]); // AGREGAR isLoading COMO DEPENDENCIA
 
   // Componente de Feedback MODIFICADO
   const renderFeedbackWidget = (messageIndex?: number) => {
