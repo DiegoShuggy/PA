@@ -320,7 +320,8 @@ class RAGEngine:
                 unique_words.append(word)
         return ' '.join(unique_words)
 
-    def process_user_query(self, user_message: str, session_id: str = None) -> Dict:
+    def process_user_query(self, user_message: str, session_id: str = None,
+                          conversational_context: str = None, user_profile: dict = None) -> Dict:
         """PROCESAMIENTO INTELIGENTE MEJORADO CON TEMPLATES Y MEMORIA JERÁRQUICA"""
         self.metrics['total_queries'] += 1
         
@@ -1353,49 +1354,79 @@ No entiendo completamente '{original_query}'.
 rag_engine = RAGEngine()
 
 
-def get_ai_response(user_message: str, context: list = None) -> Dict:
-    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES Y QR CORREGIDO"""
+def get_ai_response(user_message: str, context: list = None, 
+                   conversational_context: str = None, user_profile: dict = None) -> Dict:
+    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES, QR Y CONTEXTO CONVERSACIONAL"""
     import time
     start_time = time.time()
 
-    processing_info = rag_engine.process_user_query(user_message)
+    # Procesar query con contexto inteligente
+    processing_info = rag_engine.process_user_query(
+        user_message, 
+        conversational_context=conversational_context,
+        user_profile=user_profile
+    )
     strategy = processing_info['processing_strategy']
+    
+    # Agregar contexto conversacional al processing_info si está disponible
+    if conversational_context:
+        processing_info['conversational_context'] = conversational_context
+        processing_info['has_conversation_history'] = True
+        
+    # Agregar perfil de usuario al processing_info si está disponible
+    if user_profile:
+        processing_info['user_profile'] = user_profile
+        processing_info['user_preferences'] = user_profile.get('area_interes', [])
 
     # ESTRATEGIAS PRIORITARIAS - TEMPLATES PRIMERO
     if strategy == 'template':
         response_data = rag_engine.generate_template_response(processing_info)
         response_data['response_time'] = time.time() - start_time
+        response_data['intelligent_features_applied'] = True
         return response_data
 
     if strategy == 'greeting' or processing_info.get('is_greeting', False):
         response_data = rag_engine.generate_greeting_response(processing_info)
         response_data['response_time'] = time.time() - start_time
+        response_data['intelligent_features_applied'] = True
         return response_data
 
     if strategy == 'emergency' or processing_info.get('is_emergency', False):
         response_data = rag_engine.generate_emergency_response(processing_info)
         response_data['response_time'] = time.time() - start_time
+        response_data['intelligent_features_applied'] = True
         return response_data
 
     # ESTRATEGIAS DIFERENCIADAS
     if strategy == 'derivation':
         response_data = rag_engine.generate_derivation_response(processing_info)
         response_data['response_time'] = time.time() - start_time
+        response_data['intelligent_features_applied'] = True
         return response_data
 
     elif strategy == 'multiple_queries':
         response_data = rag_engine.generate_multiple_queries_response(processing_info)
         response_data['response_time'] = time.time() - start_time
+        response_data['intelligent_features_applied'] = True
         return response_data
 
     elif strategy == 'clarification':
         response_data = rag_engine.generate_clarification_response(processing_info)
         response_data['response_time'] = time.time() - start_time
+        response_data['intelligent_features_applied'] = True
         return response_data
 
-    # ESTRATEGIA ESTÁNDAR RAG MEJORADA
+    # ESTRATEGIA ESTÁNDAR RAG MEJORADA CON CONTEXTO
     normalized_message = rag_engine.enhanced_normalize_text(user_message)
-    cache_key = f"rag_{hashlib.md5(user_message.encode()).hexdigest()}"
+    
+    # Generar cache key que incluya contexto conversacional si está presente
+    cache_components = [user_message]
+    if conversational_context:
+        # Usar solo una parte del contexto para el cache key (evitar cache key muy largos)
+        context_summary = conversational_context[-200:] if len(conversational_context) > 200 else conversational_context
+        cache_components.append(context_summary)
+    
+    cache_key = f"rag_{hashlib.md5('|'.join(cache_components).encode()).hexdigest()}"
 
     if cache_key in rag_engine.text_cache:
         cached_response = rag_engine.text_cache[cache_key]

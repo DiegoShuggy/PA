@@ -50,6 +50,9 @@ from dotenv import load_dotenv
 from app.metrics_tracker import metrics_tracker
 from datetime import datetime, timedelta
 
+# 👇 ✅ NUEVA IMPORTACIÓN PARA SISTEMA INTELIGENTE
+from app.intelligent_response_system import intelligent_response_system
+
 # DESACTIVAR TELEMETRÍA DE CHROMADB ANTES DE CUALQUIER USO
 import app.chroma_config  # ← LÍNEA CLAVE
 
@@ -427,6 +430,35 @@ async def chat(message: Message, request: Request):
             session.commit()
             query_id = user_query.id
         
+        # 3.2.1 ✅ NUEVO: INICIALIZAR SISTEMA INTELIGENTE
+        # Generar IDs únicos para el sistema inteligente
+        import uuid
+        user_id = request.client.host if hasattr(request, 'client') else 'anonymous'
+        session_id = str(uuid.uuid4())
+        
+        # Iniciar conversación inteligente
+        try:
+            conversation_context = intelligent_response_system.start_intelligent_conversation(
+                user_id=user_id,
+                session_id=session_id,
+                initial_query=question,
+                category=category
+            )
+            
+            # Obtener perfil de usuario y sugerencias
+            user_profile = intelligent_response_system.create_or_update_user_profile(
+                user_id=user_id,
+                query=question,
+                category=category
+            )
+            
+            logger.info(f"🧠 Sistema inteligente activado para {user_id}")
+            
+        except Exception as intel_error:
+            logger.warning(f"⚠️ Error en sistema inteligente: {intel_error}")
+            conversation_context = None
+            user_profile = None
+        
         # 3.3 BUSCAR EN BASE DE CONOCIMIENTOS
         context_results = rag_engine.query(question)
         has_context = bool(context_results)
@@ -434,10 +466,38 @@ async def chat(message: Message, request: Request):
         print(f"🔍 Contexto encontrado: {len(context_results)} resultados")
         logger.info(f"Contexto encontrado: {len(context_results)} resultados para categoría '{category}'")
         
-        # 3.4 OBTENER RESPUESTA (AHORA CON QR)
+        # 3.4 OBTENER RESPUESTA (AHORA CON QR Y CONTEXTO INTELIGENTE)
         try:
+            # Obtener contexto conversacional si está disponible
+            conversational_context = ""
+            if conversation_context and hasattr(rag_engine, 'memory_manager'):
+                conversational_context = rag_engine.memory_manager.get_conversation_context(
+                    session_id=session_id,
+                    include_user_context=True,
+                    user_id=user_id
+                )
+            
             # get_ai_response es síncrona, NO usar await
-            response_data = get_ai_response(question, context_results)
+            response_data = get_ai_response(
+                question, 
+                context_results, 
+                conversational_context=conversational_context,
+                user_profile=user_profile.__dict__ if user_profile else None
+            )
+            
+            # 🔥 GENERAR SUGERENCIAS INTELIGENTES
+            followup_suggestions = []
+            if conversation_context:
+                followup_suggestions = conversation_context.suggested_followups
+            
+            # Si no hay sugerencias del contexto, usar el memory manager
+            if not followup_suggestions and hasattr(rag_engine, 'memory_manager'):
+                followup_suggestions = rag_engine.memory_manager.suggest_related_queries(
+                    current_query=question,
+                    category=category,
+                    user_id=user_id,
+                    limit=3
+                )
             
             # ✅ AGREGAR GENERACIÓN DE QR AQUÍ MISMO
             if 'qr_codes' not in response_data or not response_data.get('qr_codes'):
@@ -522,6 +582,35 @@ async def chat(message: Message, request: Request):
                 session.add(unanswered)
                 session.commit()
         
+        # 3.8.1 ✅ NUEVO: ACTUALIZAR MEMORIA CONVERSACIONAL
+        try:
+            if hasattr(rag_engine, 'memory_manager'):
+                rag_engine.memory_manager.add_to_conversation_history(
+                    session_id=session_id,
+                    query=question,
+                    response=response_text,
+                    category=category,
+                    user_id=user_id
+                )
+            
+            # Agregar a contexto de conversación inteligente
+            if conversation_context:
+                intelligent_response_system.add_to_conversation(
+                    session_id=session_id,
+                    message_type='user',
+                    content=question,
+                    category=category
+                )
+                intelligent_response_system.add_to_conversation(
+                    session_id=session_id,
+                    message_type='assistant',
+                    content=response_text,
+                    category=category
+                )
+                
+        except Exception as memory_error:
+            logger.warning(f"⚠️ Error actualizando memoria: {memory_error}")
+        
         # 3.8 GUARDAR EN LOG DE CONVERSACIONES
         try:
             with Session(engine) as session:
@@ -547,7 +636,16 @@ async def chat(message: Message, request: Request):
             "allowed": True,
             "success": True,
             "category": category,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
+            # ✅ NUEVOS CAMPOS DEL SISTEMA INTELIGENTE
+            "intelligent_features": {
+                "followup_suggestions": followup_suggestions,
+                "user_session_id": session_id,
+                "conversation_context_available": conversation_context is not None,
+                "user_profile_active": user_profile is not None,
+                "related_topics": conversation_context.related_topics if conversation_context else [],
+                "conversation_sentiment": conversation_context.conversation_sentiment if conversation_context else 'neutral'
+            }
         }
         
         # Log final de finalización
@@ -591,7 +689,9 @@ async def health_check():
             "topic_classifier": "active",
             "email_system": email_status,
             "metrics_tracker": "active",
-            "qr_generator": "active"  # 👈 NUEVO
+            "qr_generator": "active",  # 👈 NUEVO
+            "intelligent_response_system": "active",  # 👈 NUEVO
+            "memory_manager": "active"  # 👈 NUEVO
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
@@ -1472,6 +1572,227 @@ async def test_email_system(to_email: str = "shaggynator64@gmail.com"):
     except Exception as e:
         logger.error(f"Error en test de email: {e}")
         raise HTTPException(status_code=500, detail=f"Error en test de email: {str(e)}")
+
+# 👇 NUEVOS ENDPOINTS PARA SISTEMA INTELIGENTE
+@app.get("/intelligent/user-profile/{user_id}")
+async def get_user_profile(user_id: str):
+    """Obtener perfil de usuario del sistema inteligente"""
+    try:
+        profile_data = intelligent_response_system.get_user_profile_summary(user_id)
+        
+        if profile_data:
+            return {
+                "status": "success",
+                "user_profile": profile_data,
+                "timestamp": datetime.now().isoformat()
+            }
+        else:
+            return {
+                "status": "not_found",
+                "message": f"No se encontró perfil para usuario {user_id}",
+                "timestamp": datetime.now().isoformat()
+            }
+            
+    except Exception as e:
+        logger.error(f"Error obteniendo perfil de usuario: {e}")
+        raise HTTPException(status_code=500, detail=f"Error obteniendo perfil: {str(e)}")
+
+@app.get("/intelligent/knowledge-gaps")
+async def get_knowledge_gaps():
+    """Obtener reporte de gaps en el conocimiento"""
+    try:
+        gaps_report = intelligent_response_system.get_knowledge_gaps_report(min_occurrences=2)
+        
+        return {
+            "status": "success",
+            "knowledge_gaps": gaps_report,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error obteniendo gaps de conocimiento: {e}")
+        raise HTTPException(status_code=500, detail=f"Error obteniendo gaps: {str(e)}")
+
+@app.get("/intelligent/learning-insights")
+async def get_learning_insights():
+    """Obtener insights del sistema de aprendizaje"""
+    try:
+        # Obtener insights del memory manager
+        memory_insights = {}
+        if hasattr(rag_engine, 'memory_manager'):
+            memory_insights = rag_engine.memory_manager.get_learning_insights()
+        
+        # Obtener estadísticas del sistema inteligente
+        intelligent_stats = {
+            "active_conversations": len(intelligent_response_system.active_conversations),
+            "user_profiles": len(intelligent_response_system.user_profiles),
+            "pattern_categories": len(intelligent_response_system.pattern_learning),
+            "total_knowledge_gaps": len(intelligent_response_system.knowledge_gaps)
+        }
+        
+        return {
+            "status": "success",
+            "learning_insights": {
+                "memory_manager": memory_insights,
+                "intelligent_system": intelligent_stats
+            },
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error obteniendo insights de aprendizaje: {e}")
+        raise HTTPException(status_code=500, detail=f"Error obteniendo insights: {str(e)}")
+
+@app.post("/intelligent/feedback")
+async def submit_intelligent_feedback(feedback_data: dict):
+    """Enviar feedback para el sistema de aprendizaje inteligente"""
+    try:
+        session_id = feedback_data.get('session_id')
+        feedback_score = feedback_data.get('feedback_score', 3)
+        is_satisfied = feedback_data.get('is_satisfied', True)
+        comments = feedback_data.get('comments', '')
+        
+        if not session_id:
+            raise HTTPException(status_code=400, detail="session_id es requerido")
+        
+        # Procesar feedback en el sistema inteligente
+        intelligent_response_system.record_feedback_and_learn(
+            session_id=session_id,
+            feedback_data={
+                'is_satisfied': is_satisfied,
+                'rating': feedback_score,
+                'comments': comments
+            }
+        )
+        
+        # También actualizar en memory manager si está disponible
+        if hasattr(rag_engine, 'memory_manager'):
+            conversation_data = intelligent_response_system.active_conversations.get(session_id)
+            if conversation_data:
+                # Buscar la última query del usuario
+                last_user_message = None
+                for msg in reversed(conversation_data.messages):
+                    if msg['type'] == 'user':
+                        last_user_message = msg['content']
+                        break
+                
+                if last_user_message:
+                    rag_engine.memory_manager.update_feedback(
+                        query=last_user_message,
+                        feedback_score=feedback_score,
+                        session_id=session_id,
+                        user_id=conversation_data.user_id
+                    )
+        
+        return {
+            "status": "success",
+            "message": "Feedback inteligente procesado correctamente",
+            "session_id": session_id,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error procesando feedback inteligente: {e}")
+        raise HTTPException(status_code=500, detail=f"Error procesando feedback: {str(e)}")
+
+@app.get("/intelligent/conversation/{session_id}")
+async def get_conversation_context(session_id: str):
+    """Obtener contexto de conversación específica"""
+    try:
+        conversation = intelligent_response_system.active_conversations.get(session_id)
+        
+        if not conversation:
+            return {
+                "status": "not_found",
+                "message": f"No se encontró conversación {session_id}",
+                "timestamp": datetime.now().isoformat()
+            }
+        
+        # Preparar datos de la conversación
+        conversation_data = {
+            "session_id": session_id,
+            "user_id": conversation.user_id,
+            "current_topic": conversation.current_topic,
+            "related_topics": conversation.related_topics,
+            "suggested_followups": conversation.suggested_followups,
+            "conversation_sentiment": conversation.conversation_sentiment,
+            "last_interaction": conversation.last_interaction.isoformat(),
+            "message_count": len(conversation.messages),
+            "messages": [
+                {
+                    "type": msg["type"],
+                    "content": msg["content"][:100] + "..." if len(msg["content"]) > 100 else msg["content"],
+                    "timestamp": msg["timestamp"].isoformat() if isinstance(msg["timestamp"], datetime) else str(msg["timestamp"]),
+                    "category": msg.get("category")
+                }
+                for msg in list(conversation.messages)[-5:]  # Últimos 5 mensajes
+            ]
+        }
+        
+        return {
+            "status": "success",
+            "conversation": conversation_data,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error obteniendo contexto de conversación: {e}")
+        raise HTTPException(status_code=500, detail=f"Error obteniendo conversación: {str(e)}")
+
+@app.post("/intelligent/cleanup")
+async def cleanup_intelligent_system():
+    """Limpiar conversaciones y datos expirados del sistema inteligente"""
+    try:
+        # Limpiar conversaciones expiradas
+        intelligent_response_system.cleanup_expired_conversations(max_age_hours=2)
+        
+        # Limpiar memoria del memory manager si está disponible
+        if hasattr(rag_engine, 'memory_manager'):
+            # Esto limpiará entradas expiradas automáticamente
+            rag_engine.memory_manager._cleanup_old_entries()
+        
+        return {
+            "status": "success",
+            "message": "Sistema inteligente limpiado correctamente",
+            "active_conversations": len(intelligent_response_system.active_conversations),
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error limpiando sistema inteligente: {e}")
+        raise HTTPException(status_code=500, detail=f"Error en limpieza: {str(e)}")
+
+@app.get("/intelligent/stats")
+async def get_intelligent_system_stats():
+    """Obtener estadísticas completas del sistema inteligente"""
+    try:
+        stats = {
+            "system_status": "active",
+            "active_conversations": len(intelligent_response_system.active_conversations),
+            "user_profiles": len(intelligent_response_system.user_profiles),
+            "knowledge_gaps": len(intelligent_response_system.knowledge_gaps),
+            "pattern_categories": len(intelligent_response_system.pattern_learning),
+            "cache_stats": {
+                "embedding_cache_size": len(intelligent_response_system.embedding_cache)
+            }
+        }
+        
+        # Añadir estadísticas del memory manager si está disponible
+        if hasattr(rag_engine, 'memory_manager'):
+            memory_stats = rag_engine.memory_manager.get_learning_insights()
+            stats["memory_manager"] = memory_stats
+        
+        return {
+            "status": "success",
+            "intelligent_system_stats": stats,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error obteniendo estadísticas del sistema inteligente: {e}")
+        raise HTTPException(status_code=500, detail=f"Error obteniendo estadísticas: {str(e)}")
+
+# Mantener el resto del archivo intacto...
 
 # 👇 NUEVOS ENDPOINTS PARA MÉTRICAS AVANZADAS
 @app.get("/analytics/advanced/metrics")
