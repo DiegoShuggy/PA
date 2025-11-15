@@ -87,48 +87,13 @@ function App() {
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [isCursorInViewport, setIsCursorInViewport] = useState(true);
     
-    // NUEVO: Estado para el tema actual
-    const [currentTheme, setCurrentTheme] = useState<ThemeType>('light');
+    
     
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const guideLineRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement>(null);
-
-    // Efecto para aplicar el tema seleccionado
-    useEffect(() => {
-        const root = document.documentElement;
-        const theme = themes[currentTheme];
-        
-        // Aplicar variables CSS del tema
-        root.style.setProperty('--theme-primary', theme.colors.primary);
-        root.style.setProperty('--theme-secondary', theme.colors.secondary);
-        root.style.setProperty('--theme-background', theme.colors.background);
-        root.style.setProperty('--theme-text', theme.colors.text);
-        root.style.setProperty('--theme-surface', theme.colors.surface);
-        root.style.setProperty('--theme-border', theme.colors.border);
-        root.style.setProperty('--theme-accent', theme.colors.accent);
-        
-        // Aplicar clase del tema al body
-        document.body.className = `theme-${currentTheme}`;
-        
-    }, [currentTheme]);
-
-    // Efecto para persistir el tema en localStorage
-    useEffect(() => {
-        // Cargar tema guardado al iniciar
-        const savedTheme = localStorage.getItem('app-theme') as ThemeType;
-        if (savedTheme && themes[savedTheme]) {
-            setCurrentTheme(savedTheme);
-        }
-    }, []);
-
-    // Función para cambiar tema
-    const changeTheme = (theme: ThemeType) => {
-        setCurrentTheme(theme);
-        localStorage.setItem('app-theme', theme);
-    };
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -285,9 +250,6 @@ function App() {
         setGrayscale(false);
         setDyslexicFont(false);
         setReadingGuide(false);
-        setCurrentTheme('light');
-        localStorage.setItem('app-theme', 'light');
-        // NO resetear el tema - mantener la preferencia del usuario
     };
 
     const changeLanguage = (lng: string) => {
@@ -296,7 +258,7 @@ function App() {
     };
 
     return (
-        <div className={`app theme-${currentTheme}`}>
+        <div className="app">
             <div>
                 <NavBar />
                 
@@ -332,34 +294,6 @@ function App() {
                             </div>
 
                             <div className="accessibility-options">
-
-                                {/* NUEVO: Selector de Temas */}
-                                <div className="accessibility-option">
-                                    <label>{t('Accesibilidad.tema', 'Tema de color')}</label>
-                                    <div className="theme-buttons">
-                                        <button
-                                            className={`theme-btn ${currentTheme === 'light' ? 'active' : ''}`}
-                                            onClick={() => changeTheme('light')}
-                                            title={t('Accesibilidad.temaClaro', 'Tema claro')}
-                                        >
-                                            🌞
-                                        </button>
-                                        <button
-                                            className={`theme-btn ${currentTheme === 'dark' ? 'active' : ''}`}
-                                            onClick={() => changeTheme('dark')}
-                                            title={t('Accesibilidad.temaOscuro', 'Tema oscuro')}
-                                        >
-                                            🌙
-                                        </button>
-                                        <button
-                                            className={`theme-btn ${currentTheme === 'reading' ? 'active' : ''}`}
-                                            onClick={() => changeTheme('reading')}
-                                            title={t('Accesibilidad.modoLectura', 'Modo lectura')}
-                                        >
-                                            📖
-                                        </button>
-                                    </div>
-                                </div>
 
                                 {/* Tamaño de fuente */}
                                 <div className="accessibility-option">
