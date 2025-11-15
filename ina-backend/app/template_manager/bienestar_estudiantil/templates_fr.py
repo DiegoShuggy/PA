@@ -101,7 +101,7 @@ TEMPLATES_FR = {
     "apoyos_salud_mental": """
 🧠 **Quels soutiens en santé mentale existent à Duoc UC ?**
 **1. 🚨 Accompagnement psychologique urgent :**
-• **Ligne OPS 24h/7j :** +56 2 2820 3450
+• **Ligne OPS 24/7 :** +56 2 2820 3450
 • Gratuit et confidentiel
 • Urgences psychologiques
 **2. 💻 Accompagnement psychologique virtuel :**
