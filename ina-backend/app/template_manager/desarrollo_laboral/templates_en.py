@@ -108,4 +108,27 @@ It's the institutional area that accompanies you in your professional insertion 
 🔗 **Registration:** https://duoclaboral.cl/talleres
 💡 *85% of participants get employment within 3 months after workshops*
 """,
+
+    "beneficios_titulados": """
+🎓 **Graduate Benefits in Career Development**
+**Continuous support after graduation:**
+✅ **Exclusive services:**
+• **Permanent access** to DuocLaboral
+• **CV updates** at no cost
+• **Personalized job alerts**
+• **Exclusive job fairs** for graduates
+• **Networking** with partner companies
+🎯 **Special programs:**
+• **Follow Up:** Career tracking first year
+• **Alumni Network:** Professional contact network
+• **Continuous training:** Skills updating
+• **Mentorships:** With senior professionals
+💼 **2024 Statistics:**
+• 78% find work within 6 months
+• 45% improve salary compared to first job
+• 92% satisfaction with services
+👩‍💼 **Coordinator:** Claudia Cortés - ccortesn@duoc.cl
+🔗 **Portal:** https://duoclaboral.cl/titulados
+💡 *Your relationship with Duoc UC doesn't end when you graduate*
+""",
 }

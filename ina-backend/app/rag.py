@@ -474,7 +474,9 @@ class RAGEngine:
             'informations sur les programmes',
             'conditions pour postuler',
             'elle est perdue ou endommagée',
-            'programmes de soutien aux étudiants'
+            'programmes de soutien aux étudiants',
+            'offrez-vous des simulations d\'entretiens d\'embauche',
+            'offrez-vous des simulations d\'entretiens'
         ]
         
         # RETORNO INMEDIATO solo para consultas 100% francesas
@@ -482,6 +484,20 @@ class RAGEngine:
             if direct_query in query_lower:
                 print(f"   🔥 ULTRA-SPECIFIC FRENCH MATCH: '{direct_query}' -> FORCING FRENCH")
                 return 'fr'
+        
+        # PASO 1.1: DETECCIÓN DIRECTA DE CONSULTAS INGLESAS INEQUÍVOCAS
+        # ================================================================
+        ultra_specific_english_queries = [
+            'where can i access the duoc uc job bank',
+            'duoc uc job bank access',
+            'access duoc uc job bank'
+        ]
+        
+        # RETORNO INMEDIATO solo para consultas 100% inglesas específicas
+        for direct_query in ultra_specific_english_queries:
+            if direct_query in query_lower:
+                print(f"   🔥 ULTRA-SPECIFIC ENGLISH MATCH: '{direct_query}' -> FORCING ENGLISH")
+                return 'en'
         
         # ================================================================
         # PASO 2: IDENTIFICADORES ESPAÑOLES FUERTES (PRIORIDAD MÁXIMA)

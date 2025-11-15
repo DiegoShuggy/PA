@@ -184,6 +184,13 @@ class QuestionClassifier:
                 r'\b(plataforma.*laboral|portal.*empleo|acceder.*bolsa)\b',
                 r'\b(dónde.*acceder.*bolsa|crear.*cv.*duoclaboral)\b',
                 
+                # ENGLISH JOB BANK PATTERNS - NUEVO
+                r'\b(duoc.*uc.*job.*bank|job.*bank|access.*job.*bank)\b',
+                r'\b(where.*can.*i.*access.*job|find.*job.*duoc|employment.*platform)\b',
+                r'\b(career.*center|job.*portal|employment.*center)\b',
+                r'\b(where.*can.*i.*access.*the.*duoc.*uc.*job.*bank)\b',
+                r'\b(duoc.*employment|duoc.*career|job.*opportunities.*duoc)\b',
+                
                 # Prácticas profesionales - EXPANDIDO
                 r'\b(práctica profesional|práctica|practica|practicas profesionales)\b',
                 r'\b(buscar.*práctica|encontrar.*práctica|proceso.*práctica)\b',
@@ -556,7 +563,12 @@ class QuestionClassifier:
                 r'persona.*plaza.*norte', r'quién.*plaza.*norte',
                 r'contacto.*específico.*plaza.*norte', r'directamente.*plaza.*norte',
                 r'claudia.*cortés', r'ccortesn', r'adriana.*vásquez',
-                r'elizabeth.*domínguez', r'coordinadora.*plaza.*norte'
+                r'elizabeth.*domínguez', r'coordinadora.*plaza.*norte',
+                # FRENCH PATTERNS
+                r'courriel.*plaza.*norte', r'email.*plaza.*norte',
+                r'personne.*plaza.*norte', r'qui.*plaza.*norte',
+                r'à.*quel.*courriel.*plaza.*norte', r'adresser.*plaza.*norte',
+                r'contact.*plaza.*norte', r'campus.*plaza.*norte'
             ],
 
             "beneficios_titulados": [
@@ -1020,39 +1032,87 @@ class QuestionClassifier:
             ],
             
             # DESARROLLO PROFESIONAL - EXPANDIDO
-            "bolsa_empleo": [
-                r'bolsa.*empleo', r'duoclaboral', r'empleo.*estudiantil', r'ofertas.*trabajo',
-                r'duoclaboral\.cl', r'plataforma.*empleo', r'buscar.*trabajo',
-                r'ofertas.*laborales', r'trabajo.*estudiante'
-            ],
             "practicas_profesionales": [
                 r'práctica.*profesional', r'practica', r'claudia.*cortés',
                 r'ccortesn', r'buscar.*práctica', r'encontrar.*práctica',
-                r'proceso.*práctica', r'requisitos.*práctica', r'practicas.*profesionales'
+                r'proceso.*práctica', r'requisitos.*práctica', r'practicas.*profesionales',
+                # ENGLISH PATTERNS
+                r'professional.*internship', r'internship', r'find.*internship',
+                r'search.*internship', r'internship.*process', r'internship.*requirements',
+                r'support.*for.*finding.*internships',
+                # FRENCH PATTERNS
+                r'quel.*soutien.*pour.*trouver.*des.*stages.*professionnels',
+                r'aide.*pour.*stages.*professionnels', r'stages.*professionnels',
+                r'trouver.*des.*stages', r'comment.*puis-je.*faire.*un.*stage.*professionnel',
+                r'stage.*professionnel', r'faire.*stage'
             ],
             "mejorar_curriculum": [
                 r'mejorar.*curriculum', r'mejorar.*cv', r'asesoría.*curricular',
                 r'revisar.*cv', r'optimizar.*curriculum', r'cv.*mejor',
-                r'consejos.*curriculum', r'cómo.*hacer.*cv'
+                r'consejos.*curriculum', r'cómo.*hacer.*cv',
+                # ENGLISH PATTERNS
+                r'improve.*resume', r'improve.*cv', r'cv.*advisory',
+                r'review.*cv', r'optimize.*curriculum', r'resume.*help',
+                r'curriculum.*vitae.*help', r'how.*to.*make.*cv',
+                r'how.*can.*you.*help.*me.*improve.*my.*cv',
+                r'help.*me.*improve.*my.*cv', r'can.*you.*help.*improve.*cv',
+                r'how.*can.*you.*help.*me.*improve', r'help.*improve.*cv',
+                r'can.*you.*help.*me.*improve',
+                # FRENCH PATTERNS
+                r'comment.*pouvez-vous.*m\'aider.*à.*améliorer.*mon.*cv',
+                r'améliorer.*mon.*cv', r'conseils.*pour.*cv', r'aider.*améliorer.*cv',
+                r'comment.*améliorer.*cv', r'optimiser.*cv', r'aide.*pour.*cv'
             ],
             "simulaciones_entrevistas": [
                 r'simulación.*entrevista', r'entrevista.*laboral', r'practicar.*entrevista',
                 r'preparación.*entrevista', r'feedback.*entrevista', r'ensayo.*entrevista',
-                r'cómo.*enfrentar.*entrevista'
+                r'cómo.*enfrentar.*entrevista',
+                # ENGLISH PATTERNS
+                r'interview.*simulation', r'job.*interview', r'practice.*interview',
+                r'interview.*preparation', r'interview.*feedback', r'interview.*rehearsal',
+                r'how.*to.*face.*interview',
+                # FRENCH PATTERNS
+                r'comment.*puis-je.*préparer.*un.*entretien.*d\'embauche',
+                r'préparation.*entretien', r'simulation.*entretien', r'entretien.*d\'embauche',
+                r'préparer.*entretien', r'conseils.*entretien'
             ],
             "talleres_empleabilidad": [
                 r'taller.*empleabilidad', r'taller.*cv', r'taller.*entrevista',
                 r'desarrollo.*laboral', r'charla.*empleo', r'taller.*habilidades',
-                r'formación.*laboral', r'capacitación.*empleo'
+                r'formación.*laboral', r'capacitación.*empleo',
+                # ENGLISH PATTERNS
+                r'employability.*workshop', r'cv.*workshop', r'interview.*workshop',
+                r'career.*development', r'employment.*talk', r'skills.*workshop',
+                r'job.*training', r'employment.*training',
+                # FRENCH PATTERNS
+                r'quels.*sont.*les.*ateliers.*d\'employabilité.*disponibles',
+                r'ateliers.*d\'employabilité', r'formations.*employabilité',
+                r'ateliers.*emploi', r'ateliers.*compétences'
             ],
             "beneficios_titulados": [
                 r'beneficios.*titulados', r'egresados', r'titulados', r'después.*titular',
-                r'ventajas.*titulado', r'servicios.*egresados', r'duoc.*después.*estudiar'
+                r'ventajas.*titulado', r'servicios.*egresados', r'duoc.*después.*estudiar',
+                # ENGLISH PATTERNS
+                r'graduate.*benefits', r'benefits.*for.*graduates', r'graduated.*advantages',
+                r'services.*for.*graduates', r'duoc.*after.*studying', r'post.*graduation.*benefits',
+                r'what.*benefits.*do.*graduates.*have', r'benefits.*graduates.*have',
+                # FRENCH PATTERNS
+                r'quels.*sont.*les.*avantages.*pour.*les.*diplômés',
+                r'avantages.*diplômés', r'services.*diplômés', r'bénéfices.*diplômés',
+                r'privilèges.*diplômés', r'après.*diplôme'
             ],
             "ferias_laborales": [
                 r'ferias.*laborales', r'feria.*empleo', r'encuentro.*empresas',
                 r'feria.*trabajo', r'empresas.*reclutando', r'feria.*laboral.*duoc',
-                r'evento.*empleadores', r'feria.*profesional'
+                r'evento.*empleadores', r'feria.*profesional',
+                # FRENCH PATTERNS - MEJORADOS
+                r'y.*a.*t.*il.*des.*foires.*de.*l\'emploi',
+                r'y.*a-t-il.*des.*foires.*de.*l\'emploi',
+                r'foires.*de.*l\'emploi', r'salons.*emploi', r'foires.*travail',
+                r'événements.*emploi', r'rencontres.*employeurs', 
+                r'a.*t.*il.*foires', r'y.*a.*t.*il.*foires', 
+                r'des.*foires.*emploi', r'il.*des.*foires', 
+                r'a.*t.*il.*des.*foires'
             ],
             "mentoria_profesional": [
                 r'mentoría.*profesional', r'mentor.*profesional', r'programa.*mentores',
@@ -1062,12 +1122,25 @@ class QuestionClassifier:
             "linkedin_optimizacion": [
                 r'optimizar.*linkedin', r'perfil.*linkedin', r'linkedin.*profesional',
                 r'mejorar.*linkedin', r'linkedin.*optimización', r'perfil.*linkedin.*mejorar',
-                r'consejos.*linkedin', r'linkedin.*cv'
+                r'consejos.*linkedin', r'linkedin.*cv',
+                # FRENCH PATTERNS
+                r'comment.*optimiser.*mon.*profil.*linkedin',
+                r'optimiser.*linkedin', r'améliorer.*profil.*linkedin',
+                r'conseils.*linkedin', r'linkedin.*professionnel'
             ],
             "que_es_desarrollo_laboral": [
                 r'qué.*es.*desarrollo.*laboral', r'desarrollo.*laboral.*duoc',
                 r'qué.*hace.*desarrollo.*laboral', r'información.*desarrollo.*laboral',
-                r'definición.*desarrollo.*laboral', r'desarrollo.*laboral.*en.*duoc'
+                r'definición.*desarrollo.*laboral', r'desarrollo.*laboral.*en.*duoc',
+                # ENGLISH PATTERNS
+                r'what.*is.*career.*development', r'career.*development.*duoc',
+                r'what.*does.*career.*development.*do', r'information.*career.*development',
+                r'definition.*career.*development', r'career.*development.*at.*duoc',
+                r'what.*is.*labor.*development', r'labor.*development.*duoc',
+                r'what.*is.*labor.*development.*at.*duoc',
+                # FRENCH PATTERNS
+                r'qu\'est-ce.*que.*le.*développement.*professionnel',
+                r'développement.*professionnel.*duoc', r'qu\'est-ce.*que.*développement.*professionnel'
             ],
             
             # INSTITUCIONALES
@@ -1120,15 +1193,36 @@ class QuestionClassifier:
             # === TEMPLATES FALTANTES DESARROLLO LABORAL ===
             "bolsa_empleo": [
                 r'bolsa.*empleo', r'bolsa.*trabajo', r'ofertas.*empleo', r'buscar.*trabajo',
-                r'duoclaboral', r'portal.*empleo', r'ofertas.*laborales'
+                r'duoclaboral', r'portal.*empleo', r'ofertas.*laborales',
+                # ENGLISH PATTERNS
+                r'job.*portal', r'job.*board', r'job.*bank', r'employment.*platform', r'find.*work',
+                r'access.*duoclaboral', r'job.*offers', r'employment.*opportunities',
+                r'where.*can.*i.*access.*job.*bank', r'duoc.*uc.*job.*bank',
+                r'access.*the.*job.*bank', r'job.*bank.*access', r'where.*can.*i.*access.*the.*duoc.*uc.*job.*bank',
+                r'duoc.*job.*bank', r'access.*job.*bank',
+                # FRENCH PATTERNS
+                r'où.*puis-je.*accéder.*à.*la.*bourse.*d\'emploi',
+                r'bourse.*d\'emploi.*duoc.*uc', r'accès.*bourse.*emploi'
             ],
             "simulaciones_entrevistas": [
                 r'simulación.*entrevista', r'simulacro.*entrevista', r'práctica.*entrevista',
-                r'entrevista.*simulada', r'preparación.*entrevista'
+                r'entrevista.*simulada', r'preparación.*entrevista',
+                # ENGLISH PATTERNS
+                r'interview.*simulation', r'mock.*interview', r'interview.*practice',
+                r'simulated.*interview', r'interview.*preparation', r'interview.*training',
+                # FRENCH PATTERNS
+                r'offrez-vous.*des.*simulations.*d\'entretiens',
+                r'simulations.*d\'entretiens.*d\'embauche', r'simulation.*entretien'
             ],
             "talleres_empleabilidad": [
                 r'talleres.*empleabilidad', r'taller.*empleo', r'empleabilidad',
-                r'habilidades.*laborales', r'competencias.*laborales'
+                r'habilidades.*laborales', r'competencias.*laborales',
+                # ENGLISH PATTERNS
+                r'employability.*workshops', r'employment.*workshop', r'employability',
+                r'job.*skills', r'work.*competencies', r'professional.*skills',
+                # FRENCH PATTERNS
+                r'quel.*type.*d\'ateliers.*d\'employabilité',
+                r'ateliers.*d\'employabilité', r'formations.*employabilité'
             ],
             "ferias_laborales": [
                 r'ferias.*laborales', r'feria.*trabajo', r'feria.*empleo',
@@ -1260,9 +1354,20 @@ class QuestionClassifier:
                 r'o[ùu].*[eê]tes.*vous.*situ[eé]s', r'localisation.*sport'
             ],
             "mejorar_curriculum": [
-                r'c[óo]mo.*mejoro.*mi.*curriculum', r'c[óo]mo.*mejoro.*curr[íi]culum',
+                r'c[oó]mo.*mejoro.*mi.*curriculum', r'c[oó]mo.*mejoro.*curr[íi]culum',
                 r'mejorar.*curr[íi]culum', r'optimizar.*cv', r'ayuda.*curriculum',
-                r'asesor[íi]a.*curriculum', r'revisi[óo]n.*cv', r'c[óo]mo.*mejorar.*cv'
+                r'asesor[íi]a.*curriculum', r'revisi[oó]n.*cv', r'c[oó]mo.*mejorar.*cv',
+                # ENGLISH PATTERNS
+                r'how.*can.*you.*help.*me.*improve.*my.*resume', r'improve.*cv.*help',
+                r'resume.*improvement', r'cv.*enhancement', r'help.*with.*curriculum',
+                r'review.*my.*resume', r'curriculum.*vitae.*help', r'cv.*advisory',
+                r'how.*can.*you.*help.*me.*improve.*my.*cv',
+                r'help.*me.*improve.*my.*cv', r'can.*you.*help.*improve.*cv',
+                r'how.*can.*you.*help.*me.*improve', r'help.*improve.*cv',
+                r'can.*you.*help.*me.*improve',
+                # FRENCH PATTERNS
+                r'comment.*pouvez-vous.*m\'aider.*à.*améliorer.*mon.*cv',
+                r'améliorer.*mon.*cv', r'conseils.*pour.*cv', r'aide.*cv'
             ],
             "apoyo_psicologico_principal": [
                 r'necesito.*apoyo.*psicologico', r'necesito.*ayuda.*psicol[óo]gica',
@@ -1275,10 +1380,35 @@ class QuestionClassifier:
                 r'evaluaci[óo]n.*talleres.*deportivos', r'calificaci[óo]n.*deportes'
             ],
             "simulaciones_entrevistas": [
-                r'simulaci[óo]n.*entrevista', r'simulaciones.*entrevistas',
-                r'ofrecen.*simulaciones', r'simulaci[óo]n.*laboral',
+                r'simulaci[oó]n.*entrevista', r'simulaciones.*entrevistas',
+                r'ofrecen.*simulaciones', r'simulaci[oó]n.*laboral',
                 r'pr[áa]ctica.*entrevista', r'entrenar.*entrevistas',
-                r'preparaci[óo]n.*entrevista.*laboral'
+                r'preparaci[oó]n.*entrevista.*laboral',
+                # ENGLISH PATTERNS
+                r'interview.*simulation', r'interview.*simulations',
+                r'do.*you.*offer.*interview.*simulations', r'practice.*interviews',
+                r'mock.*interviews', r'interview.*training', r'interview.*preparation',
+                # FRENCH PATTERNS
+                r'comment.*puis-je.*préparer.*un.*entretien.*d\'embauche',
+                r'préparation.*entretien', r'simulation.*entretien', r'entretien.*d\'embauche',
+                r'préparer.*entretien', r'conseils.*entretien'
+            ],
+
+            "ferias_laborales": [
+                r'ferias.*laborales', r'feria.*empleo', r'encuentro.*empresas',
+                r'feria.*trabajo', r'empresas.*reclutando', r'feria.*laboral.*duoc',
+                r'evento.*empleadores', r'feria.*profesional',
+                # ENGLISH PATTERNS  
+                r'job.*fair', r'career.*fair', r'employment.*fair',
+                r'job.*fairs', r'career.*fairs', r'recruiting.*events',
+                # FRENCH PATTERNS
+                r'y.*a.*t.*il.*des.*foires.*de.*l\'emploi',
+                r'y.*a-t-il.*des.*foires.*de.*l\'emploi',
+                r'foires.*de.*l\'emploi', r'salons.*emploi', r'foires.*travail',
+                r'événements.*emploi', r'rencontres.*employeurs', 
+                r'a.*t.*il.*foires', r'y.*a.*t.*il.*foires', 
+                r'des.*foires.*emploi', r'il.*des.*foires', 
+                r'a.*t.*il.*des.*foires'
             ]
         }
         

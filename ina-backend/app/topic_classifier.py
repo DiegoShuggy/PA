@@ -53,9 +53,34 @@ class TopicClassifier:
                 "comunicación efectiva", "liderazgo", "habilidades blandas", "habilidades laborales",
                 "soft skills", "taller desarrollo profesional", "claudia cortés", "ccortesn",
                 "coordinadora desarrollo laboral", "desarrollo laboral",
+                # ENGLISH KEYWORDS
+                "career development", "professional development", "internship", "internships",
+                "job portal", "employment", "work", "job", "career", "resume", "cv",
+                "curriculum vitae", "interview", "job interview", "interview simulation",
+                "improve resume", "resume advisory", "interview preparation", "interview tips",
+                "resume model", "cv format", "employability workshop", "cv workshop",
+                "interview workshop", "personal brand", "effective communication", "leadership",
+                "soft skills", "job skills", "professional skills", "career development workshop",
+                "job board", "employment platform", "find work", "job search",
+                "duoc uc job bank", "duoc job bank", "access job bank", "job bank access",
+                "where can i access", "where can i find job", "job opportunities",
+                "job bank", "duoclaboral", "duoc laboral", "employment center", 
+                "career center", "career services", "job placement", "job finder",
+                "where can i access job", "access duoc job", "duoc employment",
+                "find job", "search job", "job portal duoc", "employment duoc",
                 "titulación", "egresados", "titulados", "beneficios titulados",
                 "ceremonia titulación", "diploma", "certificado titulación", "proceso titulación",
-                "fecha titulación", "egresar", "graduación", "titularse"
+                "fecha titulación", "egresar", "graduación", "titularse",
+                # FRENCH KEYWORDS
+                "développement professionnel", "stage professionnel", "stages", "stage",
+                "bourse d'emploi", "emploi", "travail", "embauche", "entretien d'embauche",
+                "curriculum", "cv", "améliorer cv", "simulation entretien", "conseil cv",
+                "ateliers employabilité", "ateliers d'employabilité", "atelier cv", "atelier entretien", 
+                "marque personnelle", "compétences professionnelles", "compétences", "diplômés", "avantages diplômés",
+                "optimiser", "optimisation", "profil linkedin", "linkedin", "profil professionnel",
+                "employabilité", "disponibles", "quels ateliers", "offrez-vous", "offrez", 
+                "simulations d'entretiens", "entretiens", "courriel", "personne", "adresser",
+                "campus", "quel", "à quel", "puis-je"
             ],
             "bienestar_estudiantil": {
                 "es": [
@@ -411,7 +436,9 @@ class TopicClassifier:
             'informations sur les programmes',
             'conditions pour postuler',
             'elle est perdue ou endommagée',
-            'programmes de soutien aux étudiants'
+            'programmes de soutien aux étudiants',
+            'offrez-vous des simulations d\'entretiens d\'embauche',
+            'offrez-vous des simulations d\'entretiens'
         ]
         
         # RETORNO INMEDIATO solo para consultas 100% francesas
@@ -419,6 +446,20 @@ class TopicClassifier:
             if direct_query in question_lower:
                 print(f"   🔥 ULTRA-SPECIFIC FRENCH MATCH: '{direct_query}' -> FORCING FRENCH")
                 return 'fr'
+        
+        # PASO 1.1: DETECCIÓN DIRECTA DE CONSULTAS INGLESAS INEQUÍVOCAS
+        # ================================================================
+        ultra_specific_english_queries = [
+            'where can i access the duoc uc job bank',
+            'duoc uc job bank access',
+            'access duoc uc job bank'
+        ]
+        
+        # RETORNO INMEDIATO solo para consultas 100% inglesas específicas
+        for direct_query in ultra_specific_english_queries:
+            if direct_query in question_lower:
+                print(f"   🔥 ULTRA-SPECIFIC ENGLISH MATCH: '{direct_query}' -> FORCING ENGLISH")
+                return 'en'
         
         # ================================================================
         # PASO 2: IDENTIFICADORES ESPAÑOLES FUERTES (PRIORIDAD MÁXIMA)
@@ -633,6 +674,24 @@ class TopicClassifier:
             'scholarship': 20,   # Beca en inglés
             'miss': 15,          # Faltar en inglés
             'gym': 15,           # Gimnasio en inglés
+            'sports': 15,        # Deportes en inglés
+            # CAREER DEVELOPMENT ENGLISH KEYWORDS
+            'career': 20,        # Carrera/desarrollo profesional
+            'resume': 20,        # Currículum en inglés
+            'internship': 25,    # Práctica profesional
+            'internships': 25,   # Prácticas profesionales
+            'interview': 20,     # Entrevista
+            'interviews': 20,    # Entrevistas
+            'simulation': 18,    # Simulación
+            'simulations': 18,   # Simulaciones
+            'employability': 25, # Empleabilidad
+            'job': 15,           # Trabajo
+            'employment': 20,    # Empleo
+            'portal': 18,        # Portal
+            'benefits': 15,      # Beneficios
+            'graduates': 20,     # Graduados/titulados
+            'development': 20,   # Desarrollo
+            'professional': 20,  # Profesional
             'enroll': 18,        # Inscribirse en inglés
             'located': 15,       # Ubicado en inglés
             'sports': 15,        # Deportes en inglés

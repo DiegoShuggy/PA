@@ -491,4 +491,35 @@ TEMPLATES_FR = {
 
 💡 *Accompagnement professionnel soutenu jusqu'à votre stabilité complète*
 """,
+    
+    "contacto_plaza_norte_especifico": """
+📍 **Contact Spécifique - Campus Plaza Norte**
+**Coordinatrices et contacts directs:**
+👩‍💼 **Développement Professionnel:**
+• **Nom:** Claudia Cortés
+• **Poste:** Coordinatrice Développement Professionnel
+• **Email:** ccortesn@duoc.cl
+• **Lieu:** Point Étudiant, premier étage
+👩‍💼 **Bien-être Étudiant:**
+• **Nom:** Adriana Vásquez
+• **Poste:** Coordinatrice Bien-être Étudiant
+• **Email:** avasquezm@duoc.cl
+• **Lieu:** Bureau Bien-être, deuxième étage
+👩‍💼 **Inclusion et Handicap:**
+• **Nom:** Elizabeth Domínguez
+• **Poste:** Coordinatrice Inclusion
+• **Email:** edominguezs@duoc.cl
+• **Lieu:** Bureau PAEDIS, premier étage
+📞 **Téléphones campus:**
+• **Central:** +56 2 2360 6400
+• **Point Étudiant:** +56 2 2360 6410
+• **Bien-être:** +56 2 2360 6420
+• **Bibliothèque:** +56 2 2360 6430
+• **Urgences:** +56 2 2999 3005
+📍 **Adresse:**
+Av. Américo Vespucio 1501, Conchalí, Santiago
+**Métro le plus proche:** Plaza Norte (Ligne 3)
+🔗 **Portail campus:** https://www.duoc.cl/sede/plaza-norte/
+🔗 **WhatsApp campus:** +56 9 XXXX XXXX
+""",
 }
