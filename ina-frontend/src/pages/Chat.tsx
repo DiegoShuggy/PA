@@ -233,7 +233,7 @@ const cleanTextForTTS = useCallback((text: string): string => {
     .replace(/~~(.*?)~~/g, '$1')     // ~~tachado~~ → tachado
 
     // ELIMINAR EMOJIS COMPLETAMENTE (no convertirlos a texto)
-    .replace(/[🆕📋📍⏰📞🔗💡📊🔄🆕📧💳🛡️🚑🎫📅💰✅📋🩺✝️🚪🙏🎯💻📹🍽️🤝🏢🎫💰📧💳🧠📱🚨🏥❌🤝♿🎯🎓🌟⏰📞💙💻📚🏅📍⏰❌📊📝🏋️⏰🏆💰👩‍💼👨‍💼🏢🙏🤝🌄🕯️⛪❤️⚡]/gu, ' ')
+    .replace(/[🆕📋🌐⏰💡📊⚡🆘💰✅🏥🚑🎫🔄💳📧📞📅🗂️🩺✝️🚪🙏🚌🖌️📄📊🎯💻📹🍽️🤝🏢🎫💰🧠📱🚨🔗🏥❌🤝♿👩‍💼📧💙🎓🌟📚👥🌱🚨💻📞⏰💼🎤📚🏢🤝💼🙏🤝🌄🕯️⛪❤️🍽️🧥🎁📚🏅📍⏰❌📊📝🏋️🏆💰👩‍💼👨‍💼🏢]/gu, ' ')
 
     // Eliminar cualquier otro emoji (rango Unicode completo)
     .replace(/[\u{1F600}-\u{1F64F}]/gu, ' ')  // Emoticones

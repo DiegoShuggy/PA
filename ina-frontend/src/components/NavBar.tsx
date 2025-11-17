@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import "../css/NavBar.css"
 import { useTranslation } from "react-i18next";
 import logo from '../img/pto.png';
+// Agregar import de VoiceSearch
+import VoiceSearch from '../components/VoiceSearch';
 
 function NavBar() {
     const { t } = useTranslation();
@@ -18,6 +20,18 @@ function NavBar() {
 
     // Referencia para el temporizador
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    // Función para manejar búsquedas por voz
+    const handleVoiceSearch = (query: string) => {
+        console.log('Búsqueda por voz desde NavBar:', query);
+        // Redirigir al chat con la consulta de voz
+        navigate('/InA', {
+            state: {
+                predefinedQuestion: query,
+                autoSend: true
+            }
+        });
+    };
 
     // Función para manejar el clic secreto en el logo
     const handleSecretClick = () => {
@@ -73,6 +87,11 @@ function NavBar() {
                         <p>{t('navbar.poweredBy')}</p>
                         <h1>{t('navbar.InA')}</h1>
                     </header>
+
+                    {/* Agregar la sección de búsqueda por voz aquí */}
+                    <div className="navbar-voice-search">
+                        <VoiceSearch onSearch={handleVoiceSearch} />
+                    </div>
 
                     <div className="navbar-links">
                         <Link to="/">{t('navbar.Lobby')}</Link>

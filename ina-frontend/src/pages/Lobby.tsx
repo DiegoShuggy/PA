@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import VoiceSearch from '../components/VoiceSearch';
 import '../css/Lobby.css';
 import audio from '../assets/audio/inaaaaaaa.mp3'
 function Lobby() {
@@ -19,15 +18,15 @@ function Lobby() {
     const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
     const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const isManualStopRef = useRef(false);
-     const autoReadEnabledRef = useRef(false); // Nuevo ref para controlar lectura automática
-    
+    const autoReadEnabledRef = useRef(false); // Nuevo ref para controlar lectura automática
+
     // Nuevo estado para el contador de clics
     const [clickCount, setClickCount] = useState(0);
     const clickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // Ref para el audio
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    
+
     // Efecto para inicializar el audio
     useEffect(() => {
         audioRef.current = new Audio(audio);
@@ -41,7 +40,7 @@ function Lobby() {
         };
     }, []);
 
-     // Función para manejar el clic en el título
+    // Función para manejar el clic en el título
     const handleTitleClick = () => {
         // Limpiar timeout anterior si existe
         if (clickTimeoutRef.current) {
@@ -64,7 +63,7 @@ function Lobby() {
         }
     };
 
-     // Función para reproducir el sonido secreto
+    // Función para reproducir el sonido secreto
     const playSecretSound = () => {
         if (audioRef.current) {
             audioRef.current.currentTime = 0; // Reiniciar al inicio
@@ -75,19 +74,19 @@ function Lobby() {
         }
     };
 
-     // Función para cambiar entre áreas
+    // Función para cambiar entre áreas
     const cambiarArea = (area: string) => {
         setAreaActiva(area);
         // Activar lectura automática cuando se cambia de área
         autoReadEnabledRef.current = true;
     };
-const isReturningRef = useRef(false);
-   // Función para volver al área general
-const volverAGeneral = () => {
-    isReturningRef.current = true;
-    setAreaActiva('general');
-    autoReadEnabledRef.current = true;
-};
+    const isReturningRef = useRef(false);
+    // Función para volver al área general
+    const volverAGeneral = () => {
+        isReturningRef.current = true;
+        setAreaActiva('general');
+        autoReadEnabledRef.current = true;
+    };
 
     // INICIO - FUNCIONALIDAD DEL LECTOR DE TEXTO ADAPTADA
 
@@ -138,74 +137,74 @@ const volverAGeneral = () => {
             stopReading();
         };
     }, [stopReading]);
-    
-// Mantener getPageText como estaba anteriormente
-const getPageText = useCallback(() => {
-    // Si estamos volviendo a general, no leer título y descripción
-    const isReturning = isReturningRef.current;
-    isReturningRef.current = false; // Resetear después de usar
-    // Obtener título y descripción SOLO para área general
-    const pageTitle = (areaActiva === 'general' && !isReturning) ? document.querySelector('h2')?.textContent || '' : '';
-    const pageDescription = (areaActiva === 'general' && !isReturning) ? document.querySelector('h3')?.textContent || '' : '';
-    
 
-   // Obtener texto introductorio de áreas SOLO cuando no sea un "volver"
-    const areaIntroText = (!isReturning) ? document.querySelector('.sr-only')?.textContent || '' : '';
-    
-    // Obtener nombres de las áreas disponibles (botones) - SOLO para área general
-    let areaButtons = '';
-if (areaActiva === 'general' && !isReturning) {
-        const areaNames = Array.from(document.querySelectorAll('.cambio-item span'))
-            .map(span => span.textContent)
-            .filter(Boolean);
-        
-        // Formatear los nombres de áreas con "y" antes del último elemento
-        if (areaNames.length > 0) {
-            if (areaNames.length === 1) {
-                areaButtons = areaNames[0];
-            } else {
-                const lastArea = areaNames.pop();
-                areaButtons = `${areaNames.join(', ')} ${t('Lobby.areaconnect')} ${lastArea}`;
+    // Mantener getPageText como estaba anteriormente
+    const getPageText = useCallback(() => {
+        // Si estamos volviendo a general, no leer título y descripción
+        const isReturning = isReturningRef.current;
+        isReturningRef.current = false; // Resetear después de usar
+        // Obtener título y descripción SOLO para área general
+        const pageTitle = (areaActiva === 'general' && !isReturning) ? document.querySelector('h2')?.textContent || '' : '';
+        const pageDescription = (areaActiva === 'general' && !isReturning) ? document.querySelector('h3')?.textContent || '' : '';
+
+
+        // Obtener texto introductorio de áreas SOLO cuando no sea un "volver"
+        const areaIntroText = (!isReturning) ? document.querySelector('.sr-only')?.textContent || '' : '';
+
+        // Obtener nombres de las áreas disponibles (botones) - SOLO para área general
+        let areaButtons = '';
+        if (areaActiva === 'general' && !isReturning) {
+            const areaNames = Array.from(document.querySelectorAll('.cambio-item span'))
+                .map(span => span.textContent)
+                .filter(Boolean);
+
+            // Formatear los nombres de áreas con "y" antes del último elemento
+            if (areaNames.length > 0) {
+                if (areaNames.length === 1) {
+                    areaButtons = areaNames[0];
+                } else {
+                    const lastArea = areaNames.pop();
+                    areaButtons = `${areaNames.join(', ')} ${t('Lobby.areaconnect')} ${lastArea}`;
+                }
             }
         }
-    }
-    
-    // Obtener todas las preguntas del área activa
-    const questions = Array.from(document.querySelectorAll('.lobby-item span, .Coordinador-item span'))
-        .map(span => span.textContent)
-        .filter(Boolean)
-        .join('. ');
 
-    // Construir texto completo según el área activa
-    let fullText = '';
-    
-    if (areaActiva === 'general') {
-        if (isReturning) {
-            // Texto conciso para cuando se vuelve a general - solo las preguntas
-            fullText = `${t('Lobby.VolverText')} ${questions}`;
+        // Obtener todas las preguntas del área activa
+        const questions = Array.from(document.querySelectorAll('.lobby-item span, .Coordinador-item span'))
+            .map(span => span.textContent)
+            .filter(Boolean)
+            .join('. ');
+
+        // Construir texto completo según el área activa
+        let fullText = '';
+
+        if (areaActiva === 'general') {
+            if (isReturning) {
+                // Texto conciso para cuando se vuelve a general - solo las preguntas
+                fullText = `${t('Lobby.VolverText')} ${questions}`;
+            } else {
+                // Texto completo para primera vez en general
+                fullText = `${pageTitle}. ${pageDescription}. ${areaIntroText} ${areaButtons}. ${t('Lobby.FAQareas')} ${questions}`;
+            }
         } else {
-            // Texto completo para primera vez en general
-            fullText = `${pageTitle}. ${pageDescription}. ${areaIntroText} ${areaButtons}. ${t('Lobby.FAQareas')} ${questions}`;
+            // Para áreas específicas - NO incluir título y descripción
+            const areaName = getCurrentAreaName();
+            let areaIntro = '';
+
+            // Personalizar la introducción según el área
+            switch (areaActiva) {
+                case 'pastoral':
+                    areaIntro = `${t('Lobby.areapas')}`;
+                    break;
+                default:
+                    areaIntro = `${t('Lobby.area')} ${areaName}.`;
+            }
+
+            fullText = `${areaIntro} ${t('Lobby.FAQTitle')} ${areaName.toLowerCase()}: ${questions}`;
         }
-    } else {
-        // Para áreas específicas - NO incluir título y descripción
-        const areaName = getCurrentAreaName();
-        let areaIntro = '';
-        
-        // Personalizar la introducción según el área
-        switch (areaActiva) {
-            case 'pastoral':
-                areaIntro = `${t('Lobby.areapas')}`;
-                break;
-            default:
-                areaIntro = `${t('Lobby.area')} ${areaName}.`;
-        }
-        
-        fullText = `${areaIntro} ${t('Lobby.FAQTitle')} ${areaName.toLowerCase()}: ${questions}`;
-    }
-    
-    return fullText.trim();
-}, [areaActiva]);
+
+        return fullText.trim();
+    }, [areaActiva]);
 
     // Función auxiliar para obtener el nombre del área actual
     const getCurrentAreaName = () => {
@@ -219,13 +218,7 @@ if (areaActiva === 'general' && !isReturning) {
         }
     };
 
-    // Función para manejar búsquedas por voz (opcional)
-    const handleVoiceSearch = (query: string) => {
-        console.log('Búsqueda por voz:', query);
-        // Puedes agregar lógica adicional aquí si necesitas
-    };
-
-       // Función para leer texto en voz alta
+    // Función para leer texto en voz alta
     const readText = useCallback((text: string, isAutoRead = false) => {
         // Si es lectura automática y hubo detención manual, no leer
         if (isAutoRead && isManualStopRef.current) {
@@ -234,7 +227,7 @@ if (areaActiva === 'general' && !isReturning) {
         }
 
         if (!speechSynthesisRef.current || !isTtsSupported) {
-            alert(t('Lobby.ttsNotSupported') );
+            alert(t('Lobby.ttsNotSupported'));
             return;
         }
 
@@ -380,7 +373,7 @@ if (areaActiva === 'general' && !isReturning) {
         return () => clearTimeout(timer);
     }, [areaActiva, getPageText, readText]);
     // Función para leer todo el contenido de la página
-     // Función para leer todo el contenido de la página
+    // Función para leer todo el contenido de la página
     const readPageContent = useCallback(() => {
         const fullText = getPageText();
 
@@ -658,7 +651,7 @@ if (areaActiva === 'general' && !isReturning) {
     return (
         <div className="lobby-container">
             {/* Título con detector de clics */}
-            <h2 
+            <h2
                 onClick={handleTitleClick}
             >
                 {t('Lobby.title')}
@@ -736,7 +729,6 @@ if (areaActiva === 'general' && !isReturning) {
                     </div>
                 </div>
             </div>
-
             {/* Botón para volver al área general */}
             {areaActiva !== 'general' && (
                 <div className="back-button">
@@ -746,16 +738,11 @@ if (areaActiva === 'general' && !isReturning) {
                 </div>
             )}
 
+
             {/* Contenido dinámico según el área activa */}
             {renderizarContenido()}
 
-            {/* Buscador por voz (solo en área general) */}
-            {areaActiva === 'general' && (
-                <div className="voice-search-section">
-                    <h4>{t('Lobby.voicetitle')}</h4>
-                    <VoiceSearch onSearch={handleVoiceSearch} />
-                </div>
-            )}
+
 
             <div ref={messagesEndRef} />
         </div>

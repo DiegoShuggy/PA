@@ -249,30 +249,13 @@ const findBestMatch = (command: string, commandMap: { [key: string]: any }): str
         )}
       </button>
 
-      {transcript && (
-        <div className="voice-transcript">
-          <strong>{t('VoiceSearch.recognized')}:</strong> {transcript}
-        </div>
-      )}
+      <div className="voice-transcript"></div>
 
       {autoNavigate && (
         <div className="voice-auto-navigate">
           <div className="navigating-message">
             ✅ {t('VoiceSearch.navigatingTo')}: "{autoNavigate}"
           </div>
-        </div>
-      )}
-
-      {showResults && searchResults.length > 0 && (
-        <div className="voice-results">
-          <h4>{t('VoiceSearch.results')}:</h4>
-          <ul>
-            {searchResults.map((result, index) => (
-              <li key={index} className="voice-result-item">
-                {result}
-              </li>
-            ))}
-          </ul>
         </div>
       )}
     </div>
