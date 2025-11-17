@@ -101,7 +101,12 @@ class DuocURLManager:
             "carreras_tecnicas": "https://www.duoc.cl/carreras/tecnicas/",
             "carreras_profesionales": "https://www.duoc.cl/carreras/profesionales/",
             "educacion_continua": "https://www.duoc.cl/educacion-continua/",
-            "postulacion": "https://www.duoc.cl/postulacion/"
+            "postulacion": "https://www.duoc.cl/postulacion/",
+            
+            # CVA - Campus Virtual de Aprendizaje
+            "cva": "https://cva.duoc.cl/",
+            "campus_virtual": "https://cva.duoc.cl/",
+            "aprendizaje_virtual": "https://cva.duoc.cl/"
         }
         
         # Mapeo de palabras clave a URLs (expandido)
@@ -306,7 +311,11 @@ class DuocURLManager:
 
     def get_url_by_key(self, key: str) -> Optional[str]:
         """Obtener URL por clave"""
-        return self.duoc_urls.get(key)
+        url = self.duoc_urls.get(key)
+        if url is None:
+            logger.warning(f"⚠️ URL no encontrada para la clave: {key}")
+            logger.info(f"🔑 Claves disponibles: {list(self.duoc_urls.keys())}")
+        return url
 
 class QRGenerator:
     def __init__(self):
@@ -444,6 +453,8 @@ class QRGenerator:
                         # 👈 ESTRUCTURA SIMPLIFICADA para el frontend
                         qr_codes[url] = qr_code
                         logger.info(f"✅ QR agregado desde contexto: {url}")
+                elif not url:
+                    logger.warning(f"⚠️ No se pudo generar QR para clave inexistente: {url_key}")
         
         # 4. Si no hay URLs en texto pero la pregunta sugiere necesidad, agregar URLs por defecto
         if not qr_codes and user_question:

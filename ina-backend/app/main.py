@@ -477,6 +477,9 @@ async def chat(message: Message, request: Request):
                     user_id=user_id
                 )
             
+            # 🔥 DECLARAR VARIABLES IMPORTANTES AL INICIO
+            followup_suggestions = []
+            
             # get_ai_response es síncrona, NO usar await
             response_data = get_ai_response(
                 question, 
@@ -486,7 +489,6 @@ async def chat(message: Message, request: Request):
             )
             
             # 🔥 GENERAR SUGERENCIAS INTELIGENTES
-            followup_suggestions = []
             if conversation_context:
                 followup_suggestions = conversation_context.suggested_followups
             
