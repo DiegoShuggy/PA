@@ -16,6 +16,14 @@ except ImportError:
     DOCX_AVAILABLE = False
     logging.warning("python-docx no instalado. No se procesarán .docx")
 
+# Soporte para documentos PDF
+try:
+    import pdfplumber
+    PDF_AVAILABLE = True
+except ImportError:
+    PDF_AVAILABLE = False
+    logging.warning("pdfplumber no instalado. No se procesarán .pdf")
+
 logger = logging.getLogger(__name__)
 
 
@@ -118,12 +126,158 @@ class DocumentProcessor:
             })
         return result
 
+    def extract_from_txt(self, file_path: str) -> List[Dict[str, str]]:
+        """Procesa archivos TXT planos"""
+        try:
+            filename = os.path.basename(file_path)
+            logger.info(f"Extrayendo TXT: {filename}")
+            
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            if len(content.strip()) < 50:
+                logger.warning(f"Archivo TXT muy pequeño: {filename}")
+                return []
+            
+            # Dividir en secciones por títulos o separadores
+            sections = self._split_txt_into_sections(content)
+            
+            result = []
+            for i, section in enumerate(sections):
+                if len(section['text'].strip()) > 100:  # Mínimo 100 caracteres por sección
+                    result.append({
+                        'text': section['text'],
+                        'section': section['title'] or f'Sección_{i+1}',
+                        'style': 'Text',
+                        'is_structured': section['is_structured'],
+                        'page_reference': f'section_{i}'
+                    })
+            
+            logger.info(f"TXT {filename}: {len(result)} secciones extraídas")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error procesando TXT {file_path}: {e}")
+            return []
+    
+    def extract_from_pdf(self, file_path: str) -> List[Dict[str, str]]:
+        """Procesa archivos PDF usando pdfplumber"""
+        if not PDF_AVAILABLE:
+            logger.error("pdfplumber no disponible para procesar PDF")
+            return []
+        
+        try:
+            filename = os.path.basename(file_path)
+            logger.info(f"Extrayendo PDF: {filename}")
+            
+            content = []
+            with pdfplumber.open(file_path) as pdf:
+                for page_num, page in enumerate(pdf.pages):
+                    text = page.extract_text()
+                    if text and len(text.strip()) > 50:
+                        content.append({
+                            'text': text,
+                            'section': f'Página_{page_num + 1}',
+                            'style': 'PDF_Page',
+                            'is_structured': self._is_structured_content(text),
+                            'page_reference': f'page_{page_num}'
+                        })
+            
+            logger.info(f"PDF {filename}: {len(content)} páginas extraídas")
+            return content
+            
+        except Exception as e:
+            logger.error(f"Error procesando PDF {file_path}: {e}")
+            return []
+    
+    def _split_txt_into_sections(self, content: str) -> List[Dict[str, Any]]:
+        """Divide un archivo TXT en secciones lógicas"""
+        sections = []
+        lines = content.split('\n')
+        current_section = []
+        current_title = ""
+        
+        for line in lines:
+            line = line.strip()
+            
+            # Detectar títulos/headers
+            if self._is_txt_header(line):
+                # Guardar sección anterior si existe
+                if current_section:
+                    text = '\n'.join(current_section).strip()
+                    if len(text) > 50:
+                        sections.append({
+                            'title': current_title,
+                            'text': text,
+                            'is_structured': self._is_structured_content(text)
+                        })
+                
+                # Iniciar nueva sección
+                current_title = line
+                current_section = []
+            else:
+                if line:  # Solo agregar líneas no vacías
+                    current_section.append(line)
+        
+        # Agregar última sección
+        if current_section:
+            text = '\n'.join(current_section).strip()
+            if len(text) > 50:
+                sections.append({
+                    'title': current_title,
+                    'text': text,
+                    'is_structured': self._is_structured_content(text)
+                })
+        
+        # Si no se encontraron secciones, tratar todo como una sección
+        if not sections and len(content.strip()) > 100:
+            sections.append({
+                'title': 'Contenido_Principal',
+                'text': content.strip(),
+                'is_structured': self._is_structured_content(content)
+            })
+        
+        return sections
+    
+    def _is_txt_header(self, line: str) -> bool:
+        """Detecta si una línea es un título o header"""
+        if len(line) < 3:
+            return False
+        
+        # Patrones de títulos
+        patterns = [
+            r'^#{1,6}\s',  # Markdown headers
+            r'^\d+\.\s',   # Numerados
+            r'^[A-Z][A-Z\s]{5,}$',  # TODO MAYÚSCULAS
+            r'^\*\*.*\*\*$',  # **Título**
+            r'^=+$|^-+$',   # Separadores
+            r'^\s*\*\*?\s*[A-Z]',  # * TÍTULO o ** TÍTULO
+        ]
+        
+        for pattern in patterns:
+            if re.search(pattern, line):
+                return True
+        
+        # Líneas cortas en mayúsculas
+        if line.isupper() and len(line) < 60 and len(line) > 10:
+            return True
+        
+        # Líneas que terminan con :
+        if line.endswith(':') and len(line) < 80 and not line.startswith('http'):
+            return True
+        
+        return False
+
     def _detect_category_from_filename(self, name: str) -> str:
+        """Detecta categoría por nombre de archivo"""
         n = name.lower()
         mapping = {
             'deport': 'deportes', 'bienestar': 'bienestar_estudiantil', 'be': 'bienestar_estudiantil',
             'desarrollo': 'desarrollo_profesional', 'dl': 'desarrollo_profesional',
-            'asuntos': 'asuntos_estudiantiles', 'tne': 'asuntos_estudiantiles', 'certificados': 'asuntos_estudiantiles'
+            'asuntos': 'asuntos_estudiantiles', 'tne': 'asuntos_estudiantiles', 'certificados': 'asuntos_estudiantiles',
+            'calendario': 'academico', 'procedimientos': 'academico', 'manual': 'academico',
+            'carreras': 'academico', 'directorio': 'academico', 'guia': 'general',
+            'frecuentes': 'general', 'emergencia': 'seguridad', 'protocolo': 'seguridad'
         }
         for k, v in mapping.items():
             if k in n:
@@ -139,18 +293,8 @@ class DocumentProcessor:
         if any(w in t for w in ['deporte', 'taller deportivo', 'gimnasio', 'caf', 'maiclub', 'entrenamiento']):
             return 'deportes'
         if any(w in t for w in ['trabajo', 'práctica', 'curriculum', 'bolsa trabajo', 'duoclaboral']):
-            return 'desarrollo_profesional'
+                return v
         return ""
-
-    def _is_relevant_content(self, text: str) -> bool:
-        if len(text) < 15:
-            return False
-        junk = [r'^página\s+\d+', r'^\d+\s+de\s+\d+', r'^tabla de contenido', r'^índice', r'^capítulo']
-        if any(re.search(p, text.lower()) for p in junk):
-            return False
-        if any(p in text.lower() for p in ['documento interno', 'confidencial', 'copyright']):
-            return False
-        return True
 
     def _format_for_rag(self, text: str, section: str, structured: bool) -> str:
         text = re.sub(r'\s+', ' ', text).strip()
@@ -165,7 +309,7 @@ class TrainingDataLoader:
         self.training_data_path = "./training_data"
         self.documents_path = "./app/documents"
         self.base_knowledge_loaded = False
-        self.word_documents_loaded = False
+        self.word_documents_loaded = False  # Ahora incluye DOCX, TXT y PDF
         self.document_processor = DocumentProcessor()
 
     def load_all_training_data(self):
@@ -177,7 +321,7 @@ class TrainingDataLoader:
                 self.base_knowledge_loaded = True
 
             if not self.word_documents_loaded and os.path.exists(self.documents_path):
-                self._load_word_documents()
+                self._load_documents()
                 self.word_documents_loaded = True
 
             self._load_historical_training_data()
@@ -220,42 +364,103 @@ class TrainingDataLoader:
             self._add_to_rag(item["q"], item["a"], item["c"], "base", "original")
         logger.info(f"Base: {len(knowledge)} ítems")
 
-    def _load_word_documents(self):
+    def _load_documents(self):
+        """Carga documentos DOCX, TXT y PDF desde la carpeta documents/"""
         if not os.path.exists(self.documents_path):
             logger.warning("Carpeta documents/ no encontrada")
             return
-        if not DOCX_AVAILABLE:
-            logger.error("Instala python-docx: pip install python-docx")
-            return
 
-        files = glob.glob(os.path.join(self.documents_path, "*.docx"))
-        logger.info(f"{len(files)} documentos Word encontrados")
-        total = 0
+        # Buscar todos los tipos de archivos soportados
+        docx_files = glob.glob(os.path.join(self.documents_path, "*.docx"))
+        txt_files = glob.glob(os.path.join(self.documents_path, "*.txt"))
+        pdf_files = glob.glob(os.path.join(self.documents_path, "*.pdf"))
+        
+        total_files = len(docx_files) + len(txt_files) + len(pdf_files)
+        logger.info(f"Documentos encontrados: {len(docx_files)} DOCX, {len(txt_files)} TXT, {len(pdf_files)} PDF")
+        
+        total_processed = 0
 
-        for path in files:
-            name = os.path.basename(path)
-            logger.info(f"Procesando: {name}")
-            chunks = self.document_processor.extract_from_docx(path)
+        # Procesar archivos DOCX
+        if docx_files and DOCX_AVAILABLE:
+            logger.info("Procesando documentos Word...")
+            for path in docx_files:
+                processed = self._process_single_document(path, 'docx')
+                total_processed += processed
+        elif docx_files and not DOCX_AVAILABLE:
+            logger.error("Archivos .docx encontrados pero python-docx no está instalado")
+
+        # Procesar archivos TXT
+        if txt_files:
+            logger.info("Procesando documentos TXT...")
+            for path in txt_files:
+                processed = self._process_single_document(path, 'txt')
+                total_processed += processed
+
+        # Procesar archivos PDF
+        if pdf_files and PDF_AVAILABLE:
+            logger.info("Procesando documentos PDF...")
+            for path in pdf_files:
+                processed = self._process_single_document(path, 'pdf')
+                total_processed += processed
+        elif pdf_files and not PDF_AVAILABLE:
+            logger.error("Archivos .pdf encontrados pero pdfplumber no está instalado")
+
+        logger.info(f"TOTAL DOCUMENTOS PROCESADOS: {total_processed} de {total_files} archivos")
+        self.word_documents_loaded = True
+    
+    def _process_single_document(self, file_path: str, file_type: str) -> int:
+        """Procesa un solo documento según su tipo"""
+        name = os.path.basename(file_path)
+        logger.info(f"Procesando {file_type.upper()}: {name}")
+        
+        try:
+            # Extraer contenido según el tipo
+            if file_type == 'docx':
+                chunks = self.document_processor.extract_from_docx(file_path)
+            elif file_type == 'txt':
+                chunks = self.document_processor.extract_from_txt(file_path)
+            elif file_type == 'pdf':
+                chunks = self.document_processor.extract_from_pdf(file_path)
+            else:
+                logger.error(f"Tipo de archivo no soportado: {file_type}")
+                return 0
+            
             if not chunks:
-                continue
+                logger.warning(f"No se extrajo contenido de {name}")
+                return 0
 
+            # Procesar y agregar chunks al RAG
             added = 0
             for chunk in chunks:
-                enhanced = rag_engine.enhanced_normalize_text(chunk['content'])
+                # Usar 'text' para TXT/PDF y 'content' para DOCX
+                text_content = chunk.get('text') or chunk.get('content', '')
+                if not text_content:
+                    continue
+                    
+                enhanced = rag_engine.enhanced_normalize_text(text_content)
+                
+                # Detectar categoría del archivo
+                category = self._detect_category_from_filename(name)
+                if not category:
+                    category = self._detect_category_from_content(text_content)
+                
                 if self._add_document_direct(enhanced, {
-                    "type": chunk['type'],
-                    "category": chunk['category'],
-                    "source": chunk['source'],
+                    "type": f"document_{file_type}",
+                    "category": category,
+                    "source": name,
                     "section": chunk.get('section', ''),
                     "is_structured": chunk.get('is_structured', False),
+                    "file_type": file_type,
                     "optimized": "true"
                 }):
                     added += 1
-                    total += 1
-            logger.info(f"{name}: {added}/{len(chunks)} agregados")
-
-        logger.info(f"TOTAL RAG: {total} documentos")
-        self.word_documents_loaded = True
+            
+            logger.info(f"{name}: {added}/{len(chunks)} fragmentos agregados al RAG")
+            return added
+            
+        except Exception as e:
+            logger.error(f"Error procesando {name}: {e}")
+            return 0
 
     def _add_document_direct(self, doc: str, meta: Dict = None) -> bool:
         """USO SEGURO: rag_engine.add_document() → Evita acceso directo a collection"""
@@ -346,10 +551,44 @@ class TrainingDataLoader:
     def get_loading_status(self) -> Dict:
         return {
             "base_knowledge_loaded": self.base_knowledge_loaded,
-            "word_documents_loaded": self.word_documents_loaded,
+            "documents_loaded": self.word_documents_loaded,
             "data_loaded": self.data_loaded,
-            "docx_support": DOCX_AVAILABLE
+            "docx_support": DOCX_AVAILABLE,
+            "pdf_support": PDF_AVAILABLE
         }
+
+    def _detect_category_from_filename(self, name: str) -> str:
+        """Detecta categoría por nombre de archivo"""
+        n = name.lower()
+        mapping = {
+            'deport': 'deportes', 'bienestar': 'bienestar_estudiantil', 'be': 'bienestar_estudiantil',
+            'desarrollo': 'desarrollo_profesional', 'dl': 'desarrollo_profesional',
+            'asuntos': 'asuntos_estudiantiles', 'tne': 'asuntos_estudiantiles', 'certificados': 'asuntos_estudiantiles',
+            'calendario': 'academico', 'procedimientos': 'academico', 'manual': 'academico',
+            'carreras': 'academico', 'directorio': 'academico', 'guia': 'general',
+            'frecuentes': 'general', 'emergencia': 'seguridad', 'protocolo': 'seguridad'
+        }
+        for k, v in mapping.items():
+            if k in n:
+                return v
+        return "general"
+    
+    def _detect_category_from_content(self, text: str) -> str:
+        """Detecta categoría por contenido del texto"""
+        t = text.lower()
+        if any(w in t for w in ['tne', 'tarjeta nacional estudiantil', 'pase escolar', 'certificado', 'seguro']):
+            return 'asuntos_estudiantiles'
+        if any(w in t for w in ['psicológico', 'salud mental', 'bienestar', 'crisis', 'línea ops', 'paedis']):
+            return 'bienestar_estudiantil'
+        if any(w in t for w in ['deporte', 'taller deportivo', 'gimnasio', 'caf', 'maiclub', 'entrenamiento']):
+            return 'deportes'
+        if any(w in t for w in ['trabajo', 'práctica', 'curriculum', 'bolsa trabajo', 'duoclaboral']):
+            return 'desarrollo_profesional'
+        if any(w in t for w in ['calendario', 'semestre', 'evaluación', 'examen', 'matrícula']):
+            return 'academico'
+        if any(w in t for w in ['emergencia', 'evacuación', 'seguridad', 'protocolo', 'incendio']):
+            return 'seguridad'
+        return ""
 
 
 # ========================================

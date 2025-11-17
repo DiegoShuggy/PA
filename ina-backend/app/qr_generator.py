@@ -3,6 +3,7 @@ import base64
 import io
 import logging
 import re
+import requests  # ✅ AGREGADO para validación
 from typing import Optional, Dict, List
 import logging
 
@@ -11,48 +12,255 @@ logger = logging.getLogger(__name__)
 class DuocURLManager:
     def __init__(self):
         self.duoc_urls = {
-            "inscripciones": "https://inscripciones.duoc.cl/IA/",
+            # URLs principales
+            "inscripciones": "https://www.duoc.cl/admision/",
             "portal_alumnos": "https://www.duoc.cl/alumnos/",
-            "biblioteca": "https://biblioteca.duoc.cl/",
-            "ayuda": "https://ayuda.duoc.cl/",
+            "biblioteca": "https://bibliotecas.duoc.cl/inicio/",
+            "ayuda": "https://centroayuda.duoc.cl/hc/es-419",
             "certificados": "https://certificados.duoc.cl/",
-            "practicas": "https://practicas.duoc.cl/",
-            "beneficios": "https://beneficios.duoc.cl/",
-            "plaza_norte": "https://www.duoc.cl/sede/plaza-norte/",
-            "contacto": "https://www.duoc.cl/admision/contacto/",
-            "duoclaboral": "https://duoclaboral.cl/",
-            "cva": "https://cva.duoc.cl/",
-            "eventos_psicologico": "https://eventos.duoc.cl/",
-            "formulario_emergencia": "https://centroayuda.duoc.cl",
-            "tne_seguimiento": "https://www.tne.cl",
-            "comisaria_virtual": "https://www.comisariavirtual.cl",
-            "embajadores_salud": "https://embajadores.duoc.cl"
+            "practicas": "https://www2.duoc.cl/practica/login",
+            "beneficios": "https://www.duoc.cl/beneficios/salud-autocuidado/",
+            "contacto": "https://www.duoc.cl/contacto-admision/",
+            "pago": "https://www.duoc.cl/portal-de-pago/",
+            
+            # Plaza Norte específico
+            "plaza_norte": "https://www.duoc.cl/sedes/plaza-norte/",
+            "plaza_norte_contacto": "https://www.duoc.cl/sedes/plaza-norte/contacto/",
+            "plaza_norte_servicios": "https://www.duoc.cl/sedes/plaza-norte/servicios/",
+            "plaza_norte_carreras": "https://www.duoc.cl/sedes/plaza-norte/carreras/",
+            "plaza_norte_biblioteca": "https://www.duoc.cl/sedes/plaza-norte/biblioteca/",
+            "plaza_norte_laboratorios": "https://www.duoc.cl/sedes/plaza-norte/laboratorios/",
+            "plaza_norte_como_llegar": "https://www.duoc.cl/sedes/plaza-norte/como-llegar/",
+            "plaza_norte_horarios": "https://www.duoc.cl/sedes/plaza-norte/horarios/",
+            "plaza_norte_calendario": "https://www.duoc.cl/sedes/plaza-norte/calendario-academico/",
+            "plaza_norte_estacionamiento": "https://www.duoc.cl/sedes/plaza-norte/estacionamiento/",
+            "plaza_norte_casino": "https://www.duoc.cl/sedes/plaza-norte/casino/",
+            "plaza_norte_enfermeria": "https://www.duoc.cl/sedes/plaza-norte/enfermeria/",
+            "plaza_norte_transporte": "https://www.duoc.cl/sedes/plaza-norte/transporte/",
+            
+            # Servicios estudiantiles
+            "bienestar": "https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/",
+            "seguro": "https://www.duoc.cl/alumnos/seguro/",
+            "titulados": "https://www.duoc.cl/vida-estudiantil/titulados/",
+            "deportes": "https://www.duoc.cl/vida-estudiantil/deportes/",
+            "cultura": "https://www.duoc.cl/vida-estudiantil/cultura/",
+            "pastoral": "https://www.duoc.cl/vida-estudiantil/pastoral/",
+            "centro_estudiantes": "https://www.duoc.cl/vida-estudiantil/centro-de-estudiantes/",
+            
+            # Biblioteca y recursos
+            "biblioteca_plaza_norte": "https://bibliotecas.duoc.cl/plaza-norte/",
+            "recursos_digitales": "https://bibliotecas.duoc.cl/recursos-digitales/",
+            "normas_apa": "https://bibliotecas.duoc.cl/normas-apa/",
+            "tutoriales_biblioteca": "https://bibliotecas.duoc.cl/tutoriales/",
+            
+            # Financiamiento
+            "financiamiento": "https://www.duoc.cl/admision/financiamiento/",
+            "becas_estatales": "https://www.duoc.cl/admision/financiamiento/becas-estatales/",
+            "credito_corfo": "https://www.duoc.cl/admision/financiamiento/credito-corfo/",
+            "becas_internas": "https://www.duoc.cl/admision/financiamiento/becas-internas/",
+            
+            # Servicios digitales
+            "servicios_digitales": "https://www.duoc.cl/alumnos/servicios-digitales/",
+            "cuentas_accesos": "https://www.duoc.cl/alumnos/servicios-digitales/cuentas-y-accesos/",
+            "correo_institucional": "https://www.duoc.cl/alumnos/servicios-digitales/correo-institucional/",
+            "wifi": "https://www.duoc.cl/alumnos/servicios-digitales/wifi/",
+            "plataforma": "https://plataforma.duoc.cl/admin/login",
+            "duoc_online": "https://www.duoc.cl/bienvenida-duoc-online/",
+            
+            # Empleo y prácticas
+            "empleabilidad": "https://www.duoc.cl/empleabilidad/",
+            "portal_laboral": "https://www.duoc.cl/empleabilidad/portal-laboral/",
+            "bolsa_trabajo": "https://bolsa.duoc.cl/",
+            "practicas_estudiantes": "https://www.duoc.cl/alumnos/practicas/",
+            
+            # TNE y transporte
+            "tne": "https://www.duoc.cl/sedes/info-tne/",
+            "beneficios_tne": "https://www.duoc.cl/alumnos/beneficios-tne/",
+            
+            # Ayuda y soporte
+            "centro_ayuda": "https://centroayuda.duoc.cl/hc/es-419",
+            "ayuda_online": "https://centrodeayudaonline.duoc.cl/hc/es-419/",
+            "experiencia_vivo": "https://centrodeayudaonline.duoc.cl/hc/es-419/articles/32100564564621-Portal-Experiencia-Vivo",
+            "chat_online": "https://www.duoc.cl/contacto/chat-online/",
+            
+            # Docentes
+            "portal_docentes": "https://www.duoc.cl/docentes/",
+            "portal_docente_vivo": "https://www.duoc.cl/docentes/servicios-digitales/portal-docente-experiencia-vivo/",
+            "capacitacion_docentes": "https://www.duoc.cl/docentes/capacitacion/",
+            
+            # Institucional
+            "institucional": "https://www.duoc.cl/institucional/",
+            "historia": "https://www.duoc.cl/institucional/historia/",
+            "mision_vision": "https://www.duoc.cl/institucional/mision-vision/",
+            "autoridades": "https://www.duoc.cl/institucional/autoridades/",
+            "noticias": "https://www.duoc.cl/institucional/noticias/",
+            "transparencia": "https://www.duoc.cl/institucional/transparencia/",
+            
+            # Carreras
+            "carreras": "https://www.duoc.cl/carreras/",
+            "carreras_tecnicas": "https://www.duoc.cl/carreras/tecnicas/",
+            "carreras_profesionales": "https://www.duoc.cl/carreras/profesionales/",
+            "educacion_continua": "https://www.duoc.cl/educacion-continua/",
+            "postulacion": "https://www.duoc.cl/postulacion/"
         }
         
-        # Mapeo de palabras clave a URLs
+        # Mapeo de palabras clave a URLs (expandido)
         self.keyword_mapping = {
+            # Básicos
             "inscripcion": "inscripciones",
-            "matricula": "inscripciones", 
+            "matricula": "inscripciones",
+            "postulacion": "postulacion",
+            "admision": "inscripciones", 
             "alumno": "portal_alumnos",
             "estudiante": "portal_alumnos",
             "portal": "portal_alumnos",
+            "login": "plataforma",
+            "acceso": "cuentas_accesos",
+            "usuario": "cuentas_accesos",
+            "contraseña": "cuentas_accesos",
+            
+            # Biblioteca y recursos
             "biblioteca": "biblioteca",
             "libro": "biblioteca",
             "estudio": "biblioteca",
-            "ayuda": "ayuda",
-            "soporte": "ayuda",
-            "problema": "ayuda",
+            "investigacion": "biblioteca",
+            "apa": "normas_apa",
+            "citas": "normas_apa",
+            "referencia": "normas_apa",
+            "tutorial": "tutoriales_biblioteca",
+            "recursos": "recursos_digitales",
+            "digital": "recursos_digitales",
+            
+            # Plaza Norte específico
+            "plaza norte": "plaza_norte",
+            "sede": "plaza_norte",
+            "direccion": "plaza_norte_como_llegar",
+            "ubicacion": "plaza_norte_como_llegar",
+            "como llegar": "plaza_norte_como_llegar",
+            "transporte": "plaza_norte_transporte",
+            "metro": "plaza_norte_transporte",
+            "micro": "plaza_norte_transporte",
+            "horario": "plaza_norte_horarios",
+            "horarios": "plaza_norte_horarios",
+            "calendario": "plaza_norte_calendario",
+            "estacionamiento": "plaza_norte_estacionamiento",
+            "auto": "plaza_norte_estacionamiento",
+            "parking": "plaza_norte_estacionamiento",
+            "casino": "plaza_norte_casino",
+            "comida": "plaza_norte_casino",
+            "almuerzo": "plaza_norte_casino",
+            "enfermeria": "plaza_norte_enfermeria",
+            "salud": "plaza_norte_enfermeria",
+            "primeros auxilios": "plaza_norte_enfermeria",
+            "laboratorio": "plaza_norte_laboratorios",
+            "lab": "plaza_norte_laboratorios",
+            "contacto": "plaza_norte_contacto",
+            "telefono": "plaza_norte_contacto",
+            
+            # Servicios estudiantiles
+            "bienestar": "bienestar",
+            "apoyo": "bienestar",
+            "psicologico": "bienestar",
+            "psicologia": "bienestar",
+            "seguro": "seguro",
+            "accidente": "seguro",
+            "salud": "seguro",
+            "titulado": "titulados",
+            "egresado": "titulados",
+            "deporte": "deportes",
+            "deportivo": "deportes",
+            "gimnasio": "deportes",
+            "cultura": "cultura",
+            "cultural": "cultura",
+            "arte": "cultura",
+            "pastoral": "pastoral",
+            "religion": "pastoral",
+            "centro estudiantes": "centro_estudiantes",
+            "centro": "centro_estudiantes",
+            "representacion": "centro_estudiantes",
+            
+            # Ayuda y soporte
+            "ayuda": "centro_ayuda",
+            "soporte": "centro_ayuda",
+            "problema": "centro_ayuda",
+            "error": "centro_ayuda",
+            "duda": "centro_ayuda",
+            "consulta": "centro_ayuda",
+            "chat": "chat_online",
+            "online": "ayuda_online",
+            "experiencia vivo": "experiencia_vivo",
+            "vivo": "experiencia_vivo",
+            "plataforma vivo": "experiencia_vivo",
+            
+            # Certificados y documentos
             "certificado": "certificados",
             "certificacion": "certificados",
             "documento": "certificados",
+            "titulo": "certificados",
+            "diploma": "certificados",
+            
+            # Prácticas y empleo
             "practica": "practicas",
             "practicas": "practicas",
-            "profesional": "practicas",
+            "profesional": "practicas_estudiantes",
+            "empleo": "empleabilidad",
+            "trabajo": "empleabilidad",
+            "laboral": "portal_laboral",
+            "bolsa": "bolsa_trabajo",
+            "oferta": "bolsa_trabajo",
+            
+            # Financiamiento
+            "financiamiento": "financiamiento",
+            "pago": "pago",
+            "cuota": "pago",
+            "arancel": "pago",
+            "beca": "becas_estatales",
+            "gratuidad": "becas_estatales",
             "beneficio": "beneficios",
-            "beca": "beneficios",
             "descuento": "beneficios",
-            "plaza norte": "plaza_norte",
-            "sede": "plaza_norte",
+            "corfo": "credito_corfo",
+            "credito": "credito_corfo",
+            
+            # TNE y transporte
+            "tne": "tne",
+            "tarjeta": "tne",
+            "nacional": "tne",
+            "estudiantil": "tne",
+            "beneficio tne": "beneficios_tne",
+            
+            # Servicios digitales
+            "wifi": "wifi",
+            "internet": "wifi",
+            "correo": "correo_institucional",
+            "email": "correo_institucional",
+            "institucional": "correo_institucional",
+            "servicio digital": "servicios_digitales",
+            "digital": "servicios_digitales",
+            "online": "duoc_online",
+            
+            # Docentes
+            "docente": "portal_docentes",
+            "profesor": "portal_docentes",
+            "academico": "portal_docentes",
+            "capacitacion": "capacitacion_docentes",
+            "formacion": "capacitacion_docentes",
+            
+            # Carreras
+            "carrera": "carreras",
+            "programa": "carreras",
+            "tecnica": "carreras_tecnicas",
+            "profesional": "carreras_profesionales",
+            "continua": "educacion_continua",
+            "educacion": "educacion_continua",
+            
+            # Información institucional
+            "historia": "historia",
+            "mision": "mision_vision",
+            "vision": "mision_vision",
+            "autoridad": "autoridades",
+            "noticia": "noticias",
+            "transparencia": "transparencia",
+            "informacion": "institucional",
             "campus": "plaza_norte",
             "contacto": "contacto",
             "direccion": "contacto",
@@ -180,20 +388,25 @@ class QRGenerator:
             logger.error(f"❌ Error generando QR para {url}: {e}")
             return None
 
-    def generate_duoc_qr(self, url_key: str, size: int = 200) -> Optional[str]:
-        """Generar QR específico para URL de Duoc"""
+    def generate_duoc_qr(self, url_key: str, size: int = 200, validate: bool = True) -> Optional[str]:
+        """Generar QR específico para URL de Duoc con validación opcional"""
         url = self.duoc_manager.duoc_urls.get(url_key)
         if not url:
             logger.warning(f"❌ Clave de URL no encontrada: {url_key}")
             return None
         
         # Usar cache si existe
-        cache_key = f"{url_key}_{size}"
+        cache_key = f"{url_key}_{size}_{validate}"
         if cache_key in self.generated_qrs:
             logger.info(f"🔄 Usando QR en cache para: {url_key}")
             return self.generated_qrs[cache_key]
         
-        qr_code = self.generate_qr_code(url, size)
+        # Usar validación si está habilitada
+        if validate:
+            qr_code = self.validate_and_generate_qr(url, size)
+        else:
+            qr_code = self.generate_qr_code(url, size)
+            
         if qr_code:
             self.generated_qrs[cache_key] = qr_code
         
@@ -306,6 +519,113 @@ class QRGenerator:
             self.duoc_manager.duoc_urls['portal_alumnos'],
             self.duoc_manager.duoc_urls['ayuda']
         ]
+
+    def validate_and_generate_qr(self, url: str, size: int = 200) -> Optional[str]:
+        """
+        Generar QR con validación básica de URL
+        
+        Args:
+            url: URL para validar y generar QR
+            size: Tamaño del QR en píxeles
+            
+        Returns:
+            QR code en base64 o None si falla
+        """
+        try:
+            logger.info(f"🔍 Validando y generando QR para: {url}")
+            
+            # Validación simple con timeout corto
+            try:
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+                response = requests.head(url, headers=headers, timeout=5, allow_redirects=True)
+                
+                if response.status_code >= 400:
+                    logger.warning(f"⚠️ URL problemática: {url} - HTTP {response.status_code}")
+                elif 200 <= response.status_code < 300:
+                    logger.info(f"✅ URL validada exitosamente: {url}")
+                else:
+                    logger.info(f"🔄 URL con redirección: {url} - HTTP {response.status_code}")
+                    
+            except requests.exceptions.RequestException as e:
+                logger.warning(f"⚠️ No se pudo validar {url}: {e}")
+                # Continuar con la generación de QR aunque la validación falle
+            
+            # Generar QR normalmente, incluso si la validación falló
+            qr_code = self.generate_qr_code(url, size)
+            
+            if qr_code:
+                logger.info(f"✅ QR generado exitosamente para: {url}")
+            else:
+                logger.error(f"❌ Error generando QR para: {url}")
+                
+            return qr_code
+            
+        except Exception as e:
+            logger.error(f"❌ Error en validación y generación para {url}: {e}")
+            # Fallback a generación normal sin validación
+            return self.generate_qr_code(url, size)
+
+    def check_urls_health(self) -> Dict:
+        """
+        Verificar el estado de salud de todas las URLs de Duoc
+        
+        Returns:
+            Diccionario con el estado de cada URL
+        """
+        logger.info("🏥 Verificando estado de salud de URLs de Duoc...")
+        
+        health_report = {
+            "timestamp": logging.Formatter().formatTime(logging.LogRecord(
+                "", 0, "", 0, "", (), None
+            )),
+            "total_urls": len(self.duoc_manager.duoc_urls),
+            "healthy_urls": [],
+            "problematic_urls": [],
+            "health_percentage": 0
+        }
+        
+        for key, url in self.duoc_manager.duoc_urls.items():
+            try:
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+                response = requests.head(url, headers=headers, timeout=10, allow_redirects=True)
+                
+                if 200 <= response.status_code < 400:
+                    health_report["healthy_urls"].append({
+                        "key": key,
+                        "url": url,
+                        "status": response.status_code
+                    })
+                    logger.info(f"✅ {key}: {url} - HTTP {response.status_code}")
+                else:
+                    health_report["problematic_urls"].append({
+                        "key": key,
+                        "url": url,
+                        "status": response.status_code,
+                        "issue": f"HTTP {response.status_code}"
+                    })
+                    logger.warning(f"⚠️ {key}: {url} - HTTP {response.status_code}")
+                    
+            except requests.exceptions.RequestException as e:
+                health_report["problematic_urls"].append({
+                    "key": key,
+                    "url": url,
+                    "status": 0,
+                    "issue": str(e)
+                })
+                logger.error(f"❌ {key}: {url} - {e}")
+        
+        # Calcular porcentaje de salud
+        healthy_count = len(health_report["healthy_urls"])
+        total_count = health_report["total_urls"]
+        health_report["health_percentage"] = (healthy_count / total_count * 100) if total_count > 0 else 0
+        
+        logger.info(f"📊 Salud general: {health_report['health_percentage']:.1f}% ({healthy_count}/{total_count})")
+        
+        return health_report
 
 # Instancias globales
 qr_generator = QRGenerator()

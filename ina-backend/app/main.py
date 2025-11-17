@@ -912,24 +912,40 @@ async def training_stats():
 ###############################################################
 @app.get("/qr/duoc-urls")
 async def get_all_duoc_qrs():
-    """Endpoint para obtener todos los QR de Duoc pre-generados"""
+    """Endpoint para obtener todos los QR de Duoc pre-generados con validación"""
     try:
         all_urls = duoc_url_manager.get_all_urls()
         qr_data = {}
         
+        logger.info(f"📱 Generando QRs para {len(all_urls)} URLs de Duoc...")
+        
         for key, url in all_urls.items():
-            qr_code = qr_generator.generate_duoc_qr(key)
+            # Usar generación con validación
+            qr_code = qr_generator.generate_duoc_qr(key, validate=True)
             if qr_code:
                 qr_data[key] = {
                     "url": url,
                     "qr_code": qr_code,
-                    "name": key.replace('_', ' ').title()
+                    "name": key.replace('_', ' ').title(),
+                    "validated": True  # Indica que se usó validación
                 }
+            else:
+                logger.warning(f"⚠️ No se pudo generar QR para {key}: {url}")
+        
+        # Calcular estadísticas
+        total_requested = len(all_urls)
+        total_generated = len(qr_data)
+        success_rate = (total_generated / total_requested * 100) if total_requested > 0 else 0
+        
+        logger.info(f"📊 QRs generados: {total_generated}/{total_requested} ({success_rate:.1f}%)")
         
         return {
             "status": "success",
-            "total_qrs": len(qr_data),
-            "qr_codes": qr_data
+            "total_qrs": total_generated,
+            "total_requested": total_requested,
+            "success_rate": success_rate,
+            "qr_codes": qr_data,
+            "with_validation": True  # Indica que se usó validación
         }
     except Exception as e:
         logger.error(f"Error generando QRs Duoc: {e}")
@@ -951,6 +967,39 @@ async def generate_specific_qr(url: str):
     except Exception as e:
         logger.error(f"Error generando QR: {e}")
         raise HTTPException(status_code=500, detail="Error interno")
+
+@app.get("/qr/health")
+async def check_qr_system_health():
+    """Endpoint para verificar el estado de salud del sistema de QR"""
+    try:
+        logger.info("🏥 Verificando estado de salud del sistema QR")
+        
+        # Verificar salud de URLs
+        health_report = qr_generator.check_urls_health()
+        
+        # Verificar funcionamiento básico de generación
+        test_url = "https://www.duoc.cl"
+        test_qr = qr_generator.generate_qr_code(test_url)
+        qr_generation_working = test_qr is not None
+        
+        return {
+            "status": "success",
+            "qr_generation_working": qr_generation_working,
+            "urls_health": health_report,
+            "overall_health": "healthy" if health_report["health_percentage"] > 80 and qr_generation_working else "degraded",
+            "recommendations": [
+                "Verificar URLs problemáticas" if health_report["health_percentage"] < 80 else "",
+                "Revisar logs de generación QR" if not qr_generation_working else ""
+            ]
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Error verificando salud del sistema QR: {e}")
+        return {
+            "status": "error", 
+            "error": str(e),
+            "overall_health": "unhealthy"
+        }
 
 # 👇 NUEVOS ENDPOINTS PARA EL SISTEMA DE FEEDBACK MEJORADO
 

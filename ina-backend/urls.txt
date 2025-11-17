@@ -1,11 +1,107 @@
+# URLS PRINCIPALES DUOC UC
 https://www.duoc.cl/
 https://www.duoc.cl/alumnos/
-https://www.duoc.cl/test-oficina-de-titulos-y-certificados/
-https://www.duoc.cl/vida-estudiantil/titulados/
-https://www.duoc.cl/sedes/info-tne/
-https://www.duoc.cl/admision/financiamiento/becas-estatales/
+https://www.duoc.cl/admision/
+https://www.duoc.cl/contacto-admision/
+
+# SEDE PLAZA NORTE ESPECÍFICO
+https://www.duoc.cl/sedes/plaza-norte/
+https://www.duoc.cl/sedes/plaza-norte/contacto/
+https://www.duoc.cl/sedes/plaza-norte/servicios/
+https://www.duoc.cl/sedes/plaza-norte/carreras/
+https://www.duoc.cl/sedes/plaza-norte/biblioteca/
+https://www.duoc.cl/sedes/plaza-norte/laboratorios/
+https://www.duoc.cl/sedes/plaza-norte/como-llegar/
+https://www.duoc.cl/sedes/plaza-norte/horarios/
+https://www.duoc.cl/sedes/plaza-norte/calendario-academico/
+
+# SERVICIOS ESTUDIANTILES
 https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/
 https://www.duoc.cl/alumnos/seguro/
 https://www.duoc.cl/beneficios/salud-autocuidado/
+https://www.duoc.cl/vida-estudiantil/titulados/
+https://www.duoc.cl/vida-estudiantil/deportes/
+https://www.duoc.cl/vida-estudiantil/cultura/
+https://www.duoc.cl/vida-estudiantil/pastoral/
+https://www.duoc.cl/vida-estudiantil/centro-de-estudiantes/
+
+# BIBLIOTECA Y RECURSOS ACADÉMICOS
 https://bibliotecas.duoc.cl/inicio/
-https://www.duoc.cl/sedes/plaza-norte/
+https://bibliotecas.duoc.cl/plaza-norte/
+https://bibliotecas.duoc.cl/recursos-digitales/
+https://bibliotecas.duoc.cl/normas-apa/
+https://bibliotecas.duoc.cl/tutoriales/
+https://biblioteca.duoc.cl/sitios-web/
+
+# CERTIFICADOS Y DOCUMENTOS
+https://certificados.duoc.cl/
+https://www.duoc.cl/test-oficina-de-titulos-y-certificados/
+https://www.duoc.cl/alumnos/certificados-online/
+https://www.duoc.cl/alumnos/documentos/
+
+# FINANCIAMIENTO Y BECAS
+https://www.duoc.cl/admision/financiamiento/
+https://www.duoc.cl/admision/financiamiento/becas-estatales/
+https://www.duoc.cl/admision/financiamiento/credito-corfo/
+https://www.duoc.cl/admision/financiamiento/becas-internas/
+https://www.duoc.cl/portal-de-pago/
+
+# SERVICIOS DIGITALES
+https://www.duoc.cl/alumnos/servicios-digitales/
+https://www.duoc.cl/alumnos/servicios-digitales/cuentas-y-accesos/
+https://www.duoc.cl/alumnos/servicios-digitales/correo-institucional/
+https://www.duoc.cl/alumnos/servicios-digitales/wifi/
+https://plataforma.duoc.cl/admin/login
+https://www.duoc.cl/bienvenida-duoc-online/
+
+# PRÁCTICAS Y EMPLEO
+https://www2.duoc.cl/practica/login
+https://www.duoc.cl/alumnos/practicas/
+https://www.duoc.cl/empleabilidad/
+https://www.duoc.cl/empleabilidad/portal-laboral/
+https://bolsa.duoc.cl/
+
+# TNE Y TRANSPORTE
+https://www.duoc.cl/sedes/info-tne/
+https://www.duoc.cl/alumnos/beneficios-tne/
+https://www.duoc.cl/sedes/plaza-norte/transporte/
+
+# AYUDA Y SOPORTE
+https://centroayuda.duoc.cl/hc/es-419
+https://centrodeayudaonline.duoc.cl/hc/es-419/
+https://centrodeayudaonline.duoc.cl/hc/es-419/articles/32100564564621-Portal-Experiencia-Vivo
+https://www.duoc.cl/contacto/
+https://www.duoc.cl/contacto/chat-online/
+
+# DOCENTES
+https://www.duoc.cl/docentes/
+https://www.duoc.cl/docentes/servicios-digitales/
+https://www.duoc.cl/docentes/servicios-digitales/portal-docente-experiencia-vivo/
+https://www.duoc.cl/docentes/capacitacion/
+
+# COLABORADORES
+https://www.duoc.cl/colaboradores/
+https://www.duoc.cl/colaboradores/beneficios/
+https://www.duoc.cl/colaboradores/desarrollo-profesional/
+
+# INFORMACIÓN INSTITUCIONAL
+https://www.duoc.cl/institucional/
+https://www.duoc.cl/institucional/historia/
+https://www.duoc.cl/institucional/mision-vision/
+https://www.duoc.cl/institucional/autoridades/
+https://www.duoc.cl/institucional/noticias/
+https://www.duoc.cl/institucional/transparencia/
+
+# CARRERAS Y PROGRAMAS
+https://www.duoc.cl/carreras/
+https://www.duoc.cl/carreras/tecnicas/
+https://www.duoc.cl/carreras/profesionales/
+https://www.duoc.cl/educacion-continua/
+https://www.duoc.cl/postulacion/
+
+# SERVICIOS ADICIONALES PLAZA NORTE
+https://www.duoc.cl/sedes/plaza-norte/estacionamiento/
+https://www.duoc.cl/sedes/plaza-norte/casino/
+https://www.duoc.cl/sedes/plaza-norte/fotocopiadora/
+https://www.duoc.cl/sedes/plaza-norte/enfermeria/
+https://www.duoc.cl/sedes/plaza-norte/direcciones/

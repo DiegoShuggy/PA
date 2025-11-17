@@ -1,0 +1,108 @@
+# URLs ESPECÍFICAS DE PLAZA NORTE PARA QR
+# Este archivo contiene URLs adicionales útiles para estudiantes de Plaza Norte
+# que pueden ser convertidas en códigos QR para acceso rápido
+
+# SERVICIOS ESPECÍFICOS PLAZA NORTE
+https://www.duoc.cl/sedes/plaza-norte/
+https://www.duoc.cl/sedes/plaza-norte/contacto/
+https://www.duoc.cl/sedes/plaza-norte/servicios/
+https://www.duoc.cl/sedes/plaza-norte/horarios/
+https://www.duoc.cl/sedes/plaza-norte/como-llegar/
+https://www.duoc.cl/sedes/plaza-norte/estacionamiento/
+https://www.duoc.cl/sedes/plaza-norte/transporte/
+https://www.duoc.cl/sedes/plaza-norte/biblioteca/
+https://www.duoc.cl/sedes/plaza-norte/laboratorios/
+https://www.duoc.cl/sedes/plaza-norte/casino/
+https://www.duoc.cl/sedes/plaza-norte/enfermeria/
+
+# CARRERAS DISPONIBLES EN PLAZA NORTE
+https://www.duoc.cl/carreras/administracion-de-empresas/
+https://www.duoc.cl/carreras/analista-programador/
+https://www.duoc.cl/carreras/contador-general/
+https://www.duoc.cl/carreras/tecnico-en-administracion/
+https://www.duoc.cl/carreras/tecnico-en-contabilidad/
+https://www.duoc.cl/carreras/tecnico-en-informatica/
+https://www.duoc.cl/carreras/ingenieria-en-informatica/
+https://www.duoc.cl/carreras/ingenieria-comercial/
+https://www.duoc.cl/carreras/tecnico-en-electronica/
+https://www.duoc.cl/carreras/tecnico-en-telecomunicaciones/
+
+# SERVICIOS ESTUDIANTILES ESENCIALES
+https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/
+https://www.duoc.cl/alumnos/seguro/
+https://www.duoc.cl/beneficios/salud-autocuidado/
+https://www.duoc.cl/vida-estudiantil/deportes/
+https://www.duoc.cl/vida-estudiantil/cultura/
+https://www.duoc.cl/vida-estudiantil/pastoral/
+https://www.duoc.cl/vida-estudiantil/centro-de-estudiantes/
+https://www.duoc.cl/vida-estudiantil/titulados/
+
+# BIBLIOTECA Y RECURSOS ACADÉMICOS
+https://bibliotecas.duoc.cl/plaza-norte/
+https://bibliotecas.duoc.cl/recursos-digitales/
+https://bibliotecas.duoc.cl/normas-apa/
+https://bibliotecas.duoc.cl/tutoriales/
+https://biblioteca.duoc.cl/sitios-web/
+https://bibliotecas.duoc.cl/bases-de-datos/
+
+# SERVICIOS DIGITALES PRIORITARIOS
+https://www.duoc.cl/alumnos/servicios-digitales/
+https://www.duoc.cl/alumnos/servicios-digitales/cuentas-y-accesos/
+https://www.duoc.cl/alumnos/servicios-digitales/correo-institucional/
+https://www.duoc.cl/alumnos/servicios-digitales/wifi/
+https://plataforma.duoc.cl/admin/login
+https://www.duoc.cl/bienvenida-duoc-online/
+
+# CERTIFICADOS Y DOCUMENTOS
+https://certificados.duoc.cl/
+https://www.duoc.cl/alumnos/certificados-online/
+https://www.duoc.cl/test-oficina-de-titulos-y-certificados/
+https://www.duoc.cl/alumnos/documentos/
+
+# FINANCIAMIENTO Y BECAS
+https://www.duoc.cl/admision/financiamiento/
+https://www.duoc.cl/admision/financiamiento/becas-estatales/
+https://www.duoc.cl/admision/financiamiento/credito-corfo/
+https://www.duoc.cl/admision/financiamiento/becas-internas/
+https://www.duoc.cl/portal-de-pago/
+
+# PRÁCTICAS Y EMPLEABILIDAD
+https://www2.duoc.cl/practica/login
+https://www.duoc.cl/alumnos/practicas/
+https://www.duoc.cl/empleabilidad/
+https://www.duoc.cl/empleabilidad/portal-laboral/
+https://bolsa.duoc.cl/
+
+# TNE Y TRANSPORTE
+https://www.duoc.cl/sedes/info-tne/
+https://www.duoc.cl/alumnos/beneficios-tne/
+
+# AYUDA Y SOPORTE TÉCNICO
+https://centroayuda.duoc.cl/hc/es-419
+https://centrodeayudaonline.duoc.cl/hc/es-419/
+https://centrodeayudaonline.duoc.cl/hc/es-419/articles/32100564564621-Portal-Experiencia-Vivo
+https://www.duoc.cl/contacto/
+https://www.duoc.cl/contacto/chat-online/
+
+# INFORMACIÓN INSTITUCIONAL
+https://www.duoc.cl/institucional/
+https://www.duoc.cl/institucional/historia/
+https://www.duoc.cl/institucional/mision-vision/
+https://www.duoc.cl/institucional/autoridades/
+https://www.duoc.cl/institucional/noticias/
+https://www.duoc.cl/institucional/transparencia/
+
+# ENLACES DE EMERGENCIA Y CONTACTO
+https://www.duoc.cl/contacto-admision/
+https://www.duoc.cl/sedes/plaza-norte/contacto/
+https://www.duoc.cl/sedes/plaza-norte/direcciones/
+
+# SERVICIOS EXTERNOS ÚTILES
+https://www.comisariavirtual.cl
+https://www.junaeb.cl/
+https://www.mineduc.cl/
+https://www.chileatiende.gob.cl/
+
+# APLICACIONES MÓVILES (URLs de descarga)
+https://play.google.com/store/apps/details?id=cl.duoc.app
+https://apps.apple.com/cl/app/duoc-uc/id123456789

@@ -1,0 +1,142 @@
+{
+  "generated_at": "2025-11-17T16:05:55.151059",
+  "total_qrs": 43,
+  "total_services": 43,
+  "filter_priority": null,
+  "categories": {
+    "principal": {
+      "count": 1,
+      "files": [
+        "principal_inicio_alta.png"
+      ]
+    },
+    "estudiantes": {
+      "count": 1,
+      "files": [
+        "estudiantes_portal_alumnos_alta.png"
+      ]
+    },
+    "admision": {
+      "count": 3,
+      "files": [
+        "admision_admision_alta.png",
+        "admision_contacto_admision_media.png",
+        "admision_postulacion_alta.png"
+      ]
+    },
+    "sede": {
+      "count": 2,
+      "files": [
+        "sede_plaza_norte_alta.png",
+        "sede_servicios_plaza_norte_media.png"
+      ]
+    },
+    "biblioteca": {
+      "count": 3,
+      "files": [
+        "biblioteca_biblioteca_plaza_norte_alta.png",
+        "biblioteca_biblioteca_inicio_media.png",
+        "biblioteca_tutoriales_biblioteca_baja.png"
+      ]
+    },
+    "bienestar": {
+      "count": 6,
+      "files": [
+        "bienestar_bienestar_alta.png",
+        "bienestar_seguro_media.png",
+        "bienestar_salud_autocuidado_media.png",
+        "bienestar_deportes_baja.png",
+        "bienestar_cultura_baja.png",
+        "bienestar_pastoral_baja.png"
+      ]
+    },
+    "titulados": {
+      "count": 1,
+      "files": [
+        "titulados_titulados_media.png"
+      ]
+    },
+    "certificados": {
+      "count": 1,
+      "files": [
+        "certificados_certificados_oficina_alta.png"
+      ]
+    },
+    "financiamiento": {
+      "count": 3,
+      "files": [
+        "financiamiento_financiamiento_alta.png",
+        "financiamiento_becas_estatales_alta.png",
+        "financiamiento_portal_pago_alta.png"
+      ]
+    },
+    "digital": {
+      "count": 4,
+      "files": [
+        "digital_servicios_digitales_media.png",
+        "digital_cuentas_accesos_alta.png",
+        "digital_correo_institucional_media.png",
+        "digital_wifi_media.png"
+      ]
+    },
+    "educativo": {
+      "count": 2,
+      "files": [
+        "educativo_plataforma_vivo_alta.png",
+        "educativo_duoc_online_media.png"
+      ]
+    },
+    "practicas": {
+      "count": 1,
+      "files": [
+        "practicas_practicas_alta.png"
+      ]
+    },
+    "tne": {
+      "count": 1,
+      "files": [
+        "tne_tne_media.png"
+      ]
+    },
+    "contacto": {
+      "count": 1,
+      "files": [
+        "contacto_contacto_media.png"
+      ]
+    },
+    "docentes": {
+      "count": 4,
+      "files": [
+        "docentes_portal_docentes_media.png",
+        "docentes_servicios_docentes_baja.png",
+        "docentes_portal_docente_vivo_media.png",
+        "docentes_capacitacion_docentes_baja.png"
+      ]
+    },
+    "colaboradores": {
+      "count": 2,
+      "files": [
+        "colaboradores_colaboradores_baja.png",
+        "colaboradores_beneficios_colaboradores_baja.png"
+      ]
+    },
+    "institucional": {
+      "count": 5,
+      "files": [
+        "institucional_historia_baja.png",
+        "institucional_mision_vision_baja.png",
+        "institucional_autoridades_baja.png",
+        "institucional_noticias_baja.png",
+        "institucional_transparencia_baja.png"
+      ]
+    },
+    "carreras": {
+      "count": 2,
+      "files": [
+        "carreras_carreras_alta.png",
+        "carreras_educacion_continua_media.png"
+      ]
+    }
+  },
+  "output_directory": "duoc_qr_codes"
+}

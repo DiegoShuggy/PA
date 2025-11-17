@@ -1,0 +1,674 @@
+{
+  "timestamp": "2025-11-17 15:19:34",
+  "categories": {
+    "inscripciones": {
+      "category": "inscripciones",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "¿Cómo puedo inscribirme en Duoc?",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "Necesito información sobre el proceso de matricula",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/admision/"
+          ]
+        },
+        {
+          "query": "¿Dónde me puedo matricular para el próximo semestre?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/admision/"
+          ]
+        },
+        {
+          "query": "Quiero postular a una carrera en Duoc UC",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://www.duoc.cl/admision/', 'https://www.duoc.cl/alumnos/', 'https://www.duoc.cl/contacto/'}",
+      "success_rate": 100.0
+    },
+    "portal_alumnos": {
+      "category": "portal_alumnos",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "¿Cómo accedo a mi portal de estudiante?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        },
+        {
+          "query": "Necesito revisar mis notas del semestre",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "¿Dónde veo mi horario de clases?",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "Quiero consultar mi estado académico",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://www.duoc.cl/alumnos/', 'https://www.duoc.cl/contacto/'}",
+      "success_rate": 100.0
+    },
+    "biblioteca": {
+      "category": "biblioteca",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "Necesito buscar libros en la biblioteca",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://biblioteca.duoc.cl/"
+          ]
+        },
+        {
+          "query": "¿Cómo puedo reservar un libro?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://biblioteca.duoc.cl/"
+          ]
+        },
+        {
+          "query": "¿Dónde está ubicada la biblioteca?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://biblioteca.duoc.cl/"
+          ]
+        },
+        {
+          "query": "Quiero acceder a recursos bibliográficos",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://biblioteca.duoc.cl/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://biblioteca.duoc.cl/'}",
+      "success_rate": 100.0
+    },
+    "ayuda": {
+      "category": "ayuda",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "Tengo un problema y necesito ayuda",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "¿Cómo puedo contactar a Duoc?",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "Necesito hablar con alguien de la institución",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "¿Cuál es el teléfono de mi sede?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/sede/plaza-norte/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://www.duoc.cl/sede/plaza-norte/', 'https://www.duoc.cl/alumnos/', 'https://www.duoc.cl/contacto/'}",
+      "success_rate": 100.0
+    },
+    "certificados": {
+      "category": "certificados",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "Necesito un certificado de alumno regular",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        },
+        {
+          "query": "¿Cómo solicito un certificado de notas?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        },
+        {
+          "query": "Quiero un certificado de matrícula vigente",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        },
+        {
+          "query": "Necesito constancia de estudios",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://biblioteca.duoc.cl/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://www.duoc.cl/alumnos/', 'https://biblioteca.duoc.cl/'}",
+      "success_rate": 100.0
+    },
+    "practicas": {
+      "category": "practicas",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "¿Cómo encuentro una práctica profesional?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        },
+        {
+          "query": "Necesito información sobre prácticas laborales",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://duoclaboral.cl/"
+          ]
+        },
+        {
+          "query": "¿Cuáles son los requisitos para hacer práctica?",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "Quiero postular a una práctica en empresa",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://duoclaboral.cl/', 'https://www.duoc.cl/alumnos/', 'https://www.duoc.cl/contacto/'}",
+      "success_rate": 100.0
+    },
+    "beneficios": {
+      "category": "beneficios",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "¿Qué beneficios estudiantiles hay disponibles?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://beneficios.duoc.cl/"
+          ]
+        },
+        {
+          "query": "Necesito información sobre becas",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://beneficios.duoc.cl/"
+          ]
+        },
+        {
+          "query": "¿Cómo postulo a una beca de estudio?",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://biblioteca.duoc.cl/",
+            "https://beneficios.duoc.cl/"
+          ]
+        },
+        {
+          "query": "¿Qué descuentos hay para estudiantes?",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://beneficios.duoc.cl/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://beneficios.duoc.cl/', 'https://www.duoc.cl/alumnos/', 'https://biblioteca.duoc.cl/'}",
+      "success_rate": 100.0
+    },
+    "plaza_norte": {
+      "category": "plaza_norte",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "¿Dónde está ubicada la sede Plaza Norte?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/sede/plaza-norte/"
+          ]
+        },
+        {
+          "query": "¿Cómo llego a Plaza Norte?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/sede/plaza-norte/"
+          ]
+        },
+        {
+          "query": "¿Qué carreras se imparten en Plaza Norte?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/sede/plaza-norte/"
+          ]
+        },
+        {
+          "query": "Necesito la dirección de Plaza Norte",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/sede/plaza-norte/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://www.duoc.cl/sede/plaza-norte/'}",
+      "success_rate": 100.0
+    },
+    "duoclaboral": {
+      "category": "duoclaboral",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "Busco trabajo después de titularme",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://duoclaboral.cl/"
+          ]
+        },
+        {
+          "query": "¿Cómo accedo a bolsa de trabajo?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://duoclaboral.cl/"
+          ]
+        },
+        {
+          "query": "Necesito empleo en mi área de estudio",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://biblioteca.duoc.cl/",
+            "https://duoclaboral.cl/"
+          ]
+        },
+        {
+          "query": "¿Qué oportunidades laborales hay?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://duoclaboral.cl/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://duoclaboral.cl/', 'https://biblioteca.duoc.cl/'}",
+      "success_rate": 100.0
+    },
+    "cva": {
+      "category": "cva",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "¿Cómo accedo al campus virtual?",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/sede/plaza-norte/",
+            "https://cva.duoc.cl/"
+          ]
+        },
+        {
+          "query": "Tengo clases online, ¿dónde entro?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://cva.duoc.cl/"
+          ]
+        },
+        {
+          "query": "Necesito acceder a mi aula virtual",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://cva.duoc.cl/"
+          ]
+        },
+        {
+          "query": "¿Cómo uso la plataforma CVA?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://cva.duoc.cl/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://www.duoc.cl/sede/plaza-norte/', 'https://cva.duoc.cl/'}",
+      "success_rate": 100.0
+    },
+    "eventos_psicologico": {
+      "category": "eventos_psicologico",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "Necesito apoyo psicológico",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "¿Cómo agendar cita con psicólogo?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://eventos.duoc.cl/"
+          ]
+        },
+        {
+          "query": "Tengo problemas emocionales",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "¿Hay atención psicológica gratuita?",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://eventos.duoc.cl/', 'https://www.duoc.cl/alumnos/', 'https://www.duoc.cl/contacto/'}",
+      "success_rate": 100.0
+    },
+    "formulario_emergencia": {
+      "category": "formulario_emergencia",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "Tengo una emergencia económica",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "Necesito ayuda socioeconómica urgente",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "Tengo problemas familiares que afectan mis estudios",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://biblioteca.duoc.cl/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "Necesito apoyo de asistente social",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://biblioteca.duoc.cl/', 'https://www.duoc.cl/alumnos/', 'https://www.duoc.cl/contacto/'}",
+      "success_rate": 100.0
+    },
+    "tne_seguimiento": {
+      "category": "tne_seguimiento",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "Perdí mi tarjeta TNE estudiantil",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        },
+        {
+          "query": "¿Cómo tramito mi TNE?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        },
+        {
+          "query": "Mi TNE no funciona en el metro",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        },
+        {
+          "query": "¿Dónde renuevo mi tarjeta estudiantil?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://www.duoc.cl/alumnos/'}",
+      "success_rate": 100.0
+    },
+    "comisaria_virtual": {
+      "category": "comisaria_virtual",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "Me robaron en el campus",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/sede/plaza-norte/"
+          ]
+        },
+        {
+          "query": "Perdí mi mochila con documentos",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://www.duoc.cl/alumnos/"
+          ]
+        },
+        {
+          "query": "Me sustrajeron mi celular",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        },
+        {
+          "query": "Necesito hacer una denuncia",
+          "status": "success",
+          "qr_count": 2,
+          "urls": [
+            "https://www.duoc.cl/alumnos/",
+            "https://www.duoc.cl/contacto/"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://www.duoc.cl/sede/plaza-norte/', 'https://www.duoc.cl/alumnos/', 'https://www.duoc.cl/contacto/'}",
+      "success_rate": 100.0
+    },
+    "embajadores_salud": {
+      "category": "embajadores_salud",
+      "total_queries": 4,
+      "successful_qr": 4,
+      "failed_qr": 0,
+      "details": [
+        {
+          "query": "¿Qué son los embajadores de salud mental?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://embajadores.duoc.cl"
+          ]
+        },
+        {
+          "query": "Necesito hablar con un embajador",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://embajadores.duoc.cl"
+          ]
+        },
+        {
+          "query": "¿Cómo me convierto en embajador de salud?",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://embajadores.duoc.cl"
+          ]
+        },
+        {
+          "query": "Quiero participar en programa de salud mental",
+          "status": "success",
+          "qr_count": 1,
+          "urls": [
+            "https://embajadores.duoc.cl"
+          ]
+        }
+      ],
+      "qr_urls_generated": "{'https://embajadores.duoc.cl'}",
+      "success_rate": 100.0
+    }
+  },
+  "summary": {
+    "total_categories": 15,
+    "total_queries": 60,
+    "total_successful": 60,
+    "total_failed": 0,
+    "overall_success_rate": 100.0,
+    "unique_urls_generated": [
+      "https://www.duoc.cl/admision/",
+      "https://www.duoc.cl/alumnos/",
+      "https://www.duoc.cl/contacto/",
+      "https://cva.duoc.cl/",
+      "https://embajadores.duoc.cl",
+      "https://eventos.duoc.cl/",
+      "https://biblioteca.duoc.cl/",
+      "https://beneficios.duoc.cl/",
+      "https://www.duoc.cl/sede/plaza-norte/",
+      "https://duoclaboral.cl/"
+    ],
+    "unique_urls_count": 10,
+    "test_duration_seconds": 13.18
+  }
+}

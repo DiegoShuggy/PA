@@ -1,0 +1,490 @@
+{
+  "processed_urls": [
+    {
+      "url": "https://www.duoc.cl/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 3,
+      "filepath": "extracted_content\\general_34dc8a2a.json"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 2,
+      "filepath": "extracted_content\\general_2f29ad61.json"
+    },
+    {
+      "url": "https://www.duoc.cl/admision/",
+      "category": "admision",
+      "description": "Admisión",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\admision_25588036.json"
+    },
+    {
+      "url": "https://www.duoc.cl/contacto-admision/",
+      "category": "admision",
+      "description": "Admisión",
+      "chunk_count": 3,
+      "filepath": "extracted_content\\admision_1cd76ba3.json"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/",
+      "category": "sede_plaza_norte",
+      "description": "Plaza Norte",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\sede_plaza_norte_29c6e79f.json"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/servicios/",
+      "category": "sede_plaza_norte",
+      "description": "Plaza Norte",
+      "chunk_count": 3,
+      "filepath": "extracted_content\\sede_plaza_norte_a1023c80.json"
+    },
+    {
+      "url": "https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/",
+      "category": "bienestar",
+      "description": "Bienestar Estudiantil",
+      "chunk_count": 4,
+      "filepath": "extracted_content\\bienestar_0c130bba.json"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/seguro/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 6,
+      "filepath": "extracted_content\\general_9727b157.json"
+    },
+    {
+      "url": "https://www.duoc.cl/beneficios/salud-autocuidado/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 4,
+      "filepath": "extracted_content\\general_fc4b905f.json"
+    },
+    {
+      "url": "https://www.duoc.cl/vida-estudiantil/titulados/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\general_e1c85937.json"
+    },
+    {
+      "url": "https://www.duoc.cl/vida-estudiantil/deportes/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 5,
+      "filepath": "extracted_content\\general_c100d3c7.json"
+    },
+    {
+      "url": "https://www.duoc.cl/vida-estudiantil/cultura/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\general_21e2be04.json"
+    },
+    {
+      "url": "https://www.duoc.cl/vida-estudiantil/pastoral/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 3,
+      "filepath": "extracted_content\\general_cf3acafb.json"
+    },
+    {
+      "url": "https://bibliotecas.duoc.cl/inicio/",
+      "category": "biblioteca",
+      "description": "Biblioteca",
+      "chunk_count": 2,
+      "filepath": "extracted_content\\biblioteca_6a397c39.json"
+    },
+    {
+      "url": "https://bibliotecas.duoc.cl/plaza-norte/",
+      "category": "sede_plaza_norte",
+      "description": "Plaza Norte",
+      "chunk_count": 4,
+      "filepath": "extracted_content\\sede_plaza_norte_e6d747e4.json"
+    },
+    {
+      "url": "https://bibliotecas.duoc.cl/tutoriales/",
+      "category": "biblioteca",
+      "description": "Biblioteca",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\biblioteca_ec610bd9.json"
+    },
+    {
+      "url": "https://www.duoc.cl/test-oficina-de-titulos-y-certificados/",
+      "category": "certificados",
+      "description": "Certificados",
+      "chunk_count": 5,
+      "filepath": "extracted_content\\certificados_d34e8d55.json"
+    },
+    {
+      "url": "https://www.duoc.cl/admision/financiamiento/",
+      "category": "admision",
+      "description": "Admisión",
+      "chunk_count": 10,
+      "filepath": "extracted_content\\admision_7ea289af.json"
+    },
+    {
+      "url": "https://www.duoc.cl/admision/financiamiento/becas-estatales/",
+      "category": "admision",
+      "description": "Admisión",
+      "chunk_count": 3,
+      "filepath": "extracted_content\\admision_cdb1964c.json"
+    },
+    {
+      "url": "https://www.duoc.cl/portal-de-pago/",
+      "category": "financiamiento",
+      "description": "Financiamiento",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\financiamiento_4352bd5d.json"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/servicios-digitales/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\general_aad63e49.json"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/servicios-digitales/cuentas-y-accesos/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 3,
+      "filepath": "extracted_content\\general_928cf438.json"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/servicios-digitales/correo-institucional/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 2,
+      "filepath": "extracted_content\\general_4e2d9238.json"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/servicios-digitales/wifi/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 4,
+      "filepath": "extracted_content\\general_fedfb52e.json"
+    },
+    {
+      "url": "https://plataforma.duoc.cl/admin/login",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\general_973b758c.json"
+    },
+    {
+      "url": "https://www.duoc.cl/bienvenida-duoc-online/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 4,
+      "filepath": "extracted_content\\general_83047fb6.json"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/practicas/",
+      "category": "practicas",
+      "description": "Prácticas",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\practicas_c6fca439.json"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/info-tne/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 3,
+      "filepath": "extracted_content\\general_86261786.json"
+    },
+    {
+      "url": "https://www.duoc.cl/contacto/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 3,
+      "filepath": "extracted_content\\general_72048889.json"
+    },
+    {
+      "url": "https://www.duoc.cl/docentes/",
+      "category": "docentes",
+      "description": "Docentes",
+      "chunk_count": 2,
+      "filepath": "extracted_content\\docentes_0b57cba7.json"
+    },
+    {
+      "url": "https://www.duoc.cl/docentes/servicios-digitales/",
+      "category": "docentes",
+      "description": "Docentes",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\docentes_46e7b3c9.json"
+    },
+    {
+      "url": "https://www.duoc.cl/docentes/servicios-digitales/portal-docente-experiencia-vivo/",
+      "category": "docentes",
+      "description": "Docentes",
+      "chunk_count": 4,
+      "filepath": "extracted_content\\docentes_f2af1c0d.json"
+    },
+    {
+      "url": "https://www.duoc.cl/docentes/capacitacion/",
+      "category": "docentes",
+      "description": "Docentes",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\docentes_0dc1daa4.json"
+    },
+    {
+      "url": "https://www.duoc.cl/colaboradores/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\general_822333a6.json"
+    },
+    {
+      "url": "https://www.duoc.cl/colaboradores/beneficios/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 2,
+      "filepath": "extracted_content\\general_69e829f9.json"
+    },
+    {
+      "url": "https://www.duoc.cl/institucional/historia/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 7,
+      "filepath": "extracted_content\\general_645cfc0f.json"
+    },
+    {
+      "url": "https://www.duoc.cl/institucional/mision-vision/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 5,
+      "filepath": "extracted_content\\general_ef48386c.json"
+    },
+    {
+      "url": "https://www.duoc.cl/institucional/autoridades/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\general_2d2b8dae.json"
+    },
+    {
+      "url": "https://www.duoc.cl/institucional/noticias/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\general_f8b8bac7.json"
+    },
+    {
+      "url": "https://www.duoc.cl/institucional/transparencia/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 2,
+      "filepath": "extracted_content\\general_483ea823.json"
+    },
+    {
+      "url": "https://www.duoc.cl/carreras/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 2,
+      "filepath": "extracted_content\\general_e77c26dd.json"
+    },
+    {
+      "url": "https://www.duoc.cl/educacion-continua/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 1,
+      "filepath": "extracted_content\\general_c32cadaa.json"
+    },
+    {
+      "url": "https://www.duoc.cl/postulacion/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "chunk_count": 3,
+      "filepath": "extracted_content\\general_af263397.json"
+    }
+  ],
+  "failed_urls": [
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/contacto/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/contacto/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/carreras/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/carreras/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/biblioteca/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/biblioteca/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/laboratorios/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/laboratorios/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/como-llegar/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/como-llegar/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/horarios/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/horarios/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/calendario-academico/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/calendario-academico/"
+    },
+    {
+      "url": "https://www.duoc.cl/vida-estudiantil/centro-de-estudiantes/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/vida-estudiantil/centro-de-estudiantes/"
+    },
+    {
+      "url": "https://bibliotecas.duoc.cl/recursos-digitales/",
+      "error": "404 Client Error: Not Found for url: https://bibliotecas.duoc.cl/recursos-digitales/"
+    },
+    {
+      "url": "https://bibliotecas.duoc.cl/normas-apa/",
+      "error": "404 Client Error: Not Found for url: https://bibliotecas.duoc.cl/normas-apa/"
+    },
+    {
+      "url": "https://biblioteca.duoc.cl/sitios-web/",
+      "error": "404 Client Error: Not Found for url: https://biblioteca.duoc.cl/sitios-web/"
+    },
+    {
+      "url": "https://certificados.duoc.cl/",
+      "error": "HTTPSConnectionPool(host='certificados.duoc.cl', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)')))"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/certificados-online/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/alumnos/certificados-online/"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/documentos/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/alumnos/documentos/"
+    },
+    {
+      "url": "https://www.duoc.cl/admision/financiamiento/credito-corfo/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/admision/financiamiento/credito-corfo/"
+    },
+    {
+      "url": "https://www.duoc.cl/admision/financiamiento/becas-internas/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/admision/financiamiento/becas-internas/"
+    },
+    {
+      "url": "https://www2.duoc.cl/practica/login",
+      "error": "No content extracted"
+    },
+    {
+      "url": "https://www.duoc.cl/empleabilidad/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/empleabilidad/"
+    },
+    {
+      "url": "https://www.duoc.cl/empleabilidad/portal-laboral/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/empleabilidad/portal-laboral/"
+    },
+    {
+      "url": "https://bolsa.duoc.cl/",
+      "error": "HTTPSConnectionPool(host='bolsa.duoc.cl', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x0000017FEED53250>: Failed to resolve 'bolsa.duoc.cl' ([Errno 11001] getaddrinfo failed)\"))"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/beneficios-tne/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/alumnos/beneficios-tne/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/transporte/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/transporte/"
+    },
+    {
+      "url": "https://centroayuda.duoc.cl/hc/es-419",
+      "error": "403 Client Error: Forbidden for url: https://centroayuda.duoc.cl/hc/es-419"
+    },
+    {
+      "url": "https://centrodeayudaonline.duoc.cl/hc/es-419/",
+      "error": "403 Client Error: Forbidden for url: https://centrodeayudaonline.duoc.cl/hc/es-419/"
+    },
+    {
+      "url": "https://centrodeayudaonline.duoc.cl/hc/es-419/articles/32100564564621-Portal-Experiencia-Vivo",
+      "error": "403 Client Error: Forbidden for url: https://centrodeayudaonline.duoc.cl/hc/es-419/articles/32100564564621-Portal-Experiencia-Vivo"
+    },
+    {
+      "url": "https://www.duoc.cl/contacto/chat-online/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/contacto/chat-online/"
+    },
+    {
+      "url": "https://www.duoc.cl/colaboradores/desarrollo-profesional/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/colaboradores/desarrollo-profesional/"
+    },
+    {
+      "url": "https://www.duoc.cl/institucional/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/institucional/"
+    },
+    {
+      "url": "https://www.duoc.cl/carreras/tecnicas/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/carreras/tecnicas/"
+    },
+    {
+      "url": "https://www.duoc.cl/carreras/profesionales/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/carreras/profesionales/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/estacionamiento/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/estacionamiento/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/casino/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/casino/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/fotocopiadora/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/fotocopiadora/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/enfermeria/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/enfermeria/"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/direcciones/",
+      "error": "404 Client Error: Not Found for url: https://www.duoc.cl/sedes/plaza-norte/direcciones/"
+    }
+  ],
+  "total_chunks": 118,
+  "categories": {
+    "general": {
+      "count": 26,
+      "chunks": 71
+    },
+    "admision": {
+      "count": 4,
+      "chunks": 17
+    },
+    "sede_plaza_norte": {
+      "count": 3,
+      "chunks": 8
+    },
+    "bienestar": {
+      "count": 1,
+      "chunks": 4
+    },
+    "biblioteca": {
+      "count": 2,
+      "chunks": 3
+    },
+    "certificados": {
+      "count": 1,
+      "chunks": 5
+    },
+    "financiamiento": {
+      "count": 1,
+      "chunks": 1
+    },
+    "practicas": {
+      "count": 1,
+      "chunks": 1
+    },
+    "docentes": {
+      "count": 4,
+      "chunks": 8
+    }
+  },
+  "start_time": "2025-11-17T16:03:00.911970",
+  "end_time": "2025-11-17T16:04:02.853279",
+  "success_count": 43,
+  "failed_count": 35
+}

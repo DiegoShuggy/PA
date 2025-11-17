@@ -1,0 +1,2 @@
+2025-11-17 16:02:10,296 - ERROR - Error importando módulos: No module named 'ollama'
+2025-11-17 16:02:10,297 - ERROR - Asegúrate de ejecutar desde el directorio ina-backend

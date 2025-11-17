@@ -1,0 +1,84 @@
+{
+  "generated_at": "2025-11-17T16:13:00.127413",
+  "total_qrs": 15,
+  "total_services": 43,
+  "filter_priority": "alta",
+  "categories": {
+    "principal": {
+      "count": 1,
+      "files": [
+        "principal_inicio_alta.png"
+      ]
+    },
+    "estudiantes": {
+      "count": 1,
+      "files": [
+        "estudiantes_portal_alumnos_alta.png"
+      ]
+    },
+    "admision": {
+      "count": 2,
+      "files": [
+        "admision_admision_alta.png",
+        "admision_postulacion_alta.png"
+      ]
+    },
+    "sede": {
+      "count": 1,
+      "files": [
+        "sede_plaza_norte_alta.png"
+      ]
+    },
+    "biblioteca": {
+      "count": 1,
+      "files": [
+        "biblioteca_biblioteca_plaza_norte_alta.png"
+      ]
+    },
+    "bienestar": {
+      "count": 1,
+      "files": [
+        "bienestar_bienestar_alta.png"
+      ]
+    },
+    "certificados": {
+      "count": 1,
+      "files": [
+        "certificados_certificados_oficina_alta.png"
+      ]
+    },
+    "financiamiento": {
+      "count": 3,
+      "files": [
+        "financiamiento_financiamiento_alta.png",
+        "financiamiento_becas_estatales_alta.png",
+        "financiamiento_portal_pago_alta.png"
+      ]
+    },
+    "digital": {
+      "count": 1,
+      "files": [
+        "digital_cuentas_accesos_alta.png"
+      ]
+    },
+    "educativo": {
+      "count": 1,
+      "files": [
+        "educativo_plataforma_vivo_alta.png"
+      ]
+    },
+    "practicas": {
+      "count": 1,
+      "files": [
+        "practicas_practicas_alta.png"
+      ]
+    },
+    "carreras": {
+      "count": 1,
+      "files": [
+        "carreras_carreras_alta.png"
+      ]
+    }
+  },
+  "output_directory": "qr_alta_prioridad"
+}
