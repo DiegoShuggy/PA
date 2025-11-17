@@ -383,52 +383,87 @@ const cleanTextForTTS = useCallback((text: string): string => {
     };
   }, [stopReading, i18n.language]);
 
-  // Función para leer un mensaje en voz alta
-  const readMessage = useCallback((text: string, messageIndex: number, isAutoRead = false) => {
-    // Limpiar el texto específicamente para TTS
-    const cleanText = cleanTextForTTS(text);
+// Función para leer un mensaje en voz alta CON PAUSAS ENTRE LÍNEAS
+const readMessage = useCallback((text: string, messageIndex: number, isAutoRead = false) => {
+  // Si es lectura automática y hubo una detención manual, no leer
+  if (isAutoRead && isManualStopRef.current) {
+    console.log(t('app.ttsNotSupported'));
+    return;
+  }
 
-    // Si es lectura automática y hubo una detención manual, no leer
-    if (isAutoRead && isManualStopRef.current) {
-      console.log(t('app.ttsNotSupported'));
-      return;
-    }
+  // SIEMPRE detener cualquier lectura en curso antes de empezar una nueva
+  stopReading();
 
-    // SIEMPRE detener cualquier lectura en curso antes de empezar una nueva
-    // Esto asegura que el mensaje más nuevo tenga prioridad
-    stopReading();
+  // Si el mensaje ya fue leído y es lectura automática, no repetir
+  if (isAutoRead && hasBeenReadRef.current.has(messageIndex)) {
+    console.log('🚫 Mensaje ya fue leído anteriormente, no repetir');
+    return;
+  }
 
-    // Si el mensaje ya fue leído y es lectura automática, no repetir
-    if (isAutoRead && hasBeenReadRef.current.has(messageIndex)) {
-      console.log('🚫 Mensaje ya fue leído anteriormente, no repetir');
-      return;
-    }
+  if (!speechSynthesisRef.current || !isTtsSupported) {
+    alert(t('chat.ttsNotSupported'));
+    return;
+  }
 
-    if (!speechSynthesisRef.current || !isTtsSupported) {
-      alert(t('chat.ttsNotSupported') );
-      return;
-    }
+  // Resetear el flag de detención manual si es una lectura manual
+  if (!isAutoRead) {
+    isManualStopRef.current = false;
+  }
 
-    // Resetear el flag de detención manual si es una lectura manual
-    if (!isAutoRead) {
-      isManualStopRef.current = false;
-    }
+  // Detener cualquier lectura en curso ANTES de procesar el texto
+  stopReading();
 
-    // Detener cualquier lectura en curso ANTES de crear el nuevo utterance
-    stopReading();
+  // Pequeña pausa para asegurar que se detuvo completamente
+  setTimeout(() => {
+    try {
+      // DIVIDIR EL TEXTO EN LÍNEAS
+      const lines = text.split('\n').filter(line => line.trim() !== '');
+      
+      if (lines.length === 0) {
+        console.log('📝 No hay texto para leer');
+        return;
+      }
 
-    // Pequeña pausa para asegurar que se detuvo completamente
-    setTimeout(() => {
-      try {
-        // Configurar el idioma para la síntesis de voz
-        const ttsLang = i18n.language === 'es' ? 'es-ES' :
-          i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+      console.log(`📝 Texto dividido en ${lines.length} líneas para lectura con pausas`);
 
-        // Reemplazar "/" por espacios antes de crear el utterance
-        const processedText = cleanText.replace(/\//g, ' ');
+      // Configurar el idioma para la síntesis de voz
+      const ttsLang = i18n.language === 'es' ? 'es-ES' :
+        i18n.language === 'fr' ? 'fr-FR' : 'en-US';
 
-        // Usar el texto LIMPIO para TTS
-        const utterance = new SpeechSynthesisUtterance(processedText);
+      // REF para controlar la lectura secuencial
+      const currentLineIndexRef = { current: 0 };
+      const isCancelledRef = { current: false };
+
+      // Función para leer la siguiente línea
+      const readNextLine = () => {
+        if (isCancelledRef.current || currentLineIndexRef.current >= lines.length) {
+          // Fin de la lectura
+          if (!isCancelledRef.current) {
+            console.log(`✅ ${isAutoRead ? 'Auto-' : ''}Lectura de todas las líneas finalizada`);
+            setIsReading(false);
+            setCurrentReadingIndex(null);
+            currentUtteranceRef.current = null;
+
+            // Marcar el mensaje como leído
+            if (isAutoRead) {
+              hasBeenReadRef.current.add(messageIndex);
+            }
+
+            // Resetear el flag de detención manual cuando termina naturalmente
+            if (!isAutoRead) {
+              isManualStopRef.current = false;
+            }
+          }
+          return;
+        }
+
+        const line = lines[currentLineIndexRef.current];
+        const cleanLine = cleanTextForTTS(line).replace(/\//g, ' ');
+        
+        console.log(`🔊 Leyendo línea ${currentLineIndexRef.current + 1}/${lines.length}:`, 
+                   cleanLine.substring(0, 50) + '...');
+
+        const utterance = new SpeechSynthesisUtterance(cleanLine);
         utterance.lang = ttsLang;
         utterance.rate = 0.75;
         utterance.pitch = 1;
@@ -436,13 +471,10 @@ const cleanTextForTTS = useCallback((text: string): string => {
 
         // BUSCAR Y SELECCIONAR UNA VOZ FEMENINA ESPECÍFICA
         const voices = speechSynthesisRef.current?.getVoices() || [];
-        console.log('Todas las voces disponibles:', voices.map(v => ({ name: v.name, lang: v.lang })));
-
         let femaleVoice = null;
 
         // BUSCAR VOCES FEMENINAS ESPECÍFICAS POR NOMBRE
         const femaleVoiceNames = [
-          // Voces femeninas en español
           'google español', 'español', 'spanish', 'mujer', 'female', 'femenina',
           'mexico', 'colombia', 'argentina', 'latina', 'latino', 'españa',
           'sabina', 'helena', 'juana', 'catalina', 'sofia', 'valeria',
@@ -450,37 +482,32 @@ const cleanTextForTTS = useCallback((text: string): string => {
         ];
 
         const maleVoiceNames = [
-          // Voces masculinas a EVITAR
           'raul', 'pablo', 'carlos', 'diego', 'jorge', 'miguel', 'male', 'masculino',
           'microsoft raul', 'microsoft pablo', 'google español masculino'
         ];
 
-        // Primero buscar voces femeninas explícitas
+        // Buscar voz femenina
         for (let voice of voices) {
           const voiceName = voice.name.toLowerCase();
           const voiceLang = voice.lang.toLowerCase();
 
-          // Verificar que sea del idioma correcto
           if (!voiceLang.startsWith(ttsLang.substring(0, 2))) continue;
 
-          // Buscar características femeninas en el nombre
           const isFemale = femaleVoiceNames.some(femaleName =>
             voiceName.includes(femaleName.toLowerCase())
           );
 
-          // Evitar voces masculinas explícitas
           const isMale = maleVoiceNames.some(maleName =>
             voiceName.includes(maleName.toLowerCase())
           );
 
           if (isFemale && !isMale) {
             femaleVoice = voice;
-            console.log('✅ Voz femenina encontrada:', voice.name);
             break;
           }
         }
 
-        // Si no encontramos voz femenina explícita, buscar cualquier voz que no sea masculina
+        // Si no encontramos voz femenina, buscar cualquier voz que no sea masculina
         if (!femaleVoice) {
           for (let voice of voices) {
             const voiceName = voice.name.toLowerCase();
@@ -488,14 +515,12 @@ const cleanTextForTTS = useCallback((text: string): string => {
 
             if (!voiceLang.startsWith(ttsLang.substring(0, 2))) continue;
 
-            // Evitar voces masculinas conocidas
             const isMale = maleVoiceNames.some(maleName =>
               voiceName.includes(maleName.toLowerCase())
             );
 
             if (!isMale) {
               femaleVoice = voice;
-              console.log('⚠️ Usando voz no-masculina:', voice.name);
               break;
             }
           }
@@ -506,77 +531,86 @@ const cleanTextForTTS = useCallback((text: string): string => {
           femaleVoice = voices.find(voice =>
             voice.lang.startsWith(ttsLang.substring(0, 2))
           );
-          console.warn('🚨 Usando primera voz disponible:', femaleVoice?.name);
         }
 
         if (femaleVoice) {
           utterance.voice = femaleVoice;
-          console.log('🎯 Voz seleccionada finalmente:', femaleVoice.name);
-        } else {
-          console.error('❌ No se pudo encontrar ninguna voz adecuada');
         }
 
         utterance.onstart = () => {
-          setIsReading(true);
-          setCurrentReadingIndex(messageIndex);
-          console.log(`🔊 ${isAutoRead ? 'Auto-' : ''}Lectura iniciada con voz:`, utterance.voice?.name);
+          if (currentLineIndexRef.current === 0) {
+            // Solo establecer estados al inicio de la primera línea
+            setIsReading(true);
+            setCurrentReadingIndex(messageIndex);
+            console.log(`🔊 ${isAutoRead ? 'Auto-' : ''}Lectura iniciada con voz:`, utterance.voice?.name);
+          }
         };
 
         utterance.onend = () => {
-          console.log(`✅ ${isAutoRead ? 'Auto-' : ''}Lectura finalizada`);
-          setIsReading(false);
-          setCurrentReadingIndex(null);
-          currentUtteranceRef.current = null;
-
-          // Marcar el mensaje como leído
-          if (isAutoRead) {
-            hasBeenReadRef.current.add(messageIndex);
-          }
-
-          // Resetear el flag de detención manual cuando termina naturalmente
-          if (!isAutoRead) {
-            isManualStopRef.current = false;
+          console.log(`✅ Línea ${currentLineIndexRef.current + 1} completada`);
+          
+          if (!isCancelledRef.current) {
+            currentLineIndexRef.current++;
+            
+            // PAUSA BREVE ENTRE LÍNEAS
+            const pauseDuration = 400; // 1 segundo de pausa
+            console.log(`⏸️ Pausa de ${pauseDuration}ms antes de la siguiente línea`);
+            
+            setTimeout(() => {
+              if (!isCancelledRef.current) {
+                readNextLine();
+              }
+            }, pauseDuration);
           }
         };
 
         utterance.onerror = (event) => {
-          console.error(`❌ Error en la ${isAutoRead ? 'auto-' : ''}lectura:`, event.error);
-          setIsReading(false);
-          setCurrentReadingIndex(null);
-          currentUtteranceRef.current = null;
-
-          if (event.error !== 'interrupted') {
-            console.warn('Error de TTS:', event.error);
-          }
-
-          // Resetear el flag de detención manual en caso de error
-          if (!isAutoRead) {
-            isManualStopRef.current = false;
+          console.error(`❌ Error en línea ${currentLineIndexRef.current + 1}:`, event.error);
+          
+          if (!isCancelledRef.current && event.error !== 'interrupted') {
+            // Continuar con la siguiente línea incluso si hay error
+            currentLineIndexRef.current++;
+            setTimeout(() => {
+              if (!isCancelledRef.current) {
+                readNextLine();
+              }
+            }, 500);
           }
         };
 
-        // Prevenir que se agregue múltiples veces el mismo utterance
-        if (currentUtteranceRef.current === utterance) {
-          console.log('🚫 Utterance duplicado detectado, cancelando');
-          return;
-        }
-
         currentUtteranceRef.current = utterance;
 
-        // Pequeño delay antes de empezar a hablar
+        // Pequeño delay antes de empezar a hablar cada línea
         setTimeout(() => {
-          if (speechSynthesisRef.current && currentUtteranceRef.current === utterance) {
+          if (speechSynthesisRef.current && 
+              currentUtteranceRef.current === utterance && 
+              !isCancelledRef.current) {
             speechSynthesisRef.current.speak(utterance);
           }
         }, 100);
 
-      } catch (error) {
-        console.error(t('app.readEmpty'), error);
-        setIsReading(false);
-        setCurrentReadingIndex(null);
-      }
-    }, 50);
-  }, [i18n.language, t, isTtsSupported, stopReading]);
+      };
+
+      // Configurar función de cancelación
+      const originalStopReading = stopReading;
+      const enhancedStopReading = (isManual = false) => {
+        isCancelledRef.current = true;
+        if (isManual) {
+          isManualStopRef.current = true;
+        }
+        originalStopReading(isManual);
+      };
+
+      // Iniciar la lectura de la primera línea
+      readNextLine();
+
+    } catch (error) {
+      console.error(t('app.readEmpty'), error);
+      setIsReading(false);
+      setCurrentReadingIndex(null);
+    }
+  }, 50);
+}, [i18n.language, t, isTtsSupported, stopReading, cleanTextForTTS]);
 
   // Función para alternar lectura de un mensaje
   const toggleReading = useCallback((message: Message, index: number) => {
