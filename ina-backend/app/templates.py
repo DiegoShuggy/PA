@@ -2062,7 +2062,7 @@ Puedes escribir palabras clave como:
 📞 **Si necesitas atención personalizada:**
 • **Punto Estudiantil:** +56 2 2360 6400
 • **Bienestar:** +56 2 2360 6420
-• **WhatsApp sede:** +56 9 XXXX XXXX
+• **WhatsApp sede:** +56 9 3663 9565
 💡 *Estoy aquí para ayudarte 24/7 con información oficial de Duoc UC*
 """,
         # 🎯 INFORMACIÓN CONTACTO DESDE DOCUMENTOS

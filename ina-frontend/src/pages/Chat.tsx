@@ -101,14 +101,13 @@ const Chat: React.FC = () => {
   const lastUserMessageRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const finalTranscriptRef = useRef('');
   const menuRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
   const isStartingRef = useRef(false);
   const silenceTimerRef = useRef<number | null>(null);
   const restartTimerRef = useRef<number | null>(null);
 
+  
   // Referencias para el lector de texto
   const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
   const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -891,7 +890,7 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
         resetSilenceTimer();
 
         let interimTranscript = '';
-        let finalTranscript = finalTranscriptRef.current;
+        let finalTranscript = inputMessage;
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
@@ -902,8 +901,7 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
           }
         }
 
-        finalTranscriptRef.current = finalTranscript;
-        setInputMessage(finalTranscript + interimTranscript);
+        setInputMessage(finalTranscript + interimTranscript)
 
         console.log('Voz detectada - Reiniciando temporizador');
       };
@@ -1066,7 +1064,6 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
       }
 
       isStartingRef.current = true;
-      finalTranscriptRef.current = inputMessage;
 
       // Configuración adicional para escucha extendida
       const recognition = recognitionRef.current;
@@ -1203,7 +1200,6 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
 
     // Limpiar input
     setInputMessage('');
-    finalTranscriptRef.current = '';
 
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
@@ -1284,7 +1280,6 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
 
     if (isListening) {
       setIsListening(false);
-      finalTranscriptRef.current = ''; // Limpiar transcripción al detener
     } else {
       // Verificar permisos antes de iniciar
       try {
@@ -1368,7 +1363,6 @@ useEffect(() => {
     // Limpiar input inmediatamente
     const messageToSend = inputMessage;
     setInputMessage('');
-    finalTranscriptRef.current = '';
 
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);

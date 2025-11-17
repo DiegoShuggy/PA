@@ -953,7 +953,7 @@ Puedo ayudarte con:*
         response = f"""
 {suggestion}
 
-¿Puedo ayudarte con TNE, bienestar, deportes o desarrollo laboral?*
+¿Puedo ayudarte con TNE, bienestar, deportes o desarrollo laboral?
 """
         
         # AGREGAR QR CODES PARA DERIVACIÓN (ESTRUCTURA CORREGIDA)
