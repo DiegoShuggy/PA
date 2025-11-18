@@ -1500,9 +1500,9 @@ async def get_report_types():
 
 @app.post("/reports/generate")
 async def generate_report(request: ReportRequest, background_tasks: BackgroundTasks):
-    """Generar un reporte basado en el período solicitado"""
+    """Generar un reporte basado en el período solicitado con opción avanzada"""
     try:
-        logger.info(f"📊 Generando reporte para {request.period_days} días")
+        logger.info(f"📊 Generando reporte {'avanzado' if request.advanced_pdf else 'básico'} para {request.period_days} días")
         
         # Generar reporte inmediato
         report_data = report_generator.generate_basic_report(request.period_days)
@@ -1510,21 +1510,45 @@ async def generate_report(request: ReportRequest, background_tasks: BackgroundTa
         # Si se solicita PDF, programar generación en background
         pdf_data = None
         if request.include_pdf:
-            background_tasks.add_task(
-                report_generator.generate_pdf_report,
-                report_data,
-                f"reporte_{request.period_days}dias_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
-            )
-            pdf_data = {
-                "status": "processing",
-                "filename": f"reporte_{request.period_days}dias_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
-            }
+            filename = f"reporte_{'avanzado' if request.advanced_pdf else 'basico'}_{request.period_days}dias_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
+            
+            # Generar PDF de forma síncrona para obtener la ruta inmediatamente
+            try:
+                pdf_path = report_generator.generate_pdf_report(
+                    report_data, 
+                    filename, 
+                    advanced=request.advanced_pdf
+                )
+                
+                if pdf_path and os.path.exists(pdf_path):
+                    pdf_data = {
+                        "status": "completed",
+                        "filename": filename,
+                        "path": pdf_path,
+                        "type": "avanzado" if request.advanced_pdf else "básico",
+                        "size_mb": round(os.path.getsize(pdf_path) / (1024*1024), 2)
+                    }
+                    logger.info(f"✅ PDF generado exitosamente: {filename} ({pdf_data['size_mb']} MB)")
+                else:
+                    pdf_data = {
+                        "status": "failed",
+                        "filename": filename,
+                        "error": "No se pudo generar el archivo PDF"
+                    }
+            except Exception as pdf_error:
+                logger.error(f"❌ Error generando PDF: {pdf_error}")
+                pdf_data = {
+                    "status": "failed",
+                    "filename": filename,
+                    "error": str(pdf_error)
+                }
         
         return {
             "status": "success",
             "report_id": f"rep_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
             "period_days": request.period_days,
             "generated_at": datetime.now().isoformat(),
+            "report_type": "avanzado" if request.advanced_pdf else "básico",
             "data": report_data,
             "pdf": pdf_data
         }

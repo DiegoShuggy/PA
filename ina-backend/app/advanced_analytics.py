@@ -30,6 +30,13 @@ class AdvancedAnalytics:
                 )
                 total_feedback = total_feedback_result.one() if total_feedback_result else 0
                 
+                # 💬 CONVERSACIONES ÚNICAS - NUEVO (desde ResponseFeedback)
+                unique_conversations_result = session.exec(
+                    select(func.count(func.distinct(ResponseFeedback.session_id)))
+                    .where(ResponseFeedback.timestamp >= start_date)
+                )
+                unique_conversations = unique_conversations_result.one() if unique_conversations_result else 0
+                
                 # 🎯 TASA DE SATISFACCIÓN - CORREGIDO
                 satisfaction_result = session.exec(
                     select(ResponseFeedback.is_satisfied)
@@ -113,12 +120,18 @@ class AdvancedAnalytics:
                     "period": f"last_{days}_days",
                     "summary_metrics": {
                         "total_queries": total_queries,
+                        "unique_conversations": unique_conversations,
                         "total_feedback": total_feedback,
                         "satisfaction_rate": satisfaction_rate,
                         "feedback_rate": feedback_rate,
                         "unanswered_questions": unanswered_count,
-                        "success_rate": round(100 - (unanswered_count / total_queries * 100), 2) if total_queries > 0 else 0
+                        "success_rate": round(100 - (unanswered_count / total_queries * 100), 2) if total_queries > 0 else 0,
+                        # Compatibilidad con report_generator
+                        "response_rate": round(100 - (unanswered_count / total_queries * 100), 2) if total_queries > 0 else 0,
+                        "total_conversations": unique_conversations
                     },
+                    # Formato para compatibilidad con report_generator
+                    "categories": {cat: count for cat, count in category_stats_result[:10]},
                     "category_analytics": {
                         "top_categories": [{"category": cat, "count": count} for cat, count in category_stats_result],
                         "problematic_categories": [{"category": cat, "unanswered_count": count} for cat, count in problematic_categories_result]

@@ -19,6 +19,7 @@ const Reporte = () => {
     const [success, setSuccess] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [showEmailForm, setShowEmailForm] = useState<boolean>(false);
+    const [advancedReport, setAdvancedReport] = useState<boolean>(true); // Reporte avanzado por defecto
     
     // Estados para el contador de clics y el video
     const [clickCount, setClickCount] = useState<number>(0);
@@ -109,7 +110,8 @@ const Reporte = () => {
                 },
                 body: JSON.stringify({
                     period_days: selectedPeriod,
-                    include_pdf: true
+                    include_pdf: true,
+                    advanced_pdf: advancedReport
                 })
             });
 
@@ -117,11 +119,16 @@ const Reporte = () => {
             
             if (data.status === 'success') {
                 setReportData(data.data);
-                setSuccess(`✅ Reporte generado exitosamente para ${selectedPeriod} días`);
+                const reportType = advancedReport ? 'avanzado con gráficos' : 'básico';
+                setSuccess(`✅ Reporte ${reportType} generado exitosamente para ${selectedPeriod} días`);
                 
                 // Mostrar información del PDF generado
                 if (data.pdf) {
-                    setSuccess(prev => prev + `\n📄 PDF: ${data.pdf.filename}`);
+                    if (data.pdf.status === 'completed') {
+                        setSuccess(prev => prev + `\n📄 PDF ${data.pdf.type}: ${data.pdf.filename} (${data.pdf.size_mb} MB)`);
+                    } else if (data.pdf.status === 'failed') {
+                        setError(`⚠️ PDF no generado: ${data.pdf.error}`);
+                    }
                 }
                 
             } else {
@@ -161,14 +168,16 @@ const Reporte = () => {
                 body: JSON.stringify({
                     email: email,
                     period_days: selectedPeriod,
-                    report_type: "basic"
+                    report_type: advancedReport ? "advanced" : "basic",
+                    advanced_pdf: advancedReport
                 })
             });
 
             const data = await response.json();
             
             if (data.status === 'success') {
-                setSuccess(`✅ Reporte enviado exitosamente a: ${email}`);
+                const reportType = advancedReport ? 'avanzado' : 'básico';
+                setSuccess(`✅ Reporte ${reportType} enviado exitosamente a: ${email}`);
                 setShowEmailForm(false);
                 setEmail('');
             } else {
@@ -260,6 +269,35 @@ const Reporte = () => {
                             </option>
                         ))}
                     </select>
+                </div>
+
+                {/* Selector de tipo de reporte */}
+                <div className="report-type-selector">
+                    <label className="report-type-label">Tipo de Reporte:</label>
+                    <div className="report-type-options">
+                        <label className="radio-option">
+                            <input
+                                type="radio"
+                                name="reportType"
+                                checked={advancedReport}
+                                onChange={() => setAdvancedReport(true)}
+                            />
+                            <span className="radio-text">
+                                🎨 <strong>Avanzado</strong> - Con gráficos, visualizaciones y análisis detallado
+                            </span>
+                        </label>
+                        <label className="radio-option">
+                            <input
+                                type="radio"
+                                name="reportType"
+                                checked={!advancedReport}
+                                onChange={() => setAdvancedReport(false)}
+                            />
+                            <span className="radio-text">
+                                📄 <strong>Básico</strong> - Solo tablas y texto
+                            </span>
+                        </label>
+                    </div>
                 </div>
 
                 {/* Botones de acción */}

@@ -89,6 +89,76 @@
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+/* Selector de tipo de reporte */
+.report-type-selector {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+}
+
+.report-type-label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+.report-type-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #dee2e6;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.radio-option:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.radio-option input[type="radio"] {
+    margin-top: 2px;
+    transform: scale(1.2);
+    accent-color: #667eea;
+}
+
+.radio-option input[type="radio"]:checked + .radio-text {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+    border-color: #667eea;
+    background: #f8f9ff;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.radio-text {
+    flex: 1;
+    line-height: 1.4;
+    color: #495057;
+    transition: color 0.3s ease;
+}
+
+.radio-text strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1.05em;
+}
+
 /* Botones de acción */
 .action-buttons {
     display: flex;

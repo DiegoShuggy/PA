@@ -6,6 +6,7 @@ from app.feedback import response_feedback_system
 
 # Importar nuevos módulos
 from app.pdf_generator import pdf_generator
+from app.advanced_pdf_generator import advanced_pdf_generator
 from app.email_sender import email_sender
 
 logger = logging.getLogger(__name__)
@@ -19,8 +20,10 @@ class ReportGenerator:
         """Generar reporte básico - CONSISTENCIA FORZADA"""
         logger.info(f"📊 Generando reporte básico para {period_days} días")
         
-        # Obtener datos de analytics
-        analytics_data = get_detailed_period_stats(period_days)
+        # Obtener datos de analytics AVANZADOS (incluye conversaciones únicas)
+        from app.advanced_analytics import AdvancedAnalytics
+        advanced_analytics = AdvancedAnalytics()
+        analytics_data = advanced_analytics.get_comprehensive_dashboard(period_days)
         
         # Obtener datos de feedback
         feedback_data = response_feedback_system.get_response_feedback_stats(period_days)
@@ -60,6 +63,10 @@ class ReportGenerator:
                 logger.info(f"🔧 Sincronizando totales: {basic_metrics['total_queries']} -> {total_from_advanced}")
                 basic_metrics["total_queries"] = total_from_advanced
         
+        # Calcular fechas del período
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=period_days)
+        
         # Estructurar reporte CON CONSISTENCIA FORZADA
         report = {
             "report_metadata": {
@@ -67,14 +74,14 @@ class ReportGenerator:
                 "generated_at": datetime.now().isoformat(),
                 "period_days": period_days,
                 "period_range": {
-                    "start": analytics_data.get("start_date"),
-                    "end": analytics_data.get("end_date")
+                    "start": start_date.isoformat(),
+                    "end": end_date.isoformat()
                 }
             },
             "summary_metrics": {
                 "total_consultas": basic_metrics["total_queries"],
                 "consultas_sin_respuesta": basic_metrics["unanswered_questions"],
-                "total_conversaciones": basic_metrics["total_conversations"],
+                "total_conversaciones": basic_metrics["unique_conversations"],
                 "tasa_respuesta": basic_metrics["response_rate"],
                 "total_feedback": basic_metrics["total_feedback"],
                 "tasa_satisfaccion": satisfaction_rate,
@@ -159,23 +166,33 @@ class ReportGenerator:
             }
         }
     
-    def generate_pdf_report(self, report_data: dict, filename: str = None):
-        """Generar reporte en PDF REAL con ReportLab"""
+    def generate_pdf_report(self, report_data: dict, filename: str = None, advanced: bool = True):
+        """Generar reporte en PDF con opción básica o avanzada"""
         try:
             if filename is None:
                 filename = f"reporte_ina_{report_data['report_metadata']['period_days']}dias_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
             
-            logger.info(f"📄 Generando PDF real: {filename}")
+            if advanced:
+                logger.info(f"🎨 Generando PDF avanzado con gráficos: {filename}")
+                # Usar el generador avanzado con visualizaciones
+                pdf_path = advanced_pdf_generator.generate_advanced_report_pdf(report_data, filename)
+            else:
+                logger.info(f"📄 Generando PDF básico: {filename}")
+                # Usar el generador básico original
+                pdf_path = pdf_generator.generate_report_pdf(report_data, filename)
             
-            # Usar el generador de PDFs profesional
-            pdf_path = pdf_generator.generate_report_pdf(report_data, filename)
-            
-            # 👇 CORREGIDO: Retornar SOLO la ruta del archivo, no un dict
-            return pdf_path  # ← Solo la ruta para que funcione con email_sender
+            return pdf_path
             
         except Exception as e:
             logger.error(f"❌ Error generando PDF: {e}")
-            return None  # ← Retornar None en caso de error
+            # Intentar fallback al generador básico si el avanzado falla
+            if advanced:
+                logger.info("⚠️ Intentando con generador básico como respaldo...")
+                try:
+                    return pdf_generator.generate_report_pdf(report_data, filename)
+                except:
+                    pass
+            return None
     
     def send_report_by_email(self, email: str, report_data: dict, period_days: int, include_pdf: bool = True):
         """Enviar reporte por correo electrónico usando Gmail App Password"""
