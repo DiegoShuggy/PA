@@ -184,9 +184,17 @@ class EnhancedTopicClassifier:
 class RAGEngine:
     def __init__(self):
         from app.memory_manager import MemoryManager
+        from app.derivation_manager import derivation_manager
+        from app.stationary_ai_filter import stationary_filter
         
         # Inicializar el gestor de memoria
         self.memory_manager = MemoryManager()
+        
+        # Inicializar el gestor de derivación estacionaria
+        self.derivation_manager = derivation_manager
+        
+        # Inicializar filtro específico para IA estacionaria
+        self.stationary_filter = stationary_filter
         
         # Expansiones de sinónimos mejoradas
         self.synonym_expansions = {
@@ -938,30 +946,27 @@ Puedo ayudarte con:*
         }
 
     def generate_derivation_response(self, processing_info: Dict) -> Dict:
-        """DERIVACIÓN MEJORADA CON INFORMACIÓN ESPECÍFICA Y QR"""
+        """DERIVACIÓN MEJORADA CON INFORMACIÓN ESPECÍFICA Y QR - FORMATO ESTRUCTURADO"""
         import time
         start_time = time.time()
         
-        suggestion = processing_info.get('derivation_suggestion', 
-            "**Consulta especializada**\n\n"
-            "Te recomiendo acercarte a Punto Estudiantil para derivación al área correspondiente.\n\n"
-            "Santa Elena de Huechuraba 1660\n"
-            "+56 2 2360 6400\n"
-            "L-V 8:30-19:00"
+        # Generar respuesta estructurada similar a las respuestas automáticas
+        response = (
+            "Para esta consulta específica:\n\n"
+            "🏢 **Punto Estudiantil Plaza Norte**\n"
+            "📍 Ubicación: Área de servicios estudiantiles\n"
+            "📞 Tel: +56 2 2360 6400\n"
+            "🕒 Horario: Lunes a Viernes 8:30-19:00\n\n"
+            "El personal puede orientarte según tu consulta específica.\n\n"
+            "💡 **También puedo ayudarte con**: TNE, bienestar, deportes o desarrollo laboral"
         )
-        
-        response = f"""
-{suggestion}
-
-¿Puedo ayudarte con TNE, bienestar, deportes o desarrollo laboral?
-"""
         
         # AGREGAR QR CODES PARA DERIVACIÓN (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(response, processing_info['original_query'])
         
         # ESTRUCTURA CORREGIDA
         return {
-            'response': response.strip(),
+            'response': response,
             'sources': [],
             'category': 'derivation',
             'response_time': time.time() - start_time,
@@ -1087,9 +1092,16 @@ Puedo ayudarte con:*
             context = "\n".join(context_parts)
             
             system_message = (
-                "Eres InA, asistente del Punto Estudiantil Duoc UC. "
-                f"Responde BREVE y ÚTIL con esta información: {context}\n\n"
-                "INSTRUCCIONES:\n- Máximo 3 líneas\n- Sé específico\n- Si no hay info suficiente, di 'Consulta en Punto Estudiantil'"
+                "Eres InA, asistente estacionario físico del Punto Estudiantil Duoc UC Plaza Norte. "
+                "Estás ubicado físicamente en la sede para ayudar con servicios estudiantiles básicos.\n\n"
+                f"INFORMACIÓN DISPONIBLE: {context}\n\n"
+                "CONTEXTO IMPORTANTE:\n"
+                "- Eres una IA ESTACIONARIA en Plaza Norte (no web/app)\n"
+                "- Te especializas en servicios del Punto Estudiantil\n"
+                "- Para temas fuera de tu alcance, DERIVA inteligentemente\n"
+                "- NO manejas: finanzas detalladas, biblioteca avanzada, citas médicas\n\n"
+                "INSTRUCCIONES:\n- Respuesta máximo 3 líneas\n- Si no puedes ayudar completamente, indica dónde SÍ pueden ayudar\n"
+                "- Proporciona ubicaciones y contactos específicos cuando derives"
             )
             
             response = ollama.chat(
@@ -1360,6 +1372,54 @@ def get_ai_response(user_message: str, context: list = None,
     import time
     start_time = time.time()
 
+    # 🔥 NUEVO: Análisis de derivación para IA estacionaria
+    derivation_analysis = rag_engine.derivation_manager.analyze_query(user_message)
+    logger.info(f"🔍 ANÁLISIS DERIVACIÓN: {derivation_analysis}")
+    
+    # 🔥 NUEVO: Filtro específico para IA estacionaria
+    stationary_analysis = rag_engine.stationary_filter.analyze_query(user_message)
+    logger.info(f"🛡️ ANÁLISIS FILTRO ESTACIONARIO: {stationary_analysis}")
+    
+    # Manejar respuestas automáticas para consultas fuera de alcance
+    if stationary_analysis["has_auto_response"]:
+        auto_response = rag_engine.stationary_filter.get_auto_response(stationary_analysis["auto_response_key"])
+        logger.info(f"🤖 RESPUESTA AUTOMÁTICA ACTIVADA: {stationary_analysis['auto_response_key']}")
+        
+        # Generar QR codes específicos para respuestas automáticas
+        qr_processed_response = qr_generator.process_response(auto_response, user_message)
+        
+        return {
+            "response": auto_response,
+            "qr_codes": qr_processed_response.get('qr_codes', {}),
+            "has_qr": qr_processed_response.get('has_qr', False),
+            "response_time": time.time() - start_time,
+            "stationary_filter_applied": True,
+            "filter_reason": stationary_analysis["derivation_reason"]
+        }
+    
+    # Manejar contenido inapropiado
+    if derivation_analysis["is_inappropriate"]:
+        return {
+            "response": "No puedo proporcionar esa información. Para consultas específicas, dirígete al personal del Punto Estudiantil.",
+            "qr_codes": {},
+            "has_qr": False,
+            "response_time": time.time() - start_time,
+            "derivation_applied": True,
+            "derivation_reason": "inappropriate_content"
+        }
+    
+    # Manejar emergencias
+    if derivation_analysis["is_emergency"]:
+        emergency_response = rag_engine.derivation_manager.generate_emergency_response()
+        return {
+            "response": emergency_response["response"],
+            "qr_codes": {},
+            "has_qr": False,
+            "response_time": time.time() - start_time,
+            "derivation_applied": True,
+            "derivation_reason": "emergency"
+        }
+
     # Procesar query con contexto inteligente
     processing_info = rag_engine.process_user_query(
         user_message, 
@@ -1367,6 +1427,9 @@ def get_ai_response(user_message: str, context: list = None,
         user_profile=user_profile
     )
     strategy = processing_info['processing_strategy']
+    
+    # Agregar información de derivación al processing_info
+    processing_info['derivation_analysis'] = derivation_analysis
     
     # Agregar contexto conversacional al processing_info si está disponible
     if conversational_context:
@@ -1454,8 +1517,19 @@ def get_ai_response(user_message: str, context: list = None,
                 final_sources.append(source)
 
         system_message = (
-            "Eres InA, asistente del Punto Estudiantil Duoc UC Plaza Norte. "
-            "Responde SOLO con la información proporcionada.\n\n"
+            "Eres InA, asistente estacionario físico del Punto Estudiantil en DUOC UC Plaza Norte. "
+            "Estás ubicado físicamente en la sede como kiosco interactivo.\n\n"
+            "CONTEXTO CLAVE:\n"
+            "- Modalidad: IA estacionaria física (NO web/app)\n"
+            "- Especialización: Servicios básicos del Punto Estudiantil\n"
+            "- Ubicación: Plaza Norte, área de servicios estudiantiles\n\n"
+            "LIMITACIONES IMPORTANTES:\n"
+            "❌ NO manejas: Finanzas detalladas, biblioteca avanzada, citas médicas/psicológicas\n"
+            "✅ SÍ manejas: Ubicaciones, horarios, trámites básicos, información general\n\n"
+            "ESTRATEGIA DE DERIVACIÓN:\n"
+            "- Si la consulta está fuera de tu alcance, proporciona info básica Y deriva\n"
+            "- Indica específicamente dónde pueden obtener ayuda completa\n"
+            "- Menciona ubicaciones físicas en Plaza Norte cuando sea relevante\n\n"
         )
 
         if final_sources:
@@ -1486,6 +1560,29 @@ def get_ai_response(user_message: str, context: list = None,
 
         respuesta = response['message']['content'].strip()
         respuesta = _optimize_response(respuesta, user_message)
+
+        # 🔥 NUEVO: Aplicar filtro estacionario a la respuesta
+        respuesta = rag_engine.stationary_filter.filter_response(respuesta, user_message)
+        
+        # Validar que la respuesta sea apropiada para IA estacionaria
+        is_appropriate, validation_message = rag_engine.stationary_filter.validate_response_appropriateness(respuesta)
+        if not is_appropriate:
+            logger.warning(f"Respuesta inapropiada detectada: {validation_message}")
+            respuesta += "\n\n📍 Para esta consulta específica, te recomiendo dirigirte al personal del Punto Estudiantil."
+
+        # 🔥 NUEVO: Agregar derivación inteligente si es necesario
+        derivation_analysis = rag_engine.derivation_manager.analyze_query(user_message)
+        if derivation_analysis["requires_derivation"] and not derivation_analysis["can_handle_directly"]:
+            derivation_response = rag_engine.derivation_manager.generate_derivation_response(
+                derivation_analysis["derivation_area"], 
+                user_message
+            )
+            
+            # Combinar respuesta base con derivación
+            if respuesta and len(respuesta) > 10:
+                respuesta += f"\n\n{derivation_response['response']}"
+            else:
+                respuesta = derivation_response['response']
 
         formatted_sources = []
         for source in final_sources:
