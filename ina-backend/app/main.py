@@ -9,6 +9,9 @@ from sqlmodel import Session, select
 import asyncio
 import logging
 import importlib
+
+# Configurar logger
+logger = logging.getLogger(__name__)
 _ollama_spec = importlib.util.find_spec("ollama")
 if _ollama_spec is not None:
     ollama = importlib.import_module("ollama")
@@ -52,6 +55,15 @@ from datetime import datetime, timedelta
 
 # 👇 ✅ NUEVA IMPORTACIÓN PARA SISTEMA INTELIGENTE
 from app.intelligent_response_system import intelligent_response_system
+
+# 👇 🚀 NUEVA IMPORTACIÓN PARA SISTEMA RAG MEJORADO
+try:
+    from app.enhanced_api_endpoints import include_enhanced_endpoints
+    enhanced_system_available = True
+    logger.info("✅ Sistema RAG Mejorado disponible")
+except ImportError as e:
+    enhanced_system_available = False
+    logger.warning(f"⚠️ Sistema RAG Mejorado no disponible: {e}")
 
 # DESACTIVAR TELEMETRÍA DE CHROMADB ANTES DE CUALQUIER USO
 import app.chroma_config  # ← LÍNEA CLAVE
@@ -124,7 +136,13 @@ if not hasattr(rag_engine, 'client') or rag_engine.client is None:
     )
     logger.info("ChromaDB cliente inicializado con telemetría desactivada")
 
-
+# 👇 🚀 INCLUIR SISTEMA RAG MEJORADO
+if enhanced_system_available:
+    try:
+        include_enhanced_endpoints(app)
+        logger.info("🚀 Sistema RAG Mejorado integrado exitosamente")
+    except Exception as e:
+        logger.error(f"❌ Error integrando Sistema RAG Mejorado: {e}")
 
 success = training_loader.load_all_training_data()
 if success:
