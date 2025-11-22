@@ -342,13 +342,23 @@ async def on_startup():
         logger.error(f"Error generando resumen de ingestas en startup: {e}")
 
 class Message(BaseModel):
-    text: str
+    text: Optional[str] = None
+    message: Optional[str] = None  # Alias para compatibilidad con diferentes clientes
+    
+    class Config:
+        extra = "allow"  # Permitir campos adicionales
 
 @app.post("/chat")
+@app.post("/api/ask")  # Alias para compatibilidad
+@app.post("/ask")  # Alias adicional
 async def chat(message: Message, request: Request):
     try:
         start_time = datetime.now()
-        question = message.text.strip()
+        # Soportar tanto 'text' como 'message' como nombre del campo
+        question = (message.text or message.message or "").strip()
+        
+        if not question:
+            raise HTTPException(status_code=400, detail="Message text is required")
 
         # 👇 1. VALIDACIÓN DE CONTENIDO - NUEVO SISTEMA
         content_validation = content_filter.validate_question(question)
@@ -679,6 +689,7 @@ async def chat(message: Message, request: Request):
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @app.get("/health")
+@app.get("/api/health")  # Agregar alias para compatibilidad
 async def health_check():
     """Endpoint de salud que verifica Ollama también"""
     try:
@@ -699,6 +710,9 @@ async def health_check():
         # Test de email
         email_status = "configured" if email_sender.GMAIL_USER else "not_configured"
         
+        # Test de sistema mejorado
+        enhanced_status = "active" if enhanced_system_available else "unavailable"
+        
         return {
             "status": "healthy", 
             "model": "mistral:7b",
@@ -709,9 +723,10 @@ async def health_check():
             "topic_classifier": "active",
             "email_system": email_status,
             "metrics_tracker": "active",
-            "qr_generator": "active",  # 👈 NUEVO
-            "intelligent_response_system": "active",  # 👈 NUEVO
-            "memory_manager": "active"  # 👈 NUEVO
+            "qr_generator": "active",
+            "intelligent_response_system": "active",
+            "memory_manager": "active",
+            "enhanced_rag_system": enhanced_status  # 👈 NUEVO
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")

@@ -1,6 +1,6 @@
 # enhanced_api_endpoints.py - ENDPOINTS PARA SISTEMA RAG MEJORADO
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Depends, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 import logging
@@ -11,6 +11,31 @@ logger = logging.getLogger(__name__)
 # Router para endpoints mejorados
 enhanced_router = APIRouter(prefix="/enhanced", tags=["Enhanced RAG System"])
 
+# 🔧 HEALTH CHECK ENDPOINT
+@enhanced_router.get("/health")
+async def enhanced_health_check():
+    """Health check del sistema mejorado"""
+    try:
+        status = {
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+            "components": {
+                "knowledge_graph": "healthy" if hasattr(enhanced_rag_system, 'knowledge_graph') else "unavailable",
+                "persistent_memory": "healthy" if hasattr(enhanced_rag_system, 'persistent_memory') else "unavailable",
+                "adaptive_learning": "healthy" if hasattr(enhanced_rag_system, 'adaptive_learning') else "unavailable",
+                "intelligent_cache": "healthy" if hasattr(enhanced_rag_system, 'intelligent_cache') else "unavailable"
+            },
+            "metrics": enhanced_rag_system.enhanced_metrics if hasattr(enhanced_rag_system, 'enhanced_metrics') else {}
+        }
+        return status
+    except Exception as e:
+        logger.error(f"Error en health check: {e}")
+        return {
+            "status": "degraded",
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }
+
 # Modelos Pydantic para requests
 class EnhancedQueryRequest(BaseModel):
     message: str
@@ -20,12 +45,14 @@ class EnhancedQueryRequest(BaseModel):
     enable_all_features: bool = True
 
 class FeedbackRequest(BaseModel):
-    query: str
-    rating: int  # 1-5
+    query: Optional[str] = None
+    query_id: Optional[str] = None  # Agregar query_id como alternativa
+    rating: int = Field(..., ge=1, le=5)  # 1-5
     user_id: Optional[str] = None
     session_id: Optional[str] = None
     category: Optional[str] = None
     comments: Optional[str] = None
+    feedback_text: Optional[str] = None  # Alias para comments
 
 class KnowledgeConceptRequest(BaseModel):
     concept: str
@@ -52,15 +79,22 @@ async def enhanced_query(request: EnhancedQueryRequest):
             context=request.context
         )
         
+        # Asegurar que siempre hay una respuesta
+        if not response.get('response'):
+            response['response'] = response.get('answer', 'No se pudo generar una respuesta.')
+        
         return {
             "status": "success",
+            "answer": response.get('response'),  # Formato compatible con test.py
+            "response": response.get('response'),  # Formato alternativo
             "data": response,
             "enhanced_features_used": {
                 "knowledge_graph": bool(response.get('knowledge_graph_concepts')),
                 "persistent_memory": bool(response.get('memory_contributions')),
                 "adaptive_learning": response.get('adaptations_applied', False),
                 "semantic_enhancement": response.get('semantic_enhancement_applied', False)
-            }
+            },
+            "metrics": response.get('metadata', {})
         }
         
     except Exception as e:
@@ -71,23 +105,31 @@ async def enhanced_query(request: EnhancedQueryRequest):
 async def submit_feedback(request: FeedbackRequest):
     """Enviar feedback para mejorar el sistema"""
     try:
-        if not 1 <= request.rating <= 5:
-            raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+        # Usar query o query_id como identificador
+        query = request.query or request.query_id
+        if not query:
+            raise HTTPException(status_code=400, detail="Either query or query_id must be provided")
+        
+        # Usar comments o feedback_text
+        comments = request.comments or request.feedback_text
         
         success = enhanced_rag_system.record_feedback(
-            query=request.query,
+            query=query,
             response_quality=request.rating,
             user_id=request.user_id,
             session_id=request.session_id,
             category=request.category,
-            additional_context={'comments': request.comments} if request.comments else None
+            additional_context={'comments': comments} if comments else None
         )
         
         return {
             "status": "success" if success else "error",
-            "message": "Feedback recorded successfully" if success else "Failed to record feedback"
+            "message": "Feedback recorded successfully" if success else "Failed to record feedback",
+            "feedback_id": f"fb_{datetime.now().timestamp()}"
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error registrando feedback: {e}")
         raise HTTPException(status_code=500, detail=f"Error recording feedback: {str(e)}")

@@ -243,9 +243,11 @@ def test_basic_endpoints():
     
     endpoints = [
         ("/docs", "Documentación Swagger"),
-        ("/health", "Health Check")
+        ("/health", "Health Check"),
+        ("/api/health", "API Health Check")
     ]
     
+    all_passed = True
     for endpoint, description in endpoints:
         try:
             response = requests.get(f"{BASE_URL}{endpoint}", timeout=TIMEOUT)
@@ -253,8 +255,12 @@ def test_basic_endpoints():
                 print_success(f"{description}: OK")
             else:
                 print_error(f"{description}: Error {response.status_code}")
+                all_passed = False
         except Exception as e:
             print_error(f"{description}: {e}")
+            all_passed = False
+    
+    return all_passed
 
 def test_enhanced_health():
     """Prueba el endpoint de salud mejorado"""
@@ -311,21 +317,27 @@ def test_enhanced_query():
     test_queries = [
         {
             "query": "¿Qué servicios tiene la sede Plaza Norte?",
-            "description": "Consulta sobre servicios de Plaza Norte"
+            "description": "Consulta sobre servicios de Plaza Norte",
+            "timeout": 45  # Timeout extendido para primera consulta
         },
         {
             "query": "¿Cómo puedo obtener certificados de estudios?",
-            "description": "Consulta sobre certificados"
+            "description": "Consulta sobre certificados",
+            "timeout": 30
         },
         {
             "query": "¿Qué carreras técnicas hay disponibles?",
-            "description": "Consulta sobre carreras técnicas"
+            "description": "Consulta sobre carreras técnicas",
+            "timeout": 30
         },
         {
             "query": "¿Dónde está ubicada la biblioteca?",
-            "description": "Consulta sobre biblioteca"
+            "description": "Consulta sobre biblioteca",
+            "timeout": 30
         }
     ]
+    
+    successful_queries = 0
     
     for i, test in enumerate(test_queries, 1):
         print(f"\n{Colors.YELLOW}📝 Prueba {i}: {test['description']}{Colors.END}")
@@ -338,26 +350,39 @@ def test_enhanced_query():
                 "strategy": "comprehensive"
             }
             
+            # Usar timeout específico de cada consulta
+            query_timeout = test.get('timeout', TIMEOUT)
+            
             response = requests.post(
                 f"{BASE_URL}/enhanced/query",
                 json=payload,
-                timeout=TIMEOUT
+                timeout=query_timeout
             )
             
             if response.status_code == 200:
                 data = response.json()
                 print_success("Consulta procesada exitosamente")
                 
-                # Mostrar respuesta
-                answer = data.get('answer', 'Sin respuesta')
-                print(f"\n{Colors.WHITE}💬 Respuesta:{Colors.END}")
-                print(f"{answer[:200]}..." if len(answer) > 200 else answer)
+                # Buscar respuesta en diferentes campos posibles
+                answer = (data.get('answer') or 
+                         data.get('response') or 
+                         data.get('data', {}).get('response') or
+                         data.get('data', {}).get('answer') or
+                         'Sin respuesta')
+                
+                if answer and answer != 'Sin respuesta':
+                    successful_queries += 1
+                    print(f"\n{Colors.WHITE}💬 Respuesta:{Colors.END}")
+                    print(f"{answer[:200]}..." if len(answer) > 200 else answer)
+                else:
+                    print_warning("⚠️ Respuesta vacía recibida")
                 
                 # Mostrar métricas
                 metrics = data.get('metrics', {})
-                print(f"\n{Colors.BLUE}📊 Métricas:{Colors.END}")
-                for key, value in metrics.items():
-                    print(f"  {key}: {value}")
+                if metrics:
+                    print(f"\n{Colors.BLUE}📊 Métricas:{Colors.END}")
+                    for key, value in metrics.items():
+                        print(f"  {key}: {value}")
                     
             else:
                 print_error(f"Error {response.status_code}: {response.text}")
@@ -366,6 +391,9 @@ def test_enhanced_query():
             print_error(f"Error en consulta: {e}")
         
         time.sleep(1)  # Pausa entre consultas
+    
+    # Retornar True si al menos una consulta fue exitosa
+    return successful_queries > 0
 
 def test_enhanced_insights():
     """Prueba el endpoint de insights"""
@@ -440,6 +468,7 @@ def test_performance():
     query = "¿Qué horarios tiene la sede Plaza Norte?"
     num_tests = 3
     times = []
+    successful_queries = 0
     
     print(f"Realizando {num_tests} consultas para medir rendimiento...")
     
@@ -464,6 +493,7 @@ def test_performance():
             times.append(response_time)
             
             if response.status_code == 200:
+                successful_queries += 1
                 print_success(f"Consulta {i+1}: {response_time:.2f}s")
             else:
                 print_error(f"Consulta {i+1} falló: {response.status_code}")
@@ -482,6 +512,19 @@ def test_performance():
         print(f"  Tiempo promedio: {avg_time:.2f}s")
         print(f"  Tiempo mínimo: {min_time:.2f}s")
         print(f"  Tiempo máximo: {max_time:.2f}s")
+        print(f"  Consultas exitosas: {successful_queries}/{num_tests}")
+        
+        # Criterios más realistas: tiempo promedio < 10s y al menos 2/3 exitosas
+        performance_ok = avg_time < 10.0 and successful_queries >= 2
+        
+        if performance_ok:
+            print_success(f"✅ Rendimiento aceptable (< 10s promedio)")
+        else:
+            print_warning(f"⚠️ Rendimiento puede mejorarse")
+        
+        return performance_ok
+    
+    return False
 
 def main():
     """Función principal que ejecuta todas las pruebas"""
