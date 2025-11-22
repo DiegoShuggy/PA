@@ -1305,10 +1305,21 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
     setIsMenuOpen(false);
 
     switch (action) {
-      case 'clear':
+    case 'clear':
+      // Primero intenta cancelar la generación si está cargando
+      if (isLoading && abortControllerRef.current) {
+        stopGeneration(); // Esto ya cancela la generación
+        // Opcional: limpiar el chat después de cancelar
+        setTimeout(() => {
+          setMessages([]);
+          stopReading();
+        }, 10);
+      } else if (messages.length > 0) {
+        // Si no está cargando pero hay mensajes, limpiar directamente
         setMessages([]);
-        stopReading(); // Detener lectura al limpiar chat
-        break;
+        stopReading();
+      }
+      break;
     }
   };
   // Agrega este useEffect específico para enfocar después de recibir respuesta

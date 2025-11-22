@@ -203,7 +203,12 @@ span {
   border-bottom: 6px solid rgb(242, 77, 25);
   border-right: 6px solid rgb(242, 77, 25);
 }
-
+.siete{
+  border-left: 6px solid #37A7C6;
+  border-top: 6px solid #37A7C6;
+  border-bottom: 6px solid #37A7C6;
+  border-right: 6px solid #37A7C6;
+}
 /* Animación escalonada para cada item */
 .FAQ:nth-child(1) {
   animation-delay: 0.5s;

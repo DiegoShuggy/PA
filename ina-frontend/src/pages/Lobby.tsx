@@ -429,7 +429,7 @@ function Lobby() {
         <div className="lobby-grid">
             <div className="FAQ">
                 <Link to="/Punto" className="FAQ-link">
-                    <div className="lobby-item uno">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ1')}</span>
                     </div>
                 </Link>
@@ -440,7 +440,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ2'))}
                 >
-                    <div className="lobby-item dos">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ2')}</span>
                     </div>
                 </div>
@@ -451,7 +451,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ3'))}
                 >
-                    <div className="lobby-item tres">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ3')}</span>
                     </div>
                 </div>
@@ -462,7 +462,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ4'))}
                 >
-                    <div className="lobby-item cuatro">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ4')}</span>
                     </div>
                 </div>
@@ -473,7 +473,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ5'))}
                 >
-                    <div className="lobby-item cinco">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ5')}</span>
                     </div>
                 </div>
@@ -484,7 +484,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ6'))}
                 >
-                    <div className="lobby-item seis">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ6')}</span>
                     </div>
                 </div>
@@ -495,7 +495,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ7'))}
                 >
-                    <div className="lobby-item uno">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ7')}</span>
                     </div>
                 </div>
@@ -506,7 +506,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ8'))}
                 >
-                    <div className="lobby-item dos">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ8')}</span>
                     </div>
                 </div>
@@ -517,7 +517,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ9'))}
                 >
-                    <div className="lobby-item tres">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ9')}</span>
                     </div>
                 </div>
@@ -528,7 +528,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ10'))}
                 >
-                    <div className="lobby-item cuatro">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ10')}</span>
                     </div>
                 </div>
@@ -539,7 +539,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ11'))}
                 >
-                    <div className="lobby-item cinco">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ11')}</span>
                     </div>
                 </div>
@@ -550,7 +550,7 @@ function Lobby() {
                     className="FAQ-link"
                     onClick={() => handleQuestionClick(t('Lobby.Preguntas.FAQ12'))}
                 >
-                    <div className="lobby-item seis">
+                    <div className="lobby-item siete">
                         <span>{t('Lobby.Preguntas.FAQ12')}</span>
                     </div>
                 </div>
