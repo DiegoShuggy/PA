@@ -17,6 +17,7 @@ interface Message {
 interface LocationState {
   predefinedQuestion?: string;
   autoSend?: boolean;
+  fromVoiceSearch?: boolean; // Nueva propiedad
 }
 
 // Interfaz extendida para el reconocimiento de voz
@@ -73,7 +74,7 @@ const Chat: React.FC = () => {
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
   // Agrega esta referencia para el textarea
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
+const hasProcessedAutoSendRef = useRef(false);
   // Estados para el lector de texto (TTS)
   const [isReading, setIsReading] = useState(false);
   const [currentReadingIndex, setCurrentReadingIndex] = useState<number | null>(null);
@@ -255,10 +256,12 @@ const cleanTextForTTS = useCallback((text: string): string => {
   console.log('✅ Texto limpio para TTS:', cleanText.substring(0, 100) + '...');
   return cleanText;
 }, [i18n.language, languageKey]); // AGREGAR t COMO DEPENDENCIA
-  // Función para volver a la página anterior
-  const handleGoBack = () => {
-    navigate(-1);
-  };
+// En Chat.tsx - modificar la función handleGoBack
+const handleGoBack = () => {
+  // Resetear el ref antes de navegar para evitar que se reprocese
+  hasProcessedAutoSendRef.current = false;
+  navigate(-1);
+};
 
 
   // Efecto para manejar scroll global
@@ -1158,118 +1161,173 @@ const readMessage = useCallback((text: string, messageIndex: number, isAutoRead 
     }
   };
 
-  // Efecto para manejar la pregunta predefinida y auto-enviar
-  useEffect(() => {
+useEffect(() => {
   const locationState = location.state as LocationState;
+  const searchParams = new URLSearchParams(location.search);
+  const voiceQuery = searchParams.get('voiceQuery');
+  const autoSendFromUrl = searchParams.get('autoSend') === 'true';
 
-  if (locationState?.predefinedQuestion) {
+  console.log('🔍 Verificando fuentes de pregunta:', {
+    hasState: !!locationState?.predefinedQuestion,
+    hasUrlQuery: !!voiceQuery,
+    hasProcessed: hasProcessedAutoSendRef.current,
+    isLoading
+  });
+
+  // Prevenir procesamiento si ya está cargando o ya se procesó
+  if (isLoading || hasProcessedAutoSendRef.current) {
+    console.log('⏸️ Saltando procesamiento - ya cargando o procesado');
+    return;
+  }
+
+  // PRIORIDAD 1: Parámetros URL (voiceSearch)
+  if (voiceQuery && autoSendFromUrl) {
+    console.log('🎯 Procesando desde URL:', voiceQuery);
+    hasProcessedAutoSendRef.current = true;
+    
+    setInputMessage(voiceQuery);
+
+    const timer = setTimeout(() => {
+      console.log('🚀 Ejecutando auto-envío desde URL');
+      handleAutoSend(voiceQuery);
+      
+      // Limpiar parámetros URL después de procesar
+      console.log('🧹 Limpiando parámetros URL');
+      navigate(location.pathname, { replace: true });
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }
+
+  // PRIORIDAD 2: Estado de navegación (clicks normales)
+  if (locationState?.predefinedQuestion && locationState?.autoSend) {
+    console.log('🎯 Procesando desde state:', locationState.predefinedQuestion);
+    hasProcessedAutoSendRef.current = true;
+    
     setInputMessage(locationState.predefinedQuestion);
 
-    // Si autoSend es true, enviar automáticamente después de un breve delay
-    if (locationState.autoSend) {
-      const timer = setTimeout(() => {
-        handleAutoSend(locationState.predefinedQuestion!);
-      }, 500);
+    const timer = setTimeout(() => {
+      console.log('🚀 Ejecutando auto-envío desde state');
+      handleAutoSend(locationState.predefinedQuestion!);
+    }, 500);
 
-      return () => clearTimeout(timer);
-    } else {
-      // Solo enfocar el textarea si no es auto-envío
-      setTimeout(() => {
-        if (textareaRef.current) {
-          textareaRef.current.focus();
-        }
-      }, 100);
-    }
+    return () => clearTimeout(timer);
   }
-}, [location.state]);
 
-  // Función para manejar el envío automático
-  const handleAutoSend = async (question: string) => {
-    if (!question.trim() || isLoading) return;
+  // Solo establecer mensaje sin auto-enviar
+  if (locationState?.predefinedQuestion && !locationState?.autoSend) {
+    console.log('📝 Estableciendo mensaje sin auto-enviar');
+    setInputMessage(locationState.predefinedQuestion);
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }, 100);
+  }
+}, [location.state, location.search, location.pathname, navigate, isLoading]);
 
-    // Detener reconocimiento de voz si está activo
-    if (isListening) {
-      setIsListening(false);
+// REEMPLAZAR la función handleAutoSend con esta versión:
+const handleAutoSend = async (question: string) => {
+  if (!question.trim() || isLoading) return;
+
+  // Detener reconocimiento de voz si está activo
+  if (isListening) {
+    setIsListening(false);
+  }
+
+  const userMessage: Message = {
+    text: question,
+    isUser: true,
+    timestamp: new Date()
+  };
+
+  // Limpiar input inmediatamente
+  setInputMessage('');
+
+  setMessages(prev => [...prev, userMessage]);
+  setIsLoading(true);
+
+  // Crear nuevo abort controller para esta petición
+  abortControllerRef.current = new AbortController();
+
+  try {
+    const response = await fetch('http://localhost:8000/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text: question
+      }),
+      signal: abortControllerRef.current.signal
+    });
+
+    if (!response.ok) {
+      throw new Error(t('chat.serverError'));
     }
 
-    const userMessage: Message = {
-      text: question,
-      isUser: true,
-      timestamp: new Date()
+    const data = await response.json();
+
+    // Normalizar qr_codes
+    let qrCodesObj: { [url: string]: string } = {};
+    if (Array.isArray(data.qr_codes)) {
+      data.qr_codes.forEach((qr: any) => {
+        if (qr.url && qr.qr_data) {
+          qrCodesObj[qr.url] = qr.qr_data;
+        }
+      });
+    } else if (typeof data.qr_codes === 'object' && data.qr_codes !== null) {
+      qrCodesObj = data.qr_codes;
+    }
+
+    const aiMessage: Message = {
+      text: cleanRepeatedCharacters(data.response),
+      isUser: false,
+      timestamp: new Date(),
+      qr_codes: qrCodesObj,
+      has_qr: data.has_qr || false,
+      feedback_session_id: data.feedback_session_id,
+      chatlog_id: data.chatlog_id
     };
 
-    // Limpiar input
-    setInputMessage('');
+    setMessages(prev => [...prev, aiMessage]);
 
-    setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
-
-    // Crear nuevo abort controller para esta petición
-    abortControllerRef.current = new AbortController();
-
-    try {
-      const response = await fetch('http://localhost:8000/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ text: question }),
-        signal: abortControllerRef.current.signal
-      });
-
-      if (!response.ok) {
-        throw new Error(t('chat.serverError'));
-      }
-
-      const data = await response.json();
-
-      // Normalizar qr_codes
-      let qrCodesObj: { [url: string]: string } = {};
-      if (Array.isArray(data.qr_codes)) {
-        data.qr_codes.forEach((qr: any) => {
-          if (qr.url && qr.qr_data) {
-            qrCodesObj[qr.url] = qr.qr_data;
-          }
-        });
-      } else if (typeof data.qr_codes === 'object' && data.qr_codes !== null) {
-        qrCodesObj = data.qr_codes;
-      }
-
-      const aiMessage: Message = {
-        text: cleanRepeatedCharacters(data.response), // ← Aplicar limpieza aquí también
-        isUser: false,
-        timestamp: new Date(),
-        qr_codes: qrCodesObj,
-        has_qr: data.has_qr || false,
-        feedback_session_id: data.feedback_session_id,
-        chatlog_id: data.chatlog_id
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
-
-      // Mostrar feedback después de la respuesta de Ina
-      if (data.feedback_session_id) {
-        setCurrentFeedbackSession(data.feedback_session_id);
-        setShowFeedback(true);
-        setFeedbackSubmitted(false);
-        setShowFollowup(false);
-      }
-
-    } catch (error: any) {
-      if (error.name !== 'AbortError') {
-        console.error('Error:', error);
-        const errorMessage: Message = {
-          text: t('chat.serverError'),
-          isUser: false,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, errorMessage]);
-      }
-    } finally {
-      setIsLoading(false);
-      abortControllerRef.current = null;
+    // Mostrar feedback después de la respuesta de Ina
+    if (data.feedback_session_id) {
+      setCurrentFeedbackSession(data.feedback_session_id);
+      setShowFeedback(true);
+      setFeedbackSubmitted(false);
+      setShowFollowup(false);
     }
+
+  } catch (error: any) {
+    if (error.name !== 'AbortError') {
+      console.error('Error:', error);
+      const errorMessage: Message = {
+        text: t('chat.serverError'),
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    }
+  } finally {
+    setIsLoading(false);
+    abortControllerRef.current = null;
+    
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }, 50);
+  }
+};
+
+// AGREGAR este useEffect para resetear el ref cuando el componente se desmonta
+useEffect(() => {
+  return () => {
+    hasProcessedAutoSendRef.current = false;
   };
+}, []);
 
   // Función mejorada para toggle del micrófono
   const toggleListening = async () => {
