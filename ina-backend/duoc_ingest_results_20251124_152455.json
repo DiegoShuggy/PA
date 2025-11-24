@@ -1,0 +1,44 @@
+{
+  "successful_ingests": [],
+  "failed_ingests": [],
+  "generated_qrs": [],
+  "validated_urls": [
+    {
+      "url": "https://centroayuda.duoc.cl/hc/es-419",
+      "status_code": 403,
+      "category": "ayuda_soporte"
+    },
+    {
+      "url": "https://centroayuda.duoc.cl/hc/es-419/categories/30141678666125-Admisi%C3%B3n-y-Matr%C3%ADcula",
+      "status_code": 403,
+      "category": "ayuda_soporte"
+    },
+    {
+      "url": "https://centroayuda.duoc.cl/hc/es-419/articles/30203991504653--Cu%C3%A1les-son-los-requisitos-para-postularme",
+      "status_code": 403,
+      "category": "ayuda_soporte"
+    },
+    {
+      "url": "https://centroayuda.duoc.cl/hc/es-419/articles/30173827568013--Cu%C3%A1ndo-inicia-el-proceso-de-admisi%C3%B3n",
+      "status_code": 403,
+      "category": "ayuda_soporte"
+    },
+    {
+      "url": "https://centroayuda.duoc.cl/hc/es-419/categories/30142028615565-Orientaci%C3%B3n-Estudiantes-Nuevos",
+      "status_code": 403,
+      "category": "ayuda_nuevos"
+    }
+  ],
+  "invalid_urls": [],
+  "processing_time": 0.7298715114593506,
+  "total_chunks": 0,
+  "categories": {},
+  "timestamp": "2025-11-24T15:24:55.161911",
+  "summary": {
+    "total_successful_ingests": 0,
+    "total_failed_ingests": 0,
+    "total_generated_qrs": 0,
+    "total_chunks_added": 0,
+    "categories_processed": 0
+  }
+}

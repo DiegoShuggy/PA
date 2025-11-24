@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-11-24T16:09:57.836140",
+  "status": "degraded",
+  "checks": {
+    "ollama": {
+      "status": "online",
+      "models": 3,
+      "details": [
+        "llama3.2:1b-instruct-q4_K_M",
+        "mistral:7b",
+        "gemma3:4b"
+      ]
+    },
+    "chromadb": {
+      "status": "error",
+      "error": "\u001b[91mYou are using a deprecated configuration of Chroma.\n\n\u001b[94mIf you do not have data you wish to migrate, you only need to change how you construct\nyour Chroma client. Please see the \"New Clients\" section of https://docs.trychroma.com/deployment/migration.\n________________________________________________________________________________________________\n\nIf you do have data you wish to migrate, we have a migration tool you can use in order to\nmigrate your data to the new Chroma architecture.\nPlease `pip install chroma-migrate` and run `chroma-migrate` to migrate your data and then\nchange how you construct your Chroma client.\n\nSee https://docs.trychroma.com/deployment/migration for more information or join our discord at https://discord.gg/8g5FESbj for help!\u001b[0m"
+    },
+    "hybrid_system": {
+      "status": "online",
+      "strategy": "template_enhanced"
+    },
+    "templates": {
+      "status": "online",
+      "count": 1
+    },
+    "disk_space": {
+      "status": "ok",
+      "free_gb": 106.94
+    }
+  },
+  "recommendations": []
+}

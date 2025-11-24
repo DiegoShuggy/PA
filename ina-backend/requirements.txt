@@ -12,7 +12,10 @@ python-dotenv==1.0.0
 sqlmodel==0.0.16
 
 # Vector database
-chromadb==0.4.24
+chromadb==0.5.15
+
+# Web scraping y parsing HTML
+beautifulsoup4==4.14.2
 
 # Procesamiento numérico y ML
 numpy==1.26.4

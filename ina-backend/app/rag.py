@@ -1,4 +1,4 @@
-# rag.py - VERSIÓN COMPLETA ACTUALIZADA CON QR CORREGIDO
+# rag.py - VERSIÓN COMPLETA ACTUALIZADA CON SISTEMA HÍBRIDO
 # IMPORTS SIN chromadb (para evitar activar telemetría)
 import ollama
 from typing import List, Dict, Optional
@@ -17,6 +17,18 @@ from sklearn.metrics.pairwise import cosine_similarity
 from app.cache_manager import rag_cache, response_cache, normalize_question
 from app.topic_classifier import TopicClassifier
 from app.classifier import classifier  # IMPORTAR CLASIFICADOR
+
+# NUEVO: Importar sistema híbrido
+try:
+    from app.hybrid_response_system import HybridResponseSystem
+    HYBRID_SYSTEM_AVAILABLE = True
+    logging.info("✅ Sistema híbrido cargado correctamente")
+except ImportError as e:
+    HYBRID_SYSTEM_AVAILABLE = False
+    logging.warning(f"⚠️ Sistema híbrido no disponible: {e}")
+except Exception as e:
+    HYBRID_SYSTEM_AVAILABLE = False
+    logging.error(f"❌ Error cargando sistema híbrido: {e}")
 
 logger = logging.getLogger(__name__)
 
@@ -209,14 +221,21 @@ class RAGEngine:
         }
 
         # IMPORTAR chromadb AL FINAL, DESPUÉS DE QUE chroma_config.py LO HAYA DESACTIVADO
-        import chromadb
-        from chromadb.config import Settings
-
-        self.client = chromadb.PersistentClient(
-            path="./chroma_db",
-            settings=Settings(anonymized_telemetry=False)  # TELEMETRÍA DESACTIVADA
-        )
-        logger.info("ChromaDB inicializado con telemetría DESACTIVADA")
+        # INICIALIZACIÓN SEGURA DE CHROMADB CON AUTO-REPARACIÓN
+        try:
+            from app.chromadb_autofix import safe_chromadb_init
+            self.client = safe_chromadb_init()
+            
+            if self.client is None:
+                raise Exception("No se pudo inicializar ChromaDB")
+            
+            logger.info("✅ ChromaDB inicializado de forma segura")
+        except Exception as e:
+            logger.error(f"❌ Error con ChromaDB seguro, usando fallback básico: {e}")
+            # Fallback: usar cliente en memoria
+            import chromadb
+            self.client = chromadb.Client()
+            logger.warning("⚠️ Usando ChromaDB en memoria como fallback")
 
         self.collection = self.client.get_or_create_collection(
             name="duoc_knowledge"
@@ -1368,15 +1387,41 @@ rag_engine = RAGEngine()
 
 def get_ai_response(user_message: str, context: list = None, 
                    conversational_context: str = None, user_profile: dict = None) -> Dict:
-    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES, QR Y CONTEXTO CONVERSACIONAL"""
+    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON SISTEMA HÍBRIDO"""
     import time
     start_time = time.time()
 
-    # 🔥 NUEVO: Análisis de derivación para IA estacionaria
+    # 🔥 NUEVO: Usar sistema híbrido si está disponible
+    if HYBRID_SYSTEM_AVAILABLE:
+        try:
+            hybrid_system = HybridResponseSystem()
+            context_str = "\n".join(context) if context else ""
+            
+            hybrid_result = hybrid_system.generate_smart_response(user_message, context_str)
+            
+            if hybrid_result["success"]:
+                # Generar QR codes para respuesta híbrida
+                qr_processed_response = qr_generator.process_response(
+                    hybrid_result["content"], user_message
+                )
+                
+                return {
+                    "response": hybrid_result["content"],
+                    "qr_codes": qr_processed_response.get("qr_codes", []),
+                    "response_type": f"hybrid_{hybrid_result['strategy']}",
+                    "sources": hybrid_result["sources"],
+                    "confidence": hybrid_result["confidence"],
+                    "processing_time": hybrid_result["processing_time"],
+                    "success": True
+                }
+        except Exception as e:
+            logger.warning(f"⚠️ Sistema híbrido falló, usando RAG tradicional: {e}")
+
+    # 🔥 FALLBACK: Análisis de derivación para IA estacionaria
     derivation_analysis = rag_engine.derivation_manager.analyze_query(user_message)
     logger.info(f"🔍 ANÁLISIS DERIVACIÓN: {derivation_analysis}")
     
-    # 🔥 NUEVO: Filtro específico para IA estacionaria
+    # 🔥 FALLBACK: Filtro específico para IA estacionaria
     stationary_analysis = rag_engine.stationary_filter.analyze_query(user_message)
     logger.info(f"🛡️ ANÁLISIS FILTRO ESTACIONARIO: {stationary_analysis}")
     

@@ -1,0 +1,15 @@
+[
+  {
+    "query": "Test query",
+    "category": "test",
+    "strategy_used": "test_strategy",
+    "sources": [
+      "test"
+    ],
+    "confidence": 85.0,
+    "processing_time": 0.5,
+    "user_feedback": null,
+    "timestamp": "2025-11-24T15:58:35.822001",
+    "success": true
+  }
+]

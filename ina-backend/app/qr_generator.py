@@ -317,6 +317,41 @@ class DuocURLManager:
             logger.info(f"🔑 Claves disponibles: {list(self.duoc_urls.keys())}")
         return url
 
+    def generate_qr_for_keyword(self, keyword: str) -> Optional[Dict]:
+        """Generar QR code basado en palabra clave"""
+        try:
+            # Buscar URL relevante por palabra clave
+            url_key = self.keyword_mapping.get(keyword)
+            if url_key:
+                url = self.duoc_urls.get(url_key)
+                if url:
+                    # Crear QR code
+                    import qrcode
+                    import io
+                    import base64
+                    
+                    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+                    qr.add_data(url)
+                    qr.make(fit=True)
+                    
+                    img = qr.make_image(fill_color="black", back_color="white")
+                    
+                    # Convertir a base64
+                    buffer = io.BytesIO()
+                    img.save(buffer, format='PNG')
+                    img_str = base64.b64encode(buffer.getvalue()).decode()
+                    
+                    return {
+                        "success": True,
+                        "qr_code": img_str,
+                        "url": url,
+                        "keyword": keyword
+                    }
+            return None
+        except Exception as e:
+            logger.error(f"Error generando QR para keyword {keyword}: {e}")
+            return None
+
 class QRGenerator:
     def __init__(self):
         # Patrón mejorado para detectar URLs

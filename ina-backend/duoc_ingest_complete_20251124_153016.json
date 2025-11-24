@@ -1,0 +1,139 @@
+{
+  "successful_ingests": [
+    {
+      "url": "https://www.duoc.cl/",
+      "chunks": 4,
+      "category": "general"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/",
+      "chunks": 2,
+      "category": "general"
+    },
+    {
+      "url": "https://www.duoc.cl/admision/",
+      "chunks": 25,
+      "category": "admision"
+    },
+    {
+      "url": "https://www.duoc.cl/contacto-admision/",
+      "chunks": 1,
+      "category": "admision"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/",
+      "chunks": 4,
+      "category": "sede_plaza_norte"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/servicios/",
+      "chunks": 4,
+      "category": "sede_plaza_norte"
+    }
+  ],
+  "failed_ingests": [
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/contacto/",
+      "error": "No content extracted"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/carreras/",
+      "error": "No content extracted"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/biblioteca/",
+      "error": "No content extracted"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/laboratorios/",
+      "error": "No content extracted"
+    }
+  ],
+  "generated_qrs": [
+    {
+      "url": "https://www.duoc.cl/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "qr_file": "generated_qrs\\general_DUOC_UC_General_001.png"
+    },
+    {
+      "url": "https://www.duoc.cl/alumnos/",
+      "category": "general",
+      "description": "DUOC UC General",
+      "qr_file": "generated_qrs\\general_DUOC_UC_General_002.png"
+    },
+    {
+      "url": "https://www.duoc.cl/admision/",
+      "category": "admision",
+      "description": "Admisión",
+      "qr_file": "generated_qrs\\admision_Admisión_003.png"
+    },
+    {
+      "url": "https://www.duoc.cl/contacto-admision/",
+      "category": "admision",
+      "description": "Admisión",
+      "qr_file": "generated_qrs\\admision_Admisión_004.png"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/",
+      "category": "sede_plaza_norte",
+      "description": "Plaza Norte General",
+      "qr_file": "generated_qrs\\sede_plaza_norte_Plaza_Norte_General_005.png"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/contacto/",
+      "category": "sede_plaza_norte",
+      "description": "Contacto Plaza Norte",
+      "qr_file": "generated_qrs\\sede_plaza_norte_Contacto_Plaza_Norte_006.png"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/servicios/",
+      "category": "sede_plaza_norte",
+      "description": "Servicios Plaza Norte",
+      "qr_file": "generated_qrs\\sede_plaza_norte_Servicios_Plaza_Norte_007.png"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/carreras/",
+      "category": "sede_plaza_norte",
+      "description": "Carreras Plaza Norte",
+      "qr_file": "generated_qrs\\sede_plaza_norte_Carreras_Plaza_Norte_008.png"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/biblioteca/",
+      "category": "sede_plaza_norte",
+      "description": "Biblioteca Plaza Norte",
+      "qr_file": "generated_qrs\\sede_plaza_norte_Biblioteca_Plaza_Norte_009.png"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/laboratorios/",
+      "category": "sede_plaza_norte",
+      "description": "Laboratorios Plaza Norte",
+      "qr_file": "generated_qrs\\sede_plaza_norte_Laboratorios_Plaza_Norte_010.png"
+    }
+  ],
+  "processing_time": 22.916028022766113,
+  "total_chunks": 40,
+  "categories": {
+    "general": {
+      "urls": 2,
+      "chunks": 6
+    },
+    "admision": {
+      "urls": 2,
+      "chunks": 26
+    },
+    "sede_plaza_norte": {
+      "urls": 2,
+      "chunks": 8
+    }
+  },
+  "timestamp": "2025-11-24T15:30:16.966948",
+  "summary": {
+    "total_urls_processed": 10,
+    "successful_ingests": 6,
+    "failed_ingests": 4,
+    "generated_qrs": 10,
+    "total_chunks": 40,
+    "categories": 3
+  }
+}

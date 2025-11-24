@@ -104,6 +104,27 @@ class DocumentProcessor:
             r'lunes|martes|miércoles|jueves|viernes|sábado|domingo'
         ]
         return any(re.search(p, text.lower()) for p in patterns)
+    
+    def _is_relevant_content(self, text: str) -> bool:
+        """Verifica si el contenido es relevante para indexación"""
+        if not text or len(text.strip()) < 20:
+            return False
+        
+        # Filtrar contenido irrelevante
+        irrelevant_patterns = [
+            r'^(página|page)\s*\d+',
+            r'^tabla de contenido',
+            r'^índice',
+            r'^\s*\d+\s*$',
+            r'^copyright|©',
+            r'^todos los derechos reservados',
+            r'^\s*\.{3,}',  # Puntos suspensivos
+            r'^\s*_{3,}',   # Líneas de subrayado
+            r'^\s*-{3,}',   # Líneas de guión
+        ]
+        
+        text_lower = text.lower().strip()
+        return not any(re.search(pattern, text_lower) for pattern in irrelevant_patterns)
 
     def _structure_for_rag(self, items: List[Dict], filename: str) -> List[Dict]:
         result = []
@@ -293,8 +314,8 @@ class DocumentProcessor:
         if any(w in t for w in ['deporte', 'taller deportivo', 'gimnasio', 'caf', 'maiclub', 'entrenamiento']):
             return 'deportes'
         if any(w in t for w in ['trabajo', 'práctica', 'curriculum', 'bolsa trabajo', 'duoclaboral']):
-                return v
-        return ""
+            return 'punto_estudiantil'
+        return "general"
 
     def _format_for_rag(self, text: str, section: str, structured: bool) -> str:
         text = re.sub(r'\s+', ' ', text).strip()

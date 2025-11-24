@@ -1,0 +1,6 @@
+# TEST URLs - Centro de Ayuda DuocUC
+https://centroayuda.duoc.cl/hc/es-419
+https://centroayuda.duoc.cl/hc/es-419/categories/30141678666125-Admisi%C3%B3n-y-Matr%C3%ADcula
+https://centroayuda.duoc.cl/hc/es-419/articles/30173827568013--Cu%C3%A1ndo-inicia-el-proceso-de-admisi%C3%B3n
+https://centroayuda.duoc.cl/hc/es-419/articles/30203991504653--Cu%C3%A1les-son-los-requisitos-para-postularme
+https://centroayuda.duoc.cl/hc/es-419/categories/30142028615565-Orientaci%C3%B3n-Estudiantes-Nuevos

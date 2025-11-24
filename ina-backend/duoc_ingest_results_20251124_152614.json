@@ -1,0 +1,65 @@
+{
+  "successful_ingests": [],
+  "failed_ingests": [
+    {
+      "url": "https://www.duoc.cl/alumnos/",
+      "error": "Failed to extract content"
+    },
+    {
+      "url": "https://www.duoc.cl/",
+      "error": "Failed to extract content"
+    },
+    {
+      "url": "https://www.duoc.cl/admision/",
+      "error": "Failed to extract content"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/",
+      "error": "Failed to extract content"
+    },
+    {
+      "url": "https://www.duoc.cl/contacto-admision/",
+      "error": "Failed to extract content"
+    }
+  ],
+  "generated_qrs": [],
+  "validated_urls": [
+    {
+      "url": "https://www.duoc.cl/alumnos/",
+      "status_code": 200,
+      "category": "general"
+    },
+    {
+      "url": "https://www.duoc.cl/",
+      "status_code": 200,
+      "category": "general"
+    },
+    {
+      "url": "https://www.duoc.cl/admision/",
+      "status_code": 200,
+      "category": "admision"
+    },
+    {
+      "url": "https://www.duoc.cl/sedes/plaza-norte/",
+      "status_code": 200,
+      "category": "sede_plaza_norte"
+    },
+    {
+      "url": "https://www.duoc.cl/contacto-admision/",
+      "status_code": 200,
+      "category": "admision"
+    }
+  ],
+  "invalid_urls": [],
+  "processing_time": 11.250783681869507,
+  "total_chunks": 0,
+  "categories": {},
+  "timestamp": "2025-11-24T15:26:14.163883",
+  "summary": {
+    "total_successful_ingests": 0,
+    "total_failed_ingests": 5,
+    "total_generated_qrs": 0,
+    "total_chunks_added": 0,
+    "categories_processed": 0
+  }
+}
