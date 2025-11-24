@@ -5,12 +5,34 @@ from datetime import datetime
 import re
 import random
 
+# Importar el sistema de mejoras
+try:
+    from app.response_enhancer import enhance_response
+    RESPONSE_ENHANCER_AVAILABLE = True
+    logging.info("✅ Mejoras de respuesta disponibles en ResponseGenerator")
+except ImportError as e:
+    RESPONSE_ENHANCER_AVAILABLE = False
+    logging.warning(f"⚠️ Mejoras de respuesta no disponibles: {e}")
+
 logger = logging.getLogger(__name__)
 
 class ResponseGenerator:
     def __init__(self, rag_engine):
         self.rag_engine = rag_engine
         self.response_history = {}
+    
+    def _enhance_response_if_available(self, response_text: str, query: str, category: str = "") -> str:
+        """Aplicar mejoras a la respuesta si está disponible el sistema de mejoras"""
+        if RESPONSE_ENHANCER_AVAILABLE and response_text and len(response_text.strip()) > 0:
+            try:
+                enhanced = enhance_response(response_text, query, category)
+                if enhanced != response_text:
+                    logger.info(f"✅ Respuesta mejorada: {len(response_text)} -> {len(enhanced)} chars")
+                return enhanced
+            except Exception as e:
+                logger.warning(f"❌ Error aplicando mejoras: {e}")
+                return response_text
+        return response_text
     
     def detect_opinion_question(self, query: str) -> bool:
         """
@@ -118,7 +140,18 @@ class ResponseGenerator:
             strategy = processing_info.get('processing_strategy', 'default')
             response_data = self._process_by_strategy(query, strategy, processing_info)
             
-            # 4. Guardar en memoria
+            # 4. MEJORAR LA RESPUESTA CON INFORMACIÓN ESPECÍFICA
+            if 'response' in response_data:
+                category = processing_info.get('category', strategy)
+                enhanced_response = self._enhance_response_if_available(
+                    response_data['response'], 
+                    query, 
+                    category
+                )
+                response_data['response'] = enhanced_response
+                logger.info(f"🔧 Respuesta mejorada aplicada para categoría: {category}")
+            
+            # 5. Guardar en memoria
             self._store_in_memory(query, response_data, session_id)
             
             return response_data
