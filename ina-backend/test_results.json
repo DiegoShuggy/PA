@@ -1,0 +1,64 @@
+{
+  "timestamp": "2025-11-22T12:45:33.270671",
+  "total_time": 232.88127899169922,
+  "passed_tests": [
+    "imports",
+    "knowledge_graph",
+    "persistent_memory",
+    "adaptive_learning",
+    "enhanced_rag_system",
+    "api_endpoints"
+  ],
+  "failed_tests": [
+    "intelligent_cache",
+    "performance"
+  ],
+  "success_rate": 75.0,
+  "detailed_results": {
+    "knowledge_graph_import": true,
+    "persistent_memory_import": true,
+    "adaptive_learning_import": true,
+    "intelligent_cache_import": true,
+    "enhanced_rag_import": true,
+    "knowledge_graph": {
+      "add_concept": true,
+      "find_related": true,
+      "get_stats": true,
+      "discover_gaps": true
+    },
+    "persistent_memory": {
+      "store_memory": true,
+      "recall_memory": true,
+      "get_insights": true
+    },
+    "adaptive_learning": {
+      "record_event": true,
+      "apply_adaptations": true,
+      "get_insights": true
+    },
+    "intelligent_cache": {
+      "set_cache": false,
+      "get_cache": false,
+      "semantic_search": false,
+      "get_stats": true
+    },
+    "enhanced_rag_system": {
+      "process_query": true,
+      "record_feedback": true,
+      "get_insights": true,
+      "processing_time": 0.8570253849029541
+    },
+    "api_endpoints": {
+      "import_router": true,
+      "pydantic_models": true,
+      "routes_available": true
+    },
+    "performance": {
+      "avg_time": 37.962891244888304,
+      "max_time": 125.29242706298828,
+      "min_time": 1.421522617340088,
+      "cache_hits": 0,
+      "performance_acceptable": false
+    }
+  }
+}

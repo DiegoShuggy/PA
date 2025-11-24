@@ -33,6 +33,22 @@ matplotlib>=3.7.0
 pytest>=7.0.0
 pytest-asyncio>=0.21.0
 
+# NUEVAS DEPENDENCIAS PARA SISTEMA MEJORADO
+# Redis para cache inteligente
+redis>=5.0.0
+
+# NetworkX para grafos de conocimiento
+networkx>=3.1
+
+# Clustering y análisis de patrones
+scipy>=1.11.0
+
+# Procesamiento de tiempo y fechas mejorado
+python-dateutil>=2.8.2
+
+# Paralelización y threading
+threadpoolctl>=3.2.0
+
 # Dependencias adicionales para compatibilidad
 pydantic>=2.0.0
 typing-extensions>=4.0.0
