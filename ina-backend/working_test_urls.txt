@@ -1,0 +1,6 @@
+# TEST URLs - URLs públicas de DuocUC
+https://www.duoc.cl/
+https://www.duoc.cl/alumnos/
+https://www.duoc.cl/admision/
+https://www.duoc.cl/sedes/plaza-norte/
+https://www.duoc.cl/contacto-admision/

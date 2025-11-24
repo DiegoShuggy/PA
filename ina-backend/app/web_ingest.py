@@ -56,7 +56,15 @@ def is_allowed_by_robot(url: str, user_agent: str = "*") -> bool:
 
 
 def fetch_url(url: str, timeout: int = 20) -> Optional[requests.Response]:
-    headers = {"User-Agent": "InA-WebIngest/1.0 (+https://duoc.cl)", 'Accept': '*/*'}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "DNT": "1",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1"
+    }
     try:
         r = requests.get(url, headers=headers, timeout=timeout, stream=True)
         r.raise_for_status()
@@ -228,8 +236,12 @@ def categorize_url(url: str) -> tuple[str, str]:
     elif 'financiamiento' in url_lower:
         return "financiamiento", "Financiamiento"
     elif 'becas' in url_lower or 'beca' in url_lower:
+        if 'centroayuda' in url_lower:
+            return "ayuda_beneficios", "Ayuda Beneficios Estudiantiles"
         return "financiamiento", "Becas"
     elif 'pago' in url_lower or 'portal-de-pago' in url_lower:
+        if 'centroayuda' in url_lower and 'deudas' in url_lower:
+            return "ayuda_pagos", "Ayuda Pagos y Deudas"
         return "financiamiento", "Portal de Pago"
     elif 'corfo' in url_lower:
         return "financiamiento", "Crédito CORFO"
@@ -252,9 +264,28 @@ def categorize_url(url: str) -> tuple[str, str]:
     elif 'bolsa' in url_lower:
         return "practicas_empleo", "Bolsa de Trabajo"
     
-    # Ayuda y soporte
+    # Ayuda y soporte - Centro de Ayuda específico
     elif 'centroayuda' in url_lower or 'centro-ayuda' in url_lower:
-        return "ayuda_soporte", "Centro de Ayuda"
+        if 'admision' in url_lower or 'matricula' in url_lower:
+            return "ayuda_admision", "Ayuda Admisión y Matrícula"
+        elif 'estudiantes-nuevos' in url_lower or 'orientacion' in url_lower:
+            return "ayuda_nuevos", "Ayuda Estudiantes Nuevos"
+        elif 'estudiantes' in url_lower and 'categories' in url_lower:
+            return "ayuda_estudiantes", "Ayuda Estudiantes"
+        elif 'beneficios-estudiantiles' in url_lower:
+            return "ayuda_beneficios", "Ayuda Beneficios Estudiantiles"
+        elif 'pagos' in url_lower or 'deudas' in url_lower:
+            return "ayuda_pagos", "Ayuda Pagos y Deudas"
+        elif 'servicios-digitales' in url_lower:
+            return "ayuda_digital", "Ayuda Servicios Digitales"
+        elif 'titulados' in url_lower:
+            return "ayuda_titulados", "Ayuda Titulados"
+        elif 'violencia' in url_lower or 'discriminacion' in url_lower:
+            return "ayuda_denuncias", "Ayuda Violencia y Discriminación"
+        elif 'sostenedor' in url_lower:
+            return "ayuda_sostenedor", "Ayuda Sostenedor"
+        else:
+            return "ayuda_soporte", "Centro de Ayuda"
     elif 'chat' in url_lower:
         return "ayuda_soporte", "Chat Online"
     elif 'experiencia-vivo' in url_lower:

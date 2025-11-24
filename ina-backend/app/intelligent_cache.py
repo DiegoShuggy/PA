@@ -60,7 +60,7 @@ class IntelligentCacheSystem:
             try:
                 self.redis_client = redis.Redis(
                     host=redis_host, port=redis_port, db=redis_db,
-                    decode_responses=False, socket_timeout=5
+                    decode_responses=False, socket_timeout=2, socket_connect_timeout=2
                 )
                 # Test de conexión
                 self.redis_client.ping()
@@ -69,13 +69,13 @@ class IntelligentCacheSystem:
             except Exception as e:
                 logger.warning(f"⚠️ Redis no disponible: {e}")
                 if fallback_to_memory:
-                    logger.info("🔄 Usando cache en memoria como fallback")
+                    logger.info("🔄 Usando caché en memoria como fallback")
                 else:
                     raise
         else:
             logger.warning(f"⚠️ Redis no disponible: módulo redis no instalado")
             if fallback_to_memory:
-                logger.info("🔄 Usando cache en memoria como fallback")
+                logger.info("🔄 Usando caché en memoria como fallback")
             else:
                 raise ImportError("Redis no está instalado y fallback_to_memory=False")
         

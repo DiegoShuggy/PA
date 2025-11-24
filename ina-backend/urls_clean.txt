@@ -1,0 +1,50 @@
+# URLs VERIFICADAS Y FUNCIONALES DE DUOC UC - 2024
+# Solo contiene URLs que responden correctamente (200/302)
+
+# SITIO PRINCIPAL Y NAVEGACIÓN
+https://www.duoc.cl/
+https://www.duoc.cl/nosotros/
+https://www.duoc.cl/oferta-academica/
+https://www.duoc.cl/contacto-admision/
+https://www.duoc.cl/nosotros/donde-estamos/
+
+# INFORMACIÓN ACADÉMICA
+https://www.duoc.cl/oferta-academica/carreras/
+https://www.duoc.cl/admision/
+https://www.duoc.cl/calendario-academico/
+https://www.duoc.cl/arancel/
+
+# SERVICIOS ESTUDIANTILES
+https://www.duoc.cl/vida-estudiantil/
+https://www.duoc.cl/vida-estudiantil/deportes/
+https://www.duoc.cl/vida-estudiantil/titulados/
+https://www.duoc.cl/cultura/
+https://www.duoc.cl/vida-estudiantil/pastoral/
+https://www.duoc.cl/practicas/
+
+# FINANCIAMIENTO Y BECAS
+https://www.duoc.cl/admision/financiamiento/
+https://www.duoc.cl/financiamiento/
+
+# BIBLIOTECA Y RECURSOS
+https://bibliotecas.duoc.cl/
+https://www.duoc.cl/biblioteca/
+
+# INFORMACIÓN INSTITUCIONAL  
+https://www.duoc.cl/nosotros/sobre-duoc/
+https://www.duoc.cl/nosotros/sobre-duoc/mision-vision/
+https://www.duoc.cl/nosotros/sobre-duoc/historia/
+https://www.duoc.cl/nosotros/autoridades/
+https://www.duoc.cl/noticias/
+
+# REDIRECTS FUNCIONALES (códigos 301/302)
+https://www.duoc.cl/institucional/mision-vision/
+https://www.duoc.cl/institucional/historia/ 
+https://www.duoc.cl/institucional/autoridades/
+https://www.duoc.cl/carreras/
+https://www.duoc.cl/colaboradores/beneficios/
+https://www.duoc.cl/contacto/
+
+# RECURSOS TÉCNICOS
+https://www.duoc.cl/nosotros/investigacion-aplicada/
+https://www.duoc.cl/nosotros/donde-estamos/educacion-continua/

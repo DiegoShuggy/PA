@@ -1,4 +1,13 @@
 #main.py
+# Importar y aplicar supresión completa de telemetría ChromaDB
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from suppress_chroma_logs import initialize_silent_chroma
+
+# Aplicar configuración silenciosa de ChromaDB
+initialize_silent_chroma()
+
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -9,6 +18,8 @@ from sqlmodel import Session, select
 import asyncio
 import logging
 import importlib
+
+import time
 
 # Configurar logger
 logger = logging.getLogger(__name__)
@@ -1999,3 +2010,69 @@ async def generate_advanced_report(period_days: int = 30):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+# ============================================================
+# 🖥️ SISTEMA DE MONITOREO DE PRODUCCIÓN
+# ============================================================
+
+# Integrar monitoreo de producción
+try:
+    from app.monitoring_interface import setup_monitoring_routes
+    setup_monitoring_routes(app)
+    logger.info("✅ Rutas de monitoreo integradas - Acceso: http://localhost:8000/monitoring")
+except Exception as e:
+    logger.error(f"❌ Error integrando monitoreo: {e}")
+
+# Middleware para logging de requests en producción
+@app.middleware("http")
+async def production_logging_middleware(request: Request, call_next):
+    """Middleware para registrar métricas y errores en producción"""
+    start_time = time.time()
+    
+    try:
+        response = await call_next(request)
+        process_time = time.time() - start_time
+        
+        # Log métrica de rendimiento
+        try:
+            from app.production_monitor import log_performance_metric
+            await log_performance_metric(
+                "request_time", 
+                process_time, 
+                f"{request.method} {request.url.path}"
+            )
+        except:
+            pass  # No fallar si no hay monitor
+        
+        # Log requests lentos
+        if process_time > 5.0:
+            try:
+                from app.production_monitor import log_system_warning
+                await log_system_warning(
+                    f"Request lento: {process_time:.2f}s", 
+                    f"{request.method} {request.url.path}"
+                )
+            except:
+                pass
+        
+        return response
+        
+    except Exception as e:
+        # Log error en producción
+        try:
+            from app.production_monitor import log_system_error
+            await log_system_error(e, f"Request {request.method} {request.url.path}")
+        except:
+            pass  # No fallar si no hay monitor
+        
+        raise e
+
+# Endpoint adicional para verificación rápida de estado
+@app.get("/ping")
+async def ping():
+    """Endpoint simple para verificar que el servidor está vivo"""
+    return {
+        "status": "alive",
+        "timestamp": time.time(),
+        "message": "Sistema IA Plaza Norte operativo"
+    }
