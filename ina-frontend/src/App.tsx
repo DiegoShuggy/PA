@@ -16,61 +16,6 @@ import NavBar from './components/NavBar';
 import ojoAbierto from './img/ojo-abierto.png';
 import ojoCerrado from './img/ojo-cerrado.png';
 
-// Definir tipos de temas
-type ThemeType = 'light' | 'dark' | 'reading';
-
-interface ThemeConfig {
-  name: string;
-  colors: {
-    primary: string;
-    secondary: string;
-    background: string;
-    text: string;
-    surface: string;
-    border: string;
-    accent: string;
-  };
-}
-
-const themes: Record<ThemeType, ThemeConfig> = {
-  light: {
-    name: 'light',
-    colors: {
-      primary: '#0038A8',
-      secondary: '#0056b3',
-      background: '#ffffff',
-      text: '#333333',
-      surface: '#f8f9fa',
-      border: '#e1e5e9',
-      accent: '#007bff'
-    }
-  },
-  dark: {
-    name: 'dark',
-    colors: {
-      primary: '#4d7cfe',
-      secondary: '#6c98ff',
-      background: '#1a1a1a',
-      text: '#ffffff',
-      surface: '#2d2d2d',
-      border: '#404040',
-      accent: '#4d7cfe'
-    }
-  },
-  reading: {
-    name: 'reading',
-    colors: {
-      primary: '#2e7d32',
-      secondary: '#4caf50',
-      background: '#fefefe',
-      text: '#2e2e2e',
-      surface: '#f5f5f5',
-      border: '#d4d4d4',
-      accent: '#2e7d32'
-    }
-  }
-};
-
 function App() {
     const { i18n, t } = useTranslation();
     const [isHovering, setIsHovering] = useState(false);
@@ -86,9 +31,7 @@ function App() {
     const [isDragging, setIsDragging] = useState(false);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [isCursorInViewport, setIsCursorInViewport] = useState(true);
-    
-    
-    
+
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const guideLineRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -96,9 +39,68 @@ function App() {
     const languageMenuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        const enterFullscreen = async () => {
+            try {
+                const docElement = document.documentElement as any;
+            
+            if (document.fullscreenElement) return;
+
+            if (docElement.requestFullscreen) {
+                await docElement.requestFullscreen();
+            } else if (docElement.mozRequestFullScreen) {
+                await docElement.mozRequestFullScreen();
+            } else if (docElement.webkitRequestFullscreen) {
+                await docElement.webkitRequestFullscreen();
+            } else if (docElement.msRequestFullscreen) {
+                await docElement.msRequestFullscreen();
+            }
+                console.log('Pantalla completa activada automáticamente');
+            } catch (error) {
+                console.warn('No se pudo activar la pantalla completa automáticamente:', error);
+            }
+        };
+
+        const timer = setTimeout(() => {
+            enterFullscreen();
+        }, 500);
+
+        enterFullscreen();
+
+
+        // O agregar un botón para activar pantalla completa
+        const handleFullscreen = () => {
+            enterFullscreen();
+        };
+
+        // Ejemplo: agregar evento a un botón específico
+        const fullscreenButton = document.getElementById('fullscreen-btn');
+        if (fullscreenButton) {
+            fullscreenButton.addEventListener('click', handleFullscreen);
+        }
+
+        // Activar después de que la página se haya cargado completamente
+        const handleLoad = () => {
+            setTimeout(enterFullscreen, 500); // 1 segundo después de la carga
+        };
+        if (document.readyState === 'complete') {
+            setTimeout(enterFullscreen, 500);
+        } else {
+            window.addEventListener('load', handleLoad);
+        }
+        return () => {
+            window.removeEventListener('load', handleLoad);
+            clearTimeout(timer);
+            if (fullscreenButton) {
+                fullscreenButton.removeEventListener('click', handleFullscreen);
+            }
+        };
+
+    }, []);
+    // Handle click outside accessibility menu
+    useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (showAccessibilityMenu && 
-                menuRef.current && 
+            if (showAccessibilityMenu &&
+                menuRef.current &&
                 !menuRef.current.contains(event.target as Node) &&
                 !(event.target as Element).closest('.accessibility-toggle')) {
                 setShowAccessibilityMenu(false);
@@ -139,14 +141,14 @@ function App() {
         } else {
             root.classList.remove('grayscale');
         }
-        
+
         // Aplicar fuente para disléxicos
         if (dyslexicFont) {
             root.classList.add('dyslexic-font');
         } else {
             root.classList.remove('dyslexic-font');
         }
-        
+
         // Aplicar seguidor de cursor
         if (readingGuide) {
             root.classList.add('reading-guide-active');
@@ -261,7 +263,7 @@ function App() {
         <div className="app">
             <div>
                 <NavBar />
-                
+
                 {/* Botón flotante de accesibilidad */}
                 <div className="accessibility-floating-button">
                     <button
@@ -273,9 +275,9 @@ function App() {
                         type="button"
                         aria-expanded={showAccessibilityMenu}
                     >
-                        <img 
-                            src={isHovering || showAccessibilityMenu ? ojoCerrado : ojoAbierto} 
-                            alt="Menú de accesibilidad" 
+                        <img
+                            src={isHovering || showAccessibilityMenu ? ojoCerrado : ojoAbierto}
+                            alt="Menú de accesibilidad"
                             className="accessibility-icon-img"
                         />
                     </button>
@@ -436,7 +438,18 @@ function App() {
                         </div>
                     )}
                 </div>
-
+                <button
+                    id="fullscreen-btn"
+                    className="fullscreen-button"
+                    onClick={() => {
+                        const docElement = document.documentElement;
+                        if (docElement.requestFullscreen) {
+                            docElement.requestFullscreen();
+                        }
+                    }}
+                >
+                    ⛶
+                </button>
                 {/* Selector de idiomas global */}
                 <div className="language-selector-global" ref={languageMenuRef}>
                     <button
