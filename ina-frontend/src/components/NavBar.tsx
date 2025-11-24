@@ -21,13 +21,13 @@ function NavBar() {
     // Referencia para el temporizador
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // Función para manejar búsquedas por voz
-    const handleVoiceSearch = (query: string) => {
-        console.log('Búsqueda por voz desde NavBar:', query);
+    // Función que recibe la pregunta desde el componente VoiceSearch
+    const handleQuestionFromVoice = (questionText: string) => {
+        console.log('Búsqueda por voz desde NavBar:', questionText);
         // Redirigir al chat con la consulta de voz
         navigate('/InA', {
             state: {
-                predefinedQuestion: query,
+                predefinedQuestion: questionText,
                 autoSend: true
             }
         });
@@ -90,7 +90,10 @@ function NavBar() {
 
                     {/* Agregar la sección de búsqueda por voz aquí */}
                     <div className="navbar-voice-search">
-                        <VoiceSearch onSearch={handleVoiceSearch} />
+                        <VoiceSearch 
+  onQuestionSelect={handleQuestionFromVoice} // ← ESTA ES LA CLAVE
+  onVoiceTranscript={(transcript) => console.log('Transcripción:', transcript)}
+/>
                     </div>
 
                     <div className="navbar-links">

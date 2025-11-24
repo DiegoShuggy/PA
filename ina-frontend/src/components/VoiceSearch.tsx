@@ -1,4 +1,4 @@
-// components/VoiceSearch.tsx (versión actualizada)
+// components/VoiceSearch.tsx (VERSIÓN SIMPLIFICADA)
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -7,9 +7,14 @@ import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 interface VoiceSearchProps {
   onSearch?: (query: string) => void;
   onQuestionSelect?: (questionText: string) => void;
+  onVoiceTranscript?: (transcript: string) => void;
 }
 
-const VoiceSearch: React.FC<VoiceSearchProps> = ({ onSearch, onQuestionSelect }) => {
+const VoiceSearch: React.FC<VoiceSearchProps> = ({ 
+  onSearch, 
+  onQuestionSelect,
+  onVoiceTranscript
+}) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const {
@@ -21,13 +26,10 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({ onSearch, onQuestionSelect })
     hasRecognitionSupport,
   } = useSpeechRecognition();
 
-  const [searchResults, setSearchResults] = useState<string[]>([]);
-  const [showResults, setShowResults] = useState(false);
-  const [autoNavigate, setAutoNavigate] = useState<string | null>(null);
+  const [lastTranscript, setLastTranscript] = useState<string>('');
 
-  // Mapeo de comandos de voz a rutas
-    const voiceCommands: Record<string, string> = {
-      // Comandos en español
+  // Comandos de navegación
+  const voiceCommands: Record<string, string> = {
     'inicio': '/',
     'lobby': '/',
     'chat': '/InA',
@@ -53,121 +55,82 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({ onSearch, onQuestionSelect })
     'desarrollo': '/desarrollo',
     'pastoral': '/pastoral',
     'iglesia': '/pastoral',
-    
-    // Comandos en inglés
     'home': '/',
     'assistant': '/InA',
     'school board': '/Punto',
     'frequently asked questions': '/Punto',
   };
 
-  // Mapeo de preguntas específicas a sus textos traducidos
   const questionCommands: { [key: string]: string } = {
-    // Preguntas en español - variaciones comunes
-    
-    
     'Cómo puedo inscribirme en un programa académico en Duoc UC': 'Lobby.Preguntas.FAQ2',
     'programa academico': 'Lobby.Preguntas.FAQ2',
     'inscribir programa academico': 'Lobby.Preguntas.FAQ2',
-    
     'renovar tne': 'Lobby.Preguntas.FAQ3',
     'donde renovar tne': 'Lobby.Preguntas.FAQ3',
     'renovación tne': 'Lobby.Preguntas.FAQ3',
     'donde puedo renovar mi tne': 'Lobby.Preguntas.FAQ3',
-    // Agrega más variaciones según necesites
   };
 
-  // Procesar el transcript cuando cambie
   useEffect(() => {
-    if (transcript) {
+    if (transcript && transcript !== lastTranscript) {
+      setLastTranscript(transcript);
       processVoiceCommand(transcript);
     }
-  }, [transcript]);
+  }, [transcript, lastTranscript]);
 
-// components/VoiceSearch.tsx (función corregida)
-const findBestMatch = (command: string, commandMap: { [key: string]: any }): string | null => {
-  const normalizedCommand = command.toLowerCase().trim();
-  
-  // 1. Primero buscar coincidencia EXACTA (máxima prioridad)
-  if (commandMap[normalizedCommand]) {
-    console.log('✅ Coincidencia exacta encontrada:', normalizedCommand);
-    return normalizedCommand;
-  }
-
-  // 2. Buscar coincidencias de frases completas
-  const commandWords = normalizedCommand.split(/\s+/);
-  
-  // Para cada comando en el mapa, calcular similitud
-  let bestMatch: string | null = null;
-  let bestScore = 0;
-  const MIN_SIMILARITY_THRESHOLD = 0.6; // 60% de similitud mínimo
-
-  for (const [key] of Object.entries(commandMap)) {
-    const keyWords = key.toLowerCase().split(/\s+/);
+  const findBestMatch = (command: string, commandMap: { [key: string]: any }): string | null => {
+    const normalizedCommand = command.toLowerCase().trim();
     
-    // Calcular similitud basada en palabras coincidentes
-    const matchingWords = commandWords.filter(word => 
-      keyWords.some(keyWord => {
-        // Coincidencia exacta de palabra
-        if (keyWord === word) return true;
-        // Coincidencia de palabra incluida
-        if (keyWord.includes(word) || word.includes(keyWord)) return true;
-        return false;
-      })
-    ).length;
-
-    const similarity = matchingWords / Math.max(commandWords.length, keyWords.length);
-    
-    if (similarity > bestScore && similarity >= MIN_SIMILARITY_THRESHOLD) {
-      bestScore = similarity;
-      bestMatch = key;
+    // Coincidencia exacta
+    if (commandMap[normalizedCommand]) {
+      return normalizedCommand;
     }
-  }
 
-  if (bestMatch) {
-    console.log(`✅ Coincidencia por similitud: "${bestMatch}" (score: ${bestScore.toFixed(2)})`);
+    // Coincidencia por similitud
+    let bestMatch: string | null = null;
+    let bestScore = 0;
+
+    for (const [key] of Object.entries(commandMap)) {
+      const keyWords = key.toLowerCase().split(/\s+/);
+      const commandWords = normalizedCommand.split(/\s+/);
+      
+      const matchingWords = commandWords.filter(word => 
+        keyWords.some(keyWord => keyWord.includes(word) || word.includes(keyWord))
+      ).length;
+
+      const similarity = matchingWords / Math.max(commandWords.length, keyWords.length);
+      
+      if (similarity > bestScore && similarity >= 0.6) {
+        bestScore = similarity;
+        bestMatch = key;
+      }
+    }
+
     return bestMatch;
-  }
-
-  // 3. Solo como último recurso, buscar palabras sueltas (pero con restricciones)
-  for (const [key] of Object.entries(commandMap)) {
-    const keyWords = key.toLowerCase().split(/\s+/);
-    
-    // Solo considerar coincidencia si la palabra es significativa
-    const significantWords = keyWords.filter(word => word.length > 3); // Ignorar palabras cortas
-    
-    const hasSignificantMatch = significantWords.some(significantWord =>
-      normalizedCommand.includes(significantWord)
-    );
-
-    if (hasSignificantMatch) {
-      console.log(`⚠️ Coincidencia débil encontrada: "${key}"`);
-      return key;
-    }
-  }
-
-  console.log('❌ No se encontraron coincidencias para:', normalizedCommand);
-  return null;
-};
+  };
 
   const processVoiceCommand = (command: string) => {
     const normalizedCommand = command.toLowerCase().trim();
-    console.log('Procesando comando:', normalizedCommand);
+    console.log('🎯 Procesando comando de voz:', normalizedCommand);
 
-    // Primero buscar si es una pregunta específica
+    // 1. Verificar comandos de navegación
+    const navigationMatch = findBestMatch(normalizedCommand, voiceCommands);
+    if (navigationMatch) {
+      console.log('🧭 Navegando a:', voiceCommands[navigationMatch]);
+      navigate(voiceCommands[navigationMatch]);
+      return;
+    }
+
+    // 2. Verificar preguntas específicas
     const questionMatch = findBestMatch(normalizedCommand, questionCommands);
-    
-    if (questionMatch && questionCommands[questionMatch]) {
-      const translationKey = questionCommands[questionMatch];
-      const questionText = t(translationKey);
+    if (questionMatch) {
+      const questionText = t(questionCommands[questionMatch]);
+      console.log('❓ Pregunta específica:', questionText);
       
-      console.log('Pregunta detectada:', questionMatch, 'Texto:', questionText);
-      
-      // Navegar al chat automáticamente con la pregunta
       if (onQuestionSelect) {
         onQuestionSelect(questionText);
       } else {
-        // Navegación por defecto si no hay callback
+        // Fallback directo
         navigate('/InA', { 
           state: { 
             predefinedQuestion: questionText,
@@ -175,47 +138,35 @@ const findBestMatch = (command: string, commandMap: { [key: string]: any }): str
           } 
         });
       }
-      
-      setAutoNavigate(questionText);
-      setShowResults(false);
       return;
     }
 
-    // Si no es una pregunta, buscar comandos de navegación
-    const navigationMatch = findBestMatch(normalizedCommand, voiceCommands);
+    // 3. Consulta general
+    console.log('💬 Consulta general:', command);
     
-    if (navigationMatch && voiceCommands[navigationMatch]) {
-      const route = voiceCommands[navigationMatch];
-      console.log('Navegación detectada:', navigationMatch, 'Ruta:', route);
-      executeNavigation(route, navigationMatch);
-      return;
+    if (onQuestionSelect) {
+      onQuestionSelect(command);
+    } else {
+      navigate('/InA', { 
+        state: { 
+          predefinedQuestion: command,
+          autoSend: true
+        } 
+      });
     }
 
-    // Si no hay coincidencias, mostrar mensaje
-    setSearchResults([t('VoiceSearch.noResults')]);
-    setShowResults(true);
-    
-    // Llamar al callback si existe
-    if (onSearch) {
-      onSearch(command);
-    }
-  };
-
-  const executeNavigation = (route: string, command: string) => {
-    console.log(`Navegando a: ${route} por comando: ${command}`);
-    navigate(route);
-    setShowResults(false);
-    setSearchResults([]);
+    // Callbacks adicionales
+    if (onVoiceTranscript) onVoiceTranscript(command);
+    if (onSearch) onSearch(command);
   };
 
   const toggleListening = () => {
     if (isListening) {
       stopListening();
+      setLastTranscript('');
     } else {
       startListening();
-      setShowResults(false);
-      setSearchResults([]);
-      setAutoNavigate(null);
+      setLastTranscript('');
     }
   };
 
@@ -232,32 +183,21 @@ const findBestMatch = (command: string, commandMap: { [key: string]: any }): str
       <button
         onClick={toggleListening}
         className={`voice-search-button ${isListening ? 'listening' : ''}`}
-        aria-label={isListening ? 
-          (t('VoiceSearch.stopListening')) : 
-          (t('VoiceSearch.startListening'))
-        }
       >
         {isListening ? (
           <>
             <span className="pulse-animation"></span>
             🎤 {t('VoiceSearch.listening')}
+            {transcript && (
+              <span className="voice-transcript-preview">
+                : "{transcript.length > 20 ? transcript.substring(0, 20) + '...' : transcript}"
+              </span>
+            )}
           </>
         ) : (
-          <>
-            🎤 {t('VoiceSearch.talk')}
-          </>
+          <>🎤 {t('VoiceSearch.talk')}</>
         )}
       </button>
-
-      <div className="voice-transcript"></div>
-
-      {autoNavigate && (
-        <div className="voice-auto-navigate">
-          <div className="navigating-message">
-            ✅ {t('VoiceSearch.navigatingTo')}: "{autoNavigate}"
-          </div>
-        </div>
-      )}
     </div>
   );
 };
