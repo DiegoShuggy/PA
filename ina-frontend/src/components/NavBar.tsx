@@ -21,6 +21,25 @@ function NavBar() {
     // Referencia para el temporizador
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+    // Función para salir del modo pantalla completa
+    const exitFullscreen = () => {
+        try {
+            const doc = document as any;
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (doc.mozCancelFullScreen) { // Firefox
+                doc.mozCancelFullScreen();
+            } else if (doc.webkitExitFullscreen) { // Chrome, Safari
+                doc.webkitExitFullscreen();
+            } else if (doc.msExitFullscreen) { // IE/Edge
+                doc.msExitFullscreen();
+            }
+            console.log('Saliendo del modo pantalla completa');
+        } catch (error) {
+            console.warn('Error al salir de pantalla completa:', error);
+        }
+    };
+
     // Función que recibe la pregunta desde el componente VoiceSearch
     const handleQuestionFromVoice = (questionText: string) => {
         console.log('Búsqueda por voz desde NavBar:', questionText);
@@ -60,8 +79,14 @@ function NavBar() {
             setIsAuthenticated(true);
             setError('');
             setShowModal(false);
-            // Redirigir a la página Reporte
-            navigate("/Reporte");
+            
+            // Salir del modo pantalla completa antes de redirigir
+            exitFullscreen();
+            
+            // Pequeño delay para asegurar que salió de pantalla completa antes de redirigir
+            setTimeout(() => {
+                navigate("/Reporte");
+            }, 300);
         } else {
             setError(t('navbar.error.incorrectPassword'));
             setPassword('');
@@ -91,9 +116,9 @@ function NavBar() {
                     {/* Agregar la sección de búsqueda por voz aquí */}
                     <div className="navbar-voice-search">
                         <VoiceSearch 
-  onQuestionSelect={handleQuestionFromVoice} // ← ESTA ES LA CLAVE
-  onVoiceTranscript={(transcript) => console.log('Transcripción:', transcript)}
-/>
+                            onQuestionSelect={handleQuestionFromVoice}
+                            onVoiceTranscript={(transcript) => console.log('Transcripción:', transcript)}
+                        />
                     </div>
 
                     <div className="navbar-links">
