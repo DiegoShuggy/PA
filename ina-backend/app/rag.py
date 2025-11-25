@@ -1677,6 +1677,15 @@ def get_ai_response(user_message: str, context: list = None,
         # 🔥 NUEVO: Aplicar filtro estacionario a la respuesta
         respuesta = rag_engine.stationary_filter.filter_response(respuesta, user_message)
         
+        # ✅ VALIDACIÓN DE INFORMACIÓN: Verificar que la respuesta tiene contenido útil
+        if len(respuesta.strip()) < 30 or "no encontr" in respuesta.lower() or "no dispongo" in respuesta.lower():
+            logger.warning(f"⚠️ Respuesta muy corta o sin información útil: {len(respuesta)} chars")
+            # Intentar con información de fuentes directamente
+            if final_sources:
+                logger.info(f"📚 Usando información directa de {len(final_sources)} fuentes")
+                direct_info = "\n\n".join([src['document'][:300] for src in final_sources[:2]])
+                respuesta = f"Según la información disponible:\n\n{direct_info}"
+        
         # Validar que la respuesta sea apropiada para IA estacionaria
         is_appropriate, validation_message = rag_engine.stationary_filter.validate_response_appropriateness(respuesta)
         if not is_appropriate:
@@ -1705,12 +1714,34 @@ def get_ai_response(user_message: str, context: list = None,
                 'similarity': round(source.get('similarity', 0.5), 3)
             })
 
+        # 🔍 DIAGNÓSTICO: Verificar calidad de información recuperada
+        logger.info(f"📊 INFO DIAGNOSIS:")
+        logger.info(f"  - Sources found: {len(final_sources)}")
+        logger.info(f"  - Response length: {len(respuesta)} chars")
+        logger.info(f"  - Query: '{user_message[:50]}...'")
+        if final_sources:
+            avg_similarity = sum(s.get('similarity', 0) for s in final_sources) / len(final_sources)
+            logger.info(f"  - Avg similarity: {avg_similarity:.3f}")
+            logger.info(f"  - Top source category: {final_sources[0].get('metadata', {}).get('category', 'unknown')}")
+        
         # AGREGAR GENERACIÓN DE QR CODES PARA RESPUESTAS RAG (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(respuesta, user_message)
 
         # APLICAR MEJORAS A LA RESPUESTA ANTES DE RETORNAR
         category = processing_info.get('topic_classification', {}).get('category', 'general')
-        enhanced_respuesta = enhance_final_response(respuesta, user_message, category)
+        
+        # ✅ MEJORA CRÍTICA: Aplicar enhancer correctamente
+        if RESPONSE_ENHANCER_AVAILABLE and respuesta and len(respuesta.strip()) > 10:
+            try:
+                enhanced_respuesta = enhance_final_response(respuesta, user_message, category)
+                logger.info(f"✅ Response enhanced: {len(respuesta)} -> {len(enhanced_respuesta)} chars")
+            except Exception as e:
+                logger.error(f"❌ Error enhancing response: {e}")
+                enhanced_respuesta = respuesta
+        else:
+            enhanced_respuesta = respuesta
+            if not RESPONSE_ENHANCER_AVAILABLE:
+                logger.warning("⚠️ Response enhancer not available")
 
         response_data = {
             'response': enhanced_respuesta,
@@ -1730,10 +1761,15 @@ def get_ai_response(user_message: str, context: list = None,
         return response_data
 
     except Exception as e:
-        logger.error(f"Error en RAG estándar: {str(e)}")
+        logger.error(f"❌ ERROR EN RAG ESTÁNDAR: {str(e)}")
+        logger.error(f"   Query: '{user_message[:100]}...'")
+        logger.error(f"   Sources available: {len(final_sources) if 'final_sources' in locals() else 0}")
+        import traceback
+        logger.error(f"   Stack trace: {traceback.format_exc()[:500]}")
+        
         # Fallback: si tenemos fuentes recuperadas, devolver su contenido bruto como respuesta
         try:
-            if final_sources:
+            if 'final_sources' in locals() and final_sources:
                 fallback_texts = []
                 formatted_sources = []
                 for src in final_sources:

@@ -284,8 +284,8 @@ class DuocURLManager:
             "emergencia": "formulario_emergencia",
             "socioeconomico": "formulario_emergencia",
             "ayuda economica": "formulario_emergencia",
-            "tne": "tne_seguimiento",
-            "tarjeta estudiantil": "tne_seguimiento",
+            "tne": "tne_info",
+            "tarjeta estudiantil": "tne_info",
             "perdida": "comisaria_virtual",
             "robo": "comisaria_virtual",
             "embajador": "embajadores_salud",
@@ -552,7 +552,9 @@ class QRGenerator:
             return [self.duoc_manager.duoc_urls['formulario_emergencia']]
         
         elif any(word in question_lower for word in ['tne', 'tarjeta estudiantil']):
-            return [self.duoc_manager.duoc_urls['tne_seguimiento']]
+            # TNE - usar clave correcta o manejar error
+            tne_url = self.duoc_manager.duoc_urls.get('tne_info') or self.duoc_manager.duoc_urls.get('servicios_estudiantes')
+            return [tne_url] if tne_url else []
         
         elif any(word in question_lower for word in ['perdida', 'robo']):
             return [self.duoc_manager.duoc_urls['comisaria_virtual']]

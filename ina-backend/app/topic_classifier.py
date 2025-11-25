@@ -608,7 +608,7 @@ class TopicClassifier:
             'who': 25,
             
             # Auxiliares ingleses (CRÍTICOS)
-            'do': 30,           # Crítico para diferencias inglés - AUMENTADO
+            # 'do' REMOVIDO - causa falsos positivos con español (puedo, donde, etc.)
             'does': 25,
             'did': 25,
             'will': 25,
