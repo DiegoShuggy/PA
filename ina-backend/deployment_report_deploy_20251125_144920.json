@@ -1,0 +1,80 @@
+{
+  "deployment_id": "deploy_20251125_144920",
+  "deployment_timestamp": "2025-11-25T14:51:19.305290",
+  "configuration": {
+    "python_version_required": "3.9",
+    "required_packages": [
+      "numpy>=1.21.0",
+      "sentence-transformers>=2.2.0",
+      "scikit-learn>=1.0.0",
+      "beautifulsoup4>=4.9.0",
+      "requests>=2.25.0",
+      "aiohttp>=3.8.0",
+      "feedparser>=6.0.0",
+      "redis>=4.0.0",
+      "faiss-cpu>=1.7.0",
+      "spacy>=3.4.0",
+      "psutil>=5.8.0",
+      "schedule>=1.1.0",
+      "cachetools>=4.2.0",
+      "pdfplumber>=0.6.0",
+      "joblib>=1.1.0"
+    ],
+    "optional_packages": [
+      "uvicorn[standard]>=0.18.0",
+      "fastapi>=0.78.0",
+      "python-multipart>=0.0.5"
+    ],
+    "backup_existing": true,
+    "run_tests": true,
+    "create_service": false
+  },
+  "deployment_log": [
+    {
+      "timestamp": "2025-11-25T14:49:20.356464",
+      "step": "Python version check failed",
+      "success": false,
+      "details": "Required: 3.9, Current: 3.13"
+    },
+    {
+      "timestamp": "2025-11-25T14:49:20.365578",
+      "step": "Backup creado en C:\\Users\\SSDD1\\Documents\\GitHub\\Proyecto_InA\\ina-backend\\backup_deploy_20251125_144920",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T14:50:41.020051",
+      "step": "Paquetes instalados correctamente",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T14:50:41.021635",
+      "step": "Configuración creada en C:\\Users\\SSDD1\\Documents\\GitHub\\Proyecto_InA\\ina-backend\\enhanced_ai_config.json",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T14:50:41.022561",
+      "step": "Migración de datos completada",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T14:51:19.303084",
+      "step": "Error durante tests de validación",
+      "success": false,
+      "details": "name 'Tuple' is not defined"
+    },
+    {
+      "timestamp": "2025-11-25T14:51:19.304922",
+      "step": "Script de inicio creado: C:\\Users\\SSDD1\\Documents\\GitHub\\Proyecto_InA\\ina-backend\\startup_enhanced_ai.py",
+      "success": true,
+      "details": ""
+    }
+  ],
+  "success": false,
+  "python_version": "3.13.7",
+  "platform": "win32",
+  "base_path": "C:\\Users\\SSDD1\\Documents\\GitHub\\Proyecto_InA\\ina-backend"
+}

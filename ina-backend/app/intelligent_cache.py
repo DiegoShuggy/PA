@@ -67,13 +67,13 @@ class IntelligentCacheSystem:
                 self.redis_available = True
                 logger.info(f"✅ Redis conectado en {redis_host}:{redis_port}")
             except Exception as e:
-                logger.warning(f"⚠️ Redis no disponible: {e}")
+                logger.info(f"ℹ️ Redis no encontrado: {e}")
                 if fallback_to_memory:
                     logger.info("🔄 Usando caché en memoria como fallback")
                 else:
                     raise
         else:
-            logger.warning(f"⚠️ Redis no disponible: módulo redis no instalado")
+            logger.info(f"ℹ️ Redis no instalado, usando caché en memoria")
             if fallback_to_memory:
                 logger.info("🔄 Usando caché en memoria como fallback")
             else:

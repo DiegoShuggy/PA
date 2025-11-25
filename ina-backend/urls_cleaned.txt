@@ -1,0 +1,49 @@
+# URLs PRINCIPALES DUOC UC - VERIFICADAS Y FUNCIONALES
+https://www.duoc.cl/
+https://www.duoc.cl/nosotros/
+https://www.duoc.cl/oferta-academica/
+https://www.duoc.cl/contacto-admision/
+
+# SEDE PLAZA NORTE ESPECÍFICO - URLs VÁLIDAS  
+https://www.duoc.cl/nosotros/donde-estamos/
+https://www.duoc.cl/oferta-academica/carreras/
+https://www.duoc.cl/vida-estudiantil/
+https://www.duoc.cl/calendario-academico/
+
+# SERVICIOS ESTUDIANTILES - ENDPOINTS FUNCIONALES
+https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/
+https://www.duoc.cl/vida-estudiantil/titulados/
+https://www.duoc.cl/vida-estudiantil/deportes/
+https://www.duoc.cl/cultura/
+https://www.duoc.cl/vida-estudiantil/pastoral/
+https://www.duoc.cl/practicas/
+
+# ADMISIÓN Y FINANCIAMIENTO
+https://www.duoc.cl/admision/
+https://www.duoc.cl/admision/financiamiento/
+https://www.duoc.cl/admision/financiamiento/becas-estatales/
+https://www.duoc.cl/portal-de-pago/
+
+# SERVICIOS DIGITALES
+https://www.duoc.cl/alumnos/servicios-digitales/
+https://www.duoc.cl/alumnos/servicios-digitales/cuentas-y-accesos/
+
+# NOTICIAS Y COMUNICACIÓN
+https://www.duoc.cl/noticias/
+https://www.duoc.cl/noticias/noticias/
+
+# INFORMACIÓN INSTITUCIONAL
+https://www.duoc.cl/nosotros/sobre-duoc/historia/
+https://www.duoc.cl/nosotros/sobre-duoc/mision-vision/
+https://www.duoc.cl/nosotros/autoridades/
+https://www.duoc.cl/nosotros/sobre-duoc/transparencia/
+
+# EDUCACIÓN Y CARRERAS
+https://www.duoc.cl/nosotros/donde-estamos/educacion-continua/
+https://www.duoc.cl/postulacion-recibida/
+
+# INVESTIGACIÓN Y DESARROLLO
+https://www.duoc.cl/nosotros/investigacion-aplicada/
+
+# BIBLIOTECAS (URLs corregidas)
+https://bibliotecas.duoc.cl/

@@ -1,8 +1,20 @@
 {
-  "startup_time": "2025-11-24T16:09:57.800541",
-  "last_health_check": "2025-11-24T16:09:57.836140",
-  "status": "degraded",
+  "startup_time": "2025-11-25T18:21:07.465751",
+  "last_health_check": null,
+  "status": "starting",
   "errors": [],
-  "warnings": [],
-  "performance": {}
+  "warnings": [
+    {
+      "timestamp": "2025-11-25T18:28:40.559005",
+      "message": "Request lento: 5.79s",
+      "context": "POST /chat"
+    }
+  ],
+  "performance": {
+    "request_time": {
+      "current_value": 1.1902830600738525,
+      "last_updated": "2025-11-25T18:35:18.070098",
+      "context": "POST /chat"
+    }
+  }
 }

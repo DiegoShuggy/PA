@@ -1,0 +1,98 @@
+{
+  "deployment_id": "deploy_20251125_151515",
+  "deployment_timestamp": "2025-11-25T15:16:50.557309",
+  "configuration": {
+    "python_version_required": "3.11",
+    "required_packages": [
+      "numpy>=1.21.0",
+      "sentence-transformers>=2.2.0",
+      "scikit-learn>=1.0.0",
+      "beautifulsoup4>=4.9.0",
+      "requests>=2.25.0",
+      "aiohttp>=3.8.0",
+      "feedparser>=6.0.0",
+      "redis>=4.0.0",
+      "faiss-cpu>=1.7.0",
+      "spacy>=3.4.0",
+      "psutil>=5.8.0",
+      "schedule>=1.1.0",
+      "cachetools>=4.2.0",
+      "pdfplumber>=0.6.0",
+      "joblib>=1.1.0"
+    ],
+    "optional_packages": [
+      "uvicorn[standard]>=0.18.0",
+      "fastapi>=0.78.0",
+      "python-multipart>=0.0.5"
+    ],
+    "backup_existing": true,
+    "run_tests": true,
+    "create_service": false
+  },
+  "deployment_log": [
+    {
+      "timestamp": "2025-11-25T15:15:15.347473",
+      "step": "Python version check passed: 3.13",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T15:15:15.355710",
+      "step": "Backup creado en C:\\Users\\SSDD1\\Documents\\GitHub\\Proyecto_InA\\ina-backend\\backup_deploy_20251125_151515",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T15:15:46.785825",
+      "step": "Paquetes instalados correctamente",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T15:15:46.786924",
+      "step": "Configuración creada en C:\\Users\\SSDD1\\Documents\\GitHub\\Proyecto_InA\\ina-backend\\enhanced_ai_config.json",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T15:15:46.787604",
+      "step": "Migración de datos completada",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T15:16:02.968516",
+      "step": "Test de importación de módulos - PASSED",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T15:16:35.684999",
+      "step": "Test de inicialización - PASSED",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T15:16:46.490549",
+      "step": "Test de sistema RAG básico - PASSED",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T15:16:50.554442",
+      "step": "Test de sistema de cache - PASSED",
+      "success": true,
+      "details": ""
+    },
+    {
+      "timestamp": "2025-11-25T15:16:50.556923",
+      "step": "Script de inicio creado: C:\\Users\\SSDD1\\Documents\\GitHub\\Proyecto_InA\\ina-backend\\startup_enhanced_ai.py",
+      "success": true,
+      "details": ""
+    }
+  ],
+  "success": true,
+  "python_version": "3.13.7",
+  "platform": "win32",
+  "base_path": "C:\\Users\\SSDD1\\Documents\\GitHub\\Proyecto_InA\\ina-backend"
+}

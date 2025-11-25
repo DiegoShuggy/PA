@@ -1,0 +1,441 @@
+# URLS PRINCIPALES DUOC UC - VERIFICADAS Y FUNCIONALES
+https://www.duoc.cl/
+https://www.duoc.cl/nosotros/
+https://www.duoc.cl/oferta-academica/
+https://www.duoc.cl/contacto-admision/
+
+# SEDE PLAZA NORTE ESPECÍFICO - URLs VÁLIDAS
+https://www.duoc.cl/nosotros/donde-estamos/
+https://www.duoc.cl/nosotros/sedes/
+https://www.duoc.cl/oferta-academica/carreras/
+https://www.duoc.cl/biblioteca/
+https://www.duoc.cl/vida-estudiantil/
+https://www.duoc.cl/calendario-academico/
+https://www.duoc.cl/postulaciones-admision/
+
+# SERVICIOS ESTUDIANTILES - ENDPOINTS FUNCIONALES
+https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/
+https://www.duoc.cl/vida-estudiantil/titulados/
+https://www.duoc.cl/vida-estudiantil/deportes/
+https://www.duoc.cl/cultura/
+https://www.duoc.cl/vida-estudiantil/pastoral/
+https://www.duoc.cl/practicas/
+https://www.duoc.cl/financiamiento/
+
+# BIBLIOTECA Y RECURSOS ACADÉMICOS - URLS FUNCIONALES
+https://www.duoc.cl/biblioteca/
+https://www.duoc.cl/nosotros/servicios-estudiantiles/biblioteca/
+https://www.duoc.cl/investigacion/
+https://www.duoc.cl/noticias/
+https://bibliotecas.duoc.cl/recursos-digitales/
+https://bibliotecas.duoc.cl/normas-apa/
+https://bibliotecas.duoc.cl/tutoriales/
+https://biblioteca.duoc.cl/sitios-web/
+
+# CERTIFICADOS Y DOCUMENTOS
+https://certificados.duoc.cl/
+https://www.duoc.cl/test-oficina-de-titulos-y-certificados/
+https://www.duoc.cl/alumnos/certificados-online/
+https://www.duoc.cl/alumnos/documentos/
+
+# FINANCIAMIENTO Y BECAS
+https://www.duoc.cl/admision/financiamiento/
+https://www.duoc.cl/admision/financiamiento/becas-estatales/
+https://www.duoc.cl/admision/financiamiento/credito-corfo/
+https://www.duoc.cl/admision/financiamiento/becas-internas/
+https://www.duoc.cl/portal-de-pago/
+
+# SERVICIOS DIGITALES
+https://www.duoc.cl/alumnos/servicios-digitales/
+https://www.duoc.cl/alumnos/servicios-digitales/cuentas-y-accesos/
+https://www.duoc.cl/alumnos/servicios-digitales/correo-institucional/
+https://www.duoc.cl/alumnos/servicios-digitales/wifi/
+https://plataforma.duoc.cl/admin/login
+https://www.duoc.cl/bienvenida-duoc-online/
+
+# PRÁCTICAS Y EMPLEO
+https://www2.duoc.cl/practica/login
+https://www.duoc.cl/alumnos/practicas/
+https://www.duoc.cl/empleabilidad/
+https://www.duoc.cl/empleabilidad/portal-laboral/
+https://bolsa.duoc.cl/
+
+# TNE Y TRANSPORTE
+https://www.duoc.cl/sedes/info-tne/
+https://www.duoc.cl/alumnos/beneficios-tne/
+https://www.duoc.cl/sedes/plaza-norte/transporte/
+
+# AYUDA Y SOPORTE
+https://centroayuda.duoc.cl/hc/es-419
+https://centrodeayudaonline.duoc.cl/hc/es-419/
+https://centrodeayudaonline.duoc.cl/hc/es-419/articles/32100564564621-Portal-Experiencia-Vivo
+https://www.duoc.cl/contacto/
+https://www.duoc.cl/contacto/chat-online/
+
+# DOCENTES
+https://www.duoc.cl/docentes/
+https://www.duoc.cl/docentes/servicios-digitales/
+https://www.duoc.cl/docentes/servicios-digitales/portal-docente-experiencia-vivo/
+https://www.duoc.cl/docentes/capacitacion/
+
+# COLABORADORES
+https://www.duoc.cl/colaboradores/
+https://www.duoc.cl/colaboradores/beneficios/
+https://www.duoc.cl/colaboradores/desarrollo-profesional/
+
+# INFORMACIÓN INSTITUCIONAL
+https://www.duoc.cl/institucional/
+https://www.duoc.cl/institucional/historia/
+https://www.duoc.cl/institucional/mision-vision/
+https://www.duoc.cl/institucional/autoridades/
+https://www.duoc.cl/institucional/noticias/
+https://www.duoc.cl/institucional/transparencia/
+
+# CARRERAS Y PROGRAMAS
+https://www.duoc.cl/carreras/
+https://www.duoc.cl/carreras/tecnicas/
+https://www.duoc.cl/carreras/profesionales/
+https://www.duoc.cl/educacion-continua/
+https://www.duoc.cl/postulacion/
+
+# SERVICIOS ADICIONALES PLAZA NORTE
+https://www.duoc.cl/sedes/plaza-norte/estacionamiento/
+https://www.duoc.cl/sedes/plaza-norte/casino/
+https://www.duoc.cl/sedes/plaza-norte/fotocopiadora/
+https://www.duoc.cl/sedes/plaza-norte/enfermeria/
+https://www.duoc.cl/sedes/plaza-norte/direcciones/
+
+# ====================================================================
+# CENTRO DE AYUDA DUOC UC - SISTEMA COMPLETO DE ENLACES
+# ====================================================================
+
+# CENTRO DE AYUDA PRINCIPAL
+https://centroayuda.duoc.cl/hc/es-419
+
+# CATEGORÍAS PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/categories/30141678666125-Admisi%C3%B3n-y-Matr%C3%ADcula
+https://centroayuda.duoc.cl/hc/es-419/categories/30142028615565-Orientaci%C3%B3n-Estudiantes-Nuevos
+https://centroayuda.duoc.cl/hc/es-419/categories/30142067755277-Estudiantes
+https://centroayuda.duoc.cl/hc/es-419/categories/31889884698637-Beneficios-estudiantiles
+https://centroayuda.duoc.cl/hc/es-419/categories/31890014969229-Pagos-y-Deudas
+https://centroayuda.duoc.cl/hc/es-419/categories/31265973977357-Servicios-Digitales
+https://centroayuda.duoc.cl/hc/es-419/categories/30142093504141-Titulados
+https://centroayuda.duoc.cl/hc/es-419/categories/31890297128845-Violencia-y-Discriminaci%C3%B3n
+https://centroayuda.duoc.cl/hc/es-419/categories/30142097446797-Sostenedor
+
+# ====================================================================
+# 1. ADMISIÓN Y MATRÍCULA
+# ====================================================================
+
+# SECCIONES PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/sections/30173709001613-Admisi%C3%B3n-Regular
+https://centroayuda.duoc.cl/hc/es-419/sections/32251435844365-Cambio-de-Carrera-Jornada-o-Sede
+https://centroayuda.duoc.cl/hc/es-419/sections/32251449954061-Cambio-desde-otra-instituci%C3%B3n-a-Duoc-UC
+https://centroayuda.duoc.cl/hc/es-419/sections/32251450605837-Reintegros-y-Reincorporaciones
+
+# ARTÍCULOS DE ADMISIÓN REGULAR
+https://centroayuda.duoc.cl/hc/es-419/articles/30173827568013--Cu%C3%A1ndo-inicia-el-proceso-de-admisi%C3%B3n
+https://centroayuda.duoc.cl/hc/es-419/articles/30203991504653--Cu%C3%A1les-son-los-requisitos-para-postularme
+https://centroayuda.duoc.cl/hc/es-419/articles/30204419750925--Qui%C3%A9n-puede-ser-mi-sostenedor
+
+# ARTÍCULOS DE CAMBIO DE CARRERA, JORNADA O SEDE
+https://centroayuda.duoc.cl/hc/es-419/articles/32251820558221-Admisi%C3%B3n-Especial-Interna-cambio-de-carrera
+https://centroayuda.duoc.cl/hc/es-419/articles/30308211391629--C%C3%B3mo-realizar-una-solicitud-de-cambio-de-jornada-o-sede
+https://centroayuda.duoc.cl/hc/es-419/articles/30338284908429--Puedo-postular-si-tengo-gratuidad
+
+# ARTÍCULOS DE CAMBIO DESDE OTRA INSTITUCIÓN
+https://centroayuda.duoc.cl/hc/es-419/articles/32251993548429--Cu%C3%A1ndo-inicia-el-proceso-de-postulaci%C3%B3n
+https://centroayuda.duoc.cl/hc/es-419/articles/30336761739149--C%C3%B3mo-puedo-convalidar-asignaturas-DUOC
+
+# ARTÍCULOS DE REINTEGROS Y REINCORPORACIONES
+https://centroayuda.duoc.cl/hc/es-419/articles/30204892289549--Cu%C3%A1ndo-inicia-el-proceso-de-Reintegro
+https://centroayuda.duoc.cl/hc/es-419/articles/32252342651149--Cu%C3%A1les-son-los-requisitos-para-postular
+https://centroayuda.duoc.cl/hc/es-419/articles/30141693699981--C%C3%B3mo-puedo-postular-al-Reintegro
+https://centroayuda.duoc.cl/hc/es-419/articles/30141678814349--Qu%C3%A9-hago-si-la-carrera-a-la-que-quiero-postular-no-est%C3%A1-en-el-formulario
+
+# ====================================================================
+# 2. ORIENTACIÓN ESTUDIANTES NUEVOS
+# ====================================================================
+
+# SECCIONES PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/sections/35332912860301-Inscripci%C3%B3n-de-Talleres-Extracurriculares-para-Alumnos-de-Inicio
+https://centroayuda.duoc.cl/hc/es-419/sections/30202289601293-Ingreso
+https://centroayuda.duoc.cl/hc/es-419/sections/30209665855117-Semana-Cero-y-Jornada-de-Inicio
+https://centroayuda.duoc.cl/hc/es-419/sections/33730428242189-Servicios-Digitales
+https://centroayuda.duoc.cl/hc/es-419/sections/30174262169357-Semestre-Cero
+https://centroayuda.duoc.cl/hc/es-419/sections/30209368710925-TNE-Primera-Vez
+https://centroayuda.duoc.cl/hc/es-419/sections/30224494352525-Interrupci%C3%B3n-del-Semestre
+
+# ARTÍCULOS DE TALLERES EXTRACURRICULARES
+https://centroayuda.duoc.cl/hc/es-419/articles/35528298183949--C%C3%B3mo-crear-una-Solicitud-en-L%C3%ADnea-si-tengo-problemas-con-la-inscripci%C3%B3n-de-Talleres-Extracurriculares
+https://centroayuda.duoc.cl/hc/es-419/articles/35344976808589--C%C3%B3mo-inscribir-Talleres-Extracurriculares
+
+# ARTÍCULOS DE INGRESO
+https://centroayuda.duoc.cl/hc/es-419/articles/30202470432013-No-recib%C3%AD-mi-Kit-de-Bienvenida-Correo-de-Bienvenida
+https://centroayuda.duoc.cl/hc/es-419/articles/30202376543117--D%C3%B3nde-puedo-conseguir-mi-horario-de-clases
+
+# ARTÍCULOS DE SEMANA CERO Y JORNADA DE INICIO
+https://centroayuda.duoc.cl/hc/es-419/articles/30209840642317--Qu%C3%A9-es-la-Semana-Cero-o-Jornada-de-Inicio
+https://centroayuda.duoc.cl/hc/es-419/articles/30209966086669--Cu%C3%A1ndo-es-la-Jornada-de-Inicio
+
+# ARTÍCULOS DE SERVICIOS DIGITALES (NUEVOS)
+https://centroayuda.duoc.cl/hc/es-419/articles/33730691064973-Activaci%C3%B3n-de-Servicios-Digitales
+https://centroayuda.duoc.cl/hc/es-419/articles/33731062285197-Explora-las-Plataformas-de-Duoc-UC
+
+# ARTÍCULOS DE SEMESTRE CERO
+https://centroayuda.duoc.cl/hc/es-419/articles/30141678699533--Qu%C3%A9-es-el-Semestre-Cero
+https://centroayuda.duoc.cl/hc/es-419/articles/30208969193869--Cu%C3%A1nto-tiempo-tengo-para-completar-los-cursos
+https://centroayuda.duoc.cl/hc/es-419/articles/30209100867341--Puedo-convalidar-las-asignaturas-de-Semestre-Cero
+
+# ARTÍCULOS DE TNE PRIMERA VEZ
+https://centroayuda.duoc.cl/hc/es-419/articles/30209507090189--Qu%C3%A9-es-la-TNE
+https://centroayuda.duoc.cl/hc/es-419/articles/30209661545997--C%C3%B3mo-es-el-proceso-de-solicitud-de-la-TNE
+
+# ARTÍCULOS DE INTERRUPCIÓN DEL SEMESTRE
+https://centroayuda.duoc.cl/hc/es-419/articles/30226515469837--Qu%C3%A9-es-la-renuncia-y-c%C3%B3mo-puedo-solicitarla
+
+# ====================================================================
+# 3. ESTUDIANTES
+# ====================================================================
+
+# SECCIONES PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/sections/38480011211917-Seguro-m%C3%A9dico
+https://centroayuda.duoc.cl/hc/es-419/sections/36572556072717-Programa-de-Movilidad-Acad%C3%A9mica-Saliente
+https://centroayuda.duoc.cl/hc/es-419/sections/36569484399117-Especializaciones-Escuela-de-Inform%C3%A1tica
+https://centroayuda.duoc.cl/hc/es-419/sections/35332260906125-Inscripci%C3%B3n-de-Talleres-Extracurriculares-para-alumnos-de-continuidad
+https://centroayuda.duoc.cl/hc/es-419/sections/33718683091469-Calendario-acad%C3%A9mico-y-reglamentos
+https://centroayuda.duoc.cl/hc/es-419/sections/30498564570381-Inscripci%C3%B3n-de-Asignaturas
+https://centroayuda.duoc.cl/hc/es-419/sections/32252809336717-Asistencias-e-inasistencias
+https://centroayuda.duoc.cl/hc/es-419/sections/32253954109837-Cr%C3%A9ditos-y-Becas
+https://centroayuda.duoc.cl/hc/es-419/sections/32253086608525-Notas-y-Ex%C3%A1menes
+https://centroayuda.duoc.cl/hc/es-419/sections/32253988346765-TNE
+https://centroayuda.duoc.cl/hc/es-419/sections/30561863525773-TAV-Temporada-Acad%C3%A9mica-de-Verano
+https://centroayuda.duoc.cl/hc/es-419/sections/30560219943181-Pr%C3%A1cticas
+https://centroayuda.duoc.cl/hc/es-419/sections/32253440361485-Continuidad-de-estudios
+https://centroayuda.duoc.cl/hc/es-419/sections/30307549420045-Cambio-de-Carrera-o-Sede
+https://centroayuda.duoc.cl/hc/es-419/sections/30561342601101-Duoc-Laboral
+https://centroayuda.duoc.cl/hc/es-419/sections/30336842601869-Renuncia
+https://centroayuda.duoc.cl/hc/es-419/sections/30338643009165-Suspensi%C3%B3n-Acad%C3%A9mica
+
+# ARTÍCULOS DE SEGURO MÉDICO
+https://centroayuda.duoc.cl/hc/es-419/articles/38480036969997-Certificado-de-Cobertura-de-Accidentes
+
+# ARTÍCULOS DE MOVILIDAD ACADÉMICA
+https://centroayuda.duoc.cl/hc/es-419/articles/37306026855437-Beca-Santander-de-Movilidad-Internacional
+https://centroayuda.duoc.cl/hc/es-419/articles/36572716737421-Preguntas-frecuentes-Programa-de-Movilidad-Acad%C3%A9mica-Saliente-PMAS
+https://centroayuda.duoc.cl/hc/es-419/articles/36572656502285--Qu%C3%A9-es-el-Programa-de-Movilidad-Acad%C3%A9mica-Saliente-PMAS
+
+# ARTÍCULOS DE ESPECIALIZACIONES INFORMÁTICA
+https://centroayuda.duoc.cl/hc/es-419/articles/36570582060301-Oferta-de-Especializaciones
+https://centroayuda.duoc.cl/hc/es-419/articles/36569900047885-Proceso-de-Selecci%C3%B3n-de-Especializaci%C3%B3n-2025-Ingenier%C3%ADa-Inform%C3%A1tica
+https://centroayuda.duoc.cl/hc/es-419/articles/36569577051661-Preguntas-frecuentes-Especializaciones-de-Ingenier%C3%ADa-Inform%C3%A1tica
+
+# ARTÍCULOS DE TALLERES EXTRACURRICULARES CONTINUIDAD
+https://centroayuda.duoc.cl/hc/es-419/articles/35461158393357-Preguntas-frecuentes-Inscripci%C3%B3n-de-Talleres-Extracurriculares
+
+# ARTÍCULOS DE CALENDARIO ACADÉMICO
+https://centroayuda.duoc.cl/hc/es-419/articles/33719813119245-Calendario-acad%C3%A9mico-2025
+
+# ARTÍCULOS DE INSCRIPCIÓN DE ASIGNATURAS
+https://centroayuda.duoc.cl/hc/es-419/articles/30499055520525--Cu%C3%A1ndo-es-la-inscripci%C3%B3n-de-asignaturas
+https://centroayuda.duoc.cl/hc/es-419/articles/30499255339149--C%C3%B3mo-puedo-inscribir-mis-asignaturas
+https://centroayuda.duoc.cl/hc/es-419/articles/30500028878093--Qu%C3%A9-hacer-si-me-quedaron-asignaturas-pendientes-por-inscribir
+https://centroayuda.duoc.cl/hc/es-419/articles/30500558619021--Qu%C3%A9-hacer-si-no-puedo-ingresar-al-Portal-Experiencia-Vivo-Duoc
+https://centroayuda.duoc.cl/hc/es-419/articles/38053897518477-Preguntas-Frecuentes-Inscripci%C3%B3n-de-Asignaturas
+
+# ARTÍCULOS DE ASISTENCIAS E INASISTENCIAS
+https://centroayuda.duoc.cl/hc/es-419/articles/30503353480589--C%C3%B3mo-se-realiza-el-c%C3%A1lculo-de-asistencia
+https://centroayuda.duoc.cl/hc/es-419/articles/30504203276173--Qu%C3%A9-porcentaje-de-asistencia-necesito-para-no-reprobar
+https://centroayuda.duoc.cl/hc/es-419/articles/30503605299213--C%C3%B3mo-puedo-justificar-inasistencias-a-evaluaciones
+https://centroayuda.duoc.cl/hc/es-419/articles/30503808459149--Qu%C3%A9-razones-puedo-presentar-para-justificar-mis-inasistencias-a-evaluaciones
+https://centroayuda.duoc.cl/hc/es-419/articles/30535023293837--C%C3%B3mo-puedo-saber-si-Reprob%C3%A9-por-Inasistencia
+https://centroayuda.duoc.cl/hc/es-419/articles/30535267721869--Qu%C3%A9-hacer-si-creo-que-no-reprob%C3%A9-por-inasistencias
+
+# ARTÍCULOS DE CRÉDITOS Y BECAS
+https://centroayuda.duoc.cl/hc/es-419/articles/30564834218381--C%C3%B3mo-postular-a-la-Gratuidad
+https://centroayuda.duoc.cl/hc/es-419/articles/30565508314509--Qu%C3%A9-es-el-CAE-y-c%C3%B3mo-puedo-solicitarlo
+
+# ARTÍCULOS DE NOTAS Y EXÁMENES
+https://centroayuda.duoc.cl/hc/es-419/articles/30535739956749--Qu%C3%A9-es-una-Nota-Pendiente
+https://centroayuda.duoc.cl/hc/es-419/articles/30536145938573--C%C3%B3mo-puedo-solicitar-dejar-una-asignatura-con-Nota-Pendiente
+https://centroayuda.duoc.cl/hc/es-419/articles/30559867922317--Cu%C3%A1ndo-es-el-per%C3%ADodo-de-ex%C3%A1menes
+https://centroayuda.duoc.cl/hc/es-419/articles/30560018504333--Puedo-solicitar-una-nueva-fecha-para-dar-el-examen
+https://centroayuda.duoc.cl/hc/es-419/articles/30560132677901--Cu%C3%A1nto-tiempo-tengo-para-saber-mis-notas
+
+# ARTÍCULOS DE TNE
+https://centroayuda.duoc.cl/hc/es-419/articles/32254519997453--Qu%C3%A9-hacer-si-perd%C3%AD-mi-TNE
+https://centroayuda.duoc.cl/hc/es-419/articles/32254548506765--C%C3%B3mo-revalidar-mi-TNE
+
+# ARTÍCULOS DE TAV (TEMPORADA ACADÉMICA DE VERANO)
+https://centroayuda.duoc.cl/hc/es-419/articles/30562090473613--Qu%C3%A9-es-la-Temporada-Acad%C3%A9mica-de-Verano
+https://centroayuda.duoc.cl/hc/es-419/articles/30562254077837--Qui%C3%A9nes-pueden-participar-en-el-TAV
+https://centroayuda.duoc.cl/hc/es-419/articles/30562575366925--Debo-pagar-para-participar-en-el-TAV
+https://centroayuda.duoc.cl/hc/es-419/articles/30562710185869--Cu%C3%A1ndo-puedo-inscribirme-a-la-Temporada-Acad%C3%A9mica-de-Verano
+
+# ARTÍCULOS DE PRÁCTICAS
+https://centroayuda.duoc.cl/hc/es-419/articles/30560828266509--Cu%C3%A1ntas-horas-de-pr%C3%A1ctica-debo-realizar
+https://centroayuda.duoc.cl/hc/es-419/articles/30560550053517--C%C3%B3mo-puedo-validar-mi-Centro-de-Pr%C3%A1ctica
+https://centroayuda.duoc.cl/hc/es-419/articles/30561303734797--Puedo-realizar-la-Pr%C3%A1ctica-si-est%C3%A1-como-Nota-Pendiente
+https://centroayuda.duoc.cl/hc/es-419/articles/30561140196109--C%C3%B3mo-puedo-Convalidar-mi-Pr%C3%A1ctica-Laboral
+https://centroayuda.duoc.cl/hc/es-419/articles/30561028818445--C%C3%B3mo-consigo-el-Seguro-de-Accidentes-a-la-empresa
+
+# ARTÍCULOS DE CONTINUIDAD DE ESTUDIOS
+https://centroayuda.duoc.cl/hc/es-419/articles/30497397424141--D%C3%B3nde-puedo-firmar-mi-Contrato-de-Continuidad
+https://centroayuda.duoc.cl/hc/es-419/articles/30497615264909--Por-qu%C3%A9-es-importante-firmar-el-Contrato-de-Continuidad
+https://centroayuda.duoc.cl/hc/es-419/articles/30497967554189--C%C3%B3mo-saber-si-mi-Contrato-de-Continuidad-est%C3%A1-firmado
+https://centroayuda.duoc.cl/hc/es-419/articles/30498494223373--Qu%C3%A9-hacer-si-tengo-problemas-para-firmar-mi-Contrato-de-Continuidad
+
+# ARTÍCULOS DE CAMBIO DE CARRERA O SEDE
+https://centroayuda.duoc.cl/hc/es-419/articles/30308979503117-A%C3%BAn-no-responden-mi-Admisi%C3%B3n-Especial-Debo-tomar-asignaturas
+https://centroayuda.duoc.cl/hc/es-419/articles/30338529409805--Debo-pagar-mi-matr%C3%ADcula-si-tengo-gratuidad
+
+# ARTÍCULOS DE DUOC LABORAL
+https://centroayuda.duoc.cl/hc/es-419/articles/30561483805837--Qu%C3%A9-es-Duoc-Laboral
+https://centroayuda.duoc.cl/hc/es-419/articles/30561591358477--C%C3%B3mo-solucionar-problemas-de-acceso-a-DUOC-Laboral
+
+# ARTÍCULOS DE RENUNCIA
+https://centroayuda.duoc.cl/hc/es-419/articles/30337653041165--Qu%C3%A9-es-la-Renuncia-y-c%C3%B3mo-solicitarla
+https://centroayuda.duoc.cl/hc/es-419/articles/30337967320461--Qu%C3%A9-es-la-Caducidad-de-alumno-a-regular-y-c%C3%B3mo-reincorporarme
+
+# ARTÍCULOS DE SUSPENSIÓN ACADÉMICA
+https://centroayuda.duoc.cl/hc/es-419/articles/30337233746317--Qu%C3%A9-es-la-Suspensi%C3%B3n-Acad%C3%A9mica-y-c%C3%B3mo-solicitarla
+
+# ====================================================================
+# 4. BENEFICIOS ESTUDIANTILES
+# ====================================================================
+
+# SECCIONES PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/sections/30228183020301-Programas-de-Apoyo-al-Estudiante
+https://centroayuda.duoc.cl/hc/es-419/sections/38323361292941-Programa-de-Acompa%C3%B1amiento-Estudiantes-en-situaci%C3%B3n-de-Discapacidad-PAEDIS
+https://centroayuda.duoc.cl/hc/es-419/sections/34877029895181-Bienestar
+
+# ARTÍCULOS DE PROGRAMAS DE APOYO
+https://centroayuda.duoc.cl/hc/es-419/articles/30307126308109-Programa-de-Emergencia
+https://centroayuda.duoc.cl/hc/es-419/articles/30305192863373-Programa-de-Transporte
+https://centroayuda.duoc.cl/hc/es-419/articles/36108609995021-Programa-de-Materiales
+
+# ARTÍCULOS DE PAEDIS
+https://centroayuda.duoc.cl/hc/es-419/articles/34877482210189--Qu%C3%A9-es-el-Programa-de-Acompa%C3%B1amiento-Estudiantes-con-Discapacidad-PAEDIS
+https://centroayuda.duoc.cl/hc/es-419/articles/38323485720589--Qu%C3%A9-requisitos-debo-cumplir-para-ingresar-al-PAEDIS
+https://centroayuda.duoc.cl/hc/es-419/articles/38323557074573--Qu%C3%A9-apoyos-entrega-el-PAEDIS
+
+# ARTÍCULOS DE BIENESTAR
+https://centroayuda.duoc.cl/hc/es-419/articles/39803077294733-Semana-del-Bienestar-y-Salud-Mental-Duoc-UC
+https://centroayuda.duoc.cl/hc/es-419/articles/34879018776205-Centro-Virtual-de-Aprendizaje-CVA
+https://centroayuda.duoc.cl/hc/es-419/articles/34877977330445-Apoyo-personalizado-para-t%C3%A9cnicas-de-estudio
+https://centroayuda.duoc.cl/hc/es-419/articles/34877114417165-Apoyo-psicol%C3%B3gico
+
+# ====================================================================
+# 5. PAGOS Y DEUDAS
+# ====================================================================
+
+# SECCIONES PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/sections/32254690156429-Matr%C3%ADcula-y-Arancel
+https://centroayuda.duoc.cl/hc/es-419/sections/32254699120397-Deudas
+
+# ARTÍCULOS DE MATRÍCULA Y ARANCEL
+https://centroayuda.duoc.cl/hc/es-419/articles/30340202002061--Cu%C3%A1ndo-tengo-que-pagar-mi-matr%C3%ADcula-y-qu%C3%A9-pasa-si-no-lo-hago-a-tiempo
+https://centroayuda.duoc.cl/hc/es-419/articles/30339840062989--Cu%C3%A1les-son-los-m%C3%A9todos-de-pago-de-las-mensualidades-y-matr%C3%ADculas
+https://centroayuda.duoc.cl/hc/es-419/articles/30339209797005--Tengo-que-pagar-matr%C3%ADcula-si-tengo-gratuidad
+https://centroayuda.duoc.cl/hc/es-419/articles/30339510172301--Tengo-que-pagar-matr%C3%ADcula-si-tengo-CAE
+
+# ARTÍCULOS DE DEUDAS
+https://centroayuda.duoc.cl/hc/es-419/articles/30564079648269--Puedo-repactar-mi-deuda
+https://centroayuda.duoc.cl/hc/es-419/articles/30564160769421--Puedo-pedir-repactaci%C3%B3n-si-no-me-notificaron
+https://centroayuda.duoc.cl/hc/es-419/articles/30564443937549--C%C3%B3mo-soluciono-los-problemas-al-firmar-mi-Contrato-de-Deuda
+
+# ====================================================================
+# 6. SERVICIOS DIGITALES
+# ====================================================================
+
+# SECCIONES PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/sections/39006152804493-Vivo-Duoc-UC
+https://centroayuda.duoc.cl/hc/es-419/sections/31266022889997-Acceso-a-Servicios-Digitales
+https://centroayuda.duoc.cl/hc/es-419/sections/31266025601293-Herramientas-Tecnol%C3%B3gicas-y-Convenios
+https://centroayuda.duoc.cl/hc/es-419/sections/31266044583181-Comunicaci%C3%B3n-y-Colaboraci%C3%B3n
+https://centroayuda.duoc.cl/hc/es-419/sections/31266086162189-Seguridad-Inform%C3%A1tica
+
+# ARTÍCULOS DE VIVO DUOC UC
+https://centroayuda.duoc.cl/hc/es-419/articles/39006227790733-App-Vivo-Qu%C3%A9-pasa-si-no-veo-mis-datos-con-tutorial
+
+# ARTÍCULOS DE ACCESO A SERVICIOS DIGITALES
+https://centroayuda.duoc.cl/hc/es-419/articles/31266236046477--C%C3%B3mo-puedo-gestionar-mi-cuenta-y-accesos-en-Duoc-UC
+https://centroayuda.duoc.cl/hc/es-419/articles/31266352064525--C%C3%B3mo-puedo-conectarme-a-la-red-Wifi-de-Duoc-UC
+
+# ARTÍCULOS DE HERRAMIENTAS TECNOLÓGICAS
+https://centroayuda.duoc.cl/hc/es-419/articles/31266478943757-Microsoft-365-Todo-lo-que-necesitas-para-estudiar-en-Duoc-UC
+https://centroayuda.duoc.cl/hc/es-419/articles/31266577241229-Microsoft-Azure-Dev-Tools-for-Teaching-Herramientas-Pro-para-tu-carrera
+https://centroayuda.duoc.cl/hc/es-419/articles/31266635809549-Convenio-Adobe-Duoc-UC-Creatividad-sin-l%C3%ADmites
+https://centroayuda.duoc.cl/hc/es-419/articles/31266713854221-Convenio-Suite-Autodesk-Duoc-UC-Herramientas-para-dise%C3%B1ar-tu-futuro
+
+# ARTÍCULOS DE COMUNICACIÓN Y COLABORACIÓN
+https://centroayuda.duoc.cl/hc/es-419/articles/31266797493773-Correo-Institucional-Duoc-UC-Tu-clave-para-estar-al-d%C3%ADa
+https://centroayuda.duoc.cl/hc/es-419/articles/31266905697037-Microsoft-Teams-en-Duoc-UC-Colabora-y-comun%C3%ADcate-f%C3%A1cilmente
+
+# ARTÍCULOS DE SEGURIDAD INFORMÁTICA
+https://centroayuda.duoc.cl/hc/es-419/articles/35999617868813-Tu-cuenta-protegida-activaci%C3%B3n-de-MFA
+https://centroayuda.duoc.cl/hc/es-419/articles/31267000686733--Qu%C3%A9-es-la-Seguridad-de-la-Informaci%C3%B3n
+https://centroayuda.duoc.cl/hc/es-419/articles/31267327822861--Cu%C3%A1l-es-mi-responsabilidad-como-alumno-de-Duoc-UC
+https://centroayuda.duoc.cl/hc/es-419/articles/31267244645773--Cu%C3%A1les-son-las-amenazas-cibern%C3%A9ticas-m%C3%A1s-comunes
+https://centroayuda.duoc.cl/hc/es-419/articles/31267135379725-Tips-para-proteger-mi-informaci%C3%B3n-y-la-de-Duoc-UC
+https://centroayuda.duoc.cl/hc/es-419/articles/31267096941837--Qu%C3%A9-hacer-si-enfrento-un-problema-de-seguridad-de-la-informaci%C3%B3n
+
+# ====================================================================
+# 7. TITULADOS
+# ====================================================================
+
+# SECCIONES PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/sections/30224571877005-Diploma-y-Ceremonia-de-T%C3%ADtulos
+https://centroayuda.duoc.cl/hc/es-419/sections/30224535234573-Certificados
+https://centroayuda.duoc.cl/hc/es-419/sections/30224552310669-Cuenta-de-Titulados
+
+# ARTÍCULOS DE DIPLOMA Y CEREMONIA
+https://centroayuda.duoc.cl/hc/es-419/articles/30597192092813--C%C3%B3mo-puedo-saber-la-fecha-de-mi-Ceremonia-de-Titulaci%C3%B3n
+https://centroayuda.duoc.cl/hc/es-419/articles/30597500129933--D%C3%B3nde-puedo-Retirar-mi-T%C3%ADtulo-si-no-asist%C3%AD-a-mi-Ceremonia-de-T%C3%ADtulaci%C3%B3n
+
+# ARTÍCULOS DE CERTIFICADOS
+https://centroayuda.duoc.cl/hc/es-419/articles/30595674827149--C%C3%B3mo-puedo-descargar-mi-Certificado-de-T%C3%ADtulo
+
+# ARTÍCULOS DE CUENTA DE TITULADOS
+https://centroayuda.duoc.cl/hc/es-419/articles/32255682508429--Cu%C3%A1les-son-mis-credenciales-de-titulado
+https://centroayuda.duoc.cl/hc/es-419/articles/30596928429581--C%C3%B3mo-puedo-crear-mi-cuenta-de-Titulados
+https://centroayuda.duoc.cl/hc/es-419/articles/30596722324749--C%C3%B3mo-solucionar-los-problemas-para-ingresar-a-mi-Cuenta-de-Titulados
+
+# ====================================================================
+# 8. VIOLENCIA Y DISCRIMINACIÓN
+# ====================================================================
+
+# SECCIONES PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/sections/30616499763981-Violencia-Sexual-y-de-G%C3%A9nero
+
+# ARTÍCULOS DE VIOLENCIA SEXUAL Y DE GÉNERO
+https://centroayuda.duoc.cl/hc/es-419/articles/30617527917581--Qu%C3%A9-conductas-son-causales-de-denuncia
+https://centroayuda.duoc.cl/hc/es-419/articles/30616798356493--C%C3%B3mo-puedo-contactar-con-la-Unidad-de-Apoyo
+https://centroayuda.duoc.cl/hc/es-419/articles/31638144199949-Canal-de-Denuncias-y-Consultas-Duoc-UC
+
+# ====================================================================
+# 9. SOSTENEDOR
+# ====================================================================
+
+# SECCIONES PRINCIPALES
+https://centroayuda.duoc.cl/hc/es-419/sections/30224587860493-Solicitudes
+
+# ARTÍCULOS DE SOLICITUDES
+https://centroayuda.duoc.cl/hc/es-419/articles/30598159298829--C%C3%B3mo-solicitar-certificados-del-alumno
+https://centroayuda.duoc.cl/hc/es-419/articles/30597892186125--Qu%C3%A9-datos-del-alumno-pueden-solicitar-los-Sostenedores
+
+# ====================================================================
+# ENLACES ADICIONALES IMPORTANTES
+# ====================================================================
+
+# CENTRO DE AYUDA PARA ESTUDIANTES ONLINE
+https://centrodeayudaonline.duoc.cl/hc/es-419
+
+# REDES SOCIALES DUOC UC
+https://www.facebook.com/DuocUC/?locale=es_LA
+https://www.instagram.com/duocuc_cl/?hl=es
+https://www.youtube.com/channel/UCnt0LJxzvDv1o4pOCOs143Q
+https://cl.linkedin.com/company/duocuc
+
+# PORTAL PRINCIPAL ESTUDIANTES
+https://www.duoc.cl/alumnos/

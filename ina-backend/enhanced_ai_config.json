@@ -1,0 +1,25 @@
+{
+  "system_version": "enhanced_ai_v2.0",
+  "deployment_id": "deploy_20251125_151515",
+  "deployment_timestamp": "2025-11-25T15:15:46.786170",
+  "performance_optimization": {
+    "cache_enabled": true,
+    "auto_scaling_enabled": true,
+    "monitoring_enabled": true
+  },
+  "knowledge_expansion": {
+    "auto_expansion_enabled": true,
+    "expansion_interval_hours": 48,
+    "max_sources_per_expansion": 50
+  },
+  "rag_system": {
+    "hybrid_retrieval_enabled": true,
+    "cross_encoder_reranking": true,
+    "semantic_cache_enabled": true
+  },
+  "logging": {
+    "level": "INFO",
+    "file_rotation": true,
+    "max_file_size_mb": 100
+  }
+}

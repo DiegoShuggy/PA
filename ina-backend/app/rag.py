@@ -3,6 +3,7 @@
 import ollama
 from typing import List, Dict, Optional
 import logging
+import json
 from app.qr_generator import qr_generator
 import traceback
 import hashlib
@@ -1245,7 +1246,14 @@ No entiendo completamente '{original_query}'.
                 for k, v in metadata.items():
                     if k == 'timestamp':
                         continue
-                    enhanced_metadata[k] = v
+                    # Convertir listas a strings para ChromaDB
+                    if isinstance(v, list):
+                        enhanced_metadata[k] = ', '.join(str(item) for item in v) if v else ''
+                    # Convertir diccionarios a strings JSON para ChromaDB
+                    elif isinstance(v, dict):
+                        enhanced_metadata[k] = json.dumps(v) if v else '{}'
+                    else:
+                        enhanced_metadata[k] = v
                 # Asegurar claves mínimas si faltan
                 enhanced_metadata.setdefault('source', metadata.get('source', 'unknown'))
                 enhanced_metadata.setdefault('category', metadata.get('category', 'general'))

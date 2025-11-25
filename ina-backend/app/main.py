@@ -46,6 +46,7 @@ from app.advanced_analytics import advanced_analytics
 from sqlalchemy import text
 from app.training_data_loader import training_loader
 from app.async_ingest import async_add_urls
+from app.enhanced_response_generator import enhanced_generator
 # Alias histórico: compatibilidad con endpoints que referencian `auto_trainer`
 auto_trainer = training_loader
 
@@ -519,13 +520,29 @@ async def chat(message: Message, request: Request):
             # 🔥 DECLARAR VARIABLES IMPORTANTES AL INICIO
             followup_suggestions = []
             
-            # get_ai_response es síncrona, NO usar await
-            response_data = get_ai_response(
-                question, 
-                context_results, 
-                conversational_context=conversational_context,
-                user_profile=user_profile.__dict__ if user_profile else None
-            )
+            # ✨ NUEVO: INTENTAR RESPUESTA MEJORADA PRIMERO
+            enhanced_response = enhanced_generator.generate_enhanced_response(question)
+            
+            if enhanced_response["is_enhanced"]:
+                logger.info(f"🎯 Usando respuesta específica mejorada para: {enhanced_response['query_type']}")
+                response_data = {
+                    "response": enhanced_response["response"],
+                    "text": enhanced_response["response"],
+                    "success": True,
+                    "enhanced_type": enhanced_response["query_type"],
+                    "has_context": True,
+                    "sources": ["DuocUC Knowledge Base"],
+                    "qr_codes": {}
+                }
+            else:
+                logger.info("🔍 Usando sistema RAG tradicional")
+                # get_ai_response es síncrona, NO usar await
+                response_data = get_ai_response(
+                    question, 
+                    context_results, 
+                    conversational_context=conversational_context,
+                    user_profile=user_profile.__dict__ if user_profile else None
+                )
             
             # 🔥 GENERAR SUGERENCIAS INTELIGENTES
             if conversation_context:

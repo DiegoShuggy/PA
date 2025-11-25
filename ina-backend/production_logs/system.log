@@ -1,0 +1,237 @@
+2025-11-25 15:59:49,600 - metrics - INFO - {"timestamp": "2025-11-25T15:59:49.600120", "metric": "request_time", "value": 24.59102153778076, "context": "GET /health"}
+2025-11-25 15:59:49,636 - ProductionMonitor - WARNING - WARNING en GET /health: Request lento: 24.59s
+2025-11-25 16:00:45,514 - metrics - INFO - {"timestamp": "2025-11-25T16:00:45.514358", "metric": "request_time", "value": 0.0362095832824707, "context": "POST /ask"}
+2025-11-25 16:01:05,338 - metrics - INFO - {"timestamp": "2025-11-25T16:01:05.338373", "metric": "request_time", "value": 0.0012388229370117188, "context": "POST /ask"}
+2025-11-25 16:02:30,657 - metrics - INFO - {"timestamp": "2025-11-25T16:02:30.657346", "metric": "request_time", "value": 0.01143336296081543, "context": "GET /docs"}
+2025-11-25 16:02:34,434 - metrics - INFO - {"timestamp": "2025-11-25T16:02:34.434705", "metric": "request_time", "value": 0.8094067573547363, "context": "GET /openapi.json"}
+2025-11-25 16:02:40,989 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:02:51,013 - metrics - INFO - {"timestamp": "2025-11-25T16:02:51.013109", "metric": "request_time", "value": 0.0005521774291992188, "context": "POST /ask"}
+2025-11-25 16:03:14,502 - metrics - INFO - {"timestamp": "2025-11-25T16:03:14.501913", "metric": "request_time", "value": 0.001135110855102539, "context": "POST /ask"}
+2025-11-25 16:03:22,412 - metrics - INFO - {"timestamp": "2025-11-25T16:03:22.412358", "metric": "request_time", "value": 0.0011665821075439453, "context": "POST /ask"}
+2025-11-25 16:07:41,015 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:10:59,865 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2025-11-25 16:11:00,012 - metrics - INFO - {"timestamp": "2025-11-25T16:11:00.010702", "metric": "request_time", "value": 25.313228845596313, "context": "GET /health"}
+2025-11-25 16:11:00,057 - ProductionMonitor - WARNING - WARNING en GET /health: Request lento: 25.31s
+2025-11-25 16:11:56,380 - metrics - INFO - {"timestamp": "2025-11-25T16:11:56.379910", "metric": "request_time", "value": 0.022350549697875977, "context": "POST /ask"}
+2025-11-25 16:12:28,793 - metrics - INFO - {"timestamp": "2025-11-25T16:12:28.792676", "metric": "request_time", "value": 0.0042493343353271484, "context": "POST /ask"}
+2025-11-25 16:12:41,061 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:13:12,586 - metrics - INFO - {"timestamp": "2025-11-25T16:13:12.586833", "metric": "request_time", "value": 0.013561487197875977, "context": "GET /docs"}
+2025-11-25 16:13:12,902 - metrics - INFO - {"timestamp": "2025-11-25T16:13:12.902912", "metric": "request_time", "value": 0.039603233337402344, "context": "GET /openapi.json"}
+2025-11-25 16:13:20,678 - metrics - INFO - {"timestamp": "2025-11-25T16:13:20.678594", "metric": "request_time", "value": 0.0006580352783203125, "context": "POST /ask"}
+2025-11-25 16:13:39,685 - metrics - INFO - {"timestamp": "2025-11-25T16:13:39.685259", "metric": "request_time", "value": 0.002899646759033203, "context": "POST /ask"}
+2025-11-25 16:14:03,333 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: ¿Dónde está el Punto Estudiantil en Plaza Norte?
+2025-11-25 16:14:04,567 - app.classifier - INFO - Keyword classification - Pregunta: '¿Dónde está el Punto Estudiantil en Plaza Norte?' -> 'institucionales' (confianza: 1.00)
+2025-11-25 16:14:04,568 - app.main - INFO - Categoría detectada: institucionales
+2025-11-25 16:14:08,100 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'institucionales'
+2025-11-25 16:14:10,632 - app.response_feedback - INFO - Nueva sesión de feedback creada: f6e704c0-c0c9-42a1-b0d6-a106e3f2fdab
+2025-11-25 16:14:12,376 - metrics - INFO - {"timestamp": "2025-11-25T16:14:12.376272", "metric": "request_time", "value": 9.158032178878784, "context": "POST /ask"}
+2025-11-25 16:14:12,381 - ProductionMonitor - WARNING - WARNING en POST /ask: Request lento: 9.16s
+2025-11-25 16:14:29,984 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: ¿Cuáles son los horarios del Punto Estudiantil en Plaza Norte?
+2025-11-25 16:14:30,024 - app.classifier - INFO - Keyword classification - Pregunta: '¿Cuáles son los horarios del Punto Estudiantil en Plaza Norte?' -> 'institucionales' (confianza: 0.55)
+2025-11-25 16:14:30,024 - app.main - INFO - Categoría detectada: institucionales
+2025-11-25 16:14:30,503 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'institucionales'
+2025-11-25 16:14:31,034 - app.response_feedback - INFO - Nueva sesión de feedback creada: 189a0bfa-1d1d-4fc1-b944-600cd9a92cd8
+2025-11-25 16:14:31,643 - metrics - INFO - {"timestamp": "2025-11-25T16:14:31.643000", "metric": "request_time", "value": 1.6591503620147705, "context": "POST /ask"}
+2025-11-25 16:14:33,682 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: ¿Qué servicios ofrece el Punto Estudiantil?
+2025-11-25 16:14:33,734 - app.classifier - INFO - Fallback to topic classifier - Pregunta: '¿Qué servicios ofrece el Punto Estudiantil?' -> 'asuntos_estudiantiles'
+2025-11-25 16:14:33,734 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 16:14:34,207 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 16:14:34,266 - app.response_feedback - INFO - Nueva sesión de feedback creada: 9efb0fda-1417-4353-aca4-89fab2ff6285
+2025-11-25 16:14:35,308 - metrics - INFO - {"timestamp": "2025-11-25T16:14:35.308527", "metric": "request_time", "value": 1.6264677047729492, "context": "POST /ask"}
+2025-11-25 16:14:37,326 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: ¿Dónde puedo renovar mi TNE?
+2025-11-25 16:14:37,354 - app.classifier - INFO - Keyword classification - Pregunta: '¿Dónde puedo renovar mi TNE?' -> 'asuntos_estudiantiles' (confianza: 0.55)
+2025-11-25 16:14:37,355 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 16:14:37,741 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 16:14:37,856 - app.response_feedback - INFO - Nueva sesión de feedback creada: b2375aaa-a1e4-4aa3-8c8f-5b622c335a15
+2025-11-25 16:14:38,653 - metrics - INFO - {"timestamp": "2025-11-25T16:14:38.653859", "metric": "request_time", "value": 1.3280324935913086, "context": "POST /ask"}
+2025-11-25 16:14:40,698 - app.content_filter - INFO - Pregunta permitida por contexto institucional: ¿Cómo puedo inscribir asignaturas?
+2025-11-25 16:14:40,758 - app.classifier - INFO - Fallback to topic classifier - Pregunta: '¿Cómo puedo inscribir asignaturas?' -> 'otros'
+2025-11-25 16:14:40,759 - app.main - INFO - Categoría detectada: otros
+2025-11-25 16:14:41,251 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'otros'
+2025-11-25 16:14:41,343 - app.response_feedback - INFO - Nueva sesión de feedback creada: 17354387-208d-4621-bdaf-cfdcbf3f9e65
+2025-11-25 16:14:41,856 - metrics - INFO - {"timestamp": "2025-11-25T16:14:41.856452", "metric": "request_time", "value": 1.1616880893707275, "context": "POST /ask"}
+2025-11-25 16:14:43,896 - app.content_filter - INFO - Pregunta permitida por términos institucionales: ¿Cuándo son las matrículas para 2025?
+2025-11-25 16:14:43,934 - app.classifier - INFO - Fallback to topic classifier - Pregunta: '¿Cuándo son las matrículas para 2025?' -> 'asuntos_estudiantiles'
+2025-11-25 16:14:43,935 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 16:14:44,307 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 16:14:44,405 - app.response_feedback - INFO - Nueva sesión de feedback creada: 2534d066-cb6f-4759-ba68-883a6196e4b1
+2025-11-25 16:14:45,137 - metrics - INFO - {"timestamp": "2025-11-25T16:14:45.137198", "metric": "request_time", "value": 1.2422139644622803, "context": "POST /ask"}
+2025-11-25 16:17:41,068 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:22:41,074 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:27:41,086 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:32:41,091 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:37:41,097 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:42:41,106 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:47:41,112 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:52:41,117 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 16:57:41,123 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 18:21:07,482 - metrics - INFO - {"timestamp": "2025-11-25T18:21:07.482112", "metric": "request_time", "value": 2.0068233013153076, "context": "POST /chat"}
+2025-11-25 18:25:37,236 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 18:28:18,119 - metrics - INFO - {"timestamp": "2025-11-25T18:28:18.119293", "metric": "request_time", "value": 0.0003833770751953125, "context": "OPTIONS /chat"}
+2025-11-25 18:28:18,125 - app.content_filter - INFO - Pregunta permitida por términos institucionales: hola ina
+2025-11-25 18:28:18,165 - app.classifier - INFO - Keyword classification - Pregunta: 'hola ina' -> 'institucionales' (confianza: 1.00)
+2025-11-25 18:28:18,165 - app.main - INFO - Categoría detectada: institucionales
+2025-11-25 18:28:18,585 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'institucionales'
+2025-11-25 18:28:18,696 - app.response_feedback - INFO - Nueva sesión de feedback creada: b819508e-ab1a-454f-95e1-b85799f5e707
+2025-11-25 18:28:19,574 - metrics - INFO - {"timestamp": "2025-11-25T18:28:19.574773", "metric": "request_time", "value": 1.4507241249084473, "context": "POST /chat"}
+2025-11-25 18:28:24,069 - metrics - INFO - {"timestamp": "2025-11-25T18:28:24.069796", "metric": "request_time", "value": 0.0001475811004638672, "context": "OPTIONS /feedback/response"}
+2025-11-25 18:28:24,102 - app.response_feedback - INFO - Feedback básico guardado para sesión b819508e-ab1a-454f-95e1-b85799f5e707: satisfecho=True
+2025-11-25 18:28:24,107 - metrics - INFO - {"timestamp": "2025-11-25T18:28:24.106979", "metric": "request_time", "value": 0.0325927734375, "context": "POST /feedback/response"}
+2025-11-25 18:28:34,770 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: quiero sacar mi certificado de alumno regular
+2025-11-25 18:28:34,819 - app.classifier - INFO - Keyword classification - Pregunta: 'quiero sacar mi certificado de alumno regular' -> 'asuntos_estudiantiles' (confianza: 1.00)
+2025-11-25 18:28:34,819 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:28:35,213 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:28:39,479 - app.response_feedback - INFO - Nueva sesión de feedback creada: 3bcd7f27-e2a0-4b37-aae0-9212b7449aff
+2025-11-25 18:28:40,557 - metrics - INFO - {"timestamp": "2025-11-25T18:28:40.557132", "metric": "request_time", "value": 5.786834478378296, "context": "POST /chat"}
+2025-11-25 18:28:40,560 - ProductionMonitor - WARNING - WARNING en POST /chat: Request lento: 5.79s
+2025-11-25 18:28:43,486 - app.response_feedback - INFO - Feedback básico guardado para sesión 3bcd7f27-e2a0-4b37-aae0-9212b7449aff: satisfecho=True
+2025-11-25 18:28:43,489 - metrics - INFO - {"timestamp": "2025-11-25T18:28:43.489846", "metric": "request_time", "value": 0.025209426879882812, "context": "POST /feedback/response"}
+2025-11-25 18:30:01,430 - app.content_filter - INFO - Permitiendo consulta por defecto: quiero saber sobre el estacionamiento
+2025-11-25 18:30:01,479 - app.classifier - INFO - Fallback to topic classifier - Pregunta: 'quiero saber sobre el estacionamiento' -> 'otros'
+2025-11-25 18:30:01,479 - app.main - INFO - Categoría detectada: otros
+2025-11-25 18:30:01,735 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'otros'
+2025-11-25 18:30:01,798 - app.response_feedback - INFO - Nueva sesión de feedback creada: 59203478-0023-46bb-bf7c-2e885b5965a0
+2025-11-25 18:30:02,594 - metrics - INFO - {"timestamp": "2025-11-25T18:30:02.594337", "metric": "request_time", "value": 1.1658210754394531, "context": "POST /chat"}
+2025-11-25 18:30:14,256 - app.response_feedback - INFO - Feedback básico guardado para sesión 59203478-0023-46bb-bf7c-2e885b5965a0: satisfecho=True
+2025-11-25 18:30:14,260 - metrics - INFO - {"timestamp": "2025-11-25T18:30:14.260525", "metric": "request_time", "value": 0.024535417556762695, "context": "POST /feedback/response"}
+2025-11-25 18:30:19,142 - app.content_filter - INFO - Pregunta permitida por contexto institucional: donde veo mis notas
+2025-11-25 18:30:19,184 - app.classifier - INFO - Fallback to topic classifier - Pregunta: 'donde veo mis notas' -> 'otros'
+2025-11-25 18:30:19,184 - app.main - INFO - Categoría detectada: otros
+2025-11-25 18:30:19,434 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'otros'
+2025-11-25 18:30:19,535 - app.response_feedback - INFO - Nueva sesión de feedback creada: 0d064b27-6f9f-4a1e-9da9-de445628f9c3
+2025-11-25 18:30:20,384 - metrics - INFO - {"timestamp": "2025-11-25T18:30:20.384382", "metric": "request_time", "value": 1.242757797241211, "context": "POST /chat"}
+2025-11-25 18:30:23,415 - app.response_feedback - INFO - Feedback básico guardado para sesión 0d064b27-6f9f-4a1e-9da9-de445628f9c3: satisfecho=True
+2025-11-25 18:30:23,419 - metrics - INFO - {"timestamp": "2025-11-25T18:30:23.419577", "metric": "request_time", "value": 0.024959087371826172, "context": "POST /feedback/response"}
+2025-11-25 18:30:31,829 - app.content_filter - INFO - Permitiendo consulta por defecto: quiero saber sobre salud estudiantil
+2025-11-25 18:30:31,869 - app.classifier - INFO - Fallback to topic classifier - Pregunta: 'quiero saber sobre salud estudiantil' -> 'otros'
+2025-11-25 18:30:31,869 - app.main - INFO - Categoría detectada: otros
+2025-11-25 18:30:32,100 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'otros'
+2025-11-25 18:30:32,997 - app.response_feedback - INFO - Nueva sesión de feedback creada: 92f35fb6-06c5-443c-b6ca-df6cc244cbb2
+2025-11-25 18:30:33,804 - metrics - INFO - {"timestamp": "2025-11-25T18:30:33.804847", "metric": "request_time", "value": 1.9775736331939697, "context": "POST /chat"}
+2025-11-25 18:30:37,241 - app.intelligent_cache - ERROR - Error optimizando estrategias: 'response'
+2025-11-25 18:30:39,033 - app.response_feedback - INFO - Feedback básico guardado para sesión 92f35fb6-06c5-443c-b6ca-df6cc244cbb2: satisfecho=True
+2025-11-25 18:30:39,036 - metrics - INFO - {"timestamp": "2025-11-25T18:30:39.036615", "metric": "request_time", "value": 0.02513742446899414, "context": "POST /feedback/response"}
+2025-11-25 18:30:47,527 - app.content_filter - INFO - Pregunta permitida por términos institucionales: quiero saber sobre los seguros
+2025-11-25 18:30:47,565 - app.classifier - INFO - Fallback to topic classifier - Pregunta: 'quiero saber sobre los seguros' -> 'asuntos_estudiantiles'
+2025-11-25 18:30:47,565 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:30:47,829 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:30:47,891 - app.response_feedback - INFO - Nueva sesión de feedback creada: 338c8fac-b2ce-4b8a-87b0-b8efd223d089
+2025-11-25 18:30:48,918 - metrics - INFO - {"timestamp": "2025-11-25T18:30:48.918273", "metric": "request_time", "value": 1.3920824527740479, "context": "POST /chat"}
+2025-11-25 18:30:50,337 - app.response_feedback - INFO - Feedback básico guardado para sesión 338c8fac-b2ce-4b8a-87b0-b8efd223d089: satisfecho=True
+2025-11-25 18:30:50,340 - metrics - INFO - {"timestamp": "2025-11-25T18:30:50.340801", "metric": "request_time", "value": 0.0253908634185791, "context": "POST /feedback/response"}
+2025-11-25 18:30:56,798 - app.content_filter - INFO - Pregunta permitida por términos institucionales: ¿Cómo funciona el seguro?
+2025-11-25 18:30:56,809 - app.classifier - INFO - SEGURO ESTUDIANTIL DETECTADO: '¿Cómo funciona el seguro?' -> asuntos_estudiantiles
+2025-11-25 18:30:56,810 - app.classifier - INFO - Keyword classification - Pregunta: '¿Cómo funciona el seguro?' -> 'asuntos_estudiantiles' (confianza: 0.95)
+2025-11-25 18:30:56,810 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:30:57,086 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:30:57,165 - app.response_feedback - INFO - Nueva sesión de feedback creada: ef516abf-9783-493f-bc35-e15bacf946cc
+2025-11-25 18:30:58,290 - metrics - INFO - {"timestamp": "2025-11-25T18:30:58.290668", "metric": "request_time", "value": 1.4937810897827148, "context": "POST /chat"}
+2025-11-25 18:31:00,679 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: ¿Cómo saco mi TNE?
+2025-11-25 18:31:00,707 - app.classifier - INFO - Keyword classification - Pregunta: '¿Cómo saco mi TNE?' -> 'asuntos_estudiantiles' (confianza: 0.55)
+2025-11-25 18:31:00,708 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:31:00,953 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:31:01,062 - app.response_feedback - INFO - Nueva sesión de feedback creada: 0287d6c8-5b9e-4cca-9fef-a4dbc6ad7791
+2025-11-25 18:31:02,094 - metrics - INFO - {"timestamp": "2025-11-25T18:31:02.094947", "metric": "request_time", "value": 1.4165258407592773, "context": "POST /chat"}
+2025-11-25 18:31:04,251 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: ¿Cómo saco mi TNE?
+2025-11-25 18:31:04,265 - app.classifier - INFO - Semantic Cache hit - Pregunta: '¿Cómo saco mi TNE?' -> 'asuntos_estudiantiles'
+2025-11-25 18:31:04,265 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:31:04,552 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:31:04,656 - app.response_feedback - INFO - Nueva sesión de feedback creada: ff7c78d0-1ab7-4282-a3f3-89ad1e6c6e79
+2025-11-25 18:31:05,672 - metrics - INFO - {"timestamp": "2025-11-25T18:31:05.672077", "metric": "request_time", "value": 1.4214558601379395, "context": "POST /chat"}
+2025-11-25 18:31:18,069 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: ¿Cómo Revalido mi TNE?
+2025-11-25 18:31:18,098 - app.classifier - INFO - Keyword classification - Pregunta: '¿Cómo Revalido mi TNE?' -> 'asuntos_estudiantiles' (confianza: 0.55)
+2025-11-25 18:31:18,099 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:31:18,376 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:31:18,485 - app.response_feedback - INFO - Nueva sesión de feedback creada: 247f84dd-0db1-46c0-bd37-3ecf1cff1c76
+2025-11-25 18:31:19,582 - metrics - INFO - {"timestamp": "2025-11-25T18:31:19.582659", "metric": "request_time", "value": 1.5133373737335205, "context": "POST /chat"}
+2025-11-25 18:31:26,770 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: ¿Cómo saco mi TNE si se pierde o esta dañada?
+2025-11-25 18:31:26,786 - app.classifier - INFO - PATRÓN ESPECÍFICO detectado: '¿Cómo saco mi TNE si se pierde o esta dañada?' -> 'asuntos_estudiantiles'
+2025-11-25 18:31:26,787 - app.classifier - INFO - Keyword classification - Pregunta: '¿Cómo saco mi TNE si se pierde o esta dañada?' -> 'asuntos_estudiantiles' (confianza: 0.80)
+2025-11-25 18:31:26,787 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:31:27,022 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:31:27,126 - app.response_feedback - INFO - Nueva sesión de feedback creada: b0e96c31-9205-43a5-81da-2a1b5dc9dbfb
+2025-11-25 18:31:28,218 - metrics - INFO - {"timestamp": "2025-11-25T18:31:28.218249", "metric": "request_time", "value": 1.4478259086608887, "context": "POST /chat"}
+2025-11-25 18:31:30,643 - app.content_filter - INFO - Pregunta permitida por términos institucionales: ¿Cuáles son los requisitos para postular al programa de Emergencia?
+2025-11-25 18:31:30,653 - app.classifier - WARNING - URGENCIA DETECTADA en clasificación: ¿Cuáles son los requisitos para postular al programa de Emergencia?
+2025-11-25 18:31:30,653 - app.classifier - INFO - Keyword classification - Pregunta: '¿Cuáles son los requisitos para postular al programa de Emergencia?' -> 'bienestar_estudiantil' (confianza: 0.95)
+2025-11-25 18:31:30,654 - app.main - INFO - Categoría detectada: bienestar_estudiantil
+2025-11-25 18:31:30,891 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'bienestar_estudiantil'
+2025-11-25 18:31:31,541 - app.response_feedback - INFO - Nueva sesión de feedback creada: 6ba84cc6-bbdb-4cdd-891a-bef882db4865
+2025-11-25 18:31:31,731 - metrics - INFO - {"timestamp": "2025-11-25T18:31:31.731652", "metric": "request_time", "value": 1.0889346599578857, "context": "POST /chat"}
+2025-11-25 18:31:34,532 - app.content_filter - INFO - Pregunta permitida por términos institucionales: ¿Cuáles son las categorías de postulación al programa de Emergencia?
+2025-11-25 18:31:34,543 - app.classifier - WARNING - URGENCIA DETECTADA en clasificación: ¿Cuáles son las categorías de postulación al programa de Emergencia?
+2025-11-25 18:31:34,543 - app.classifier - INFO - Keyword classification - Pregunta: '¿Cuáles son las categorías de postulación al programa de Emergencia?' -> 'bienestar_estudiantil' (confianza: 0.95)
+2025-11-25 18:31:34,543 - app.main - INFO - Categoría detectada: bienestar_estudiantil
+2025-11-25 18:31:34,779 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'bienestar_estudiantil'
+2025-11-25 18:31:34,866 - app.response_feedback - INFO - Nueva sesión de feedback creada: eff238c4-ec65-43cd-8417-1cfce98cc372
+2025-11-25 18:31:35,089 - metrics - INFO - {"timestamp": "2025-11-25T18:31:35.089506", "metric": "request_time", "value": 0.5579755306243896, "context": "POST /chat"}
+2025-11-25 18:31:41,343 - app.content_filter - INFO - Pregunta permitida por términos institucionales: ¿Cuándo puedo postular al Programa de Emergencia?
+2025-11-25 18:31:41,352 - app.classifier - WARNING - URGENCIA DETECTADA en clasificación: ¿Cuándo puedo postular al Programa de Emergencia?
+2025-11-25 18:31:41,352 - app.classifier - INFO - Keyword classification - Pregunta: '¿Cuándo puedo postular al Programa de Emergencia?' -> 'bienestar_estudiantil' (confianza: 0.95)
+2025-11-25 18:31:41,352 - app.main - INFO - Categoría detectada: bienestar_estudiantil
+2025-11-25 18:31:41,655 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'bienestar_estudiantil'
+2025-11-25 18:31:41,744 - app.response_feedback - INFO - Nueva sesión de feedback creada: 75b38108-e2b5-4c8c-ab7f-91de24d98ba7
+2025-11-25 18:31:42,004 - metrics - INFO - {"timestamp": "2025-11-25T18:31:42.004352", "metric": "request_time", "value": 0.6612026691436768, "context": "POST /chat"}
+2025-11-25 18:31:45,747 - app.content_filter - INFO - Pregunta permitida por términos institucionales: ¿Cómo puedo obtener información sobre los Programas de Apoyo al Estudiante?
+2025-11-25 18:31:45,792 - app.classifier - INFO - Fallback to topic classifier - Pregunta: '¿Cómo puedo obtener información sobre los Programas de Apoyo al Estudiante?' -> 'asuntos_estudiantiles'
+2025-11-25 18:31:45,793 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:31:46,110 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:31:47,084 - app.response_feedback - INFO - Nueva sesión de feedback creada: fc13bec5-9318-4593-bd9e-d341d2086975
+2025-11-25 18:31:48,140 - metrics - INFO - {"timestamp": "2025-11-25T18:31:48.140470", "metric": "request_time", "value": 2.3937652111053467, "context": "POST /chat"}
+2025-11-25 18:34:49,126 - app.content_filter - INFO - Pregunta permitida por términos institucionales: How does the insurance work?
+2025-11-25 18:34:49,165 - app.classifier - INFO - Fallback to topic classifier - Pregunta: 'How does the insurance work?' -> 'desarrollo_profesional'
+2025-11-25 18:34:49,165 - app.main - INFO - Categoría detectada: desarrollo_profesional
+2025-11-25 18:34:49,558 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'desarrollo_profesional'
+2025-11-25 18:34:49,746 - app.response_feedback - INFO - Nueva sesión de feedback creada: 0fb22ac9-e256-4bfb-beb7-d4c0b3fa74d9
+2025-11-25 18:34:49,754 - metrics - INFO - {"timestamp": "2025-11-25T18:34:49.754102", "metric": "request_time", "value": 0.6288273334503174, "context": "POST /chat"}
+2025-11-25 18:34:51,865 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: How do I get my TNE?
+2025-11-25 18:34:51,895 - app.classifier - INFO - Keyword classification - Pregunta: 'How do I get my TNE?' -> 'asuntos_estudiantiles' (confianza: 0.55)
+2025-11-25 18:34:51,896 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:34:52,170 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:34:52,273 - app.response_feedback - INFO - Nueva sesión de feedback creada: 130b21c8-1b39-4a29-853d-e4008dc62a7f
+2025-11-25 18:34:53,368 - metrics - INFO - {"timestamp": "2025-11-25T18:34:53.368102", "metric": "request_time", "value": 1.5030808448791504, "context": "POST /chat"}
+2025-11-25 18:34:55,539 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: How do I renew my TNE?
+2025-11-25 18:34:55,574 - app.classifier - INFO - Keyword classification - Pregunta: 'How do I renew my TNE?' -> 'asuntos_estudiantiles' (confianza: 0.55)
+2025-11-25 18:34:55,574 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:34:55,842 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:34:55,954 - app.response_feedback - INFO - Nueva sesión de feedback creada: 3f466214-dfa4-4d24-b81d-14672ef83d52
+2025-11-25 18:34:56,975 - metrics - INFO - {"timestamp": "2025-11-25T18:34:56.975304", "metric": "request_time", "value": 1.4361186027526855, "context": "POST /chat"}
+2025-11-25 18:34:59,243 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: How do I get my TNE if it's lost or damaged?
+2025-11-25 18:34:59,277 - app.classifier - INFO - Keyword classification - Pregunta: 'How do I get my TNE if it's lost or damaged?' -> 'asuntos_estudiantiles' (confianza: 0.55)
+2025-11-25 18:34:59,277 - app.main - INFO - Categoría detectada: asuntos_estudiantiles
+2025-11-25 18:34:59,519 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'asuntos_estudiantiles'
+2025-11-25 18:34:59,626 - app.response_feedback - INFO - Nueva sesión de feedback creada: e0d1bf51-92c4-4210-b756-7dbbbcd2ed85
+2025-11-25 18:35:00,733 - metrics - INFO - {"timestamp": "2025-11-25T18:35:00.733357", "metric": "request_time", "value": 1.4902191162109375, "context": "POST /chat"}
+2025-11-25 18:35:03,147 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: What are the requirements to apply for the Emergency Program?
+2025-11-25 18:35:03,167 - app.classifier - WARNING - URGENCIA DETECTADA en clasificación: What are the requirements to apply for the Emergency Program?
+2025-11-25 18:35:03,167 - app.classifier - INFO - Keyword classification - Pregunta: 'What are the requirements to apply for the Emergency Program?' -> 'bienestar_estudiantil' (confianza: 0.95)
+2025-11-25 18:35:03,168 - app.main - INFO - Categoría detectada: bienestar_estudiantil
+2025-11-25 18:35:03,409 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'bienestar_estudiantil'
+2025-11-25 18:35:03,504 - app.response_feedback - INFO - Nueva sesión de feedback creada: 8110f270-f4cb-4620-96f9-89223928fb04
+2025-11-25 18:35:03,679 - metrics - INFO - {"timestamp": "2025-11-25T18:35:03.679026", "metric": "request_time", "value": 0.5320637226104736, "context": "POST /chat"}
+2025-11-25 18:35:05,884 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: What are the application categories for the Emergency Program?
+2025-11-25 18:35:05,895 - app.classifier - WARNING - URGENCIA DETECTADA en clasificación: What are the application categories for the Emergency Program?
+2025-11-25 18:35:05,895 - app.classifier - INFO - Keyword classification - Pregunta: 'What are the application categories for the Emergency Program?' -> 'bienestar_estudiantil' (confianza: 0.95)
+2025-11-25 18:35:05,896 - app.main - INFO - Categoría detectada: bienestar_estudiantil
+2025-11-25 18:35:06,138 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'bienestar_estudiantil'
+2025-11-25 18:35:06,229 - app.response_feedback - INFO - Nueva sesión de feedback creada: 76f8f713-3490-42fc-8067-3519074cd2fe
+2025-11-25 18:35:06,403 - metrics - INFO - {"timestamp": "2025-11-25T18:35:06.403347", "metric": "request_time", "value": 0.5199124813079834, "context": "POST /chat"}
+2025-11-25 18:35:09,181 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: When can I apply for the Emergency Program?
+2025-11-25 18:35:09,194 - app.classifier - WARNING - URGENCIA DETECTADA en clasificación: When can I apply for the Emergency Program?
+2025-11-25 18:35:09,194 - app.classifier - INFO - Keyword classification - Pregunta: 'When can I apply for the Emergency Program?' -> 'bienestar_estudiantil' (confianza: 0.95)
+2025-11-25 18:35:09,194 - app.main - INFO - Categoría detectada: bienestar_estudiantil
+2025-11-25 18:35:09,474 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'bienestar_estudiantil'
+2025-11-25 18:35:09,566 - app.response_feedback - INFO - Nueva sesión de feedback creada: 53ec1c10-9364-4578-9601-d57ddeb4e95a
+2025-11-25 18:35:09,738 - metrics - INFO - {"timestamp": "2025-11-25T18:35:09.738196", "metric": "request_time", "value": 0.5571541786193848, "context": "POST /chat"}
+2025-11-25 18:35:12,206 - app.content_filter - INFO - PRIORIDAD ALTA - Pregunta institucional: How can I get information about Student Support Programs?
+2025-11-25 18:35:12,247 - app.classifier - INFO - Fallback to topic classifier - Pregunta: 'How can I get information about Student Support Programs?' -> 'otros'
+2025-11-25 18:35:12,248 - app.main - INFO - Categoría detectada: otros
+2025-11-25 18:35:12,510 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'otros'
+2025-11-25 18:35:12,642 - app.response_feedback - INFO - Nueva sesión de feedback creada: 99d9aaf9-de08-4f47-abbc-d58a27a3a299
+2025-11-25 18:35:13,436 - metrics - INFO - {"timestamp": "2025-11-25T18:35:13.436017", "metric": "request_time", "value": 1.230165958404541, "context": "POST /chat"}
+2025-11-25 18:35:16,880 - app.content_filter - INFO - Pregunta permitida por términos institucionales: Comment fonctionne l'assurance ?
+2025-11-25 18:35:16,919 - app.classifier - INFO - Fallback to topic classifier - Pregunta: 'Comment fonctionne l'assurance ?' -> 'otros'
+2025-11-25 18:35:16,919 - app.main - INFO - Categoría detectada: otros
+2025-11-25 18:35:17,182 - app.main - INFO - Contexto encontrado: 3 resultados para categoría 'otros'
+2025-11-25 18:35:17,281 - app.response_feedback - INFO - Nueva sesión de feedback creada: 25bfa79e-8be3-4f76-886f-209741358320
+2025-11-25 18:35:18,069 - metrics - INFO - {"timestamp": "2025-11-25T18:35:18.069723", "metric": "request_time", "value": 1.1902830600738525, "context": "POST /chat"}
