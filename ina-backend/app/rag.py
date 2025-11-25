@@ -30,7 +30,33 @@ except Exception as e:
     HYBRID_SYSTEM_AVAILABLE = False
     logging.error(f"❌ Error cargando sistema híbrido: {e}")
 
+# NUEVO: Importar sistema de mejora de respuestas
+try:
+    from app.response_enhancer import enhance_response
+    RESPONSE_ENHANCER_AVAILABLE = True
+    logging.info("✅ Mejoras de respuesta cargadas correctamente")
+except ImportError as e:
+    RESPONSE_ENHANCER_AVAILABLE = False
+    logging.warning(f"⚠️ Mejoras de respuesta no disponibles: {e}")
+except Exception as e:
+    RESPONSE_ENHANCER_AVAILABLE = False
+    logging.error(f"❌ Error cargando mejoras de respuesta: {e}")
+
 logger = logging.getLogger(__name__)
+
+# FUNCIÓN AUXILIAR PARA MEJORAR RESPUESTAS
+def enhance_final_response(response_text: str, query: str, category: str = "") -> str:
+    """Aplicar mejoras a la respuesta si el sistema está disponible"""
+    if RESPONSE_ENHANCER_AVAILABLE:
+        try:
+            enhanced = enhance_response(response_text, query, category)
+            logger.info(f"✅ Respuesta mejorada con contactos específicos")
+            return enhanced
+        except Exception as e:
+            logger.warning(f"❌ Error mejorando respuesta: {e}")
+            return response_text
+    else:
+        return response_text
 
 
 class SemanticCache:
@@ -856,7 +882,11 @@ class RAGEngine:
         if template_response:
                 # AGREGAR GENERACIÓN DE QR CODES PARA TEMPLATES (ESTRUCTURA CORREGIDA)
                 original_query = processing_info['original_query']
-                qr_processed_response = qr_generator.process_response(template_response, original_query)
+                
+                # MEJORAR LA RESPUESTA CON INFORMACIÓN ESPECÍFICA
+                enhanced_response = enhance_final_response(template_response, original_query, template_category)
+                
+                qr_processed_response = qr_generator.process_response(enhanced_response, original_query)
                 
                 response_time = time.time() - start_time
                 self.metrics['template_responses'] += 1
@@ -868,7 +898,7 @@ class RAGEngine:
                 
                 # ESTRUCTURA CORREGIDA - qr_codes como dict simple
                 return {
-                    'response': template_response.strip(),
+                    'response': enhanced_response.strip(),
                     'sources': [],
                     'category': template_category,
                     'response_time': response_time,
@@ -1112,15 +1142,20 @@ Puedo ayudarte con:*
             
             system_message = (
                 "Eres InA, asistente estacionario físico del Punto Estudiantil Duoc UC Plaza Norte. "
-                "Estás ubicado físicamente en la sede para ayudar con servicios estudiantiles básicos.\n\n"
+                "Estás ubicado físicamente en la sede para ayudar con servicios estudiantiles específicos.\n\n"
                 f"INFORMACIÓN DISPONIBLE: {context}\n\n"
                 "CONTEXTO IMPORTANTE:\n"
                 "- Eres una IA ESTACIONARIA en Plaza Norte (no web/app)\n"
                 "- Te especializas en servicios del Punto Estudiantil\n"
-                "- Para temas fuera de tu alcance, DERIVA inteligentemente\n"
-                "- NO manejas: finanzas detalladas, biblioteca avanzada, citas médicas\n\n"
-                "INSTRUCCIONES:\n- Respuesta máximo 3 líneas\n- Si no puedes ayudar completamente, indica dónde SÍ pueden ayudar\n"
-                "- Proporciona ubicaciones y contactos específicos cuando derives"
+                "- SIEMPRE incluye información de contacto específica cuando sea posible\n"
+                "- Proporciona números de teléfono, ubicaciones exactas, horarios\n"
+                "- Para temas fuera de tu alcance, DERIVA con contacto específico\n\n"
+                "INSTRUCCIONES:\n"
+                "- Respuesta máximo 5 líneas para incluir contactos\n"
+                "- SIEMPRE agrega teléfonos y ubicaciones específicas\n"
+                "- Usa formato: 📞 +56 2 2596 5XXX | 📍 Ubicación específica\n"
+                "- Incluye horarios: 🕒 Lunes a Viernes X:XX-X:XX\n"
+                "- Sé específico, no genérico"
             )
             
             response = ollama.chat(
@@ -1129,11 +1164,15 @@ Puedo ayudarte con:*
                     {'role': 'system', 'content': system_message},
                     {'role': 'user', 'content': query}
                 ],
-                options={'temperature': 0.1, 'num_predict': 80}
+                options={'temperature': 0.1, 'num_predict': 150}
             )
             
+            # MEJORAR LA RESPUESTA DE OLLAMA CON INFORMACIÓN ESPECÍFICA
+            raw_response = response['message']['content'].strip()
+            enhanced_response = enhance_final_response(raw_response, query, "general")
+            
             return {
-                'response': response['message']['content'].strip(),
+                'response': enhanced_response,
                 'sources': [{
                     'content': source['document'][:80] + '...',
                     'category': source['metadata'].get('category', 'general'),
@@ -1176,12 +1215,15 @@ No entiendo completamente '{original_query}'.
 *Ejemplo: "¿Cómo saco mi TNE?"*
 """
         
+        # MEJORAR LA RESPUESTA DE CLARIFICACIÓN CON CONTACTOS
+        enhanced_response = enhance_final_response(response, original_query, "clarification")
+        
         # AGREGAR QR CODES PARA CLARIFICATION (ESTRUCTURA CORREGIDA)
-        qr_processed_response = qr_generator.process_response(response, original_query)
+        qr_processed_response = qr_generator.process_response(enhanced_response, original_query)
         
         # ESTRUCTURA CORREGIDA
         return {
-            'response': response.strip(),
+            'response': enhanced_response.strip(),
             'sources': [],
             'category': 'clarification',
             'response_time': time.time() - start_time,
@@ -1489,18 +1531,32 @@ def get_ai_response(user_message: str, context: list = None,
     # ESTRATEGIAS PRIORITARIAS - TEMPLATES PRIMERO
     if strategy == 'template':
         response_data = rag_engine.generate_template_response(processing_info)
+        # MEJORAR RESPUESTA DE TEMPLATE
+        if 'response' in response_data:
+            category = processing_info.get('category', 'template')
+            enhanced_response = enhance_final_response(response_data['response'], user_message, category)
+            response_data['response'] = enhanced_response
+            logger.info(f"✅ Template response enhanced for category: {category}")
         response_data['response_time'] = time.time() - start_time
         response_data['intelligent_features_applied'] = True
         return response_data
 
     if strategy == 'greeting' or processing_info.get('is_greeting', False):
         response_data = rag_engine.generate_greeting_response(processing_info)
+        # MEJORAR RESPUESTA DE SALUDO
+        if 'response' in response_data:
+            enhanced_response = enhance_final_response(response_data['response'], user_message, 'greeting')
+            response_data['response'] = enhanced_response
         response_data['response_time'] = time.time() - start_time
         response_data['intelligent_features_applied'] = True
         return response_data
 
     if strategy == 'emergency' or processing_info.get('is_emergency', False):
         response_data = rag_engine.generate_emergency_response(processing_info)
+        # MEJORAR RESPUESTA DE EMERGENCIA
+        if 'response' in response_data:
+            enhanced_response = enhance_final_response(response_data['response'], user_message, 'emergency')
+            response_data['response'] = enhanced_response
         response_data['response_time'] = time.time() - start_time
         response_data['intelligent_features_applied'] = True
         return response_data
@@ -1508,18 +1564,30 @@ def get_ai_response(user_message: str, context: list = None,
     # ESTRATEGIAS DIFERENCIADAS
     if strategy == 'derivation':
         response_data = rag_engine.generate_derivation_response(processing_info)
+        # MEJORAR RESPUESTA DE DERIVACIÓN
+        if 'response' in response_data:
+            enhanced_response = enhance_final_response(response_data['response'], user_message, 'derivation')
+            response_data['response'] = enhanced_response
         response_data['response_time'] = time.time() - start_time
         response_data['intelligent_features_applied'] = True
         return response_data
 
     elif strategy == 'multiple_queries':
         response_data = rag_engine.generate_multiple_queries_response(processing_info)
+        # MEJORAR RESPUESTA DE MÚLTIPLES CONSULTAS
+        if 'response' in response_data:
+            enhanced_response = enhance_final_response(response_data['response'], user_message, 'multiple_queries')
+            response_data['response'] = enhanced_response
         response_data['response_time'] = time.time() - start_time
         response_data['intelligent_features_applied'] = True
         return response_data
 
     elif strategy == 'clarification':
         response_data = rag_engine.generate_clarification_response(processing_info)
+        # MEJORAR RESPUESTA DE CLARIFICACIÓN
+        if 'response' in response_data:
+            enhanced_response = enhance_final_response(response_data['response'], user_message, 'clarification')
+            response_data['response'] = enhanced_response
         response_data['response_time'] = time.time() - start_time
         response_data['intelligent_features_applied'] = True
         return response_data
@@ -1609,6 +1677,15 @@ def get_ai_response(user_message: str, context: list = None,
         # 🔥 NUEVO: Aplicar filtro estacionario a la respuesta
         respuesta = rag_engine.stationary_filter.filter_response(respuesta, user_message)
         
+        # ✅ VALIDACIÓN DE INFORMACIÓN: Verificar que la respuesta tiene contenido útil
+        if len(respuesta.strip()) < 30 or "no encontr" in respuesta.lower() or "no dispongo" in respuesta.lower():
+            logger.warning(f"⚠️ Respuesta muy corta o sin información útil: {len(respuesta)} chars")
+            # Intentar con información de fuentes directamente
+            if final_sources:
+                logger.info(f"📚 Usando información directa de {len(final_sources)} fuentes")
+                direct_info = "\n\n".join([src['document'][:300] for src in final_sources[:2]])
+                respuesta = f"Según la información disponible:\n\n{direct_info}"
+        
         # Validar que la respuesta sea apropiada para IA estacionaria
         is_appropriate, validation_message = rag_engine.stationary_filter.validate_response_appropriateness(respuesta)
         if not is_appropriate:
@@ -1637,13 +1714,39 @@ def get_ai_response(user_message: str, context: list = None,
                 'similarity': round(source.get('similarity', 0.5), 3)
             })
 
+        # 🔍 DIAGNÓSTICO: Verificar calidad de información recuperada
+        logger.info(f"📊 INFO DIAGNOSIS:")
+        logger.info(f"  - Sources found: {len(final_sources)}")
+        logger.info(f"  - Response length: {len(respuesta)} chars")
+        logger.info(f"  - Query: '{user_message[:50]}...'")
+        if final_sources:
+            avg_similarity = sum(s.get('similarity', 0) for s in final_sources) / len(final_sources)
+            logger.info(f"  - Avg similarity: {avg_similarity:.3f}")
+            logger.info(f"  - Top source category: {final_sources[0].get('metadata', {}).get('category', 'unknown')}")
+        
         # AGREGAR GENERACIÓN DE QR CODES PARA RESPUESTAS RAG (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(respuesta, user_message)
 
+        # APLICAR MEJORAS A LA RESPUESTA ANTES DE RETORNAR
+        category = processing_info.get('topic_classification', {}).get('category', 'general')
+        
+        # ✅ MEJORA CRÍTICA: Aplicar enhancer correctamente
+        if RESPONSE_ENHANCER_AVAILABLE and respuesta and len(respuesta.strip()) > 10:
+            try:
+                enhanced_respuesta = enhance_final_response(respuesta, user_message, category)
+                logger.info(f"✅ Response enhanced: {len(respuesta)} -> {len(enhanced_respuesta)} chars")
+            except Exception as e:
+                logger.error(f"❌ Error enhancing response: {e}")
+                enhanced_respuesta = respuesta
+        else:
+            enhanced_respuesta = respuesta
+            if not RESPONSE_ENHANCER_AVAILABLE:
+                logger.warning("⚠️ Response enhancer not available")
+
         response_data = {
-            'response': respuesta,
+            'response': enhanced_respuesta,
             'sources': formatted_sources,
-            'category': processing_info['topic_classification'].get('category', 'general'),
+            'category': category,
             'timestamp': time.time(),
             'response_time': time.time() - start_time,
             'cache_type': 'ollama_generated',
@@ -1658,10 +1761,15 @@ def get_ai_response(user_message: str, context: list = None,
         return response_data
 
     except Exception as e:
-        logger.error(f"Error en RAG estándar: {str(e)}")
+        logger.error(f"❌ ERROR EN RAG ESTÁNDAR: {str(e)}")
+        logger.error(f"   Query: '{user_message[:100]}...'")
+        logger.error(f"   Sources available: {len(final_sources) if 'final_sources' in locals() else 0}")
+        import traceback
+        logger.error(f"   Stack trace: {traceback.format_exc()[:500]}")
+        
         # Fallback: si tenemos fuentes recuperadas, devolver su contenido bruto como respuesta
         try:
-            if final_sources:
+            if 'final_sources' in locals() and final_sources:
                 fallback_texts = []
                 formatted_sources = []
                 for src in final_sources:
