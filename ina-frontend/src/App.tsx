@@ -31,19 +31,39 @@ function App() {
     const [isDragging, setIsDragging] = useState(false);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [isCursorInViewport, setIsCursorInViewport] = useState(true);
-
+     const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(true);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const guideLineRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
     const languageMenuRef = useRef<HTMLDivElement>(null);
 
+     useEffect(() => {
+        // Verificar si ya estamos en pantalla completa
+        const checkFullscreen = () => {
+            if (document.fullscreenElement) {
+                setShowFullscreenPrompt(false);
+            }
+        };
+
+        // Escuchar cambios en el estado de pantalla completa
+        document.addEventListener('fullscreenchange', checkFullscreen);
+        
+        return () => {
+            document.removeEventListener('fullscreenchange', checkFullscreen);
+        };
+    }, []);
+
     useEffect(() => {
-        const enterFullscreen = async () => {
-            try {
-                const docElement = document.documentElement as any;
+    const enterFullscreen = async () => {
+        try {
+            const docElement = document.documentElement as any;
             
-            if (document.fullscreenElement) return;
+            // Verificar si ya está en pantalla completa
+            if (document.fullscreenElement) {
+                console.log('Ya está en pantalla completa');
+                return;
+            }
 
             if (docElement.requestFullscreen) {
                 await docElement.requestFullscreen();
@@ -54,48 +74,44 @@ function App() {
             } else if (docElement.msRequestFullscreen) {
                 await docElement.msRequestFullscreen();
             }
-                console.log('Pantalla completa activada automáticamente');
-            } catch (error) {
-                console.warn('No se pudo activar la pantalla completa automáticamente:', error);
-            }
-        };
+            
+            console.log('Pantalla completa activada automáticamente');
+        } catch (error) {
+            console.warn('No se pudo activar la pantalla completa automáticamente:', error);
+            // Esto es normal - los navegadores bloquean la pantalla completa automática
+        }
+    };
 
-        const timer = setTimeout(() => {
-            enterFullscreen();
-        }, 500);
-
+    // Solo un intento después de 1 segundo
+    const timer = setTimeout(() => {
         enterFullscreen();
+    }, 1000);
 
-
-        // O agregar un botón para activar pantalla completa
-        const handleFullscreen = () => {
-            enterFullscreen();
-        };
-
-        // Ejemplo: agregar evento a un botón específico
-        const fullscreenButton = document.getElementById('fullscreen-btn');
-        if (fullscreenButton) {
-            fullscreenButton.addEventListener('click', handleFullscreen);
+    return () => {
+        clearTimeout(timer);
+    };
+}, []);
+const handleUserInitiatedFullscreen = () => {
+        const docElement = document.documentElement as any;
+        if (docElement.requestFullscreen) {
+            docElement.requestFullscreen().catch((err: Error) => {
+                console.log('Error al activar pantalla completa:', err);
+            });
+        } else if (docElement.mozRequestFullScreen) {
+            docElement.mozRequestFullScreen();
+        } else if (docElement.webkitRequestFullscreen) {
+            docElement.webkitRequestFullscreen();
+        } else if (docElement.msRequestFullscreen) {
+            docElement.msRequestFullscreen();
         }
+        setShowFullscreenPrompt(false);
+    };
 
-        // Activar después de que la página se haya cargado completamente
-        const handleLoad = () => {
-            setTimeout(enterFullscreen, 500); // 1 segundo después de la carga
-        };
-        if (document.readyState === 'complete') {
-            setTimeout(enterFullscreen, 500);
-        } else {
-            window.addEventListener('load', handleLoad);
-        }
-        return () => {
-            window.removeEventListener('load', handleLoad);
-            clearTimeout(timer);
-            if (fullscreenButton) {
-                fullscreenButton.removeEventListener('click', handleFullscreen);
-            }
-        };
-
-    }, []);
+    const handleSkipFullscreen = () => {
+        setShowFullscreenPrompt(false);
+        // Opcional: guardar en localStorage para no mostrar nuevamente
+        localStorage.setItem('fullscreenSkipped', 'true');
+    };
     // Handle click outside accessibility menu
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -112,6 +128,8 @@ function App() {
         };
     }, [showAccessibilityMenu]);
 
+
+    
     // Aplicar los estilos de accesibilidad (actualizado para incluir temas)
     useEffect(() => {
         const root = document.documentElement;
@@ -438,18 +456,7 @@ function App() {
                         </div>
                     )}
                 </div>
-                <button
-                    id="fullscreen-btn"
-                    className="fullscreen-button"
-                    onClick={() => {
-                        const docElement = document.documentElement;
-                        if (docElement.requestFullscreen) {
-                            docElement.requestFullscreen();
-                        }
-                    }}
-                >
-                    ⛶
-                </button>
+
                 {/* Selector de idiomas global */}
                 <div className="language-selector-global" ref={languageMenuRef}>
                     <button
@@ -526,6 +533,51 @@ function App() {
                     </Routes>
                 </main>
             </div>
+            {showFullscreenPrompt && (
+        <div className="fullscreen-prompt-overlay">
+            <div className="fullscreen-prompt">
+                <div className="prompt-header">
+                    <h3>🎯 Modo Pantalla Completa</h3>
+                    <p>Para una experiencia óptima, te recomendamos usar pantalla completa</p>
+                </div>
+                
+                <div className="prompt-features">
+                    <div className="feature">
+                        <span className="feature-icon">🔍</span>
+                        <span>Mejor visualización</span>
+                    </div>
+                    <div className="feature">
+                        <span className="feature-icon">🎮</span>
+                        <span>Experiencia inmersiva</span>
+                    </div>
+                    <div className="feature">
+                        <span className="feature-icon">💻</span>
+                        <span>Máximo espacio útil</span>
+                    </div>
+                </div>
+
+                <div className="fullscreen-buttons">
+                    <button 
+                        onClick={handleUserInitiatedFullscreen}
+                        className="fullscreen-confirm-btn"
+                        autoFocus
+                    >
+                        🚀 Activar Pantalla Completa
+                    </button>
+                    <button 
+                        onClick={handleSkipFullscreen}
+                        className="fullscreen-cancel-btn"
+                    >
+                        Continuar en Modo Normal
+                    </button>
+                </div>
+                
+                <div className="prompt-footer">
+                    <small>Puedes activar pantalla completa luego con el botón ⛶</small>
+                </div>
+            </div>
+        </div>
+    )}
         </div>
     );
 }
