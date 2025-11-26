@@ -1440,26 +1440,88 @@ No entiendo completamente '{original_query}'.
         return stats
 
 
-# Instancia global del motor RAG
-rag_engine = RAGEngine()
+# OPTIMIZACIÓN: Lazy loading del motor RAG
+# No se inicializa hasta que se use por primera vez
+_rag_engine_instance = None
+_rag_engine_initializing = False
+
+def _get_rag_engine():
+    """Obtener instancia de RAG Engine con lazy loading"""
+    global _rag_engine_instance, _rag_engine_initializing
+    
+    if _rag_engine_instance is None and not _rag_engine_initializing:
+        _rag_engine_initializing = True
+        import time
+        start = time.time()
+        print(f"⏱️  Inicializando RAG Engine bajo demanda...")
+        _rag_engine_instance = RAGEngine()
+        elapsed = time.time() - start
+        print(f"⏱️  RAG Engine inicializado en {elapsed:.2f}s")
+        _rag_engine_initializing = False
+    
+    return _rag_engine_instance
+
+# Property que simula una instancia pero es lazy
+class LazyRAGEngine:
+    """Proxy lazy para RAG Engine - solo se inicializa cuando se accede a un atributo/método"""
+    def __getattr__(self, name):
+        # Solo inicializar cuando realmente se accede a un atributo
+        engine = _get_rag_engine()
+        if engine is None:
+            raise RuntimeError("RAG Engine no inicializado todavía")
+        return getattr(engine, name)
+    
+    def __setattr__(self, name, value):
+        engine = _get_rag_engine()
+        if engine is None:
+            raise RuntimeError("RAG Engine no inicializado todavía")
+        return setattr(engine, name, value)
+    
+    def __call__(self, *args, **kwargs):
+        engine = _get_rag_engine()
+        if engine is None:
+            raise RuntimeError("RAG Engine no inicializado todavía")
+        return engine(*args, **kwargs)
+
+# Instancia global del motor RAG (lazy)
+rag_engine = LazyRAGEngine()
 
 
 def get_ai_response(user_message: str, context: list = None, 
                    conversational_context: str = None, user_profile: dict = None) -> Dict:
-    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES PRIORITARIOS"""
+    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES PRIORITARIOS + EXTRACCIÓN DE PALABRAS CLAVE"""
     import time
+    from app.keyword_extractor import keyword_extractor
     start_time = time.time()
+
+    # 🔍 PASO 0: Extraer palabras clave para mejorar búsqueda
+    print(f"\n🔍 EXTRAYENDO PALABRAS CLAVE...")
+    extracted_keywords = keyword_extractor.extract_keywords(user_message)
+    logger.info(f"🔑 Palabras clave detectadas: {extracted_keywords.get('categories', {})}")
+    
+    # Mejorar la consulta para búsquedas más efectivas
+    enhanced_query = keyword_extractor.enhance_query_for_rag(user_message)
+    logger.info(f"🔧 Consulta mejorada: '{enhanced_query}'")
 
     # 🔥 PRIORIDAD ABSOLUTA: Procesar query con contexto inteligente PRIMERO (incluye detección de templates)
     print(f"\n🔄 INICIANDO PROCESAMIENTO INTELIGENTE...")
     logger.info(f"🔄 Llamando a process_user_query para: '{user_message}'")
     
-    processing_info = rag_engine.process_user_query(
-        user_message, 
+    # Usar la consulta mejorada si es diferente
+    query_to_process = enhanced_query if enhanced_query != user_message else user_message
+    
+    # Obtener instancia de RAG Engine (lazy loading)
+    engine = _get_rag_engine()
+    
+    processing_info = engine.process_user_query(
+        query_to_process, 
         conversational_context=conversational_context,
         user_profile=user_profile
     )
     strategy = processing_info['processing_strategy']
+    
+    # Agregar información de palabras clave al processing_info
+    processing_info['extracted_keywords'] = extracted_keywords
     
     print(f"📋 Estrategia determinada: {strategy}")
     logger.info(f"📋 Estrategia de procesamiento: {strategy}")
@@ -1469,7 +1531,7 @@ def get_ai_response(user_message: str, context: list = None,
         print(f"\n✨ GENERANDO RESPUESTA DESDE TEMPLATE...")
         logger.info(f"✨ Generando respuesta desde template para: '{user_message}'")
         
-        response_data = rag_engine.generate_template_response(processing_info)
+        response_data = engine.generate_template_response(processing_info)
         
         # MEJORAR RESPUESTA DE TEMPLATE
         if 'response' in response_data:
@@ -1510,16 +1572,16 @@ def get_ai_response(user_message: str, context: list = None,
             logger.warning(f"⚠️ Sistema híbrido falló, usando RAG tradicional: {e}")
 
     # 🔥 FALLBACK 2: Análisis de derivación para IA estacionaria
-    derivation_analysis = rag_engine.derivation_manager.analyze_query(user_message)
+    derivation_analysis = engine.derivation_manager.analyze_query(user_message)
     logger.info(f"🔍 ANÁLISIS DERIVACIÓN: {derivation_analysis}")
     
     # 🔥 FALLBACK: Filtro específico para IA estacionaria
-    stationary_analysis = rag_engine.stationary_filter.analyze_query(user_message)
+    stationary_analysis = engine.stationary_filter.analyze_query(user_message)
     logger.info(f"🛡️ ANÁLISIS FILTRO ESTACIONARIO: {stationary_analysis}")
     
     # Manejar respuestas automáticas para consultas fuera de alcance
     if stationary_analysis["has_auto_response"]:
-        auto_response = rag_engine.stationary_filter.get_auto_response(stationary_analysis["auto_response_key"])
+        auto_response = engine.stationary_filter.get_auto_response(stationary_analysis["auto_response_key"])
         logger.info(f"🤖 RESPUESTA AUTOMÁTICA ACTIVADA: {stationary_analysis['auto_response_key']}")
         
         # Generar QR codes específicos para respuestas automáticas
@@ -1547,7 +1609,7 @@ def get_ai_response(user_message: str, context: list = None,
     
     # Manejar emergencias
     if derivation_analysis["is_emergency"]:
-        emergency_response = rag_engine.derivation_manager.generate_emergency_response()
+        emergency_response = engine.derivation_manager.generate_emergency_response()
         return {
             "response": emergency_response["response"],
             "qr_codes": {},

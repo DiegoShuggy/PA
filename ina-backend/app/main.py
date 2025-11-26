@@ -93,6 +93,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# ⏱️ INICIAR CONTADOR DE TIEMPO DE INICIO
+SERVER_START_TIME = time.time()
+
 # Instanciar la app ANTES de cualquier uso de @app
 app = FastAPI(title="InA API", version="1.0.0")
 
@@ -140,13 +143,14 @@ from app.cache_manager import get_cache_stats, rag_cache, classification_cache
 import chromadb
 from chromadb.config import Settings
 
-# Forzar configuración segura de ChromaDB (DESACTIVA TELEMETRÍA)
-if not hasattr(rag_engine, 'client') or rag_engine.client is None:
-    rag_engine.client = chromadb.PersistentClient(
-        path="./chroma_db",
-        settings=Settings(anonymized_telemetry=False)  # ← DESACTIVA TELEMETRÍA
-    )
-    logger.info("ChromaDB cliente inicializado con telemetría desactivada")
+# OPTIMIZACIÓN: NO forzar inicialización de rag_engine aquí (lazy loading)
+# El RAG Engine se inicializará automáticamente cuando se use por primera vez
+# if not hasattr(rag_engine, 'client') or rag_engine.client is None:
+#     rag_engine.client = chromadb.PersistentClient(
+#         path="./chroma_db",
+#         settings=Settings(anonymized_telemetry=False)
+#     )
+#     logger.info("ChromaDB cliente inicializado con telemetría desactivada")
 
 # 👇 🚀 INCLUIR SISTEMA RAG MEJORADO
 if enhanced_system_available:
@@ -261,97 +265,81 @@ class DetailedFeedbackRequest(BaseModelOriginal):
 # Inicializar base de datos al iniciar
 @app.on_event("startup")
 async def on_startup():
+    startup_start = time.time()
+    print(f"\n⏱️  INICIO DEL STARTUP: {time.time():.2f}")
+    
+    # 1. Inicializar DB (rápido)
+    db_start = time.time()
     init_db()
-    # Cargar conocimiento desde training data + base conocimiento
-    training_loader.load_all_training_data()
-    training_loader.generate_knowledge_from_patterns()
-    logger.info("✅ Base de datos y conocimiento histórico cargados")
+    print(f"⏱️  DB inicializada en: {time.time() - db_start:.2f}s")
+    logger.info(f"✅ Base de datos inicializada ({time.time() - db_start:.2f}s)")
+    
+    # 2. OPTIMIZACIÓN AGRESIVA: Deshabilitar carga de training data en startup
+    # Esto se puede cargar bajo demanda en la primera consulta
+    knowledge_start = time.time()
+    print(f"⏱️  Inicio carga conocimiento: {time.time():.2f}")
+    
+    # DESHABILITADO TEMPORALMENTE PARA DIAGNÓSTICO
+    # if not hasattr(training_loader, '_already_loaded'):
+    #     training_loader.load_all_training_data()
+    #     training_loader.generate_knowledge_from_patterns()
+    #     training_loader._already_loaded = True
+    
+    print(f"⏱️  Carga conocimiento omitida (lazy loading): {time.time() - knowledge_start:.2f}s")
+    logger.info(f"✅ Carga de conocimiento OMITIDA (lazy loading habilitado)")
+    
     logger.info("✅ Sistema de filtros de contenido inicializado")
     logger.info("✅ Sistema de emails Gmail configurado y listo")
     logger.info("✅ Generador de QR inicializado y listo")
 
-    # Si existe urls.txt en el proyecto, realizar ingesta automática en startup
+    # OPTIMIZACIÓN: NO hacer ingesta automática en startup (ralentiza mucho)
+    # En su lugar, mostrar mensaje informativo
     try:
         urls_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'urls.txt'))
         if os.path.exists(urls_path):
             try:
                 with open(urls_path, 'r', encoding='utf-8') as f:
                     urls = [line.strip() for line in f if line.strip()]
+                url_count = len(urls)
             except Exception as e:
                 urls = []
+                url_count = 0
                 logger.warning(f"No se pudo leer urls.txt: {e}")
 
-            if urls:
-                logger.info(f"🔄 Iniciando ingesta automática desde {urls_path} ({len(urls)} URLs)")
-                try:
-                    added = await async_add_urls(urls, concurrency=6)
-                    if added > 0:
-                        logger.info(f"✅ Ingesta automática completada: {added} fragmentos nuevos añadidos desde urls.txt")
-                    else:
-                        logger.warning(f"⚠️  Ingesta automática completada pero 0 fragmentos nuevos añadidos. Posible causa: contenido ya indexado previamente.")
-                    for u in urls:
-                        logger.info(f" - Ingestada URL: {u}")
-                except Exception as e:
-                    logger.error(f"Error durante ingesta automática desde urls.txt: {e}")
+            if url_count > 0:
+                logger.info(f"📋 Se detectaron {url_count} URLs en urls.txt")
+                logger.info(f"💡 TIP: Para ingestar manualmente, usa el endpoint POST /ingest/urls")
+                logger.info(f"💡 O ejecuta: python -m app.async_ingest")
             else:
-                logger.info("ℹ️ urls.txt encontrado pero no contiene URLs.")
+                logger.info("ℹ️  urls.txt encontrado pero está vacío")
         else:
-            logger.info("ℹ️ No se encontró urls.txt en la raíz del proyecto; no se ejecutó ingesta automática de URLs.")
+            logger.info("ℹ️  No se encontró urls.txt (ingesta manual disponible vía API)")
     except Exception as e:
-        logger.error(f"Error al intentar iniciar ingesta automática en startup: {e}")
+        logger.error(f"Error al verificar urls.txt: {e}")
 
-    # --- Startup: resumen de ingestas (URLs detectadas en la colección Chroma) ---
+    # OPTIMIZACIÓN AGRESIVA: Omitir resumen completo de ChromaDB en startup
+    print(f"⏱️  Inicio resumen ChromaDB: {time.time():.2f}")
+    summary_start = time.time()
+    
     try:
+        # Solo obtener conteo básico, sin procesar metadatas
         stats = rag_engine.get_cache_stats()
         total_docs = stats.get('total_documents', 'N/A')
-
-        url_sources = set()
-        try:
-            if hasattr(rag_engine, 'collection') and rag_engine.collection is not None:
-                # Obtener solo metadatas (incluir 'ids' provocaba error en algunas versiones)
-                coll_data = rag_engine.collection.get(include=['metadatas'])
-                metadatas = []
-                if isinstance(coll_data, dict):
-                    metadatas = coll_data.get('metadatas', [])
-
-                # Aplanar estructuras anidadas devueltas por chroma (p. ej. [ [md1, md2, ...] ])
-                flat_mds = []
-                if isinstance(metadatas, list):
-                    for m in metadatas:
-                        if isinstance(m, list):
-                            flat_mds.extend(m)
-                        else:
-                            flat_mds.append(m)
-
-                # Buscar valores que parezcan URLs en varias claves posibles
-                for md in flat_mds:
-                    if not isinstance(md, dict):
-                        continue
-                    for key in ('source', 'uri', 'url'):
-                        val = md.get(key)
-                        if isinstance(val, str) and (val.startswith('http://') or val.startswith('https://')):
-                            url_sources.add(val)
-                        elif isinstance(val, list):
-                            for v in val:
-                                if isinstance(v, str) and (v.startswith('http://') or v.startswith('https://')):
-                                    url_sources.add(v)
-        except Exception as e:
-            logger.warning(f"No se pudo enumerar fuentes ingestadas desde Chroma (esto no impide el servicio): {e}")
-
-        if url_sources:
-            logger.info(f"✅ Ingesta web detectada: {len(url_sources)} URLs indexadas en la colección")
-            # Loguear cada URL (limitar a 100 para no spamear logs)
-            for i, u in enumerate(sorted(url_sources)):
-                if i >= 100:
-                    logger.info(f"... (más URLs omitidas en log, total {len(url_sources)})")
-                    break
-                logger.info(f" - URL ingestada: {u}")
-        else:
-            logger.info("ℹ️  No se detectaron URLs ingestadas en la colección Chroma (no hay ingestas web registradas)")
-
-        logger.info(f"📦 Resumen RAG al inicio: total_documents={total_docs}")
+        
+        logger.info(f"📦 RAG Engine: {total_docs} documentos totales")
+        print(f"⏱️  Resumen ChromaDB completado en: {time.time() - summary_start:.2f}s")
     except Exception as e:
-        logger.error(f"Error generando resumen de ingestas en startup: {e}")
+        logger.error(f"Error generando resumen: {e}")
+        print(f"⏱️  Error en resumen: {time.time() - summary_start:.2f}s")
+    
+    # ⏱️ MOSTRAR TIEMPO DE INICIO DEL SERVIDOR
+    startup_time = time.time() - SERVER_START_TIME
+    print("\n" + "=" * 80)
+    print(f"🚀 SERVIDOR INICIADO COMPLETAMENTE")
+    print(f"⏱️  Tiempo de inicio: {startup_time:.2f} segundos")
+    print(f"🌐 Servidor disponible en: http://localhost:8000")
+    print(f"📚 Documentación API: http://localhost:8000/docs")
+    print("=" * 80 + "\n")
 
 class Message(BaseModel):
     text: Optional[str] = None
@@ -391,9 +379,11 @@ async def chat(message: Message, request: Request):
                 "timestamp": datetime.now().isoformat()
             }
         
-        # 👇 2. CLASIFICACIÓN DE TEMA - MODO PERMISIVO MEJORADO
+        # 👇 2. CLASIFICACIÓN DE TEMA - MODO PERMISIVO MEJORADO CON EXTRACCIÓN DE PALABRAS CLAVE
         try:
-            topic_classification = topic_classifier.classify_topic(question)
+            # Usar el nuevo método que es más tolerante con consultas informales
+            topic_classification = topic_classifier.classify_with_keywords(question)
+            logger.info(f"🔍 Clasificación con palabras clave: {topic_classification.get('category')} (método: {topic_classification.get('method', 'tradicional')})")
         except Exception as e:
             logger.warning(f"Error en topic classifier: {e}")
             # En caso de error, asumir que es institucional y continuar

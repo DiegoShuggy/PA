@@ -3,6 +3,7 @@ import logging
 from typing import Dict, List, Tuple
 import re
 import unicodedata
+from .keyword_extractor import keyword_extractor
 
 logger = logging.getLogger(__name__)
 
@@ -1014,3 +1015,81 @@ class TopicClassifier:
             "special_patterns": {k: len(v) for k, v in self.special_patterns.items()},
             "total_categories": len(self.allowed_categories) + len(self.redirect_categories)
         }
+    
+    def classify_with_keywords(self, question: str) -> Dict:
+        """
+        Clasificación mejorada usando extracción de palabras clave.
+        Este método es más tolerante con consultas informales o mal escritas.
+        """
+        logger.info(f"🔍 Clasificando consulta con extractor de palabras clave: '{question}'")
+        
+        # Primero intentar clasificación tradicional
+        traditional_result = self.classify_topic(question)
+        
+        # Si la clasificación tradicional fue exitosa con alta confianza, usarla
+        if traditional_result.get("is_institutional") and traditional_result.get("confidence", 0) >= 0.8:
+            logger.info(f"✅ Clasificación tradicional exitosa: {traditional_result.get('category')}")
+            return traditional_result
+        
+        # Si no, usar extracción de palabras clave
+        extracted = keyword_extractor.extract_keywords(question)
+        detected_categories = extracted.get("categories", {})
+        
+        logger.info(f"📊 Palabras clave detectadas: {detected_categories}")
+        
+        # Mapeo de categorías del extractor a categorías institucionales
+        category_mapping = {
+            "tne": "asuntos_estudiantiles",
+            "certificado": "asuntos_estudiantiles",
+            "seguro": "asuntos_estudiantiles",
+            "psicologico": "bienestar_estudiantil",
+            "licencia": "bienestar_estudiantil",
+            "caf": "deportes",
+            "natacion": "deportes",
+            "talleres": "deportes",
+            "futbol": "deportes",
+            "horarios": "deportes",
+            "cv": "desarrollo_profesional",
+            "practica": "desarrollo_profesional",
+            "trabajo": "desarrollo_profesional",
+            "entrevista": "desarrollo_profesional",
+            "bienestar": "bienestar_estudiantil",
+            "beca": "asuntos_estudiantiles",
+            "ubicacion": "institucionales",
+            "contacto": "institucionales",
+            "matricula": "asuntos_estudiantiles",
+            "notas": "asuntos_estudiantiles",
+            "biblioteca": "biblioteca",
+            "pago": "financiamiento"
+        }
+        
+        # Si encontramos categorías por palabras clave
+        if detected_categories:
+            # Ordenar por cantidad de coincidencias
+            sorted_categories = sorted(
+                detected_categories.items(), 
+                key=lambda x: len(x[1]), 
+                reverse=True
+            )
+            
+            best_category_key = sorted_categories[0][0]
+            matched_keywords = sorted_categories[0][1]
+            
+            # Mapear a categoría institucional
+            institutional_category = category_mapping.get(best_category_key, "institucionales")
+            
+            logger.info(f"✨ Categoría detectada por palabras clave: {institutional_category} (desde {best_category_key})")
+            
+            return {
+                "is_institutional": True,
+                "category": institutional_category,
+                "matched_keywords": matched_keywords,
+                "confidence": 0.75,  # Confianza media por detección de palabras clave
+                "language": "es",
+                "method": "keyword_extraction",
+                "message": f"Pregunta permitida - {institutional_category.replace('_', ' ').title()} (detectado por palabras clave)"
+            }
+        
+        # Si no se detectó nada, devolver resultado tradicional
+        logger.warning(f"⚠️ No se detectaron categorías por palabras clave")
+        return traditional_result

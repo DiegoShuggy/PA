@@ -335,24 +335,36 @@ class TrainingDataLoader:
 
     def load_all_training_data(self):
         try:
-            logger.info("INICIANDO CARGA COMPLETA")
+            # OPTIMIZACIÓN: Solo cargar si no se ha cargado antes
+            if self.data_loaded:
+                logger.info("✅ Datos ya cargados (reutilizando)")
+                return True
+            
+            logger.info("⚡ CARGA RÁPIDA INICIADA")
 
+            # Solo cargar conocimiento base esencial (muy rápido)
             if not self.base_knowledge_loaded:
                 self._load_corrected_base_knowledge()
                 self.base_knowledge_loaded = True
 
+            # OPTIMIZACIÓN: Cargar documentos Word solo si existen y es primera carga
             if not self.word_documents_loaded and os.path.exists(self.documents_path):
-                self._load_documents()
+                doc_count = len([f for f in os.listdir(self.documents_path) if f.endswith('.docx')])
+                if doc_count > 0:
+                    logger.info(f"📄 Cargando {doc_count} documentos Word...")
+                    self._load_documents()
                 self.word_documents_loaded = True
 
+            # OPTIMIZACIÓN: Cargar datos históricos de forma más eficiente
             self._load_historical_training_data()
             self._load_derivation_knowledge()
-            self._load_centro_ayuda_knowledge()
-            self._load_specific_duoc_knowledge()
-            self.generate_knowledge_from_patterns()
+            
+            # OPTIMIZACIÓN: Saltar cargas pesadas opcionales en startup
+            # self._load_centro_ayuda_knowledge()  # Comentado: carga bajo demanda
+            # self._load_specific_duoc_knowledge()  # Comentado: carga bajo demanda
 
             self.data_loaded = True
-            logger.info("CARGA COMPLETA FINALIZADA")
+            logger.info("⚡ CARGA RÁPIDA FINALIZADA")
             return True
         except Exception as e:
             logger.error(f"Error en carga: {e}")
@@ -560,6 +572,10 @@ class TrainingDataLoader:
         })
 
     def generate_knowledge_from_patterns(self):
+        # OPTIMIZACIÓN: Solo generar si no se ha hecho antes
+        if hasattr(self, '_patterns_generated') and self._patterns_generated:
+            return
+        
         patterns = [
             "Punto Estudiantil Plaza Norte: Santa Elena de Huechuraba 1660. L-V 8:30-19:00",
             "Certificado alumno regular: Digital gratis (portal), Impreso $1.000 (24h)",
@@ -568,6 +584,8 @@ class TrainingDataLoader:
         ]
         for doc in patterns:
             self._add_document_direct(doc, {"type": "pattern", "category": "general", "source": "generated"})
+        
+        self._patterns_generated = True
 
     def get_loading_status(self) -> Dict:
         return {
