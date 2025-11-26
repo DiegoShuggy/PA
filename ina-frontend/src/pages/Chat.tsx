@@ -1763,7 +1763,7 @@ useEffect(() => {
       {/* Contenedor del chat */}
       <div className="chat-container" id="Cuerpo">
         <div className="chat-header">
-          <h2>{t('chat.title')}</h2>
+          
           {isListening && (
             <div className="extended-listening-info">
             </div>
