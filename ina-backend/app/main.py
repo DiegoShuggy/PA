@@ -3,7 +3,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from suppress_chroma_logs import initialize_silent_chroma
+from scripts.utilities.suppress_chroma_logs import initialize_silent_chroma
 
 # Aplicar configuración silenciosa de ChromaDB
 initialize_silent_chroma()

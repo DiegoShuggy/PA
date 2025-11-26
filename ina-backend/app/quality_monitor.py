@@ -34,7 +34,7 @@ class ResponseQuality:
             self.timestamp = datetime.now().isoformat()
 
 class QualityMonitor:
-    def __init__(self, log_file: str = "quality_monitor.json"):
+    def __init__(self, log_file: str = "config/quality_monitor.json"):
         self.log_file = Path(log_file)
         self.quality_data: List[ResponseQuality] = []
         self.unanswered_threshold = 5

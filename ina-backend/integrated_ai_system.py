@@ -22,10 +22,10 @@ from pathlib import Path
 
 # Importar sistemas mejorados
 try:
-    from advanced_duoc_ingest import AdvancedDuocIngestSystem
+    from scripts.ingest.advanced_duoc_ingest import AdvancedDuocIngestSystem
     from enhanced_rag_system import EnhancedRAGSystem
-    from information_expansion_system import InformationExpansionSystem
-    from performance_optimization_system import PerformanceOptimizationSystem
+    from scripts.ingest.information_expansion_system import InformationExpansionSystem
+    from scripts.utilities.performance_optimization_system import PerformanceOptimizationSystem
     
     # Importar módulos existentes del proyecto
     from app.rag import rag_engine

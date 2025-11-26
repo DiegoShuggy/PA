@@ -1,0 +1,218 @@
+# 🌐 SERVICIOS DIGITALES Y TECNOLÓGICOS PLAZA NORTE
+
+## 💻 **PORTAL ESTUDIANTE PRINCIPAL**
+
+### **Portal Institucional**
+🌐 **URL**: https://portal.duoc.cl
+👤 **Acceso**: Con credenciales institucionales
+📱 **App móvil**: Disponible iOS/Android
+⏰ **Disponibilidad**: 24/7
+
+### **Servicios Disponibles en Portal**
+📊 **Notas y calificaciones** en tiempo real
+📅 **Horarios personalizados** por semestre
+📚 **Materiales de clase** descargables
+💰 **Estado financiero** y pagos pendientes
+📜 **Certificados online** (descarga inmediata)
+🎓 **Malla curricular** y avance académico
+📞 **Información de contacto** actualizada
+
+## 🎓 **PLATAFORMA EDUCATIVA (AULA VIRTUAL)**
+
+### **Blackboard Learn Ultra**
+🌐 **URL**: https://plataforma.duoc.cl
+👤 **Acceso**: Automático al ingresar credenciales
+📱 **App**: "Blackboard" en stores
+
+### **Funcionalidades Principales**
+📚 **Cursos virtuales** por asignatura
+📝 **Entrega de tareas** y proyectos
+💬 **Foros de discusión** con compañeros y docentes
+🎬 **Clases grabadas** disponibles 24/7
+📊 **Calificaciones** con retroalimentación
+📁 **Recursos descargables** (PDF, videos, presentaciones)
+🔔 **Notificaciones** de actividades pendientes
+
+### **Modalidades Educativas**
+🏫 **Presencial**: Apoyo digital a clases físicas
+💻 **Online**: Clases 100% virtuales
+🔀 **Híbrido**: Combinación presencial/virtual
+
+## 📧 **CORREO INSTITUCIONAL**
+
+### **Configuración Email Duoc**
+📧 **Formato**: nombre.apellido@duocuc.cl
+🌐 **Acceso web**: https://outlook.office.com
+📱 **Apps móviles**: Outlook iOS/Android
+💾 **Almacenamiento**: 50GB por estudiante
+
+### **Servicios Office 365**
+📝 **Word Online**: Edición de documentos
+📊 **Excel Online**: Hojas de cálculo
+📽️ **PowerPoint Online**: Presentaciones
+☁️ **OneDrive**: 1TB almacenamiento en nube
+👥 **Teams**: Videollamadas y colaboración
+📅 **Calendar**: Gestión de horarios
+
+### **Configuración en Dispositivos**
+📱 **Móvil**: Configuración automática
+💻 **PC/Mac**: Acceso vía navegador o app
+🔐 **Autenticación**: Doble factor disponible
+
+## 📱 **WIFI INSTITUCIONAL**
+
+### **Redes Disponibles**
+🌐 **DUOC-Estudiantes**: Red principal estudiantes
+🔐 **DUOC-Academicos**: Red para docentes
+🌍 **DUOC-Invitados**: Red temporal visitantes
+
+### **Configuración Wifi**
+👤 **Usuario**: Número de alumno (sin puntos)
+🔑 **Contraseña**: Misma del portal estudiante
+📍 **Cobertura**: Todo el campus
+📶 **Velocidad**: 100 Mbps simétricos
+
+### **Soporte Técnico Wifi**
+📞 **Mesa de ayuda**: +56 2 2354 8400
+📧 **Email**: soporte.plazanorte@duoc.cl
+⏰ **Horario**: Lunes a Viernes 8:00-20:00
+
+## 🎯 **SERVICIOS DIGITALES ESPECIALIZADOS**
+
+### **Portal de Certificados**
+🌐 **URL**: https://certificados.duoc.cl/
+📜 **Tipos disponibles**:
+- Certificado de Alumno Regular
+- Concentración de Notas
+- Certificado de Título en Trámite
+- Certificado de Egreso
+
+💰 **Costos**:
+- Digital (PDF): GRATUITO
+- Físico: $1.000 (entrega 24 horas)
+
+### **Portal de Pagos**
+🌐 **URL**: https://www.duoc.cl/portal-de-pago/
+💳 **Métodos aceptados**:
+- Tarjetas de crédito/débito
+- Transferencia bancaria
+- RedCompra
+- Webpay
+
+📧 **Comprobantes**: Envío automático por email
+
+### **Portal Duoc Online**
+🌐 **URL**: https://www.duoc.cl/bienvenida-duoc-online/
+🎓 **Para estudiantes** modalidad online
+📚 **Recursos especializados**:
+- Inducción a modalidad virtual
+- Tutoriales de plataformas
+- Soporte técnico especializado
+
+## 🔧 **SOPORTE TÉCNICO Y HELP DESK**
+
+### **Mesa de Ayuda Central**
+📞 **Teléfono**: +56 2 2354 8400
+📧 **Email**: soporte.plazanorte@duoc.cl
+💬 **Chat**: Disponible en portal.duoc.cl
+⏰ **Horario**: Lunes a Viernes 8:00-20:00, Sábados 9:00-13:00
+
+### **Servicios de Soporte**
+💻 **Problemas de acceso** portal/plataformas
+📧 **Configuración email** institucional
+🌐 **Conectividad WiFi**
+📱 **Apps móviles** (instalación y uso)
+🔑 **Recuperación de contraseñas**
+📊 **Problemas con notas** o certificados
+
+### **Centro de Ayuda Online**
+🌐 **URL**: https://centroayuda.duoc.cl/hc/es-419
+📚 **Base de conocimiento** con +500 artículos
+🔍 **Buscador** de problemas frecuentes
+🎬 **Videos tutoriales** paso a paso
+
+### **Artículos Más Consultados**
+1. **Cómo recuperar mi contraseña**
+2. **Configurar email en móvil**
+3. **Acceder a notas en portal**
+4. **Descargar certificados online**
+5. **Conectar a WiFi DUOC**
+
+## 💻 **LABORATORIOS DE COMPUTACIÓN**
+
+### **Equipamiento Disponible**
+🖥️ **+120 computadores** en 5 laboratorios
+🖨️ **Impresoras** en cada laboratorio
+📡 **Proyectores** y sistemas de audio
+🔌 **Puntos de carga** para dispositivos
+
+### **Software Instalado**
+💼 **Productividad**: Office 365, Google Workspace
+💻 **Programación**: Visual Studio, Eclipse, NetBeans, Python
+📊 **Análisis**: SPSS, R Studio, Tableau
+🎨 **Diseño**: Adobe Creative Suite (licencia educativa)
+🌐 **Navegadores**: Chrome, Firefox, Edge
+🔧 **Especializado**: Según carrera (base de datos, simuladores)
+
+### **Horarios y Reservas**
+📅 **Lunes a Viernes**: 8:00-21:00
+📅 **Sábados**: 8:00-14:00
+📝 **Reservas**: Via portal estudiante
+👥 **Capacidad**: 30 estudiantes por laboratorio
+
+## 📱 **APLICACIONES MÓVILES OFICIALES**
+
+### **App Duoc UC**
+📱 **Descarga**: 
+- iOS: App Store "Duoc UC"
+- Android: Play Store "Duoc UC"
+
+🎯 **Funciones principales**:
+- Acceso rápido a portal estudiante
+- Push notifications de notas
+- Horarios offline
+- Directorio de contactos
+- Mapa del campus
+- Noticias institucionales
+
+### **App Microsoft Outlook** (Email)
+📧 **Para email** institucional @duocuc.cl
+🔔 **Notificaciones** de correos importantes
+📅 **Calendario** integrado con horarios
+
+### **App Blackboard** (Aula Virtual)
+🎓 **Acceso completo** a cursos virtuales
+📱 **Optimizada para móvil**
+📴 **Contenido offline** disponible
+
+## 🔒 **CUENTAS Y ACCESOS**
+
+### **Credenciales Institucionales**
+👤 **Usuario**: Número de alumno (ej: 123456789)
+🔑 **Contraseña**: Asignada en matrícula (modificable)
+🔐 **Doble factor**: Recomendado para mayor seguridad
+
+### **Gestión de Contraseñas**
+🌐 **Portal**: https://www.duoc.cl/alumnos/servicios-digitales/cuentas-y-accesos/
+🔄 **Cambio de contraseña**: Cada 90 días (recomendado)
+📧 **Recuperación**: Via email de respaldo
+
+### **Política de Uso**
+✅ **Uso exclusivo académico**
+❌ **Prohibido compartir credenciales**
+🚫 **No usar para actividades comerciales**
+🔒 **Cerrar sesión** en equipos compartidos
+
+## 📊 **ESTADÍSTICAS DE USO**
+
+### **Usuarios Activos**
+👥 **Portal Estudiante**: 98% estudiantes activos
+📚 **Plataforma virtual**: 95% uso semanal
+📧 **Email institucional**: 85% uso diario
+🌐 **WiFi campus**: 1,500 conexiones diarias promedio
+
+### **Disponibilidad del Servicio**
+⏰ **Portal**: 99.9% uptime
+💻 **Plataforma educativa**: 99.8% uptime
+🌐 **WiFi**: 99.5% uptime
+📧 **Email**: 99.9% uptime
