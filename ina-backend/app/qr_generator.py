@@ -504,13 +504,16 @@ class QRGenerator:
                         qr_codes[url] = qr_code
                         logger.info(f"✅ QR agregado por defecto: {url}")
         
-        # Log final
+        # Log final - MEJORADO
         if qr_codes:
+            print(f"🎊 Generación de QR completada: {len(qr_codes)} códigos creados")
             logger.info(f"🎊 Generación de QR completada: {len(qr_codes)} códigos creados")
             for url in qr_codes.keys():
+                print(f"   📱 QR generado: {url}")
                 logger.info(f"   📱 QR: {url}")
         else:
-            logger.warning("❌ No se generaron códigos QR")
+            print("ℹ️  No se generaron códigos QR (no se encontraron URLs en la respuesta)")
+            logger.debug("❌ No se generaron códigos QR")
         
         # 👈 ESTRUCTURA FINAL CORREGIDA - solo dict simple
         return {

@@ -300,100 +300,92 @@ class QuestionClassifier:
         """DETECCIÓN INTELIGENTE DE TEMPLATES EXPANDIDA CON TODOS LOS NUEVOS"""
         question_lower = self._clean_question(question)
         
-        print(f"🔍 TEMPLATE DETECTION para: '{question_lower[:50]}...'")
-        logger.info(f"Template detection iniciada para: '{question}'")
+        print(f"\n🔍 BUSCANDO TEMPLATE...")
+        print(f"   📝 Consulta normalizada: '{question_lower}'")
+        logger.info(f"🔍 Template detection iniciada para: '{question}'")
         
         # DETECCIÓN PRIORITARIA PARA TEMPLATES CRÍTICOS (MULTIIDIOMA)
         priority_templates = {
-            # TNE TEMPLATES CON SOPORTE MULTIIDIOMA
+            # TNE TEMPLATES - ORDEN CRÍTICO: Más específico primero
+            "tne_reposicion_perdida_danada": [
+                r'tne.*(pierde|p[ée]rdida|da[ñn]ada)', r'tne.*(se.*pierde|esta.*da[ñn]ada)',  # español
+                r'(saco|obtener|sacar).*tne.*(pierde|perdida|da[ñn]ada)', r'tne.*si.*(pierde|esta.*da[ñn]ada)',
+                r'lost.*tne', r'damaged.*tne', r'tne.*(lost|damaged)',  # inglés
+                r"if.*tne.*(lost|damaged)", r"tne.*if.*it's.*(lost|damaged)", r"get.*tne.*(lost|damaged)",
+                r'tne.*(perdue|endommagée)', r'si.*tne.*(perdue|endommagée)',  # francés
+                r'obtenir.*tne.*(perdue|endommagée)', r'tne.*si.*elle.*est.*(perdue|endommagée)'
+            ],
             "tne_primera_vez": [
-                r'c[óo]mo.*saco.*tne', r'obtener.*tne', r'sacar.*tne',  # español
-                r'how.*do.*i.*get.*tne', r'how.*to.*get.*tne', r'obtain.*tne',  # inglés
-                r'get.*my.*tne', r'how.*get.*student.*card', r'how.*obtain.*student.*card',
-                r'comment.*obtenir.*tne', r'comment.*avoir.*tne', r'obtenir.*ma.*tne'  # francés
+                r'c[óo]mo.*saco.*tne(?!.*(pierde|perdida|da[ñn]ada))', r'obtener.*tne(?!.*(pierde|perdida))', r'sacar.*tne(?!.*(pierde|perdida))',  # español
+                r'how.*do.*i.*get.*tne(?!.*(lost|damaged))', r'how.*to.*get.*tne(?!.*(lost|damaged))', r'obtain.*tne(?!.*(lost|damaged))',  # inglés
+                r'get.*my.*tne(?!.*(lost|damaged))', r'how.*get.*student.*card', r'how.*obtain.*student.*card',
+                r'comment.*obtenir.*tne(?!.*(perdue|endommagée))', r'comment.*avoir.*tne', r'obtenir.*ma.*tne(?!.*(perdue|endommagée))',  # francés
             ],
             "tne_seguimiento": [
                 r'c[óo]mo.*revalido.*tne', r'renovar.*tne', r'seguimiento.*tne',  # español
+                r'revalidar.*tne', r'c[óo]mo.*renuevo.*tne',  # español adicional
                 r'how.*do.*i.*renew.*tne', r'how.*renew.*my.*tne', r'tne.*renewal',  # inglés
-                r'revalidate.*tne', r'how.*to.*renew.*student.*card',
-                r'comment.*renouveler.*tne', r'renouveler.*ma.*tne', r'revalidation.*tne'  # francés
+                r'revalidate.*tne', r'how.*to.*renew.*student.*card', r'renew.*tne',  # inglés adicional
+                r'comment.*renouveler.*tne', r'renouveler.*ma.*tne', r'revalidation.*tne',  # francés
+                r'comment.*renouveler.*ma.*tne'  # francés adicional
             ],
             
             # PROGRAMA EMERGENCIA - MULTIIDIOMA EXPANDIDO
-            "programa_emergencia": [
-                r'programa.*emergencia', r'emergencia.*programa', r'qu[eé].*es.*programa.*emergencia',  # español
-                r'categorías.*emergencia', r'cu[aá]ndo.*emergencia', r'ayuda.*emergencia',
-                r'emergency.*program', r'program.*emergency', r'what.*emergency.*program',  # inglés
-                r'emergency.*support', r'financial.*aid.*emergency', r'when.*apply.*emergency',
-                r'programme.*urgence', r'urgence.*programme', r'programme.*d.*urgence',  # francés
-                r'aide.*urgence', r'soutien.*urgence', r'quand.*programme.*urgence'
-            ],
             "programa_emergencia_requisitos": [
-                r'requisitos.*emergencia', r'conditions.*emergencia', r'qu[eé].*requisitos',  # español
-                r'requirements.*emergency', r'emergency.*requirements', r'apply.*emergency',  # inglés
-                r'application.*categories.*emergency', r'what.*are.*requirements',
+                r'requisitos.*programa.*emergencia', r'requisitos.*emergencia',  # español
+                r'cu[aá]les.*requisitos.*emergencia', r'condiciones.*emergencia',  # español adicional
+                r'emergency.*program.*requirements', r'requirements.*emergency.*program',  # inglés
+                r'what.*requirements.*emergency', r'apply.*emergency.*program',  # inglés adicional
+                r'requirements.*to.*apply.*emergency', r'what.*are.*the.*requirements.*emergency',  # inglés adicional
                 r'conditions.*programme.*urgence', r'requisitos.*programme.*urgence',  # francés
-                r'conditions.*postuler.*urgence', r'quelles.*conditions'
+                r'conditions.*postuler.*urgence', r'quelles.*conditions', r'quelles.*sont.*conditions'  # francés adicional
+            ],
+            "programa_emergencia_categorias": [
+                r'categor[íi]as.*emergencia', r'categor[íi]as.*postulaci[óo]n.*emergencia',  # español
+                r'cu[aá]les.*categor[íi]as.*emergencia',  # español adicional
+                r'emergency.*program.*categories', r'application.*categories.*emergency',  # inglés
+                r'what.*are.*categories.*emergency', r'categories.*for.*emergency',  # inglés adicional
+                r'catégories.*programme.*urgence', r'catégories.*postulation.*urgence',  # francés
+                r'quelles.*sont.*catégories', r'catégories.*d.*urgence'  # francés adicional
+            ],
+            "programa_emergencia_plazos": [
+                r'cu[aá]ndo.*postular.*emergencia', r'plazo.*emergencia', r'cu[aá]ndo.*puedo.*postular',  # español
+                r'when.*apply.*emergency', r'when.*can.*i.*apply.*emergency',  # inglés
+                r'emergency.*program.*deadline', r'deadline.*emergency',  # inglés adicional
+                r'quand.*puis.*je.*postuler.*urgence', r'délai.*urgence',  # francés
+                r'quand.*postuler.*programme.*urgence'  # francés adicional
             ],
             
             # PROGRAMAS DE APOYO - MULTIIDIOMA
             "programas_apoyo_estudiante": [
                 r'programas.*apoyo.*estudiante', r'información.*apoyo', r'apoyo.*al.*estudiante',  # español
+                r'c[óo]mo.*obtener.*informaci[óo]n.*apoyo',  # español adicional
                 r'student.*support.*programs', r'information.*student.*support',  # inglés
-                r'how.*get.*information.*support', r'support.*programs.*information',
+                r'how.*get.*information.*support', r'support.*programs.*information',  # inglés adicional
+                r'how.*can.*i.*get.*information.*support',  # inglés adicional
                 r'programmes.*soutien.*étudiants', r'informations.*programmes.*soutien',  # francés
-                r'comment.*obtenir.*informations.*soutien', r'soutien.*aux.*étudiants'
+                r'comment.*obtenir.*informations.*soutien', r'soutien.*aux.*étudiants',  # francés adicional
+                r'comment.*puis.*je.*obtenir.*informations'  # francés adicional
             ],
             
             # SEGURO - MULTIIDIOMA EXPANDIDO  
             "seguro_cobertura": [
                 r'c[óo]mo.*funciona.*seguro', r'seguro.*estudiantil', r'cobertura.*seguro',  # español
+                r'funciona.*el.*seguro', r'seguro.*estudiantil.*funciona',  # español adicional
                 r'how.*insurance.*work', r'how.*does.*insurance.*work', r'student.*insurance',  # inglés
-                r'insurance.*coverage', r'does.*insurance.*work',
+                r'insurance.*coverage', r'does.*insurance.*work', r'how.*does.*the.*insurance.*work',  # inglés adicional
                 r'comment.*assurance.*fonctionne', r'comment.*fonctionne.*assurance',  # francés
-                r'assurance.*étudiante', r'couverture.*assurance'
-            ],
-            "tne_reposicion_perdida_danada": [
-                r'tne.*pierde', r'tne.*p[ée]rdida', r'tne.*da[ñn]ada',  # español
-                r'lost.*tne', r'damaged.*tne', r'tne.*lost.*damaged',  # inglés
-                r'if.*tne.*lost', r'if.*tne.*damaged', r'lost.*student.*card',
-                r'tne.*perdue', r'tne.*endommagée', r'si.*tne.*perdue.*endommagée'  # francés
-            ],
-            # SEGURO TEMPLATES
-            "seguro_cobertura": [
-                r'c[óo]mo.*funciona.*seguro', r'seguro.*cobertura', r'informaci[óo]n.*seguro',  # español
-                r'how.*does.*insurance.*work', r'insurance.*coverage', r'insurance.*information',  # inglés
-                r'how.*insurance.*works', r'student.*insurance.*work',
-                r'comment.*fonctionne.*assurance', r'assurance.*couverture', r'information.*assurance'  # francés
-            ],
-            # PROGRAMA EMERGENCIA
-            "programa_emergencia_requisitos": [
-                r'requisitos.*programa.*emergencia',  # español
-                r'emergency.*program.*requirements', r'requirements.*emergency.*program',  # inglés
-                r'what.*requirements.*emergency', r'apply.*emergency.*program',
-                r'conditions.*programme.*urgence', r'exigences.*programme.*urgence'  # francés
-            ],
-            "programa_emergencia_que_es": [
-                r'qu[ée].*es.*programa.*emergencia',  # español
-                r'what.*emergency.*program', r'emergency.*program.*categories',  # inglés
-                r'application.*categories.*emergency', r'when.*apply.*emergency',
-                r'quest.*ce.*que.*programme.*urgence', r'catégories.*programme.*urgence'  # francés
+                r'comment.*fonctionne.*l.*assurance', r'assurance.*étudiante',  # francés adicional
+                r'couverture.*assurance'  # francés adicional
             ]
         }
 
         for template_id, patterns in priority_templates.items():
             for pattern in patterns:
                 if re.search(pattern, question_lower):
-                    logger.info(f"PRIORITY TEMPLATE: '{question}' -> {template_id}")
-                    return template_id
-        
-        # PATRONES ESPECÍFICOS PARA TEMPLATES - MULTIIDIOMA COMPLETOS
-        # (La definición real está más abajo con soporte multilingual completo)
-
-        for template_id, patterns in priority_templates.items():
-            for pattern in patterns:
-                if re.search(pattern, question_lower):
-                    logger.info(f"PRIORITY TEMPLATE: '{question}' -> {template_id}")
+                    print(f"   ✅ TEMPLATE ENCONTRADO: '{template_id}'")
+                    print(f"   🎯 Patrón coincidente: {pattern[:50]}...")
+                    logger.info(f"✅ PRIORITY TEMPLATE: '{question}' -> {template_id}")
                     return template_id
         
         # PATRONES ESPECÍFICOS PARA TEMPLATES - COMPLETAMENTE EXPANDIDOS
@@ -802,20 +794,27 @@ class QuestionClassifier:
                 r'encuentros.*grupales', r'sesión.*grupal'
             ],
             "apoyo_crisis": [
-                # ESPAÑOL
+                # ESPAÑOL - EXPANDIDO CON VARIANTES ESPECÍFICAS
+                r'qué.*debo.*hacer.*si.*tengo.*crisis', r'qué.*hacer.*si.*tengo.*crisis',
+                r'tengo.*crisis.*estando.*en.*sede', r'me.*siento.*mal.*estando.*en.*sede',
+                r'crisis.*o.*me.*siento.*mal', r'crisis.*en.*la.*sede', r'crisis.*en.*el.*campus',
+                r'me.*siento.*mal.*en.*sede', r'me.*siento.*mal.*en.*campus',
                 r'apoyo.*crisis', r'protocolo.*crisis', r'emergencia.*emocional',
                 r'crisis.*psicológica', r'urgencia.*salud.*mental', r'atención.*inmediata',
                 r'situación.*crítica', r'protocolo.*emergencia',
                 # INGLÉS
+                r'what.*should.*i.*do.*if.*i.*have.*crisis', r'what.*do.*if.*crisis',
                 r'crisis.*support', r'crisis.*protocol', r'emotional.*emergency',
                 r'psychological.*crisis', r'mental.*health.*emergency', r'immediate.*care',
                 r'critical.*situation', r'emergency.*protocol', r'crisis.*feel.*unwell',
                 r'have.*crisis.*campus', r'feel.*unwell.*campus', r'crisis.*on.*campus',
+                r'feel.*unwell.*while.*at.*campus', r'crisis.*while.*on.*campus',
                 # FRANCÉS - EXPANDIDO
                 r"que.*dois.*je.*faire.*si.*j'ai.*une.*crise", r'crise.*ou.*me.*sens.*mal',
                 r"j'ai.*une.*crise", r'me.*sens.*mal.*sur.*le.*campus',
                 r'soutien.*crise', r'aide.*urgente', r'crise.*émotionnelle',
-                r'que.*faire.*si.*crise', r'mal.*sur.*le.*campus'
+                r'que.*faire.*si.*crise', r'mal.*sur.*le.*campus',
+                r'crise.*sur.*le.*campus', r'me.*sens.*mal.*campus'
             ],
             "recursos_digitales_bienestar": [
                 r'recursos.*digitales', r'contenidos.*online', r'material.*digital',
@@ -1415,13 +1414,14 @@ class QuestionClassifier:
         for template_id, patterns in template_patterns.items():
             for pattern in patterns:
                 if re.search(pattern, question_lower):
-                    print(f"✅ TEMPLATE MATCH ENCONTRADO: '{question}' -> {template_id}")
-                    logger.info(f"TEMPLATE MATCH: '{question}' -> {template_id}")
+                    print(f"   ✅ TEMPLATE ENCONTRADO: '{template_id}'")
+                    print(f"   🎯 Patrón coincidente: {pattern[:50]}...")
+                    logger.info(f"✅ TEMPLATE MATCH: '{question}' -> {template_id}")
                     self.stats['template_matches'] += 1
                     return template_id
         
-        print(f"❌ NO TEMPLATE MATCH para: '{question_lower[:50]}...'")
-        logger.info(f"No template match para: '{question}'")
+        print(f"   ℹ️  No se encontró template específico (se usará RAG)")
+        logger.debug(f"No template match para: '{question}'")
         return None
     
     def _keyword_classification(self, question: str) -> Tuple[str, float]:

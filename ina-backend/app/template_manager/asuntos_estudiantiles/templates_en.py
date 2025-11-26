@@ -158,4 +158,107 @@ If you need more specific information (for example, steps to use insurance, cove
 
 ⚡ **Processing time:** 15-20 business days
 """,
+
+    "tne_reposicion_perdida_danada": """
+🔄 **TNE Replacement for lost or damaged card:**
+
+**Steps to request new TNE:**
+1. **Payment:** $1,540 at campus cashier or online payment portal
+2. **Send receipt** to: Puntoestudiantil_pnorte@duoc.cl
+3. **Automatic update** in system
+4. **Receive instructions** for replacement process
+
+**Required documentation:**
+• Payment receipt ($1,540)
+• Valid identity card
+• Loss declaration (if applicable)
+
+💳 **Online payments:** https://portal.duoc.cl
+📧 **Email:** Puntoestudiantil_pnorte@duoc.cl
+📞 **Inquiries:** +56 2 2360 6400
+🔗 **Tracking:** https://www.tne.cl
+
+⚡ **Processing time:** 15-20 business days
+💡 *Process applies for lost, stolen or damaged cards*
+""",
+
+    "programa_emergencia_plazos": """
+📅 **Application Deadlines - Emergency Program:**
+
+**Applications 2025:**
+• **First Semester:** April 28 - July 31
+• **Second Semester:** September 1 - December 22
+
+**Application process:**
+1. **Review requirements** before applying
+2. **Gather documentation** according to category
+3. **Apply online** within deadline
+4. **Track** application status
+
+🔗 **Apply:** https://centroayuda.duoc.cl
+📞 **Inquiries:** +56 2 2596 5202
+📧 **Email:** bienestar.plazanorte@duoc.cl
+
+⚠️ **Important:**
+• Apply only during enabled periods
+• Ensure your documentation is complete
+• Maximum response time: 30 business days
+
+💡 *Applications outside deadlines will not be considered*
+""",
+    "programa_emergencia_requisitos": """
+✅ **Requirements to apply for the Emergency Program:**
+
+**General requirements:**
+• Be a regular Duoc UC student
+• Have assigned academic load
+• No active suspension or withdrawal request
+• Social Registry of Households (maximum 6 months validity)
+• Active RUT account at Banco Estado
+
+📋 **Documentation by category:**
+
+🩺 **Medical expenses:**
+• Valid Social Registry of Households
+• Medical records and/or treatment with prescription
+
+✝️ **Family bereavement:**
+• Valid Social Registry of Households
+• Birth/marriage certificate/AUC
+• Death certificate from Civil Registry
+
+🚪 **Housing damage:**
+• Valid Social Registry of Households
+• Fire Department certificate and/or Basic Emergency Form
+
+🙏 **Exceptional support:**
+• Valid Social Registry of Households
+• Social worker report
+
+🔗 **Apply:** https://centroayuda.duoc.cl
+🚫 **Exclusion:** Students with Duoc UC Employee Scholarship
+""",
+    "programa_emergencia_categorias": """
+🗂️ **Application Categories - Emergency Program**
+
+1. **🩺 Medical expenses for treatments/medications:**
+   • Social Registry of Households (6 months)
+   • Medical records and/or treatment with prescription
+
+2. **✝️ Family bereavement expenses:**
+   • Social Registry of Households (6 months)
+   • Birth/marriage certificate/AUC
+   • Death certificate from Civil Registry
+
+3. **🚪 Housing damage expenses:**
+   • Social Registry of Households (6 months)
+   • Fire Department certificate and/or Basic Emergency Form
+
+4. **🙏 Exceptional support:**
+   • Social Registry of Households (6 months)
+   • Social worker report
+   • *Only once during the academic program*
+
+💡 *Documentation must be consistent with the application reason*
+""",
 }

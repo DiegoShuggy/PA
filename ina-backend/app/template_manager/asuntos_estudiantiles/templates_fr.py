@@ -156,4 +156,107 @@ Contact et ressources:
 
 Si vous avez besoin d'informations plus spécifiques (par exemple, étapes pour utiliser l'assurance, couverture à l'étranger ou comment déposer une réclamation), dites-le moi et je fournirai les détails ou indiquerai le contact approprié.
 """,
+
+    "tne_reposicion_perdida_danada": """
+🔄 **Remplacement de TNE perdue ou endommagée:**
+
+**Étapes pour demander une nouvelle TNE:**
+1. **Paiement:** $1.540 à la caisse du campus ou portail de paiement
+2. **Envoyer le reçu** à: Puntoestudiantil_pnorte@duoc.cl
+3. **Mise à jour automatique** dans le système
+4. **Recevoir les instructions** pour le processus de remplacement
+
+**Documentation requise:**
+• Reçu de paiement ($1.540)
+• Carte d'identité valide
+• Déclaration de perte (si applicable)
+
+💳 **Paiements en ligne:** https://portal.duoc.cl
+📧 **Email:** Puntoestudiantil_pnorte@duoc.cl
+📞 **Demandes:** +56 2 2360 6400
+🔗 **Suivi:** https://www.tne.cl
+
+⚡ **Délai de traitement:** 15-20 jours ouvrables
+💡 *Processus applicable pour cartes perdues, volées ou endommagées*
+""",
+
+    "programa_emergencia_plazos": """
+📅 **Délais de Candidature - Programme d'Urgence:**
+
+**Candidatures 2025:**
+• **Premier Semestre:** 28 avril - 31 juillet
+• **Deuxième Semestre:** 1er septembre - 22 décembre
+
+**Processus de candidature:**
+1. **Vérifier les exigences** avant de postuler
+2. **Rassembler la documentation** selon la catégorie
+3. **Postuler en ligne** dans les délais
+4. **Suivre** l'état de la candidature
+
+🔗 **Postuler:** https://centroayuda.duoc.cl
+📞 **Demandes:** +56 2 2596 5202
+📧 **Email:** bienestar.plazanorte@duoc.cl
+
+⚠️ **Important:**
+• Postulez uniquement pendant les périodes activées
+• Assurez-vous que votre documentation est complète
+• Délai de réponse maximum: 30 jours ouvrables
+
+💡 *Les candidatures hors délais ne seront pas considérées*
+""",
+    "programa_emergencia_requisitos": """
+✅ **Exigences pour postuler au Programme d'Urgence:**
+
+**Exigences générales:**
+• Être étudiant régulier de Duoc UC
+• Avoir une charge académique assignée
+• Aucune demande active de suspension ou de retrait
+• Registre Social des Foyers (validité maximale 6 mois)
+• Compte RUT actif à Banco Estado
+
+📋 **Documentation par catégorie:**
+
+🩺 **Frais médicaux:**
+• Registre Social des Foyers valide
+• Antécédents médicaux et/ou traitement avec ordonnance
+
+✝️ **Décès familial:**
+• Registre Social des Foyers valide
+• Certificat de naissance/mariage/AUC
+• Certificat de décès du Registre Civil
+
+🚪 **Dommages au logement:**
+• Registre Social des Foyers valide
+• Certificat des Pompiers et/ou Fiche Basique d'Urgence
+
+🙏 **Soutien exceptionnel:**
+• Registre Social des Foyers valide
+• Rapport d'assistant social
+
+🔗 **Postuler:** https://centroayuda.duoc.cl
+🚫 **Exclusion:** Étudiants avec Bourse Collaborateur Duoc UC
+""",
+    "programa_emergencia_categorias": """
+🗂️ **Catégories de Candidature - Programme d'Urgence**
+
+1. **🩺 Frais médicaux pour traitements/médicaments:**
+   • Registre Social des Foyers (6 mois)
+   • Antécédents médicaux et/ou traitement avec ordonnance
+
+2. **✝️ Frais pour décès familial:**
+   • Registre Social des Foyers (6 mois)
+   • Certificat de naissance/mariage/AUC
+   • Certificat de décès du Registre Civil
+
+3. **🚪 Frais pour dommages au logement:**
+   • Registre Social des Foyers (6 mois)
+   • Certificat des Pompiers et/ou Fiche Basique d'Urgence
+
+4. **🙏 Soutien exceptionnel:**
+   • Registre Social des Foyers (6 mois)
+   • Rapport d'assistant social
+   • *Une seule fois pendant la carrière*
+
+💡 *La documentation doit être cohérente avec le motif de candidature*
+""",
 }

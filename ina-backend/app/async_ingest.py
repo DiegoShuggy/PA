@@ -110,7 +110,8 @@ async def async_add_url(url: str, client: httpx.AsyncClient, hashes: Dict[str, b
         r = await client.get(url, headers=headers, timeout=30.0)
         r.raise_for_status()
     except Exception as e:
-        logger.error(f'Error descargando {url}: {e}')
+        # Ocultar errores de URLs para no saturar logs en startup
+        logger.debug(f'Error descargando {url}: {e}')
         return 0
 
     content_type = r.headers.get('content-type', '').lower()

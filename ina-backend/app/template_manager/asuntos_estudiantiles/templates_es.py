@@ -188,4 +188,97 @@ Resumen rápido:
 
 💡 *Estamos aquí para apoyarte en tu experiencia universitaria*
 """,
+
+    "tne_reposicion_perdida_danada": """
+🔄 **Reposición de TNE perdida o dañada:**
+
+**Pasos para solicitar nueva TNE:**
+1. **Pago:** $1.540 en caja de sede o portal de pagos
+2. **Enviar comprobante** a: Puntoestudiantil_pnorte@duoc.cl
+3. **Actualización automática** en sistema
+4. **Recibir instrucciones** para proceso de reposición
+
+**Documentación requerida:**
+• Comprobante de pago ($1.540)
+• Cédula de identidad vigente
+• Declaración de extravío (si aplica)
+
+💳 **Pagos online:** https://portal.duoc.cl
+📧 **Email:** Puntoestudiantil_pnorte@duoc.cl
+📞 **Consultas:** +56 2 2360 6400
+🔗 **Seguimiento:** https://www.tne.cl
+
+⚡ **Tiempo de procesamiento:** 15-20 días hábiles
+💡 *Proceso aplica para tarjetas perdidas, robadas o dañadas*
+""",
+
+    "programa_emergencia_plazos": """
+📅 **Plazos de Postulación - Programa de Emergencia:**
+
+**Postulaciones 2025:**
+• **Primer Semestre:** 28 abril - 31 julio
+• **Segundo Semestre:** 1 septiembre - 22 diciembre
+
+**Proceso de postulación:**
+1. **Revisar requisitos** antes de postular
+2. **Reunir documentación** según categoría
+3. **Postular online** dentro del plazo
+4. **Seguimiento** del estado de postulación
+
+🔗 **Postular:** https://centroayuda.duoc.cl
+📞 **Consultas:** +56 2 2596 5202
+📧 **Email:** bienestar.plazanorte@duoc.cl
+
+⚠️ **Importante:**
+• Postula solo durante los períodos habilitados
+• Revisa que tu documentación esté completa
+• Plazo máximo de respuesta: 30 días hábiles
+
+💡 *Las postulaciones fuera de plazo no serán consideradas*
+""",
+
+    "programa_emergencia_requisitos": """
+✅ **Requisitos para postular al Programa de Emergencia:**
+**Requisitos generales:**
+• Ser alumno regular de Duoc UC
+• Tener carga académica asignada
+• Sin solicitud activa de suspensión o renuncia
+• Registro Social de Hogares (máximo 6 meses vigencia)
+• Cuenta RUT activa del Banco Estado
+📋 **Documentación por categoría:**
+🩺 **Gastos médicos:**
+• Registro Social de Hogares vigente
+• Antecedentes médicos y/o tratamiento con receta médica
+✝️ **Fallecimiento familiar:**
+• Registro Social de Hogares vigente
+• Certificado de nacimiento/matrimonio/AUC
+• Certificado de defunción del Registro Civil
+🚪 **Daños vivienda:**
+• Registro Social de Hogares vigente
+• Certificado de Bomberos y/o Ficha Básica de Emergencia
+🙏 **Apoyo excepcional:**
+• Registro Social de Hogares vigente
+• Informe de asistente social
+🔗 **Postular:** https://centroayuda.duoc.cl
+🚫 **Exclusión:** Estudiantes con Beca Colaborador Duoc UC
+""",
+
+    "programa_emergencia_categorias": """
+🗂️ **Categorías de Postulación - Programa Emergencia**
+1. **🩺 Gastos médicos en tratamientos/medicamentos:**
+   • Registro Social de Hogares (6 meses)
+   • Antecedentes médicos y/o tratamiento con receta
+2. **✝️ Gastos por fallecimiento familiar:**
+   • Registro Social de Hogares (6 meses)
+   • Certificado de nacimiento/matrimonio/AUC
+   • Certificado de defunción del Registro Civil
+3. **🚪 Gastos por daños a la vivienda:**
+   • Registro Social de Hogares (6 meses)
+   • Certificado de Bomberos y/o Ficha Básica de Emergencia
+4. **🙏 Apoyo excepcional:**
+   • Registro Social de Hogares (6 meses)
+   • Informe de asistente social
+   • *Solo una vez durante la carrera*
+💡 *Documentación debe ser consistente con el motivo de postulación*
+""",
 }

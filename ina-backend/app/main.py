@@ -454,14 +454,17 @@ async def chat(message: Message, request: Request):
         # 👇 3. SI PASÓ TODOS LOS FILTROS - PROCESAR NORMALMENTE
         print("\n" + "="*80)
         print(f"🌐 NUEVA CONSULTA RECIBIDA - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        print(f"📝 Texto: '{question}'")
+        print(f"📝 CONSULTA COMPLETA: '{question}'")
+        print(f"📏 Longitud: {len(question)} caracteres")
         print(f"✅ Pregunta aprobada por filtros - Categoría: {topic_classification['category']}")
-        logger.info(f"✅ Pregunta aprobada por filtros: {question} - Categoría: {topic_classification['category']}")
+        logger.info(f"\n{'='*80}")
+        logger.info(f"🌐 NUEVA CONSULTA RECIBIDA: '{question}'")
+        logger.info(f"✅ Aprobada - Categoría: {topic_classification['category']}")
         
         # 3.1 CLASIFICAR LA PREGUNTA (sistema original)
         category = classifier.classify_question(question)
         print(f"📂 Categoría detectada: {category}")
-        logger.info(f"Categoría detectada: {category}")
+        logger.info(f"📂 Categoría detectada: {category}")
         
         # 3.2 REGISTRAR PREGUNTA DEL USUARIO CON CATEGORÍA
         with Session(engine) as session:
@@ -504,7 +507,7 @@ async def chat(message: Message, request: Request):
         has_context = bool(context_results)
 
         print(f"🔍 Contexto encontrado: {len(context_results)} resultados")
-        logger.info(f"Contexto encontrado: {len(context_results)} resultados para categoría '{category}'")
+        logger.info(f"🔍 Contexto encontrado: {len(context_results)} resultados para categoría '{category}'")
         
         # 3.4 OBTENER RESPUESTA (AHORA CON QR Y CONTEXTO INTELIGENTE)
         try:
@@ -520,29 +523,41 @@ async def chat(message: Message, request: Request):
             # 🔥 DECLARAR VARIABLES IMPORTANTES AL INICIO
             followup_suggestions = []
             
-            # ✨ NUEVO: INTENTAR RESPUESTA MEJORADA PRIMERO
-            enhanced_response = enhanced_generator.generate_enhanced_response(question)
+            # ✨ PRIORIDAD 1: VERIFICAR TEMPLATES PRIMERO (consultas frecuentes)
+            # Esto asegura que las preguntas frecuentes usen templates predefinidos
+            print(f"\n🔍 VERIFICANDO SI ES PREGUNTA FRECUENTE...")
+            logger.info("🔍 Verificando templates para preguntas frecuentes")
             
-            if enhanced_response["is_enhanced"]:
-                logger.info(f"🎯 Usando respuesta específica mejorada para: {enhanced_response['query_type']}")
-                response_data = {
-                    "response": enhanced_response["response"],
-                    "text": enhanced_response["response"],
-                    "success": True,
-                    "enhanced_type": enhanced_response["query_type"],
-                    "has_context": True,
-                    "sources": ["DuocUC Knowledge Base"],
-                    "qr_codes": {}
-                }
-            else:
-                logger.info("🔍 Usando sistema RAG tradicional")
-                # get_ai_response es síncrona, NO usar await
-                response_data = get_ai_response(
-                    question, 
-                    context_results, 
-                    conversational_context=conversational_context,
-                    user_profile=user_profile.__dict__ if user_profile else None
-                )
+            # Llamar directamente al sistema RAG que incluye detección de templates
+            response_data = get_ai_response(
+                question, 
+                context_results, 
+                conversational_context=conversational_context,
+                user_profile=user_profile.__dict__ if user_profile else None
+            )
+            
+            # Si no se usó un template (estrategia no es 'template'), intentar enhanced_generator
+            processing_info = response_data.get('processing_info', {})
+            strategy = processing_info.get('processing_strategy', 'N/A')
+            
+            if strategy != 'template':
+                # ✨ FALLBACK: INTENTAR RESPUESTA MEJORADA SI NO HAY TEMPLATE
+                logger.info("🔍 No se encontró template, intentando respuesta mejorada")
+                enhanced_response = enhanced_generator.generate_enhanced_response(question)
+                
+                if enhanced_response["is_enhanced"]:
+                    logger.info(f"🎯 Usando respuesta específica mejorada para: {enhanced_response['query_type']}")
+                    response_data = {
+                        "response": enhanced_response["response"],
+                        "text": enhanced_response["response"],
+                        "success": True,
+                        "enhanced_type": enhanced_response["query_type"],
+                        "has_context": True,
+                        "sources": ["DuocUC Knowledge Base"],
+                        "qr_codes": {},
+                        "processing_info": {"processing_strategy": "enhanced"}
+                    }
+                # Si no es enhanced, mantener la respuesta RAG original
             
             # 🔥 GENERAR SUGERENCIAS INTELIGENTES
             if conversation_context:
@@ -570,28 +585,46 @@ async def chat(message: Message, request: Request):
                     'has_qr': qr_processed_response['has_qr']
                 })
                 
-                # Log de QR generados
+                # Log de QR generados - MEJORADO CON MÁS DETALLES
                 if qr_processed_response['has_qr']:
+                    print(f"📱 QR GENERADOS: {len(qr_processed_response['qr_codes'])} códigos")
                     logger.info(f"📱 QR generados: {len(qr_processed_response['qr_codes'])} códigos")
-                    for url in qr_processed_response['qr_codes'].keys():
-                        logger.info(f"   🔗 QR para: {url}")
+                    for key, qr_data in qr_processed_response['qr_codes'].items():
+                        print(f"   🔗 QR para: {key}")
+                        logger.info(f"   🔗 QR para: {key} -> {qr_data}")
                 else:
+                    print("❌ No se generaron QR codes")
                     logger.info("❌ No se generaron QR - ningún link detectado")
             
             strategy = response_data.get('processing_info', {}).get('processing_strategy', 'N/A')
+            template_id = response_data.get('processing_info', {}).get('template_id', None)
             response_time = response_data.get('response_time', 0)
             sources_count = len(response_data.get('sources', []))
+            response_length = len(response_data.get('response', ''))
             
-            print(f"🎯 RESPUESTA GENERADA")
-            print(f"🗣️  Estrategia: {strategy}")
-            print(f"📊 Tiempo: {response_time:.2f}s")
-            print(f"🔍 Fuentes: {sources_count}")
-            print(f"📝 Longitud: {len(response_data.get('response', ''))} caracteres")
+            print(f"\n🎯 RESPUESTA GENERADA:")
+            print(f"   🗣️  Estrategia: {strategy}")
+            if template_id:
+                print(f"   📋 Template usado: {template_id}")
+            print(f"   📊 Tiempo: {response_time:.2f}s")
+            print(f"   🔍 Fuentes: {sources_count}")
+            print(f"   📝 Longitud: {response_length} caracteres")
             
-            logger.info(f"🎯 RESPUESTA GENERADA - Estrategia: {strategy}")
-            logger.info(f"📊 Tiempo total: {response_time:.2f}s")
-            logger.info(f"🔍 Fuentes utilizadas: {sources_count}")
-            logger.info(f"📝 Longitud respuesta: {len(response_data.get('response', ''))} caracteres")
+            # MOSTRAR RESPUESTA COMPLETA - Obtener del campo correcto
+            response_text = response_data.get('response') or response_data.get('text', '')
+            print(f"\n💬 RESPUESTA COMPLETA DE LA IA:")
+            print(f"{'─'*80}")
+            print(response_text)
+            print(f"{'─'*80}\n")
+            
+            logger.info(f"🎯 RESPUESTA GENERADA:")
+            logger.info(f"   Estrategia: {strategy}")
+            if template_id:
+                logger.info(f"   Template: {template_id}")
+            logger.info(f"   Tiempo: {response_time:.2f}s")
+            logger.info(f"   Fuentes: {sources_count}")
+            logger.info(f"   Longitud: {response_length} caracteres")
+            logger.info(f"\n💬 RESPUESTA COMPLETA: {response_text}")
             
             
         except Exception as e:
@@ -706,9 +739,22 @@ async def chat(message: Message, request: Request):
             }
         }
         
-        # Log final de finalización
+        # Log final de finalización - MEJORADO CON RESUMEN COMPLETO
+        print(f"\n{'='*80}")
         print("✅ CONSULTA COMPLETADA EXITOSAMENTE")
+        print(f"📊 RESUMEN:")
+        print(f"   • Consulta: '{question[:80]}{'...' if len(question) > 80 else ''}'")
+        print(f"   • Categoría: {category}")
+        print(f"   • Estrategia: {strategy}")
+        if template_id:
+            print(f"   • Template: {template_id}")
+        print(f"   • QR Codes: {'✅ Sí' if response_data.get('has_qr') else '❌ No'}")
+        print(f"   • Tiempo total: {response_time:.2f}s")
+        print(f"   • Fuentes: {sources_count}")
         print("=" * 80 + "\n")
+        
+        logger.info(f"✅ CONSULTA COMPLETADA - Categoría: {category}, Tiempo: {response_time:.2f}s")
+        logger.info("=" * 80 + "\n")
         
         return final_response
         

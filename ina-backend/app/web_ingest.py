@@ -70,7 +70,8 @@ def fetch_url(url: str, timeout: int = 20) -> Optional[requests.Response]:
         r.raise_for_status()
         return r
     except Exception as e:
-        logger.error(f"Error descargando {url}: {e}")
+        # Ocultar errores de URLs para no saturar logs en startup
+        logger.debug(f"Error descargando {url}: {e}")
         return None
 
 

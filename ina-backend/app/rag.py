@@ -381,22 +381,8 @@ class RAGEngine:
         
         query_lower = user_message.lower().strip()
         
-        # Buscar en memoria primero
-        similar_queries = self.memory_manager.find_similar_queries(user_message)
-        if similar_queries:
-            best_match = similar_queries[0]
-            if best_match['similarity'] > 0.85:  # Alta confianza en la similitud
-                logger.info(f"Respuesta encontrada en memoria: {best_match['similarity']:.3f}")
-                return {
-                    'processing_strategy': 'memory',
-                    'original_query': user_message,
-                    'cached_response': best_match['response'],
-                    'similarity_score': best_match['similarity'],
-                    'metadata': best_match['metadata']
-                }
-        
-        # 1. PRIMERO VERIFICAR TEMPLATES (MÁS RÁPIDO) CON DETECCIÓN DE IDIOMA MEJORADA
-        # Usar el nuevo método que incluye información de idioma
+        # 1. PRIMERO VERIFICAR TEMPLATES (MÁXIMA PRIORIDAD) CON DETECCIÓN DE IDIOMA MEJORADA
+        # Los templates tienen prioridad sobre la memoria para asegurar respuestas actualizadas
         try:
             classification_info = classifier.get_classification_info(user_message)
             detected_language = classification_info.get('language', 'es')
@@ -415,8 +401,11 @@ class RAGEngine:
         
         template_match = classifier.detect_template_match(user_message)
         if template_match:
-            print(f"📋 Template detectado: {template_match} para idioma {detected_language}")
-            logger.info(f"TEMPLATE DETECTADO: '{user_message}' -> {template_match}")
+            print(f"\n📋 USANDO TEMPLATE:")
+            print(f"   🆔 ID: {template_match}")
+            print(f"   🌍 Idioma: {detected_language}")
+            print(f"   📂 Categoría: {category}")
+            logger.info(f"✅ TEMPLATE DETECTADO: '{user_message}' -> {template_match} (idioma: {detected_language})")
             return {
                 'processing_strategy': 'template',
                 'original_query': user_message,
@@ -426,7 +415,23 @@ class RAGEngine:
                 'query_parts': [user_message]
             }
         
-        # 2. DETECCIÓN PRIORITARIA DE SALUDOS
+        # 2. SI NO HAY TEMPLATE, BUSCAR EN MEMORIA (SEGUNDA PRIORIDAD)
+        similar_queries = self.memory_manager.find_similar_queries(user_message)
+        if similar_queries:
+            best_match = similar_queries[0]
+            if best_match['similarity'] > 0.85:  # Alta confianza en la similitud
+                print(f"\n💾 USANDO MEMORIA CACHÉ:")
+                print(f"   🎯 Similitud: {best_match['similarity']:.1%}")
+                logger.info(f"💾 Respuesta encontrada en memoria: {best_match['similarity']:.3f}")
+                return {
+                    'processing_strategy': 'memory',
+                    'original_query': user_message,
+                    'cached_response': best_match['response'],
+                    'similarity_score': best_match['similarity'],
+                    'metadata': best_match['metadata']
+                }
+        
+        # 3. DETECCIÓN PRIORITARIA DE SALUDOS
         greeting_keywords = [
             'hola', 'holi', 'holis', 'holaa', 'buenos días', 'buenas tardes', 
             'buenas noches', 'saludos', 'quién eres', 'presentate', 'presentación',
@@ -444,7 +449,7 @@ class RAGEngine:
                 'query_parts': [user_message]
             }
         
-        # 3. DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
+        # 4. DETECCIÓN PRIORITARIA DE URGENCIAS/CRISIS
         emergency_keywords = [
             'crisis', 'urgencia', 'emergencia', 'línea ops', 
             'me siento mal', 'ayuda urgente', 'necesito ayuda ahora',
@@ -467,7 +472,7 @@ class RAGEngine:
                 'query_parts': [user_message]
             }
         
-        # 4. VERIFICAR SI ES DERIVACIÓN
+        # 5. VERIFICAR SI ES DERIVACIÓN
         if self.topic_classifier.should_derive(user_message):
             topic_info = self.topic_classifier.classify_topic(user_message)
             logger.info(f"DERIVACIÓN DETECTADA: {user_message} -> {topic_info.get('category', 'unknown')}")
@@ -791,10 +796,14 @@ class RAGEngine:
                 template_category = detected_area
                 
                 if template_response:
-                    print(f"✅ Template multiidioma encontrado: {template_id} en {template_category} ({detected_language})")
+                    print(f"\n📄 GENERANDO RESPUESTA DESDE TEMPLATE:")
+                    print(f"   ✅ Template encontrado: {template_id}")
+                    print(f"   📂 Área: {template_category}")
+                    print(f"   🌍 Idioma: {detected_language}")
                     logger.info(f"✅ Template multiidioma '{template_id}' encontrado en '{template_category}' idioma '{detected_language}'")
                 else:
-                    print(f"❌ Template multiidioma NO encontrado: {template_id} en {template_category} ({detected_language})")
+                    print(f"\n⚠️  Template no encontrado en área principal")
+                    print(f"   🔍 Buscando en otras áreas...")
                     logger.warning(f"❌ Template multiidioma '{template_id}' NO encontrado en '{template_category}' idioma '{detected_language}'")
                     
                     # BÚSQUEDA AGRESIVA: Si no se encuentra en el área detectada, buscar en TODAS las áreas
@@ -1437,11 +1446,44 @@ rag_engine = RAGEngine()
 
 def get_ai_response(user_message: str, context: list = None, 
                    conversational_context: str = None, user_profile: dict = None) -> Dict:
-    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON SISTEMA HÍBRIDO"""
+    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES PRIORITARIOS"""
     import time
     start_time = time.time()
 
-    # 🔥 NUEVO: Usar sistema híbrido si está disponible
+    # 🔥 PRIORIDAD ABSOLUTA: Procesar query con contexto inteligente PRIMERO (incluye detección de templates)
+    print(f"\n🔄 INICIANDO PROCESAMIENTO INTELIGENTE...")
+    logger.info(f"🔄 Llamando a process_user_query para: '{user_message}'")
+    
+    processing_info = rag_engine.process_user_query(
+        user_message, 
+        conversational_context=conversational_context,
+        user_profile=user_profile
+    )
+    strategy = processing_info['processing_strategy']
+    
+    print(f"📋 Estrategia determinada: {strategy}")
+    logger.info(f"📋 Estrategia de procesamiento: {strategy}")
+
+    # 🎯 SI ES TEMPLATE, PROCESARLO INMEDIATAMENTE (MÁXIMA PRIORIDAD)
+    if strategy == 'template':
+        print(f"\n✨ GENERANDO RESPUESTA DESDE TEMPLATE...")
+        logger.info(f"✨ Generando respuesta desde template para: '{user_message}'")
+        
+        response_data = rag_engine.generate_template_response(processing_info)
+        
+        # MEJORAR RESPUESTA DE TEMPLATE
+        if 'response' in response_data:
+            category = processing_info.get('category', 'template')
+            enhanced_response = enhance_final_response(response_data['response'], user_message, category)
+            response_data['response'] = enhanced_response
+            print(f"✅ Respuesta de template mejorada (categoría: {category})")
+            logger.info(f"✅ Template response enhanced for category: {category}")
+        
+        response_data['response_time'] = time.time() - start_time
+        response_data['intelligent_features_applied'] = True
+        return response_data
+
+    # 🔥 FALLBACK 1: Usar sistema híbrido si está disponible Y NO ES TEMPLATE
     if HYBRID_SYSTEM_AVAILABLE:
         try:
             hybrid_system = HybridResponseSystem()
@@ -1467,7 +1509,7 @@ def get_ai_response(user_message: str, context: list = None,
         except Exception as e:
             logger.warning(f"⚠️ Sistema híbrido falló, usando RAG tradicional: {e}")
 
-    # 🔥 FALLBACK: Análisis de derivación para IA estacionaria
+    # 🔥 FALLBACK 2: Análisis de derivación para IA estacionaria
     derivation_analysis = rag_engine.derivation_manager.analyze_query(user_message)
     logger.info(f"🔍 ANÁLISIS DERIVACIÓN: {derivation_analysis}")
     
@@ -1515,14 +1557,6 @@ def get_ai_response(user_message: str, context: list = None,
             "derivation_reason": "emergency"
         }
 
-    # Procesar query con contexto inteligente
-    processing_info = rag_engine.process_user_query(
-        user_message, 
-        conversational_context=conversational_context,
-        user_profile=user_profile
-    )
-    strategy = processing_info['processing_strategy']
-    
     # Agregar información de derivación al processing_info
     processing_info['derivation_analysis'] = derivation_analysis
     
@@ -1535,19 +1569,6 @@ def get_ai_response(user_message: str, context: list = None,
     if user_profile:
         processing_info['user_profile'] = user_profile
         processing_info['user_preferences'] = user_profile.get('area_interes', [])
-
-    # ESTRATEGIAS PRIORITARIAS - TEMPLATES PRIMERO
-    if strategy == 'template':
-        response_data = rag_engine.generate_template_response(processing_info)
-        # MEJORAR RESPUESTA DE TEMPLATE
-        if 'response' in response_data:
-            category = processing_info.get('category', 'template')
-            enhanced_response = enhance_final_response(response_data['response'], user_message, category)
-            response_data['response'] = enhanced_response
-            logger.info(f"✅ Template response enhanced for category: {category}")
-        response_data['response_time'] = time.time() - start_time
-        response_data['intelligent_features_applied'] = True
-        return response_data
 
     if strategy == 'greeting' or processing_info.get('is_greeting', False):
         response_data = rag_engine.generate_greeting_response(processing_info)
