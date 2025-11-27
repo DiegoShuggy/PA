@@ -10,6 +10,7 @@ import logging
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 import hashlib
+from datetime import datetime
 
 try:
     import docx
@@ -356,9 +357,18 @@ class SemanticChunker:
     def _create_chunk(self, content: str, title: str, section: str,
                       source_name: str, category: str, chunk_index: int,
                       overlap_with_previous: bool = False) -> Chunk:
-        """Crea un objeto Chunk con todos los metadatos"""
-        # Extraer keywords
+        """Crea un objeto Chunk con metadatos enriquecidos según DeepSeek"""
+        # Extraer keywords mejorados
         keywords = self._extract_keywords(content)
+        
+        # Detectar departamento/área
+        departamento = self._detect_department(content, category)
+        
+        # Detectar tema específico
+        tema = self._detect_topic(content, keywords)
+        
+        # Clasificar tipo de contenido
+        content_type = self._classify_content_type(content)
         
         # Generar ID único
         chunk_id = self._generate_chunk_id(source_name, chunk_index)
@@ -366,18 +376,21 @@ class SemanticChunker:
         # Estimar tokens
         token_count = self._estimate_tokens(content)
         
-        # Metadatos enriquecidos
+        # Metadatos enriquecidos con filtros semánticos (DeepSeek)
         metadata = {
             'source': source_name,
             'category': category,
+            'departamento': departamento,  # NUEVO: filtrado por área
+            'tema': tema,                  # NUEVO: filtrado por tema
             'section': section,
             'title': title,
             'chunk_index': chunk_index,
             'token_count': token_count,
             'has_overlap': overlap_with_previous,
-            'keywords': keywords,
+            'keywords': ', '.join(keywords),  # String para ChromaDB
+            'content_type': content_type,     # FAQ, horario, ubicación, etc.
             'type': 'semantic_chunk',
-            'fecha_procesamiento': '2025-11-26'
+            'fecha_procesamiento': datetime.now().strftime('%Y-%m-%d')
         }
         
         return Chunk(
@@ -391,27 +404,116 @@ class SemanticChunker:
             overlap_with_previous=overlap_with_previous
         )
     
+    def _detect_department(self, content: str, category: str) -> str:
+        """Detecta el departamento/área basado en contenido"""
+        content_lower = content.lower()
+        
+        department_mapping = {
+            'Admisiones': ['requisitos', 'postulación', 'matrícula', 'inscripción'],
+            'Asuntos Estudiantiles': ['tne', 'certificado', 'tarjeta', 'alumno regular'],
+            'Bienestar': ['beca', 'económico', 'gratuidad', 'financiamiento', 'junaeb'],
+            'Salud': ['psicológico', 'médico', 'enfermería', 'salud mental'],
+            'Deportes': ['gimnasio', 'caf', 'entrenamiento', 'fitness'],
+            'Biblioteca': ['préstamo', 'libro', 'recurso', 'bibliográfico'],
+            'Desarrollo Laboral': ['empleo', 'práctica', 'cv', 'bolsa laboral'],
+            'Académico': ['nota', 'evaluación', 'examen', 'asignatura']
+        }
+        
+        for dept, keywords_dept in department_mapping.items():
+            if any(kw in content_lower for kw in keywords_dept):
+                return dept
+        
+        return 'General'
+    
+    def _detect_topic(self, content: str, keywords: List[str]) -> str:
+        """Detecta el tema específico del contenido"""
+        content_lower = content.lower()
+        
+        if any(kw in content_lower for kw in ['tne', 'tarjeta nacional']):
+            return 'tne_transporte'
+        elif any(kw in content_lower for kw in ['certificado', 'alumno regular']):
+            return 'certificados'
+        elif any(kw in content_lower for kw in ['beca', 'gratuidad']):
+            return 'apoyo_economico'
+        elif any(kw in content_lower for kw in ['gimnasio', 'caf']):
+            return 'deportes_recreacion'
+        elif any(kw in content_lower for kw in ['psicológico', 'salud mental']):
+            return 'salud_mental'
+        elif any(kw in content_lower for kw in ['práctica', 'laboral']):
+            return 'practicas_empleo'
+        else:
+            return keywords[0] if keywords else 'general'
+    
+    def _classify_content_type(self, content: str) -> str:
+        """Clasifica el tipo de contenido"""
+        content_lower = content.lower()
+        
+        if '?' in content and len(content) < 200:
+            return 'faq'
+        elif any(w in content_lower for w in ['horario', 'lunes', 'martes']):
+            return 'horario'
+        elif any(w in content_lower for w in ['ubicación', 'piso', 'hall']):
+            return 'ubicacion'
+        elif any(w in content_lower for w in ['requisito', 'paso', 'proceso']):
+            return 'procedimiento'
+        elif any(w in content_lower for w in ['teléfono', 'correo', 'contacto']):
+            return 'contacto'
+        else:
+            return 'informativo'
+    
     def _extract_keywords(self, text: str) -> List[str]:
-        """Extrae keywords relevantes del texto"""
+        """Extrae keywords relevantes del texto con análisis mejorado"""
         text_lower = text.lower()
         keywords = []
         
-        # Buscar keywords institucionales
+        # PASO 1: Buscar keywords institucionales (prioridad alta)
         for keyword in self.institutional_keywords:
             if keyword in text_lower:
                 keywords.append(keyword)
         
-        # Extraer palabras importantes (más de 5 letras, no comunes)
+        # PASO 2: Extraer entidades importantes (nombres propios, lugares)
+        # Detectar palabras capitalizadas (lugares, nombres)
+        capitalized = re.findall(r'\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{3,}\b', text)
+        keywords.extend([w.lower() for w in capitalized[:3]])
+        
+        # PASO 3: Extraer palabras importantes (longitud 6+, frecuencia)
         words = re.findall(r'\b[a-záéíóúñ]{6,}\b', text_lower)
         
-        # Palabras comunes a filtrar
-        stopwords = {'información', 'alumno', 'estudiante', 'consulta', 'realizar', 
-                     'solicitar', 'proceso', 'servicio', 'sistema', 'general'}
+        # Stopwords expandidas
+        stopwords = {
+            'información', 'alumno', 'estudiante', 'consulta', 'realizar',
+            'solicitar', 'proceso', 'servicio', 'sistema', 'general',
+            'además', 'después', 'durante', 'entonces', 'siguiente',
+            'anterior', 'importante', 'necesario', 'ejemplo', 'diferentes'
+        }
         
-        important_words = [w for w in set(words) if w not in stopwords]
-        keywords.extend(important_words[:5])  # Top 5 palabras importantes
+        # Contar frecuencias
+        word_freq = {}
+        for word in words:
+            if word not in stopwords:
+                word_freq[word] = word_freq.get(word, 0) + 1
         
-        return list(set(keywords))[:10]  # Máximo 10 keywords
+        # Top palabras por frecuencia
+        frequent_words = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
+        keywords.extend([w for w, _ in frequent_words[:5]])
+        
+        # PASO 4: Extraer categorías detectadas
+        category_keywords = {
+            'tne': ['transporte', 'tarjeta', 'metro', 'bus'],
+            'beca': ['económico', 'financiamiento', 'junaeb', 'gratuidad'],
+            'salud': ['psicológico', 'médico', 'enfermería', 'bienestar'],
+            'deporte': ['gimnasio', 'caf', 'entrenamiento', 'fitness'],
+            'certificado': ['documento', 'alumno regular', 'práctica', 'título'],
+            'biblioteca': ['préstamo', 'libro', 'recurso', 'estudio']
+        }
+        
+        for category, terms in category_keywords.items():
+            if any(term in text_lower for term in terms):
+                keywords.append(category)
+        
+        # Limpiar y retornar máximo 15 keywords únicos
+        unique_keywords = list(dict.fromkeys(keywords))  # Preservar orden
+        return unique_keywords[:15]
     
     def _generate_chunk_id(self, source_name: str, chunk_index: int) -> str:
         """Genera un ID único para el chunk"""

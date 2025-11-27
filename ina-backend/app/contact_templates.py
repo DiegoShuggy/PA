@@ -55,7 +55,8 @@ CONTACT_TEMPLATES = {
 • Certificado PSU/PTU (si aplica)
 
 🌐 **Proceso online:** duoc.cl/admision
-📧 **Consultas:** admision.plazanorte@duoc.cl
+📞 **Mesa Central:** +56 2 2999 3000
+📞 **Punto Estudiantil:** +56 2 2999 3075
 📞 **Contacto directo:** +56 2 2596 5202
 📍 **Oficina:** Piso 1, Oficina de Admisión
 🕒 **Horarios:** Lunes a Viernes 9:00-17:00''',
@@ -100,7 +101,7 @@ CONTACT_TEMPLATES = {
 📞 **Consultas bibliográficas:** +56 2 2596 5220
 📍 **Ubicación:** Piso 2, Biblioteca Central
 🕒 **Horarios:** Lunes a Viernes 8:00-21:00, Sábados 9:00-14:00
-📧 **Email:** biblioteca.plazanorte@duoc.cl''',
+📞 **Mesa Central:** +56 2 2999 3000''',
         'keywords': ['biblioteca', 'libros', 'estudio', 'recursos', 'sala']
     },
     
@@ -182,8 +183,8 @@ CONTACT_TEMPLATES = {
 • Buses: Múltiples recorridos por Vespucio Norte
 • Estacionamientos: Disponibles (pagados)
 
-📞 **Información general:** +56 2 2596 5200
-📞 **Punto Estudiantil:** +56 2 2596 5201
+📞 **Información general:** +56 2 2999 3000
+📞 **Punto Estudiantil:** +56 2 2999 3075
 🕒 **Horarios sede:** Lunes a Viernes 7:30-22:00, Sábados 8:00-16:00''',
         'keywords': ['sede', 'plaza norte', 'ubicacion', 'direccion', 'como llegar', 'metro']
     }

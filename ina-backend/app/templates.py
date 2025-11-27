@@ -986,15 +986,17 @@ Si necesitas información más específica (por ejemplo, pasos para hacer uso de
         # 🎯 TNE - INFORMACIÓN GENERAL DESDE DOCUMENTOS
         "tne_informacion_general": """
 🎫 **TNE - Información General:**
-**Proceso externo** gestionado por JUNAEB [](http://www.tne.cl)
-**Duoc UC** actúa como intermediario para ayudarte
+**Proceso externo** gestionado por JUNAEB
+**Duoc UC** actúa como intermediario para validar tu condición estudiantil
 📋 **Aspectos importantes:**
 • Tiempos de entrega los define JUNAEB
-• Toma de foto según protocolo JUNAEB
-• Montos a cancelar establecidos por JUNAEB
-• Toda información se envía vía correo institucional
+• Proceso online en www.duoc.cl/sedes/info-tne/
+• Debes ser alumno regular sin deudas pendientes
+• Plazo: 15-20 días hábiles para retiro
 🔗 **Seguimiento TNE:** https://www.tne.cl
-📧 **Información:** Por correo institucional @duocuc.cl
+📞 **Mesa Central:** +56 2 2999 3000
+📍 **Ubicación:** Calle Nueva 1660, Huechuraba
+⏰ **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00
 💡 *Duoc UC te ayuda a gestionar pero el proceso es de JUNAEB*
 """,
         # 🎯 TNE - PRIMERA VEZ DESDE DOCUMENTOS
@@ -1007,8 +1009,7 @@ Si necesitas información más específica (por ejemplo, pasos para hacer uso de
 3. **Actualización de datos** en sistema
 4. **Recibir instrucciones** para captura de fotografías
 💳 **Pagos online:** https://portal.duoc.cl
-📧 **Email envío:** Puntoestudiantil_pnorte@duoc.cl
-📞 **Confirmación:** +56 2 2360 6400
+📞 **Mesa Central:** +56 2 2999 3000
 🔗 **Portal TNE:** https://www.tne.cl
 💡 *Proceso exclusivo para primer ingreso a educación superior*
 """,
@@ -2028,13 +2029,13 @@ Es el área institucional que te acompaña en tu proceso de inserción y desarro
 • **Email:** edominguezs@duoc.cl
 • **Ubicación:** Oficina PAEDIS, primer piso
 📞 **Teléfonos sede:**
-• **Central:** +56 2 2360 6400
-• **Punto Estudiantil:** +56 2 2360 6410
-• **Bienestar:** +56 2 2360 6420
-• **Biblioteca:** +56 2 2360 6430
-• **Emergencias:** +56 2 2999 3005
+• **Central:** +56 2 2999 3000
+• **Punto Estudiantil:** +56 2 2999 3075
+• **Bienestar:** +56 2 2999 3076
+• **Biblioteca:** +56 2 2999 3077
+• **Emergencias:** DOC DUOC 600 362 3862
 📍 **Dirección:**
-Av. Américo Vespucio 1501, Conchalí, Santiago
+Calle Nueva 1660, Huechuraba
 **Metro más cercano:** Plaza Norte (Línea 3)
 🔗 **Portal sede:** https://www.duoc.cl/sede/plaza-norte/
 🔗 **WhatsApp sede:** +56 9 XXXX XXXX
@@ -2062,70 +2063,64 @@ Puedes escribir palabras clave como:
 📞 **Si necesitas atención personalizada:**
 • **Punto Estudiantil:** +56 2 2360 6400
 • **Bienestar:** +56 2 2360 6420
-• **WhatsApp sede:** +56 9 3663 9565
+• **Mesa Central:** +56 2 2999 3000
 💡 *Estoy aquí para ayudarte 24/7 con información oficial de Duoc UC*
 """,
         # 🎯 INFORMACIÓN CONTACTO DESDE DOCUMENTOS
         "informacion_contacto": """
 📞 **Información de Contacto - Duoc UC Plaza Norte**
-**📍 Dirección:**
-Av. Américo Vespucio 1501, Conchalí, Santiago
-**Metro:** Plaza Norte (Línea 3)
-**📞 Teléfonos:**
-• **Central:** +56 2 2360 6400
-• **Punto Estudiantil:** +56 2 2360 6410
-• **Bienestar Estudiantil:** +56 2 2360 6420
-• **Biblioteca:** +56 2 2360 6430
-• **Emergencias:** +56 2 2999 3005
-**📧 Emails principales:**
-• **Informaciones:** informaciones@duoc.cl
-• **Punto Estudiantil:** puntoestudiantil_pnorte@duoc.cl
-• **Bienestar:** bienestarpnorte@duoc.cl
-• **Desarrollo Laboral:** ccortesn@duoc.cl
+
+**📍 Ubicación oficial:**
+Calle Nueva 1660, Huechuraba
+A pasos del Mall Plaza Norte
+
+**📞 Contactos principales:**
+• **Mesa Central:** +56 2 2999 3000
+• **Punto Estudiantil:** +56 2 2999 3075
+• **Emergencias médicas:** DOC DUOC 600 362 3862
+
 **⏰ Horarios de atención:**
-• **Lunes a Viernes:** 8:30 - 19:00 hrs
-• **Sábados:** 9:00 - 14:00 hrs
+• **Lunes a Viernes:** 08:30 - 22:30 horas
+• **Sábados:** 08:30 - 14:00 horas
 • **Domingos:** Cerrado
-**🔗 Enlaces importantes:**
-• **Portal alumnos:** https://portal.duoc.cl
-• **Certificados online:** https://certificados.duoc.cl
-• **DuocLaboral:** https://duoclaboral.cl
-• **Centro ayuda:** https://centroayuda.duoc.cl
-💡 *Para consultas específicas, contacta directamente al área correspondiente*
+
+**🔗 Portales oficiales:**
+• **Portal estudiantes:** https://portal.duoc.cl
+• **Sede Plaza Norte:** https://www.duoc.cl/sedes/plaza-norte/
+• **Centro de ayuda:** https://centroayuda.duoc.cl
+
+💡 *Para consultas específicas, contacta la Mesa Central que te derivará al área correspondiente*
 """,
         # 🎯 HORARIOS ATENCIÓN DESDE DOCUMENTOS
         "horarios_atencion": """
 ⏰ **Horarios de Atención - Sede Plaza Norte**
 **📅 Horarios generales:**
-• **Lunes a Viernes:** 8:30 - 19:00 horas
-• **Sábados:** 9:00 - 14:00 horas
+• **Lunes a Viernes:** 08:30 - 22:30 horas
+• **Sábados:** 08:30 - 14:00 horas
 • **Domingos:** Cerrado
 **🏢 Por áreas específicas:**
-**Punto Estudiantil:**
-• **Teléfono:** +56 2 2360 6410
-• **Email:** puntoestudiantil_pnorte@duoc.cl
-• **Servicios:** TNE, certificados, trámites académicos
-**Bienestar Estudiantil:**
-• **Teléfono:** +56 2 2360 6420
-• **Email:** bienestarpnorte@duoc.cl
-• **Servicios:** Apoyo psicológico, inclusión, actividades
-**Desarrollo Laboral:**
-• **Email:** ccortesn@duoc.cl
-• **Servicios:** Prácticas, empleo, talleres empleabilidad
+**Mesa de Servicios (General):**
+• **Mesa Central:** +56 2 2999 3000
+• **Punto Estudiantil:** +56 2 2999 3075
+• **Ubicación:** Calle Nueva 1660, Huechuraba
+• **Servicios:** Información general, consultas, derivaciones
+**Secretaría Académica:**
+• **Horario:** Lunes a Viernes 8:30-18:00, Sábados 9:00-12:00
+• **Servicios:** Certificados, congelamientos, cambios de carrera
 **Biblioteca:**
-• **Teléfono:** +56 2 2360 6430
-• **Email:** biblioteca_pnorte@duoc.cl
+• **Horario:** Lunes a Viernes 8:00-21:00, Sábados 8:00-15:00
 • **Servicios:** Préstamo libros, salas estudio, recursos digitales
-**Gimnasio CAF:**
-• **Ubicación:** Piso -1 (CAF)
-• **Servicios:** Talleres deportivos, gimnasio, selecciones
+**Admisión:**
+• **Mesa Central:** +56 2 2999 3000
+• **Horario:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00
 **Casino:**
 • **Lunes a Viernes:** 8:00 - 20:00
 • **Sábados:** 9:00 - 15:00
-**📞 Atención telefónica:**
-• Lunes a Viernes: 8:30 - 19:00
-• Sábados: 9:00 - 14:00
-🔗 **Portal sede:** https://www.duoc.cl/sede/plaza-norte/
+**📞 Atención telefónica general:**
+• **Mesa Central:** +56 2 2999 3000
+• Lunes a Viernes: 08:30 - 22:30
+• Sábados: 08:30 - 14:00
+🔗 **Portal sede:** https://www.duoc.cl/sedes/plaza-norte/
 💡 *Horarios sujetos a modificación en periodos especiales*
 """,
         # 🎯 BECAS BENEFICIOS DESDE DOCUMENTOS
@@ -2247,38 +2242,35 @@ Av. Américo Vespucio 1501, Conchalí, Santiago
 """,
         # 🎯 CONTINGENCIAS EMERGENCIAS DESDE DOCUMENTOS
         "contingencias_emergencias": """
-🚨 **Protocolo de Emergencias y Contingencias**
-**Procedimientos para situaciones de emergencia:**
-🆘 **Números de emergencia:**
-• **Ambulancia:** 131
-• **Bomberos:** 132
-• **Carabineros:** 133
-• **PDI:** 134
-• **Salud Responde:** 600 360 7777
-🏥 **Emergencias en sede:**
-• **Primeros Auxilios:** Piso 1, junto a caja
-• **Teléfono interno:** +56 2 2999 3005
-• **Personal capacitado:** Disponible en horario de atención
-🧯 **Protocolo incendio:**
-1. **Activa alarma** más cercana
-2. **Evacúa** por rutas señalizadas
-3. **Dirígete** a punto de encuentro
-4. **No uses ascensores**
-5. **Espera instrucciones**
-🌋 **Protocolo sismo:**
-1. **Mantén la calma**
-2. **Protégete** bajo mesas o marcos de puertas
-3. **Aléjate** de ventanas y objetos que caigan
-4. **Evacúa** cuando cese el movimiento
-5. **Sigue instrucciones del personal**
-💡 **Recomendaciones generales:**
-• Conoce las salidas de emergencia de tu piso
-• Identifica a los encargados de emergencia
-• Mantén tu ficha de emergencia actualizada
-• Participa en los simulacros programados
-🔗 **Plan de emergencia:** https://www.duoc.cl/sede/emergencias
-🔗 **Contacto seguridad:** seguridad@duoc.cl
-💡 *Tu seguridad es nuestra prioridad - conoce los protocolos*
+🚨 **Emergencias — ¿Qué hacer?**
+
+**🆘 Emergencia médica inmediata:**
+• **Llama ya:** DOC DUOC 600 362 3862 (24 horas)
+• **También puedes:** Mesa Central +56 2 2999 3000
+• **Emergencias externas:** 131 (Ambulancia) / 133 (Bomberos)
+
+**🏥 En la sede:**
+• Dirígete al punto de primeros auxilios en piso 1
+• Identifícate como estudiante de Duoc UC
+• El personal capacitado te ayudará inmediatamente
+
+**🔥 Si hay incendio:**
+1. Activa la alarma más cercana
+2. Evacúa por las rutas señalizadas
+3. Ve al punto de encuentro
+4. No uses ascensores
+5. Espera las instrucciones del personal
+
+**🌋 Si hay sismo:**
+1. Mantén la calma y protégete
+2. Ponte bajo mesas o marcos de puertas
+3. Aléjate de ventanas
+4. Evacúa solo cuando pare el movimiento
+5. Sigue al personal de emergencia
+
+💡 **Importante:** Siempre lleva tu credencial estudiantil contigo para identificarte en emergencias.
+
+🔗 **Más información:** https://www.duoc.cl/sedes/plaza-norte/
 """,
         # 🎯 CONTACTO ÁREAS DESDE DOCUMENTOS
         "contacto_areas": """

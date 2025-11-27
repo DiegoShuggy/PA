@@ -298,8 +298,10 @@ class RAGEngine:
         self.semantic_cache = SemanticCache(similarity_threshold=0.65)
         self.text_cache = {}
         
-        # NUEVO: Configuración de modelos Ollama dinámicos
-        self.ollama_models = ['llama3.2:3b', 'mistral:7b', 'llama3.2:1b']
+        # CONFIGURACIÓN DE MODELOS OLLAMA OPTIMIZADA
+        # llama3.2:1b-instruct-q4_K_M es más liviano (807MB) y optimizado para instrucciones
+        # mistral:7b requiere 4.5GB y causa errores de memoria
+        self.ollama_models = ['llama3.2:1b-instruct-q4_K_M', 'llama3.2:3b', 'gemma3:4b']  
         self.current_model = self._select_best_model()
 
         logger.info("RAG Engine DUOC UC inicializado")
@@ -329,55 +331,82 @@ class RAGEngine:
             result = subprocess.run(['ollama', 'list'], capture_output=True, text=True, timeout=5)
             available_models = result.stdout.lower()
             
-            for model in self.ollama_models:
-                if model in available_models:
-                    logger.info(f"✅ Modelo {model} disponible")
-                    return model
+            # Debug: mostrar modelos disponibles
+            logger.info(f"🔍 Modelos Ollama disponibles:\n{available_models}")
             
-            # Fallback a mistral
-            logger.warning("⚠️ No se encontraron modelos preferidos, usando mistral:7b")
-            return 'mistral:7b'
+            for model in self.ollama_models:
+                model_lower = model.lower()
+                if model_lower in available_models:
+                    logger.info(f"✅ Modelo seleccionado: {model}")
+                    return model
+                else:
+                    logger.info(f"❌ Modelo no encontrado: {model}")
+            
+            # Fallback: verificar si hay algún modelo disponible
+            logger.warning("⚠️ No se encontraron modelos preferidos, buscando cualquier modelo disponible")
+            
+            # Extraer nombres de modelos de la salida de ollama list
+            lines = result.stdout.strip().split('\n')[1:]  # Skip header
+            if lines:
+                first_available = lines[0].split()[0]  # Primer columna (NAME)
+                logger.warning(f"🔄 Usando primer modelo disponible: {first_available}")
+                return first_available
+            
+            # Último fallback
+            logger.error("❌ No se encontraron modelos Ollama disponibles")
+            return 'llama3.2:1b-instruct-q4_K_M'  # Default to our preferred lightweight model
         except Exception as e:
             logger.error(f"Error detectando modelos Ollama: {e}")
-            return 'llama3.2:3b'  # Default
+            return 'llama3.2:1b-instruct-q4_K_M'  # Default to our preferred lightweight model
     
     def _build_strict_prompt(self, sources: List[Dict], query: str) -> str:
         """Construye prompt estricto con contexto enriquecido"""
         if not sources:
-            return f"No tengo información sobre: {query}\nContacta Punto Estudiantil: +56 2 2596 5201"
+            return f"INSTRUCCIÓN: Responde que no tienes información específica sobre {query} y que contacten al Punto Estudiantil +56 2 2596 5201 para más detalles."
         
-        ctx_parts = []
-        for i, s in enumerate(sources, 1):
-            m = s.get('metadata', {})
-            section = m.get('section', 'N/A')
-            keywords = m.get('keywords', '')
-            category = m.get('category', 'general')
-            content = s['document'][:500]
+        # Construir contexto más claro y directo
+        context_parts = []
+        for i, source in enumerate(sources[:3], 1):  # Máximo 3 fuentes
+            metadata = source.get('metadata', {})
+            content = source['document'][:400]  # Reducir a 400 chars por fuente
+            section = metadata.get('section', 'General')
+            category = metadata.get('category', 'información')
             
-            ctx_parts.append(f"""[FUENTE {i} - {category.upper()}]
-Sección: {section}
-Keywords: {keywords}
-Contenido: {content}""")
+            context_parts.append(f"INFORMACIÓN {i} ({category}):\n{content}")
         
-        context_text = "\n\n".join(ctx_parts)
+        full_context = "\n\n".join(context_parts)
         
-        # Detectar si pregunta por beneficios/becas - requerir listado completo
-        query_lower = query.lower()
-        is_beneficios = any(word in query_lower for word in ['beneficio', 'beneficios', 'beca', 'becas', 'ayuda economica', 'ayudas'])
+        # Prompt más estricto que fuerza el uso del contexto
+        strict_prompt = f"""Eres InA, asistente del Punto Estudiantil Duoc UC Plaza Norte.
+
+REGLA ABSOLUTA: Solo responde usando la INFORMACIÓN proporcionada abajo. Si no está en la INFORMACIÓN, di que no tienes datos específicos.
+
+INFORMACIÓN DISPONIBLE:
+{full_context}
+
+RESTRICCIONES ESTRICTAS:
+- SOLO habla sobre DUOC UC - NUNCA menciones otras universidades
+- NUNCA digas "Universidad Central del Valle", "Universidad de Chile" o instituciones que NO sean Duoc UC
+- Si no tienes información, deriva al Punto Estudiantil de DUOC UC Plaza Norte
+- Sede específica: DUOC UC PLAZA NORTE (no otras sedes)
+
+INSTRUCCIONES ESPECÍFICAS:
+- Responde en 2-3 oraciones máximo
+- Usa solo datos de la INFORMACIÓN de arriba
+- Si es sobre TNE: Es la Tarjeta Nacional Estudiantil para descuentos en transporte público, gestionada por JUNAEB
+- Si es sobre beneficios: Menciona becas JUNAEB, gratuidad, ayudas internas según la INFORMACIÓN
+- Incluye datos prácticos (ubicación, teléfono, costo) si están en la INFORMACIÓN
+- NUNCA inventes números de teléfono como "1-8000"
+- Contacto correcto: Mesa Central +56 2 2999 3000, Punto Estudiantil +56 2 2999 3075
+- Ubicación correcta: Calle Nueva 1660, Huechuraba (sede Plaza Norte)
+- Horario: Lunes a viernes 08:30-22:30, sábados 08:30-14:00
+- INSTITUCIÓN: Duoc UC (no otra universidad)
+
+PREGUNTA DEL USUARIO: {query}
+
+RESPUESTA (solo sobre DUOC UC usando la INFORMACIÓN):"""
         
-        base_prompt = f"""Eres InA, asistente de Duoc UC Plaza Norte. Tu tono es profesional pero cercano.
-
-🎯 REGLAS CRÍTICAS:
-1. Usa SOLO información del CONTEXTO - NO inventes nada
-2. Responde de forma directa y natural (sin "Según...", "[FUENTE]...")
-3. Sé CONCISO: 2-3 líneas de explicación + datos prácticos al final
-4. Si NO está en contexto: deriva al Punto Estudiantil
-5. TNE = Tarjeta de transporte estudiantil (NO es certificado académico)
-
-📚 CONTEXTO:
-{context_text}
-
-❓ PREGUNTA: {query}"""
+        return strict_prompt
 
         # Si pregunta por beneficios, agregar instrucciones específicas
         if is_beneficios:
@@ -393,11 +422,40 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
 ✍️ RESPUESTA:"""
     
     def _expand_query(self, query: str) -> str:
-        """Expande consulta con sinónimos clave para mejorar recall - MEJORADO"""
-        query_lower = query.lower().strip()
-        expanded_terms = []
+        """Expande consulta con sinónimos clave para mejorar recall - MEJORADO CON PRIORITY KEYWORDS"""
+        from app.priority_keyword_system import priority_keyword_system
         
-        # Para queries muy cortas (1-2 palabras), expandir más agresivamente
+        query_lower = query.lower().strip()
+        
+        # 🔥 PASO 1: Verificar si hay keyword prioritaria que evite expansión genérica
+        priority_detection = priority_keyword_system.detect_absolute_keyword(query)
+        
+        if priority_detection:
+            logger.info(f"🎯 Priority keyword detected: '{priority_detection['keyword']}' (priority: {priority_detection['priority']})")
+            
+            # Si la keyword NO debe ser expandida, retornar query original
+            if priority_detection['avoid_expansion']:
+                logger.info(f"🚫 Evitando expansión genérica para: '{priority_detection['keyword']}'")
+                
+                # Solo agregar expansiones ESPECÍFICAS para esta keyword
+                specific_terms = priority_detection['specific_expansion']
+                if specific_terms:
+                    expanded_query = query + " " + " ".join(specific_terms)
+                    logger.info(f"✅ Expansión específica: '{query}' → +{len(specific_terms)} términos específicos")
+                    return expanded_query
+                else:
+                    logger.info(f"✅ Query sin expansión (keyword absoluta): '{query}'")
+                    return query
+            
+            # Si permite expansión, usar solo términos específicos
+            expanded_terms = list(set(priority_detection['specific_expansion']))
+            if expanded_terms:
+                expanded_query = query + " " + " ".join(expanded_terms)
+                logger.info(f"✅ Expansión específica permitida: '{query}' → +{len(expanded_terms)} términos")
+                return expanded_query
+        
+        # 🔥 PASO 2: Expansión genérica solo si NO hay keyword prioritaria
+        expanded_terms = []
         is_short_query = len(query_lower.split()) <= 2
         
         for base, synonyms in self.synonym_expansions.items():
@@ -413,7 +471,7 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
             # Eliminar duplicados
             expanded_terms = list(set(expanded_terms))
             expanded_query = query + " " + " ".join(expanded_terms)
-            logger.info(f"🔍 Query Expansion: '{query}' → +{len(expanded_terms)} términos")
+            logger.info(f"🔍 Query Expansion genérica: '{query}' → +{len(expanded_terms)} términos")
             return expanded_query
         
         logger.debug(f"Query sin expansión: '{query}'")
@@ -481,19 +539,29 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
 
     def process_user_query(self, user_message: str, session_id: str = None,
                           conversational_context: str = None, user_profile: dict = None) -> Dict:
-        """PROCESAMIENTO INTELIGENTE MEJORADO CON SMART KEYWORD DETECTION"""
+        """PROCESAMIENTO INTELIGENTE MEJORADO CON SMART KEYWORD DETECTION + PRIORITY KEYWORDS"""
         from app.smart_keyword_detector import smart_keyword_detector
+        from app.priority_keyword_system import priority_keyword_system
         
         self.metrics['total_queries'] += 1
         
         query_lower = user_message.lower().strip()
         
-        # 0. DETECCIÓN INTELIGENTE DE KEYWORDS (PRIMERA PRIORIDAD)
+        # 0A. DETECCIÓN DE KEYWORDS ABSOLUTAS (MÁXIMA PRIORIDAD)
+        priority_detection = priority_keyword_system.detect_absolute_keyword(user_message)
+        if priority_detection:
+            print(f"🔥 KEYWORD ABSOLUTA DETECTADA: '{priority_detection['keyword']}' "
+                  f"(priority: {priority_detection['priority']}, category: {priority_detection['category']})")
+            logger.info(f"🔥 Priority keyword: {priority_detection['keyword']} → "
+                       f"{priority_detection['category']}/{priority_detection['topic']} "
+                       f"(avoid_expansion: {priority_detection['avoid_expansion']})")
+        
+        # 0B. DETECCIÓN INTELIGENTE DE KEYWORDS (SEGUNDA PRIORIDAD)
         keyword_analysis = smart_keyword_detector.detect_keywords(user_message)
         
         # Si hay keyword de alta confianza, usarla para orientar la búsqueda
         if keyword_analysis['confidence'] >= 80 and keyword_analysis['primary_keyword']:
-            print(f"🎯 KEYWORD PRIORITARIA: {keyword_analysis['primary_keyword']} "
+            print(f"🎯 KEYWORD SMART: {keyword_analysis['primary_keyword']} "
                   f"({keyword_analysis['match_type']}, {keyword_analysis['confidence']}%)")
             logger.info(f"🎯 Smart detection: {keyword_analysis['primary_keyword']} → "
                        f"{keyword_analysis['category']}/{keyword_analysis['topic']}")
@@ -504,8 +572,13 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
             classification_info = classifier.get_classification_info(user_message)
             detected_language = classification_info.get('language', 'es')
             
-            # 🎯 USAR KEYWORD ANALYSIS PARA MEJORAR CATEGORIZACIÓN
-            if keyword_analysis['confidence'] >= 80 and keyword_analysis['category']:
+            # 🎯 USAR PRIORITY KEYWORD PRIMERO, luego SMART DETECTOR
+            if priority_detection:
+                category = priority_detection['category']
+                confidence = priority_detection['confidence']
+                print(f"🔥 Categoría desde PRIORITY KEYWORD: {category} (confianza: {confidence:.2f})")
+                logger.info(f"🔥 Category forced by priority keyword: {category}")
+            elif keyword_analysis['confidence'] >= 80 and keyword_analysis['category']:
                 category = keyword_analysis['category']
                 confidence = keyword_analysis['confidence'] / 100.0
                 print(f"✨ Categoría desde SMART DETECTOR: {category} (confianza: {confidence:.2f})")
@@ -519,12 +592,17 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
             logger.warning(f"Error obteniendo información completa, usando detección básica: {e}")
             detected_language = self.detect_language(user_message)
             
-            # Priorizar keyword analysis si está disponible
-            if keyword_analysis['confidence'] >= 80 and keyword_analysis['category']:
+            # Priorizar: 1) Priority keyword, 2) Smart keyword, 3) Classifier
+            if priority_detection:
+                category = priority_detection['category']
+                confidence = priority_detection['confidence']
+                logger.info(f"🔥 Fallback: usando priority keyword")
+            elif keyword_analysis['confidence'] >= 80 and keyword_analysis['category']:
                 category = keyword_analysis['category']
+                confidence = keyword_analysis['confidence'] / 100.0
             else:
                 category = classifier.classify_question(user_message)
-            confidence = 0.6
+                confidence = 0.6
         
         print(f"🌍 Idioma detectado: {detected_language}")
         
@@ -1271,47 +1349,28 @@ Puedo ayudarte con:*
                     'sources': []
                 }
             
-            context_parts = []
-            for i, source in enumerate(limited_sources):
-                content = source['document']
-                short_content = content[:150] + "..." if len(content) > 150 else content
-                context_parts.append(f"Fuente {i+1}: {short_content}")
-            
-            context = "\n".join(context_parts)
-            
-            system_message = (
-                "Eres InA, asistente estacionario físico del Punto Estudiantil Duoc UC Plaza Norte. "
-                "Estás ubicado físicamente en la sede para ayudar con servicios estudiantiles específicos.\n\n"
-                f"INFORMACIÓN DISPONIBLE: {context}\n\n"
-                "CONTEXTO IMPORTANTE:\n"
-                "- Eres una IA ESTACIONARIA en Plaza Norte (no web/app)\n"
-                "- Te especializas en servicios del Punto Estudiantil\n"
-                "- SIEMPRE incluye información de contacto específica cuando sea posible\n"
-                "- Proporciona números de teléfono, ubicaciones exactas, horarios\n"
-                "- Para temas fuera de tu alcance, DERIVA con contacto específico\n\n"
-                "INSTRUCCIONES:\n"
-                "- Respuesta máximo 5 líneas para incluir contactos\n"
-                "- SIEMPRE agrega teléfonos y ubicaciones específicas\n"
-                "- Usa formato: 📞 +56 2 2596 5XXX | 📍 Ubicación específica\n"
-                "- Incluye horarios: 🕒 Lunes a Viernes X:XX-X:XX\n"
-                "- Sé específico, no genérico"
-            )
+            # Usar el prompt estricto mejorado
+            system_message = self._build_strict_prompt(limited_sources, query)
             
             response = ollama.chat(
-                model='mistral:7b',
+                model=self.current_model,
                 messages=[
-                    {'role': 'system', 'content': system_message},
-                    {'role': 'user', 'content': query}
+                    {'role': 'user', 'content': system_message}  # Todo en user para mayor claridad
                 ],
-                options={'temperature': 0.1, 'num_predict': 150}
+                options={
+                    'temperature': 0.0,  # Máximo determinismo
+                    'num_predict': 120,  # Respuestas concisas
+                    'top_p': 0.8,        # Más enfocado
+                    'repeat_penalty': 1.5  # Evitar repeticiones
+                }
             )
             
-            # MEJORAR LA RESPUESTA DE OLLAMA CON INFORMACIÓN ESPECÍFICA
+            # PROCESAR RESPUESTA SIN MODIFICACIONES ADICIONALES
             raw_response = response['message']['content'].strip()
-            enhanced_response = enhance_final_response(raw_response, query, "general")
+            # NO usar enhance_final_response aquí para evitar modificaciones
             
             return {
-                'response': enhanced_response,
+                'response': raw_response,
                 'sources': [{
                     'content': source['document'][:80] + '...',
                     'category': source['metadata'].get('category', 'general'),
@@ -1429,16 +1488,34 @@ No entiendo completamente '{original_query}'.
             logger.error(f"Error en query RAG: {e}")
             return []
 
-    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.35):
-        """BÚSQUEDA OPTIMIZADA CON UMBRALES FLEXIBLES"""
+    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.35, 
+                        metadata_filters: Dict = None):
+        """BÚSQUEDA OPTIMIZADA CON METADATA FILTERS (DeepSeek)"""
         try:
             processed_query = self.enhanced_normalize_text(query_text)
 
-            results = self.collection.query(
-                query_texts=[processed_query],
-                n_results=n_results * 4,
-                include=['distances', 'documents', 'metadatas']
-            )
+            # Construir where_document para filtrado por metadata
+            where_filter = None
+            if metadata_filters:
+                where_filter = {}
+                if 'departamento' in metadata_filters:
+                    where_filter['departamento'] = metadata_filters['departamento']
+                if 'tema' in metadata_filters:
+                    where_filter['tema'] = metadata_filters['tema']
+                if 'content_type' in metadata_filters:
+                    where_filter['content_type'] = metadata_filters['content_type']
+
+            # Query con filtros opcionales
+            query_params = {
+                'query_texts': [processed_query],
+                'n_results': n_results * 4,
+                'include': ['distances', 'documents', 'metadatas']
+            }
+            if where_filter:
+                query_params['where'] = where_filter
+                logger.info(f"🔍 Aplicando filtros: {where_filter}")
+
+            results = self.collection.query(**query_params)
 
             filtered_docs = []
             for i, distance in enumerate(results['distances'][0]):
@@ -1452,11 +1529,15 @@ No entiendo completamente '{original_query}'.
                     doc_content = results['documents'][0][i]
                     doc_metadata = results['metadatas'][0][i]
                     
+                    # Boost score si keywords coinciden
+                    keyword_boost = self._calculate_keyword_boost(query_text, doc_metadata)
+                    adjusted_similarity = min(1.0, similarity + keyword_boost)
+                    
                     if self._is_relevant_document_improved(processed_query, doc_content):
                         filtered_docs.append({
                             'document': doc_content,
                             'metadata': doc_metadata,
-                            'similarity': similarity
+                            'similarity': adjusted_similarity
                         })
 
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
@@ -1488,6 +1569,31 @@ No entiendo completamente '{original_query}'.
                 print(f"❌ Búsqueda simple también falló: {str(fallback_error)[:100]}")
                 return []
 
+    def _calculate_keyword_boost(self, query: str, metadata: Dict) -> float:
+        """Calcula boost de relevancia basado en keywords del metadata"""
+        if not metadata or 'keywords' not in metadata:
+            return 0.0
+        
+        query_lower = query.lower()
+        keywords_str = metadata.get('keywords', '')
+        if not keywords_str:
+            return 0.0
+        
+        # Convertir keywords (pueden ser string separado por comas o lista)
+        if isinstance(keywords_str, str):
+            keywords = [k.strip() for k in keywords_str.split(',')]
+        else:
+            keywords = keywords_str
+        
+        # Contar coincidencias de keywords en la query
+        matches = sum(1 for kw in keywords if kw.lower() in query_lower)
+        
+        # Boost proporcional (máximo +0.15)
+        boost = min(0.15, matches * 0.05)
+        if boost > 0:
+            logger.debug(f"📈 Keyword boost: +{boost:.2f} ({matches} matches)")
+        return boost
+    
     def _is_relevant_document_improved(self, query: str, document: str) -> bool:
         """VERIFICACIÓN DE RELEVANCIA MEJORADA"""
         query_words = set(query.lower().split())
@@ -2036,6 +2142,33 @@ def get_ai_response(user_message: str, context: list = None,
             if len(final_sources) < max_sources:
                 final_sources.append(source)
         
+        # FILTRAR FUENTES DE MALA CALIDAD ANTES DE PROCESAR
+        quality_sources = []
+        for source in final_sources:
+            content = source.get('document', '')
+            metadata = source.get('metadata', {})
+            
+            # Detectar fuentes corruptas/malformateadas (más específico)
+            bad_indicators = [
+                'pregunta qué es tne respuesta la tarjeta',
+                'pregunta que es tne respuesta la tarjeta',
+                'pregunta sobre tne respuesta la',
+                'pregunta tne respuesta la tarjeta'
+            ]
+            
+            is_corrupt = any(bad in content.lower() for bad in bad_indicators)
+            is_too_short = len(content.strip()) < 20  # Reducido de 50 a 20
+            has_no_useful_info = content.count(' ') < 3  # Reducido de 5 a 3
+            
+            # PERMITIR más fuentes válidas
+            if not (is_corrupt or is_too_short or has_no_useful_info):
+                quality_sources.append(source)
+            else:
+                logger.warning(f"🗑️ Fuente de mala calidad filtrada: {content[:100]}...")
+        
+        final_sources = quality_sources
+        logger.info(f"🔍 Fuentes de calidad seleccionadas: {len(final_sources)}")
+        
         print(f"\n📌 PASO 5: SELECCIÓN FINAL DE FUENTES")
         print(f"   📋 Fuentes seleccionadas: {len(final_sources)}")
         logger.info(f"📋 Fuentes finales para Ollama: {len(final_sources)}")
@@ -2159,7 +2292,7 @@ def get_ai_response(user_message: str, context: list = None,
             print(f"🔴 Error: {str(ollama_error)[:200]}")
             print(f"🔧 Tipo: {type(ollama_error).__name__}")
             print(f"🤖 Modelo: {rag_engine.current_model}")
-            print(f"📝 Prompt length: {len(strict_prompt)} caracteres")
+            print(f"📝 Prompt length: {len(system_message)} caracteres")
             print(f"🔄 Activando sistema de fallback...")
             print(f"{'='*80}\n")
             
@@ -2167,15 +2300,30 @@ def get_ai_response(user_message: str, context: list = None,
             logger.error(f"❌ Tipo de error: {type(ollama_error).__name__}")
             logger.error(f"❌ Detalles: {str(ollama_error)}")
             
-            # Si Ollama falla, usar las fuentes directamente
+            # Si Ollama falla, construir respuesta estructurada desde las fuentes
             if final_sources:
                 print(f"   ✅ Usando {len(final_sources)} fuentes directamente")
                 logger.warning(f"⚠️ Ollama falló, usando {len(final_sources)} fuentes directas")
-                respuesta = "\n\n".join([src['document'][:400] for src in final_sources[:2]])
+                
+                # Construir respuesta estructurada manualmente
+                first_source = final_sources[0]['document']
+                category = final_sources[0]['metadata'].get('category', 'información')
+                
+                if 'tne' in user_message.lower():
+                    if 'como' in user_message.lower() or 'cómo' in user_message.lower() or 'obten' in user_message.lower():
+                        respuesta = "Para solicitar la TNE, accede a www.duoc.cl/sedes/info-tne/. Debes ser alumno regular sin deudas pendientes. El proceso es gestionado por JUNAEB y el retiro se hace en asuntos estudiantiles. Contacto: +56 2 2585 6990. Mall Plaza Norte, horario lunes a viernes 9:00-19:00."
+                    else:
+                        respuesta = "La TNE es la Tarjeta Nacional Estudiantil que te permite obtener descuentos en el transporte público de Santiago. Es gestionada por JUNAEB y Duoc UC Plaza Norte actúa como intermediario para validar tu condición estudiantil. Contacto: +56 2 2585 6990, Mall Plaza Norte."
+                elif any(word in user_message.lower() for word in ['beneficio', 'beca', 'ayuda']):
+                    respuesta = f"En Duoc UC Plaza Norte tienes acceso a becas JUNAEB, gratuidad estatal, becas internas (Excelencia Académica, Hermanos DUOC, Deportiva), y financiamiento en cuotas. Para información específica, contacta Mesa de Servicios: +56 2 2585 6990, Mall Plaza Norte."
+                else:
+                    # Construir respuesta genérica estructurada
+                    clean_content = first_source[:300].replace('\n', ' ').strip()
+                    respuesta = f"Según la información de Duoc UC Plaza Norte: {clean_content}. Para más detalles, contacta Mesa de Servicios: +56 2 2585 6990, Mall Plaza Norte."
             else:
                 print(f"   ❌ Sin fuentes disponibles para fallback")
                 logger.error(f"❌ Sin fuentes disponibles, retornando mensaje genérico")
-                respuesta = "No tengo información específica sobre eso. Contacta Punto Estudiantil: +56 2 2596 5201"
+                respuesta = "No tengo información específica sobre eso en este momento. Para consultas sobre servicios de Duoc UC Plaza Norte, contacta Mesa de Servicios: +56 2 2585 6990, Mall Plaza Norte, horario lunes a viernes 9:00-19:00, sábados 9:00-15:00."
         respuesta = _optimize_response(respuesta, user_message)
         logger.info(f"✂️ Respuesta optimizada: {len(respuesta)} chars")
 

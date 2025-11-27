@@ -253,7 +253,8 @@ Limita tu respuesta a 200 palabras máximo."""
 Para consultas sobre matrícula y admisión:
 • Visita: www.duoc.cl/admision
 • Llama: +56 2 2354 8000
-• Email: admision.plazanorte@duoc.cl
+• Mesa Central: +56 2 2999 3000
+• Punto Estudiantil: +56 2 2999 3075
 • Presencial: Av. Américo Vespucio Norte 1630""",
 
             "certificados": """📄 **Certificados y Documentos**
@@ -267,7 +268,7 @@ Para solicitar certificados:
             
 • Teléfono: +56 2 2354 8000
 • Dirección: Av. Américo Vespucio Norte 1630
-• Email: plazanorte@duoc.cl
+• Mesa Central: +56 2 2999 3000
 • Centro de Ayuda: centroayuda.duoc.cl""",
         }
         

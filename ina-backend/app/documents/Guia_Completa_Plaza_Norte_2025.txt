@@ -8,28 +8,27 @@
 ## 1. INFORMACIÓN GENERAL DE LA SEDE
 
 ### Ubicación y Contacto
-- **Dirección**: Av. Los Libertadores 1138, Plaza Norte, Huechuraba
+- **Dirección**: Calle Nueva 1660, Huechuraba
 - **Teléfonos de contacto**:
-  - Mesa de Servicios: (+56) 2 2585 6990
-  - Mesa de Servicios Plaza Norte: (+56) 44220 1098
-  - WhatsApp Admisión: +56 9 5814 2089
-  - WhatsApp Información: +56 9 3663 9565
+  - Mesa Central: +56 2 2999 3000
+  - Punto Estudiantil: +56 2 2999 3075
+  - DOC DUOC (Emergencias Médicas): 600 362 3862
 
 ### Horarios de Atención
-- **Lunes a Viernes**: 8:00 - 20:00 hrs
-- **Sábados**: 8:00 - 13:00 hrs
-- **Biblioteca**: Lunes a Viernes 8:00 - 21:00 hrs, Sábados 8:00 - 15:00 hrs
+- **Lunes a Viernes**: 08:30 - 22:30 hrs
+- **Sábados**: 08:30 - 14:00 hrs
+- **Biblioteca**: Lunes a Viernes horario extendido según necesidades
 
 ### Cómo Llegar
 **Transporte Público:**
-- Metro Línea 2: Estación Vespucio Norte (10 minutos caminando)
-- Micros desde Santiago Centro: 506, 507, 508
-- Transantiago: D03, D04, D07
+- Conexiones desde Santiago Centro hacia Huechuraba/Plaza Norte
+- Múltiples líneas de buses hacia la zona
+- Referencia: Mall Plaza Norte (ubicación conocida)
 
 **Automóvil:**
-- Acceso directo desde Av. Los Libertadores
-- Estacionamientos disponibles en el mall Plaza Norte
-- Estacionamiento para estudiantes en convenio
+- Acceso directo desde rutas principales hacia Huechuraba
+- Estacionamientos disponibles en Mall Plaza Norte
+- Ubicación estratégica en sector comercial
 
 ---
 
@@ -285,21 +284,20 @@ Acceso en: https://plataforma.duoc.cl/admin/login
 ## 11. CONTACTO Y EMERGENCIAS
 
 ### Directorio Telefónico
-- **Mesa de Servicios General**: (+56) 2 2585 6990
-- **Admisión Plaza Norte**: (+56) 9 5814 2089
-- **Biblioteca**: Ext. 2150
-- **Enfermería**: Ext. 2160
-- **Bienestar Estudiantil**: Ext. 2170
+- **Mesa Central**: +56 2 2999 3000
+- **Punto Estudiantil**: +56 2 2999 3075
+- **DOC DUOC (Emergencias Médicas)**: 600 362 3862
+- **Información General**: Consultar en punto estudiantil
 
 ### Emergencias
-- **Primeros Auxilios**: Enfermería sede
-- **Seguridad**: Ext. 911 (desde red interna)
+- **Primeros Auxilios/Emergencias Médicas**: DOC DUOC 600 362 3862
+- **Mesa Central**: +56 2 2999 3000
 - **Emergencias Externas**: 133 (Bomberos), 131 (Ambulancia)
 
 ### Canales Digitales
 - **Portal Web**: https://www.duoc.cl/sedes/plaza-norte/
-- **WhatsApp**: +56 9 5814 2089
-- **Email**: admision.plazanorte@duoc.cl
+- **Mesa Central**: +56 2 2999 3000
+- **Punto Estudiantil**: +56 2 2999 3075
 - **Redes Sociales**: @DuocUC
 
 ---

@@ -615,6 +615,9 @@ async def chat(message: Message, request: Request):
             
             # 🔥 DECLARAR VARIABLES IMPORTANTES AL INICIO
             followup_suggestions = []
+            strategy = "unknown"
+            sources_count = 0
+            template_id = None
             
             # ✨ PRIORIDAD 1: VERIFICAR TEMPLATES PRIMERO (consultas frecuentes)
             # Esto asegura que las preguntas frecuentes usen templates predefinidos
@@ -725,7 +728,9 @@ async def chat(message: Message, request: Request):
             response_data = {
                 "text": "El servicio está tardando demasiado. Por favor, intenta nuevamente.",
                 "qr_codes": {},
-                "has_qr": False
+                "has_qr": False,
+                "sources": [],
+                "processing_info": {"processing_strategy": "error_fallback"}
             }
         
         # 3.5 CALCULAR TIEMPO DE RESPUESTA Y GUARDAR EN MÉTRICAS
@@ -865,7 +870,7 @@ async def health_check():
     try:
         # Test simple de Ollama
         test_response = ollama.chat(
-            model='mistral:7b',
+            model='llama3.2:1b-instruct-q4_K_M',
             messages=[{'role': 'user', 'content': 'Hola'}],
             options={'num_predict': 10}
         )
@@ -885,7 +890,7 @@ async def health_check():
         
         return {
             "status": "healthy", 
-            "model": "mistral:7b",
+            "model": "llama3.2:1b-instruct-q4_K_M",
             "ollama": "connected",
             "database": "connected",
             "chromadb": rag_status,
@@ -902,7 +907,7 @@ async def health_check():
         logger.error(f"Health check failed: {e}")
         return {
             "status": "unhealthy", 
-            "model": "mistral:7b",
+            "model": "llama3.2:1b-instruct-q4_K_M",
             "error": str(e)
         }
 
@@ -920,7 +925,7 @@ async def get_analytics():
 async def root():
     return {
         "message": "InA API is running!", 
-        "model": "mistral:7b",
+        "model": "llama3.2:1b-instruct-q4_K_M",
         "version": "1.0.0",
         "features": {
             "rag": True,

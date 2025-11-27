@@ -332,7 +332,7 @@ class AdvancedAnalytics:
         try:
             import ollama
             response = ollama.chat(
-                model='mistral:7b',
+                model='llama3.2:1b-instruct-q4_K_M',
                 messages=[{'role': 'user', 'content': 'ping'}],
                 options={'num_predict': 1}
             )

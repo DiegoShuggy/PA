@@ -11,9 +11,10 @@ TEMPLATES_ES = {
 • **Certificado de alumno regular** vigente
 • **Foto carnet** reciente (fondo blanco)
 • **Comprobante de pago** ($2.700)
-📍 **Lugar:** Punto Estudiantil, edificio principal
-⏰ **Horario:** Lunes a Viernes 8:30-19:00
-📞 **Contacto:** +56 2 2360 6400
+📏 **Lugar:** Punto Estudiantil, Calle Nueva 1660, Huechuraba
+⏰ **Horario:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00
+📞 **Mesa Central:** +56 2 2999 3000
+📞 **Punto Estudiantil:** +56 2 2999 3075
 🔗 **Seguimiento TNE:** https://www.tne.cl
 🔗 **Portal Duoc:** https://portal.duoc.cl
 🔗 **Certificados:** https://certificados.duoc.cl
@@ -21,17 +22,26 @@ TEMPLATES_ES = {
 """,
 
     "tne_primera_vez": """
-🆕 **¿Cómo saco mi TNE por primera vez?**
-**Para estudiantes que ingresan por primera vez a la Educación Superior**
-📋 **Pasos a seguir:**
-1. **Realizar pago:** $2.700 en caja de sede o portal de pago.
-2. **Enviar comprobante** a: Puntoestudiantil_pnorte@duoc.cl
-3. **Actualización de datos** en sistema.
-4. **Recibir instrucciones** para captura de fotografías.
-💳 **Pagos online:** https://portal.duoc.cl
-📧 **Email envío:** Puntoestudiantil_pnorte@duoc.cl
-📞 **Confirmación:** +56 2 2360 6400.
-🔗 **Portal TNE:** https://www.tne.cl
+🆕 **TNE por primera vez — Proceso completo**
+
+**¿Eres estudiante nuevo en educación superior?** Te ayudamos con tu TNE.
+
+📋 **Pasos simples:**
+1. **Realiza el pago** del costo vigente en caja de sede
+2. **Envía el comprobante** según las instrucciones que recibirás  
+3. **Actualiza tus datos** en el sistema cuando se te solicite
+4. **Recibe las instrucciones** para captura de fotografías online
+
+💻 **Información importante:**
+• La TNE es administrada por JUNAEB, Duoc UC actúa como intermediario
+• Toda la información específica se envía a tu correo institucional
+• Puedes realizar seguimiento en el portal oficial de TNE
+
+🔗 **Recursos útiles:**
+• Portal de pagos: https://portal.duoc.cl
+• Portal TNE oficial: https://www.tne.cl
+• Mesa Central: +56 2 2999 3000
+
 💡 *Proceso exclusivo para primer ingreso a educación superior*
 """,
 
@@ -49,32 +59,28 @@ TEMPLATES_ES = {
 """,
 
     "seguro_cobertura": """
-🛡️ **Seguro Estudiantil — Cobertura y Procedimientos.**
+🛡️ **Seguro Estudiantil — Cobertura 24/7**
 
-Resumen rápido:
-- El seguro de accidentes cubre actividades educativas y traslados
-- Activo durante clases, prácticas y trayectos
-- Activación automática para estudiantes matriculados  
-- Cobertura gratuita con protección integral.
+✅ **Cobertura completa:**
+• **365 días del año** — sin excepción
+• **24 horas del día** — dentro y fuera de la sede  
+• **Sin costo adicional** para estudiantes regulares
+• **Activación automática** al matricularse
 
-🏥 **La cobertura incluye:**
-• Emergencias médicas durante clases.
-• Accidentes en trayecto hacia/desde la institución.
-• Cobertura de incidentes en el campus.
-• Transporte médico si es necesario.
+🏥 **¿Qué cubre?**
+• Emergencias médicas durante actividades académicas
+• Accidentes en trayecto hacia/desde la institución
+• Incidentes dentro del campus universitario
+• Transporte médico de emergencia
 
-📋 **Cómo usar:**
-1. **Emergencia:** Presentar ID de estudiante en centro de salud.
-2. **Accidente:** Reportar inmediatamente a Servicios Estudiantiles.
-3. **Reclamos:** Presentar documentación dentro de 24 horas.
-4. **Cobertura:** Mostrar este QR para atención directa.
+🚨 **¿Qué hacer en emergencia?**
+1. **Llamar inmediatamente:** DOC DUOC 600 362 3862
+2. **Coordinar atención:** El equipo médico te guiará
+3. **Portar credencial:** Siempre lleva tu tarjeta estudiantil
+4. **Reportar incidente:** Informar a la sede si ocurre en campus
 
-🌐 **Más información:**
-- Portal estudiantes: https://centroayuda.duoc.cl
-- Portal institución: https://www.duoc.cl/alumnos/
-
-⚡ **Emergencia:** Siempre porta tu credencial estudiantil.
-💡 *Recuerda: La cobertura es automática y gratuita para todos los estudiantes matriculados*
+🔗 **Más información:** https://www.duoc.cl/alumnos/seguro/
+💡 *Tu seguridad es nuestra prioridad — cobertura inmediata garantizada*
 """,
 
     "tne_tiempos_emision": """
@@ -98,26 +104,36 @@ Resumen rápido:
 • **Instrucciones** para revalidación enviadas por email
 💳 **Pagos online:** https://portal.duoc.cl
 📧 **Email envío:** Puntoestudiantil_pnorte@duoc.cl
-📞 **Confirmación:** +56 2 2360 6400
+📞 **Mesa Central:** +56 2 2999 3000
 🔗 **Portal de pagos:** https://portal.duoc.cl
 📅 **Proceso anual** - debe revalidarse cada año académico
 """,
 
     "programa_emergencia": """
-🆘 **Programa de Emergencia Duoc UC:**
-**Ayuda financiera inmediata** para situaciones imprevistas que afecten tu estabilidad económica.
-💰 **Monto máximo:** $200.000
-✅ **Requisitos:**
-• Alumno regular con carga académica
-• Registro Social de Hogares (6 meses vigencia)
-• Cuenta RUT activa
-• Sin suspensión/renuncia activa
-📅 **Postulaciones 2025:**
-• **1er semestre:** 28 abril - 31 julio
-• **2do semestre:** 1 septiembre - 22 diciembre
-🔗 **Postular:** https://beneficios.duoc.cl
-🔗 **Consultas:** https://centroayuda.duoc.cl
-💡 *Postula dentro de los plazos establecidos*
+🆘 **Programa de Emergencia — Apoyo financiero inmediato**
+
+**¿Enfrentas una situación imprevista?** Duoc UC te puede ayudar.
+
+💰 **Apoyo disponible:**
+• Monto máximo de 200 mil pesos
+• Para situaciones que afecten tu estabilidad económica
+• Destinado a gastos médicos, fallecimiento familiar, daños a vivienda o situaciones excepcionales
+
+📋 **¿Puedes postular?**
+• Debes ser alumno regular con carga académica
+• Tener Registro Social de Hogares vigente (máximo 6 meses)
+• Contar con Cuenta RUT activa del Banco Estado
+• No tener suspensión o renuncia activa
+
+📅 **Fechas importantes 2025:**
+• Primer semestre: del 28 de abril al 31 de julio
+• Segundo semestre: del 1 de septiembre al 22 de diciembre
+
+🔗 **¿Cómo postular?**
+• Ingresa a beneficios.duoc.cl con tus credenciales
+• Para consultas adicionales visita centroayuda.duoc.cl
+
+💡 *Recuerda postular dentro de los plazos establecidos para cada semestre*
 """,
 
     "certificado_alumno_regular": """

@@ -14,8 +14,9 @@ FALLBACK_RESPONSES = {
 4. **Paga arancel** a través del portal de pagos
 
 📞 **Contacto Plaza Norte:**
-- Teléfono: +56 2 2354 8000
-- Email: admision.plazanorte@duoc.cl
+- Teléfono: +56 2 2999 3000
+- Mesa Central: +56 2 2999 3000
+- Punto Estudiantil: +56 2 2999 3075
 
 🔗 **Enlaces útiles:**
 - Portal Admisión: www.duoc.cl/admision/
@@ -92,7 +93,7 @@ Tel: +56 2 2354 8000 ext. 2250
         
 **Información General:**
 - Teléfono: +56 2 2354 8000
-- Email: plazanorte@duoc.cl
+- Mesa Central: +56 2 2999 3000
 - Dirección: Av. Américo Vespucio Norte 1630, Quilicura
 
 **Coordinaciones Específicas:**

@@ -88,7 +88,9 @@ class IntelligentCacheSystem:
         # Configuraciones de cache
         self.cache_strategies = {
             'default': CacheStrategy.HYBRID,
+            'response': CacheStrategy.SEMANTIC,  # Corregido para coincidir con el uso
             'responses': CacheStrategy.SEMANTIC,
+            'knowledge': CacheStrategy.SEMANTIC,  # Agregado tipo knowledge
             'embeddings': CacheStrategy.LFU,
             'user_profiles': CacheStrategy.LRU,
             'analytics': CacheStrategy.ADAPTIVE
@@ -248,25 +250,29 @@ class IntelligentCacheSystem:
             
             # Buscar en Redis si está disponible
             if self.redis_available:
-                pattern = f"embedding:{data_type}:*"
-                keys = self.redis_client.keys(pattern)
-                
-                for key in keys:
-                    try:
-                        embedding_data = self.redis_client.get(key)
-                        if embedding_data:
-                            stored_embedding = pickle.loads(embedding_data)
-                            similarity = cosine_similarity(
-                                [query_embedding], [stored_embedding]
-                            )[0][0]
-                            
-                            if similarity > similarity_threshold and similarity > best_similarity:
-                                best_similarity = similarity
-                                # Obtener la clave original
-                                original_key = key.decode().split(':')[-1]
-                                best_match = self._direct_get(original_key)
-                    except Exception:
-                        continue
+                try:
+                    pattern = f"embedding:{data_type}:*"
+                    keys = self.redis_client.keys(pattern)
+                    
+                    for key in keys:
+                        try:
+                            embedding_data = self.redis_client.get(key)
+                            if embedding_data:
+                                stored_embedding = pickle.loads(embedding_data)
+                                similarity = cosine_similarity(
+                                    [query_embedding], [stored_embedding]
+                                )[0][0]
+                                
+                                if similarity > similarity_threshold and similarity > best_similarity:
+                                    best_similarity = similarity
+                                    # Obtener la clave original
+                                    original_key = key.decode().split(':')[-1]
+                                    best_match = self._direct_get(original_key)
+                        except Exception:
+                            continue
+                except Exception as e:
+                    logger.debug(f"Error accediendo a Redis para búsqueda semántica: {e}")
+                    pass
             
             # Buscar en memoria cache
             if self.memory_cache and not best_match:
@@ -592,12 +598,13 @@ class IntelligentCacheSystem:
             if hit_rate < 0.6:  # Menos del 60% de hits
                 logger.info("📈 Optimizando estrategias de cache debido a baja tasa de hit")
                 
-                # Aumentar uso de búsqueda semántica
+                # Aumentar uso de búsqueda semántica para tipos que existen
                 for data_type in ['response', 'knowledge']:
-                    if self.cache_strategies[data_type] != CacheStrategy.SEMANTIC:
-                        self.cache_strategies[data_type] = CacheStrategy.SEMANTIC
+                    if data_type in self.cache_strategies:
+                        if self.cache_strategies[data_type] != CacheStrategy.SEMANTIC:
+                            self.cache_strategies[data_type] = CacheStrategy.SEMANTIC
                 
-                # Aumentar TTL para datos importantes
+                # Aumentar TTL para datos importantes que existen
                 for data_type in ['knowledge', 'user_data']:
                     if data_type in self.type_configs:
                         self.type_configs[data_type]['ttl'] *= 1.5

@@ -3,14 +3,14 @@
 ## 📍 **SEDE PLAZA NORTE**
 
 ### **Ubicación y Acceso**
-🏢 **Dirección**: Santa Elena de Huechuraba 1660, Huechuraba
-🚇 **Metro**: Línea 2, Estación Plaza de Armas (Conexión Transantiago)
-🚌 **Transporte**: Múltiples líneas de buses desde Plaza Baquedano y La Moneda
-🚗 **Estacionamiento**: Disponible para estudiantes y funcionarios
+🏢 **Dirección**: Calle Nueva 1660, Huechuraba
+🚇 **Transporte Público**: Conexiones desde Santiago Centro
+🚌 **Buses**: Múltiples líneas hacia Plaza Norte/Huechuraba
+🚗 **Estacionamiento**: Disponible en Mall Plaza Norte
 
 ### **Horarios Generales de Atención**
-📅 **Lunes a Viernes**: 8:00 - 22:00 hrs
-📅 **Sábados**: 8:00 - 14:00 hrs  
+📅 **Lunes a Viernes**: 08:30 - 22:30 hrs
+📅 **Sábados**: 08:30 - 14:00 hrs  
 📅 **Domingos**: Cerrado
 
 ### **Información Institucional**
@@ -32,9 +32,9 @@
 🔄 **Innovación**: Creatividad y adaptación al cambio
 
 ### **Autoridades Plaza Norte**
-👤 **Director de Sede**: [Información actualizada en portal]
-📞 **Teléfono Dirección**: +56 2 2354 8000
-📧 **Email Dirección**: direccion.plazanorte@duoc.cl
+👤 **Director de Sede**: [Información disponible en portal oficial]
+📞 **Mesa Central**: +56 2 2999 3000
+📞 **Punto Estudiantil**: +56 2 2999 3075
 
 ### **Acreditación y Certificaciones**
 🏆 **Acreditación Institucional**: 5 años (máxima)
@@ -55,6 +55,6 @@
 ▶️ **YouTube**: DuocUC
 
 ### **Contactos de Emergencia**
-🚨 **Emergencias Médicas**: +56 2 2354 8000 (ext. 911)
-👮 **Seguridad Campus**: +56 2 2354 8000 (ext. 800)
-🔐 **Soporte TI**: soporte.plazanorte@duoc.cl
+🚨 **DOC DUOC (Emergencias Médicas)**: 600 362 3862
+👮 **Mesa Central**: +56 2 2999 3000
+🔐 **Soporte**: Consultar en punto estudiantil
