@@ -138,13 +138,23 @@ class IntegratedAISystem:
             # Actualizar métricas
             self.system_metrics["last_expansion"] = datetime.now().isoformat()
             
-            discovered_count = len(expansion_results.get("discovery_results", []))
-            ingested_count = len(expansion_results.get("ingestion_results", {}).get("processed_urls", []))
+            # Verificar tipo de expansion_results
+            if isinstance(expansion_results, dict):
+                discovered_count = len(expansion_results.get("discovery_results", []))
+                ingested_count = len(expansion_results.get("ingestion_results", {}).get("processed_urls", []))
+            elif isinstance(expansion_results, list):
+                discovered_count = len(expansion_results)
+                ingested_count = 0
+            else:
+                discovered_count = 0
+                ingested_count = 0
             
             logger.info(f"✅ Expansión inicial completada: {discovered_count} fuentes descubiertas, {ingested_count} ingresadas")
             
         except Exception as e:
             logger.error(f"❌ Error en expansión inicial: {e}")
+            import traceback
+            logger.debug(traceback.format_exc())
 
     def _setup_performance_monitoring(self):
         """Configura monitoreo automático de rendimiento"""

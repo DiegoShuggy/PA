@@ -1,2 +1,17 @@
 # URLs para configuración del sistema
-# Este archivo puede contener URLs de recursos externos si es necesario
+# URLs de documentación oficial Duoc UC (respetan robots.txt)
+
+# Centro de Ayuda (contenido público disponible)
+https://centroayuda.duoc.cl/
+
+# Biblioteca (recursos públicos)
+https://www.duoc.cl/biblioteca/
+
+# Admisión (información pública)
+https://www.duoc.cl/admision/
+
+# Vida Estudiantil (servicios disponibles)
+https://www.duoc.cl/vida-estudiantil/
+
+# Nota: Algunas URLs pueden estar bloqueadas por robots.txt
+# El sistema respeta automáticamente estas restricciones

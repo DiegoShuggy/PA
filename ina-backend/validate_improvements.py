@@ -42,8 +42,8 @@ def check_ollama_models():
         models_found = []
         if 'llama3.2:3b' in output:
             models_found.append('llama3.2:3b')
-        if 'mistral:7b' in output:
-            models_found.append('mistral:7b')
+        if 'llama3.2:1b-instruct-q4_K_M' in output:
+            models_found.append('llama3.2:1b-instruct-q4_K_M')
         if 'llama3.2:1b' in output:
             models_found.append('llama3.2:1b')
         
