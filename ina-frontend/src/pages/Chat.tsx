@@ -1364,6 +1364,7 @@ useEffect(() => {
 
     switch (action) {
     case 'clear':
+      stopReading(true);
       // Primero intenta cancelar la generación si está cargando
       if (isLoading && abortControllerRef.current) {
         stopGeneration(); // Esto ya cancela la generación
