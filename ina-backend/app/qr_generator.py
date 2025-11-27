@@ -527,7 +527,11 @@ class QRGenerator:
         question_lower = question.lower()
         
         # Mapeo más específico de preguntas a URLs
-        if any(word in question_lower for word in ['certificado', 'documento', 'alumno regular', 'constancia']):
+        if any(word in question_lower for word in ['tne', 'tarjeta estudiantil', 'tarjeta nacional', 'pase escolar']):
+            # TNE: portal oficial + portal DuocUC para pagos - SIEMPRE devolver estas URLs
+            return ["https://www.tne.cl", "https://portal.duoc.cl"]
+        
+        elif any(word in question_lower for word in ['certificado', 'documento', 'alumno regular', 'constancia']):
             return [self.duoc_manager.duoc_urls['certificados']]
         
         elif any(word in question_lower for word in ['practica', 'profesional', 'empresa', 'practicas']):
@@ -554,10 +558,20 @@ class QRGenerator:
         elif any(word in question_lower for word in ['emergencia', 'socioeconomico', 'ayuda urgente']):
             return [self.duoc_manager.duoc_urls['formulario_emergencia']]
         
-        elif any(word in question_lower for word in ['tne', 'tarjeta estudiantil']):
-            # TNE - usar clave correcta o manejar error
-            tne_url = self.duoc_manager.duoc_urls.get('tne_info') or self.duoc_manager.duoc_urls.get('servicios_estudiantes')
-            return [tne_url] if tne_url else []
+        elif any(word in question_lower for word in ['tne', 'tarjeta estudiantil', 'tarjeta nacional']):
+            # TNE - portal oficial TNE + portal DuocUC para pagos
+            from app.qr_api_integration import generate_qr_for_resource
+            try:
+                tne_qrs = generate_qr_for_resource("tne")
+                if tne_qrs:
+                    return [qr['url'] for qr in tne_qrs]
+            except:
+                pass
+            # Fallback directo
+            return [
+                "https://www.tne.cl",
+                "https://portal.duoc.cl"
+            ]
         
         elif any(word in question_lower for word in ['perdida', 'robo']):
             return [self.duoc_manager.duoc_urls['comisaria_virtual']]

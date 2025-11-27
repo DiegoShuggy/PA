@@ -213,9 +213,23 @@ class EnhancedQRManager:
             
             # TNE y beneficios
             "tne_info": {
-                "url": "https://www.duoc.cl/sedes/info-tne/",
-                "title": "TNE Información",
-                "description": "Información sobre Tarjeta Nacional Estudiantil",
+                "url": "https://www.tne.cl",
+                "title": "Portal TNE Nacional",
+                "description": "Portal oficial para solicitar y gestionar TNE",
+                "category": "tne",
+                "priority": "high"
+            },
+            "tne_duoc": {
+                "url": "https://portal.duoc.cl",
+                "title": "Portal Estudiante DuocUC",
+                "description": "Portal para pago y gestión de TNE en DuocUC",
+                "category": "tne",
+                "priority": "high"
+            },
+            "beneficios_tne": {
+                "url": "https://www.duoc.cl/alumnos/beneficios-tne/",
+                "title": "Beneficios TNE",
+                "description": "Información sobre beneficios de la TNE",
                 "category": "tne",
                 "priority": "medium"
             }

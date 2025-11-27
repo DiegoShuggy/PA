@@ -11,64 +11,41 @@ logger = logging.getLogger(__name__)
 
 def auto_fix_chromadb():
     """Reparación automática de ChromaDB al detectar errores"""
-    chroma_path = Path("./chroma_db")
+    # OPTIMIZACIÓN: Solo verificar si hay un archivo de marca de error
+    # No verificar toda la DB en cada inicio (muy lento)
     
-    try:
-        # Verificar si ChromaDB existe y tiene problemas
-        if chroma_path.exists():
-            import sqlite3
-            
-            # Buscar archivo de base de datos
-            db_files = list(chroma_path.glob("*.sqlite*"))
-            
-            for db_file in db_files:
-                if "chroma.sqlite3" in db_file.name:
-                    try:
-                        conn = sqlite3.connect(db_file)
-                        cursor = conn.cursor()
-                        
-                        # Intentar verificar esquema de collections
-                        cursor.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='collections'")
-                        result = cursor.fetchone()
-                        
-                        if result and "topic" not in result[0].lower():
-                            logger.warning("🔧 Esquema ChromaDB obsoleto detectado - reparando...")
-                            conn.close()
-                            
-                            # Crear backup
-                            backup_path = Path(f"./chroma_db_auto_backup")
-                            if backup_path.exists():
-                                shutil.rmtree(backup_path)
-                            shutil.copytree(chroma_path, backup_path)
-                            
-                            # Remover corrupto
-                            shutil.rmtree(chroma_path)
-                            
-                            logger.info("✅ ChromaDB reparado automáticamente")
-                            return True
-                        
-                        conn.close()
-                        
-                    except Exception as e:
-                        logger.error(f"Error verificando ChromaDB: {e}")
-                        # Si hay cualquier error, resetear ChromaDB
-                        try:
-                            shutil.rmtree(chroma_path)
-                            logger.info("✅ ChromaDB problemático removido")
-                            return True
-                        except:
-                            pass
+    error_marker = Path("./chroma_db/.needs_fix")
+    
+    if error_marker.exists():
+        logger.warning("🔧 ChromaDB marcado para reparación...")
+        chroma_path = Path("./chroma_db")
         
-        return False
-        
-    except Exception as e:
-        logger.error(f"Error en auto-fix ChromaDB: {e}")
-        return False
+        try:
+            # Crear backup
+            backup_path = Path(f"./chroma_db_auto_backup")
+            if backup_path.exists():
+                shutil.rmtree(backup_path)
+            shutil.copytree(chroma_path, backup_path)
+            
+            # Remover corrupto
+            shutil.rmtree(chroma_path)
+            
+            logger.info("✅ ChromaDB reparado automáticamente")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error reparando ChromaDB: {e}")
+            return False
+    
+    return False
 
 def safe_chromadb_init():
-    """Inicialización segura de ChromaDB con auto-reparación"""
+    """Inicialización segura de ChromaDB con auto-reparación OPTIMIZADA"""
+    import time
+    init_start = time.time()
+    
     try:
-        # Intentar auto-reparación primero
+        # OPTIMIZACIÓN: Solo reparar si hay marca de error
         auto_fix_chromadb()
         
         # Desactivar telemetría de ChromaDB completamente
@@ -81,13 +58,21 @@ def safe_chromadb_init():
         # Inicializar ChromaDB con configuración básica y segura
         import chromadb
         
-        # Crear cliente con configuración mínima
-        client = chromadb.PersistentClient(path="./chroma_db")
-        logger.info("✅ ChromaDB inicializado correctamente")
+        # OPTIMIZACIÓN: Crear cliente sin verificaciones extras
+        client = chromadb.PersistentClient(
+            path="./chroma_db",
+            settings=chromadb.config.Settings(
+                anonymized_telemetry=False,
+                allow_reset=False  # No permitir reset accidental
+            )
+        )
+        
+        elapsed = time.time() - init_start
+        logger.info(f"✅ ChromaDB inicializado ({elapsed:.2f}s)")
         
         return client
         
     except Exception as e:
-        logger.error(f"❌ Error con ChromaDB seguro, usando fallback básico: {e}")
+        logger.error(f"❌ Error con ChromaDB: {e}")
         logger.warning("⚠️ Usando fallback mínimo")
         return None

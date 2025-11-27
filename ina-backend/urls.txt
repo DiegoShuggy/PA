@@ -1,0 +1,2 @@
+# URLs para configuración del sistema
+# Este archivo puede contener URLs de recursos externos si es necesario

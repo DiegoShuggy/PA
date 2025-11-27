@@ -80,6 +80,25 @@ class StationaryAIDerivationManager:
                 "resources": ["Coordinación Académica"],
                 "contact": "Consultar directorio por carrera",
                 "urgent": False
+            },
+            "direccion_carrera": {
+                "keywords": ["carrera", "programa", "ingeniería", "técnico", "plan de estudios", "perfil egreso", 
+                            "campo laboral", "asignaturas", "especialización", "duración carrera"],
+                "office": "Dirección de Carrera / Admisión",
+                "location": "Piso 2, sector académico Plaza Norte",
+                "hours": "Lunes a Viernes 9:00-18:00",
+                "resources": ["Portal de Carreras DUOC", "Orientación Vocacional"],
+                "contact": "admision.plazanorte@duoc.cl / Tel: +56 2 2596 5300",
+                "urgent": False
+            },
+            "matricula_admision": {
+                "keywords": ["matrícula", "inscripción", "postulación", "admisión", "vacantes", "requisitos ingreso"],
+                "office": "Oficina de Admisión y Matrícula",
+                "location": "Piso 1, hall principal Plaza Norte",
+                "hours": "Lunes a Viernes 8:30-19:00",
+                "resources": ["Portal de Admisión", "Matrícula Online"],
+                "contact": "admision@duoc.cl / Tel: +56 2 2596 5200",
+                "urgent": False
             }
         }
         
