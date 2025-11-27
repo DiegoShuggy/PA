@@ -160,11 +160,13 @@ if enhanced_system_available:
     except Exception as e:
         logger.error(f"❌ Error integrando Sistema RAG Mejorado: {e}")
 
-success = training_loader.load_all_training_data()
-if success:
-    print("✅ RAG cargado con toda la información de documentos Word")
-else:
-    print("❌ Error en carga")
+# OPTIMIZACIÓN: No cargar training_loader aquí (antes del startup)
+# Se carga dentro de @app.on_event("startup") para evitar errores de lazy loading
+# success = training_loader.load_all_training_data()
+# if success:
+#     print("✅ RAG cargado con toda la información de documentos Word")
+# else:
+#     print("❌ Error en carga")
 
 # ENDPOINTS DE CACHE
 @app.get("/cache/stats")
@@ -274,19 +276,114 @@ async def on_startup():
     print(f"⏱️  DB inicializada en: {time.time() - db_start:.2f}s")
     logger.info(f"✅ Base de datos inicializada ({time.time() - db_start:.2f}s)")
     
-    # 2. OPTIMIZACIÓN AGRESIVA: Deshabilitar carga de training data en startup
-    # Esto se puede cargar bajo demanda en la primera consulta
+    # 2. Cargar conocimiento de entrenamiento
     knowledge_start = time.time()
     print(f"⏱️  Inicio carga conocimiento: {time.time():.2f}")
     
-    # DESHABILITADO TEMPORALMENTE PARA DIAGNÓSTICO
-    # if not hasattr(training_loader, '_already_loaded'):
-    #     training_loader.load_all_training_data()
-    #     training_loader.generate_knowledge_from_patterns()
-    #     training_loader._already_loaded = True
-    
-    print(f"⏱️  Carga conocimiento omitida (lazy loading): {time.time() - knowledge_start:.2f}s")
-    logger.info(f"✅ Carga de conocimiento OMITIDA (lazy loading habilitado)")
+    # CARGA CON PROTECCIÓN: Inicializar RAG Engine primero
+    try:
+        from app.rag import _get_rag_engine
+        # Forzar inicialización del RAG Engine
+        engine = _get_rag_engine()
+        engine_time = time.time() - knowledge_start
+        logger.info(f"✅ RAG Engine inicializado correctamente ({engine_time:.2f}s)")
+        
+        # 🔍 AUTO-DETECCIÓN DE CHUNKS ANTIGUOS
+        print(f"\n🔍 VERIFICANDO CALIDAD DE CHUNKS EN CHROMADB...")
+        try:
+            from app.intelligent_chunker import semantic_chunker
+            collection = engine.collection
+            total_chunks = collection.count()
+            
+            needs_reprocess = False
+            reason = ""
+            
+            if total_chunks == 0:
+                needs_reprocess = True
+                reason = "ChromaDB está vacío"
+                print(f"   ⚠️  ChromaDB VACÍO (0 chunks)")
+            elif total_chunks < 100:
+                needs_reprocess = True
+                reason = f"Solo {total_chunks} chunks (esperados: 500+)"
+                print(f"   ⚠️  Pocos chunks: {total_chunks} (esperados: 500+)")
+            else:
+                # Verificar metadata enriquecida
+                results = collection.query(query_texts=["tne"], n_results=1)
+                if results['metadatas'] and results['metadatas'][0]:
+                    meta = results['metadatas'][0][0]
+                    has_section = 'section' in meta and meta['section'] and meta['section'] != 'N/A'
+                    has_keywords = 'keywords' in meta and meta['keywords']
+                    has_chunk_id = 'chunk_id' in meta and meta['chunk_id']
+                    
+                    if not (has_section and has_keywords and has_chunk_id):
+                        needs_reprocess = True
+                        reason = "Metadata no enriquecida (falta section/keywords/chunk_id)"
+                        print(f"   ⚠️  Chunks sin metadata enriquecida")
+                        print(f"      - Sección: {'✓' if has_section else '✗'}")
+                        print(f"      - Keywords: {'✓' if has_keywords else '✗'}")
+                        print(f"      - Chunk ID: {'✓' if has_chunk_id else '✗'}")
+                    else:
+                        print(f"   ✅ ChromaDB OK: {total_chunks} chunks con metadata enriquecida")
+                        logger.info(f"✅ ChromaDB verificado: {total_chunks} chunks válidos")
+            
+            # 🔄 REPROCESAR AUTOMÁTICAMENTE SI ES NECESARIO
+            if needs_reprocess:
+                print(f"\n🔄 REPROCESAMIENTO AUTOMÁTICO REQUERIDO")
+                print(f"   Razón: {reason}")
+                print(f"   Iniciando reprocesamiento con chunking inteligente...")
+                logger.warning(f"⚠️  Reprocesamiento automático: {reason}")
+                
+                # Limpiar ChromaDB
+                try:
+                    collection.delete(where={})
+                    print(f"   ✅ ChromaDB limpiado")
+                except:
+                    pass
+                
+                # Forzar recarga con chunker inteligente
+                training_loader.data_loaded = False
+                training_loader.base_knowledge_loaded = False
+                training_loader.word_documents_loaded = False
+                
+                reprocess_start = time.time()
+                success = training_loader.load_all_training_data()
+                reprocess_time = time.time() - reprocess_start
+                
+                if success:
+                    new_count = collection.count()
+                    print(f"   ✅ Reprocesamiento completado en {reprocess_time:.2f}s")
+                    print(f"   📊 Nuevos chunks: {new_count}")
+                    logger.info(f"✅ Reprocesamiento automático exitoso: {new_count} chunks en {reprocess_time:.2f}s")
+                else:
+                    print(f"   ❌ Error en reprocesamiento")
+                    logger.error(f"❌ Reprocesamiento automático falló")
+        except Exception as check_error:
+            print(f"   ⚠️  Error verificando chunks: {check_error}")
+            logger.warning(f"No se pudo verificar calidad de chunks: {check_error}")
+        
+        # Ahora cargar el training data (solo si no se ha cargado antes)
+        if not hasattr(training_loader, '_already_loaded') or not training_loader._already_loaded:
+            training_data_start = time.time()
+            success = training_loader.load_all_training_data()
+            training_data_time = time.time() - training_data_start
+            
+            if success:
+                patterns_start = time.time()
+                training_loader.generate_knowledge_from_patterns()
+                patterns_time = time.time() - patterns_start
+                
+                training_loader._already_loaded = True
+                total_time = time.time() - knowledge_start
+                print(f"✅ RAG cargado con toda la información de documentos Word")
+                logger.info(f"✅ Training data cargado en {training_data_time:.2f}s, patrones en {patterns_time:.2f}s (total: {total_time:.2f}s)")
+            else:
+                print(f"❌ Error en carga de training data")
+                logger.error("Error cargando training data")
+        else:
+            logger.info("✅ Training data ya estaba cargado (reutilizando)")
+    except Exception as e:
+        logger.error(f"❌ Error en carga de conocimiento: {e}")
+        print(f"⏱️  Error en carga: {time.time() - knowledge_start:.2f}s")
     
     logger.info("✅ Sistema de filtros de contenido inicializado")
     logger.info("✅ Sistema de emails Gmail configurado y listo")
@@ -322,12 +419,18 @@ async def on_startup():
     summary_start = time.time()
     
     try:
-        # Solo obtener conteo básico, sin procesar metadatas
-        stats = rag_engine.get_cache_stats()
-        total_docs = stats.get('total_documents', 'N/A')
-        
-        logger.info(f"📦 RAG Engine: {total_docs} documentos totales")
-        print(f"⏱️  Resumen ChromaDB completado en: {time.time() - summary_start:.2f}s")
+        # Verificar que el RAG Engine esté inicializado antes de obtener stats
+        from app.rag import _rag_engine_instance
+        if _rag_engine_instance is not None:
+            # Solo obtener conteo básico, sin procesar metadatas
+            stats = rag_engine.get_cache_stats()
+            total_docs = stats.get('total_documents', 'N/A')
+            
+            logger.info(f"📦 RAG Engine: {total_docs} documentos totales")
+            print(f"⏱️  Resumen ChromaDB completado en: {time.time() - summary_start:.2f}s")
+        else:
+            logger.info("📦 RAG Engine: Inicialización diferida (lazy loading)")
+            print(f"⏱️  Resumen ChromaDB omitido (lazy): {time.time() - summary_start:.2f}s")
     except Exception as e:
         logger.error(f"Error generando resumen: {e}")
         print(f"⏱️  Error en resumen: {time.time() - summary_start:.2f}s")
@@ -730,6 +833,9 @@ async def chat(message: Message, request: Request):
         }
         
         # Log final de finalización - MEJORADO CON RESUMEN COMPLETO
+        strategy = response_data.get('processing_info', {}).get('processing_strategy', strategy)
+        template_id = response_data.get('processing_info', {}).get('template_id', None)
+        
         print(f"\n{'='*80}")
         print("✅ CONSULTA COMPLETADA EXITOSAMENTE")
         print(f"📊 RESUMEN:")

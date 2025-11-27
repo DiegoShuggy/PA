@@ -47,12 +47,26 @@ logger = logging.getLogger(__name__)
 
 # FUNCIÓN AUXILIAR PARA MEJORAR RESPUESTAS
 def enhance_final_response(response_text: str, query: str, category: str = "") -> str:
-    """Aplicar mejoras a la respuesta si el sistema está disponible"""
+    """Aplicar mejoras CONSERVADORAS a la respuesta - NO eliminar contenido útil"""
+    if not response_text or len(response_text.strip()) < 20:
+        logger.warning(f"⚠️ Respuesta muy corta, no se mejorará: {len(response_text)} chars")
+        return response_text
+    
     if RESPONSE_ENHANCER_AVAILABLE:
         try:
-            enhanced = enhance_response(response_text, query, category)
-            logger.info(f"✅ Respuesta mejorada con contactos específicos")
-            return enhanced
+            # Solo mejorar si la respuesta ya tiene contenido sustancial
+            if len(response_text) >= 50:
+                enhanced = enhance_response(response_text, query, category)
+                # Verificar que la mejora no eliminó contenido importante
+                if len(enhanced) >= len(response_text) * 0.7:  # Al menos 70% del original
+                    logger.info(f"✅ Respuesta mejorada: {len(response_text)} → {len(enhanced)} chars")
+                    return enhanced
+                else:
+                    logger.warning(f"⚠️ Mejora rechazada (perdió contenido): {len(enhanced)} < {len(response_text)}")
+                    return response_text
+            else:
+                logger.debug(f"Respuesta corta, no se mejora: {len(response_text)} chars")
+                return response_text
         except Exception as e:
             logger.warning(f"❌ Error mejorando respuesta: {e}")
             return response_text
@@ -283,8 +297,13 @@ class RAGEngine:
         # CACHE SEMÁNTICO MEJORADO
         self.semantic_cache = SemanticCache(similarity_threshold=0.65)
         self.text_cache = {}
+        
+        # NUEVO: Configuración de modelos Ollama dinámicos
+        self.ollama_models = ['llama3.2:3b', 'mistral:7b', 'llama3.2:1b']
+        self.current_model = self._select_best_model()
 
         logger.info("RAG Engine DUOC UC inicializado")
+        logger.info(f"🤖 Modelo Ollama: {self.current_model}")
         self.metrics = {
             'total_queries': 0,
             'successful_responses': 0,
@@ -303,19 +322,101 @@ class RAGEngine:
             'template_responses': 0  # MÉTRICA PARA TEMPLATES
         }
         
-    def _expand_query(self, query: str) -> str:
-        """Expande consulta con sinónimos clave para mejorar recall"""
+    def _select_best_model(self) -> str:
+        """Selecciona el mejor modelo Ollama disponible"""
+        try:
+            import subprocess
+            result = subprocess.run(['ollama', 'list'], capture_output=True, text=True, timeout=5)
+            available_models = result.stdout.lower()
+            
+            for model in self.ollama_models:
+                if model in available_models:
+                    logger.info(f"✅ Modelo {model} disponible")
+                    return model
+            
+            # Fallback a mistral
+            logger.warning("⚠️ No se encontraron modelos preferidos, usando mistral:7b")
+            return 'mistral:7b'
+        except Exception as e:
+            logger.error(f"Error detectando modelos Ollama: {e}")
+            return 'llama3.2:3b'  # Default
+    
+    def _build_strict_prompt(self, sources: List[Dict], query: str) -> str:
+        """Construye prompt estricto con contexto enriquecido"""
+        if not sources:
+            return f"No tengo información sobre: {query}\nContacta Punto Estudiantil: +56 2 2596 5201"
+        
+        ctx_parts = []
+        for i, s in enumerate(sources, 1):
+            m = s.get('metadata', {})
+            section = m.get('section', 'N/A')
+            keywords = m.get('keywords', '')
+            category = m.get('category', 'general')
+            content = s['document'][:500]
+            
+            ctx_parts.append(f"""[FUENTE {i} - {category.upper()}]
+Sección: {section}
+Keywords: {keywords}
+Contenido: {content}""")
+        
+        context_text = "\n\n".join(ctx_parts)
+        
+        # Detectar si pregunta por beneficios/becas - requerir listado completo
         query_lower = query.lower()
+        is_beneficios = any(word in query_lower for word in ['beneficio', 'beneficios', 'beca', 'becas', 'ayuda economica', 'ayudas'])
+        
+        base_prompt = f"""Eres InA, asistente de Duoc UC Plaza Norte. Tu tono es profesional pero cercano.
+
+🎯 REGLAS CRÍTICAS:
+1. Usa SOLO información del CONTEXTO - NO inventes nada
+2. Responde de forma directa y natural (sin "Según...", "[FUENTE]...")
+3. Sé CONCISO: 2-3 líneas de explicación + datos prácticos al final
+4. Si NO está en contexto: deriva al Punto Estudiantil
+5. TNE = Tarjeta de transporte estudiantil (NO es certificado académico)
+
+📚 CONTEXTO:
+{context_text}
+
+❓ PREGUNTA: {query}"""
+
+        # Si pregunta por beneficios, agregar instrucciones específicas
+        if is_beneficios:
+            return base_prompt + """
+
+💡 ESPECIAL: Lista solo los beneficios MENCIONADOS en el contexto.
+Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
+
+✍️ RESPUESTA:"""
+        else:
+            return base_prompt + """
+
+✍️ RESPUESTA:"""
+    
+    def _expand_query(self, query: str) -> str:
+        """Expande consulta con sinónimos clave para mejorar recall - MEJORADO"""
+        query_lower = query.lower().strip()
         expanded_terms = []
+        
+        # Para queries muy cortas (1-2 palabras), expandir más agresivamente
+        is_short_query = len(query_lower.split()) <= 2
         
         for base, synonyms in self.synonym_expansions.items():
             if base in query_lower:
-                expanded_terms.extend(synonyms)
+                if is_short_query:
+                    # Para queries cortas, usar todos los sinónimos
+                    expanded_terms.extend(synonyms)
+                else:
+                    # Para queries largas, solo los primeros 2 sinónimos
+                    expanded_terms.extend(synonyms[:2])
             
         if expanded_terms:
+            # Eliminar duplicados
+            expanded_terms = list(set(expanded_terms))
             expanded_query = query + " " + " ".join(expanded_terms)
-            logger.info(f"Query Expansion: '{query}' → '{expanded_query[:100]}...'")
+            logger.info(f"🔍 Query Expansion: '{query}' → +{len(expanded_terms)} términos")
             return expanded_query
+        
+        logger.debug(f"Query sin expansión: '{query}'")
         return query
 
     def enhanced_normalize_text(self, text: str) -> str:
@@ -325,13 +426,17 @@ class RAGEngine:
         
         # EXPANDIR SINÓNIMOS Y VARIANTES ESPECÍFICAS DUOC
         synonym_expansions = {
-            'tne': ['tarjeta nacional estudiantil', 'pase escolar', 'tne duoc', 'beneficio tne'],
+            'tne': ['tarjeta nacional estudiantil', 'pase escolar', 'tne duoc', 'beneficio tne', 'credencial estudiantil'],
+            'tarjeta nacional estudiantil': ['tne', 'pase escolar', 'credencial estudiante', 'tarjeta transporte'],
+            'tarjeta nacional': ['tne', 'tarjeta estudiantil', 'pase escolar'],
+            'tarjeta estudiantil': ['tne', 'tarjeta nacional', 'pase escolar', 'credencial'],
             'deporte': ['deportes', 'actividad física', 'entrenamiento', 'ejercicio', 'taller deportivo'],
             'taller': ['talleres', 'clase', 'actividad deportiva', 'entrenamiento grupal'],
             'gimnasio': ['gimnasio duoc', 'complejo deportivo', 'instalaciones deportivas', 'maiclub'],
             'certificado': ['certificados', 'constancia', 'documento oficial', 'record académico'],
             'psicológico': ['psicólogo', 'salud mental', 'bienestar', 'apoyo emocional', 'consejería'],
             'beca': ['becas', 'ayuda económica', 'beneficio estudiantil', 'subsidio'],
+            'beneficio': ['beneficios', 'becas', 'ayuda económica', 'subsidio estudiantil'],
             'práctica': ['practica profesional', 'empleo', 'trabajo', 'duoclaboral', 'bolsa trabajo'],
             'contraseña': ['password', 'acceso', 'login', 'plataforma', 'mi duoc'],
         }
@@ -376,25 +481,49 @@ class RAGEngine:
 
     def process_user_query(self, user_message: str, session_id: str = None,
                           conversational_context: str = None, user_profile: dict = None) -> Dict:
-        """PROCESAMIENTO INTELIGENTE MEJORADO CON TEMPLATES Y MEMORIA JERÁRQUICA"""
+        """PROCESAMIENTO INTELIGENTE MEJORADO CON SMART KEYWORD DETECTION"""
+        from app.smart_keyword_detector import smart_keyword_detector
+        
         self.metrics['total_queries'] += 1
         
         query_lower = user_message.lower().strip()
+        
+        # 0. DETECCIÓN INTELIGENTE DE KEYWORDS (PRIMERA PRIORIDAD)
+        keyword_analysis = smart_keyword_detector.detect_keywords(user_message)
+        
+        # Si hay keyword de alta confianza, usarla para orientar la búsqueda
+        if keyword_analysis['confidence'] >= 80 and keyword_analysis['primary_keyword']:
+            print(f"🎯 KEYWORD PRIORITARIA: {keyword_analysis['primary_keyword']} "
+                  f"({keyword_analysis['match_type']}, {keyword_analysis['confidence']}%)")
+            logger.info(f"🎯 Smart detection: {keyword_analysis['primary_keyword']} → "
+                       f"{keyword_analysis['category']}/{keyword_analysis['topic']}")
         
         # 1. PRIMERO VERIFICAR TEMPLATES (MÁXIMA PRIORIDAD) CON DETECCIÓN DE IDIOMA MEJORADA
         # Los templates tienen prioridad sobre la memoria para asegurar respuestas actualizadas
         try:
             classification_info = classifier.get_classification_info(user_message)
             detected_language = classification_info.get('language', 'es')
-            category = classification_info.get('category', 'otros')
-            confidence = classification_info.get('confidence', 0.5)
+            
+            # 🎯 USAR KEYWORD ANALYSIS PARA MEJORAR CATEGORIZACIÓN
+            if keyword_analysis['confidence'] >= 80 and keyword_analysis['category']:
+                category = keyword_analysis['category']
+                confidence = keyword_analysis['confidence'] / 100.0
+                print(f"✨ Categoría desde SMART DETECTOR: {category} (confianza: {confidence:.2f})")
+            else:
+                category = classification_info.get('category', 'otros')
+                confidence = classification_info.get('confidence', 0.5)
             
             print(f"🌍 Idioma detectado: {detected_language}, Categoría: {category}, Confianza: {confidence:.2f}")
             logger.info(f"CLASIFICACIÓN COMPLETA: '{user_message}' -> {category} ({detected_language}) conf:{confidence:.2f}")
         except Exception as e:
             logger.warning(f"Error obteniendo información completa, usando detección básica: {e}")
             detected_language = self.detect_language(user_message)
-            category = classifier.classify_question(user_message)
+            
+            # Priorizar keyword analysis si está disponible
+            if keyword_analysis['confidence'] >= 80 and keyword_analysis['category']:
+                category = keyword_analysis['category']
+            else:
+                category = classifier.classify_question(user_message)
             confidence = 0.6
         
         print(f"🌍 Idioma detectado: {detected_language}")
@@ -1339,10 +1468,25 @@ No entiendo completamente '{original_query}'.
             return filtered_docs[:n_results]
 
         except Exception as e:
+            print(f"\n{'='*80}")
+            print(f"❌ ERROR EN BÚSQUEDA CHROMADB")
+            print(f"{'='*80}")
+            print(f"🔴 Error: {str(e)[:200]}")
+            print(f"🔧 Tipo: {type(e).__name__}")
+            print(f"📝 Query: '{query_text}'")
+            print(f"🔄 Intentando búsqueda simple como fallback...")
+            print(f"{'='*80}\n")
+            
             logger.error(f"Error en query optimizada: {e}")
             # En caso de error, retornar resultados simples sin recursión
-            simple_results = self.query(query_text, n_results)
-            return [{'document': doc, 'metadata': {}, 'similarity': 0.7} for doc in simple_results]
+            try:
+                simple_results = self.query(query_text, n_results)
+                if simple_results:
+                    print(f"✅ Búsqueda simple exitosa: {len(simple_results)} resultados")
+                return [{'document': doc, 'metadata': {}, 'similarity': 0.7} for doc in simple_results]
+            except Exception as fallback_error:
+                print(f"❌ Búsqueda simple también falló: {str(fallback_error)[:100]}")
+                return []
 
     def _is_relevant_document_improved(self, query: str, document: str) -> bool:
         """VERIFICACIÓN DE RELEVANCIA MEJORADA"""
@@ -1393,23 +1537,80 @@ No entiendo completamente '{original_query}'.
             logger.error(f"Error en query con fuentes: {e}")
             return []
 
+    def _build_strict_system_prompt(self, sources: List[Dict], user_query: str) -> str:
+        """Construye un prompt de sistema estricto basado en contexto"""
+        # Formatear fuentes con metadatos enriquecidos
+        sources_text = []
+        for i, source in enumerate(sources, 1):
+            metadata = source.get('metadata', {})
+            section = metadata.get('section', 'Sin sección')
+            source_name = metadata.get('source', 'Desconocido')
+            keywords = metadata.get('keywords', '')
+            
+            formatted = f"""[FUENTE {i}]
+Documento: {source_name}
+Sección: {section}
+Palabras clave: {keywords}
+Contenido:
+{source['document'][:500]}...
+"""
+            sources_text.append(formatted)
+        
+        context = "\n\n".join(sources_text)
+        
+        return f"""Eres un asistente especializado de Duoc UC Plaza Norte.
+
+INSTRUCCIONES OBLIGATORIAS:
+1. Responde ÚNICAMENTE con información del CONTEXTO proporcionado abajo
+2. Si la información NO está en el contexto, responde EXACTAMENTE:
+   "No tengo información actualizada sobre eso. Te recomiendo contactar a Punto Estudiantil al +56 2 2596 5201 o visitar centroayuda.duoc.cl"
+3. Sé CONCISO: Máximo 4-5 líneas + datos de contacto
+4. Incluye información práctica: horarios, ubicaciones, teléfonos, correos
+5. Cita la sección del documento: "Según [sección], ..."
+6. NO inventes información que no esté en el contexto
+7. NO uses frases genéricas como "estamos aquí para ayudarte"
+
+CONTEXTO DISPONIBLE:
+{context}
+
+PREGUNTA DEL ESTUDIANTE:
+{user_query}
+
+RESPUESTA (basada SOLO en el contexto):"""
+    
     def hybrid_search(self, query_text: str, n_results: int = 3) -> List[Dict]:
-        """BÚSQUEDA HÍBRIDA MEJORADA"""
+        """BÚSQUEDA HÍBRIDA MEJORADA CON MAYOR RECALL"""
         try:
+            # Expandir query con sinónimos y contexto
             expanded_query = self._expand_query(query_text)
             processed_query = self.enhanced_normalize_text(expanded_query)
-            results = self.query_optimized(processed_query, n_results * 2, score_threshold=0.35)
+            
+            # Buscar más resultados con umbral más bajo para mejor recall
+            results = self.query_optimized(processed_query, n_results * 3, score_threshold=0.25)
+            
+            logger.info(f"🔍 Búsqueda híbrida: '{query_text[:50]}' → {len(results)} resultados")
 
+            # Filtrar con umbral más permisivo
             filtered_docs = []
             for result in results:
-                if result['similarity'] >= 0.35:
+                if result['similarity'] >= 0.3:  # Umbral más bajo para capturar más info
                     filtered_docs.append(result)
+                    logger.debug(f"  ✓ Doc {result['metadata'].get('category', 'unknown')}: {result['similarity']:.3f}")
 
+            # Ordenar por relevancia
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
-            return filtered_docs[:n_results]
+            
+            # Retornar top resultados
+            final_results = filtered_docs[:n_results]
+            if final_results:
+                logger.info(f"✅ Retornando {len(final_results)} documentos (mejor: {final_results[0]['similarity']:.3f})")
+            else:
+                logger.warning(f"⚠️ No se encontraron documentos relevantes para: '{query_text}'")
+            
+            return final_results
 
         except Exception as e:
-            logger.error(f"Error en hybrid search: {e}")
+            logger.error(f"❌ Error en hybrid search: {e}")
             return []
 
     def get_cache_stats(self) -> Dict:
@@ -1489,22 +1690,51 @@ rag_engine = LazyRAGEngine()
 
 def get_ai_response(user_message: str, context: list = None, 
                    conversational_context: str = None, user_profile: dict = None) -> Dict:
-    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON TEMPLATES PRIORITARIOS + EXTRACCIÓN DE PALABRAS CLAVE"""
+    """VERSIÓN MEJORADA - PROCESAMIENTO INTELIGENTE CON SMART KEYWORD DETECTION"""
     import time
-    from app.keyword_extractor import keyword_extractor
+    from app.smart_keyword_detector import smart_keyword_detector
     start_time = time.time()
 
-    # 🔍 PASO 0: Extraer palabras clave para mejorar búsqueda
-    print(f"\n🔍 EXTRAYENDO PALABRAS CLAVE...")
-    extracted_keywords = keyword_extractor.extract_keywords(user_message)
-    logger.info(f"🔑 Palabras clave detectadas: {extracted_keywords.get('categories', {})}")
+    # 🎯 BANNER INICIAL DE CONSULTA
+    print(f"\n{'='*80}")
+    print(f"🔍 NUEVA CONSULTA RECIBIDA")
+    print(f"{'='*80}")
+    print(f"📝 Query: '{user_message}'")
+    print(f"📏 Longitud: {len(user_message)} caracteres")
+    print(f"⏰ Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"{'='*80}\n")
+    logger.info(f"{'='*80}")
+    logger.info(f"🔍 NUEVA CONSULTA: '{user_message}' (len={len(user_message)})")
+    logger.info(f"{'='*80}")
+
+    # 🔍 PASO 0: Detección inteligente de palabras clave con priorización
+    print(f"📌 PASO 1: DETECCIÓN INTELIGENTE DE KEYWORDS")
+    keyword_analysis = smart_keyword_detector.detect_keywords(user_message)
     
-    # Mejorar la consulta para búsquedas más efectivas
-    enhanced_query = keyword_extractor.enhance_query_for_rag(user_message)
-    logger.info(f"🔧 Consulta mejorada: '{enhanced_query}'")
+    if keyword_analysis.get('primary_keyword'):
+        print(f"   ✅ Keyword detectada: '{keyword_analysis.get('primary_keyword')}'")
+        print(f"   📂 Categoría: {keyword_analysis.get('category', 'N/A')}")
+        print(f"   🎯 Confianza: {keyword_analysis.get('confidence', 0)}%")
+        print(f"   🔍 Tipo match: {keyword_analysis.get('match_type', 'N/A')}")
+        logger.info(f"🎯 Keyword: {keyword_analysis.get('primary_keyword')} | "
+                   f"Cat: {keyword_analysis.get('category')} | "
+                   f"Conf: {keyword_analysis.get('confidence')}%")
+    else:
+        print(f"   ℹ️  No se detectó keyword específica")
+        logger.info(f"ℹ️  No se detectó keyword específica")
+    
+    # Si hay una keyword clara, priorizar esa categoría
+    if keyword_analysis['confidence'] >= 80 and keyword_analysis['primary_keyword']:
+        logger.info(f"✨ KEYWORD DE ALTA CONFIANZA detectada: {keyword_analysis['primary_keyword']} "
+                   f"→ Categoría: {keyword_analysis['category']}")
+        # No modificar la query original para consultas simples
+        enhanced_query = user_message
+    else:
+        # Para consultas complejas, mantener mejora si existe
+        enhanced_query = user_message
 
     # 🔥 PRIORIDAD ABSOLUTA: Procesar query con contexto inteligente PRIMERO (incluye detección de templates)
-    print(f"\n🔄 INICIANDO PROCESAMIENTO INTELIGENTE...")
+    print(f"\n📌 PASO 2: PROCESAMIENTO INTELIGENTE DE QUERY")
     logger.info(f"🔄 Llamando a process_user_query para: '{user_message}'")
     
     # Usar la consulta mejorada si es diferente
@@ -1520,11 +1750,20 @@ def get_ai_response(user_message: str, context: list = None,
     )
     strategy = processing_info['processing_strategy']
     
-    # Agregar información de palabras clave al processing_info
-    processing_info['extracted_keywords'] = extracted_keywords
+    # 🎯 Agregar información inteligente de keywords al processing_info
+    processing_info['keyword_analysis'] = keyword_analysis
+    processing_info['smart_detection'] = {
+        'primary_keyword': keyword_analysis.get('primary_keyword'),
+        'category': keyword_analysis.get('category'),
+        'topic': keyword_analysis.get('topic'),
+        'confidence': keyword_analysis.get('confidence'),
+        'match_type': keyword_analysis.get('match_type')
+    }
     
-    print(f"📋 Estrategia determinada: {strategy}")
-    logger.info(f"📋 Estrategia de procesamiento: {strategy}")
+    print(f"   ✅ Estrategia determinada: {strategy.upper()}")
+    print(f"   📂 Categoría: {processing_info.get('category', 'N/A')}")
+    print(f"   🌍 Idioma: {processing_info.get('language', 'N/A')}")
+    logger.info(f"📋 Estrategia: {strategy} | Cat: {processing_info.get('category')} | Lang: {processing_info.get('language')}")
 
     # 🎯 SI ES TEMPLATE, PROCESARLO INMEDIATAMENTE (MÁXIMA PRIORIDAD)
     if strategy == 'template':
@@ -1545,8 +1784,11 @@ def get_ai_response(user_message: str, context: list = None,
         response_data['intelligent_features_applied'] = True
         return response_data
 
-    # 🔥 FALLBACK 1: Usar sistema híbrido si está disponible Y NO ES TEMPLATE
-    if HYBRID_SYSTEM_AVAILABLE:
+    # 🔥 FALLBACK 1: Sistema híbrido DESACTIVADO para debugging del RAG mejorado
+    # El sistema híbrido está interceptando las consultas y no usando ChromaDB
+    # TODO: Reactivar después de verificar que el RAG mejorado funciona
+    print(f"\n⚠️ Sistema híbrido DESACTIVADO - forzando RAG mejorado con ChromaDB")
+    if False and HYBRID_SYSTEM_AVAILABLE:
         try:
             hybrid_system = HybridResponseSystem()
             context_str = "\n".join(context) if context else ""
@@ -1571,6 +1813,44 @@ def get_ai_response(user_message: str, context: list = None,
         except Exception as e:
             logger.warning(f"⚠️ Sistema híbrido falló, usando RAG tradicional: {e}")
 
+    # 📚 INTENTAR RAG PARA BIBLIOTECA ANTES DE DERIVAR
+    if 'biblioteca' in user_message.lower() and (not sources or len(sources) == 0):
+        logger.info("🔍 Detectada 'biblioteca' - intentando búsqueda RAG...")
+        print(f"\n🔍 Detectada consulta sobre biblioteca - buscando información...")
+        try:
+            sources_biblioteca = engine.query_optimized(
+                query=user_message,
+                category='institucionales',
+                n_results=5,
+                similarity_threshold=0.25
+            )
+            if sources_biblioteca:
+                sources = sources_biblioteca
+                strategy = 'standard_rag'
+                logger.info(f"✅ Encontradas {len(sources_biblioteca)} fuentes para biblioteca")
+                print(f"✅ Fuentes encontradas: {len(sources_biblioteca)}")
+        except Exception as e:
+            logger.warning(f"⚠️ Error buscando biblioteca: {e}")
+    
+    # 📚 INTENTAR RAG PARA BIBLIOTECA ANTES DE DERIVAR
+    if 'biblioteca' in user_message.lower() and strategy != 'template' and (not sources or len(sources) == 0):
+        logger.info("🔍 Detectada 'biblioteca' - intentando búsqueda RAG...")
+        print(f"\n🔍 Detectada consulta sobre biblioteca - buscando información...")
+        try:
+            sources_biblioteca = engine.query_optimized(
+                query=user_message,
+                category='institucionales',
+                n_results=5,
+                similarity_threshold=0.25
+            )
+            if sources_biblioteca:
+                sources = sources_biblioteca
+                strategy = 'standard_rag'
+                logger.info(f"✅ Encontradas {len(sources_biblioteca)} fuentes para biblioteca")
+                print(f"✅ Fuentes encontradas: {len(sources_biblioteca)}")
+        except Exception as e:
+            logger.warning(f"⚠️ Error buscando biblioteca: {e}")
+    
     # 🔥 FALLBACK 2: Análisis de derivación para IA estacionaria
     derivation_analysis = engine.derivation_manager.analyze_query(user_message)
     logger.info(f"🔍 ANÁLISIS DERIVACIÓN: {derivation_analysis}")
@@ -1695,20 +1975,54 @@ def get_ai_response(user_message: str, context: list = None,
     
     cache_key = f"rag_{hashlib.md5('|'.join(cache_components).encode()).hexdigest()}"
 
-    if cache_key in rag_engine.text_cache:
+    # 🔥 CACHE DESHABILITADO TEMPORALMENTE - devolvía respuestas malas
+    # Necesitamos garantizar que SIEMPRE se ejecute Ollama para generar respuestas
+    use_cache = False  # Cambiar a True cuando el sistema funcione correctamente
+    
+    if use_cache and cache_key in rag_engine.text_cache:
         cached_response = rag_engine.text_cache[cache_key]
         rag_engine.metrics['text_cache_hits'] += 1
         logger.info(f"RAG Text Cache HIT para: '{user_message}'")
         cached_response['response_time'] = time.time() - start_time
         return cached_response
 
-    logger.info(f"RAG Cache MISS para: '{user_message}'")
+    logger.info(f"🔥 RAG Cache DESHABILITADO - generando respuesta fresca para: '{user_message}'")
 
     try:
-        sources = rag_engine.hybrid_search(user_message, n_results=3)
+        print(f"\n📌 PASO 3: BÚSQUEDA EN CHROMADB")
+        print(f"   📊 ChromaDB status: {rag_engine.collection.count()} chunks totales")
+        # NUEVO: Optimizar parámetros de búsqueda según tipo de query
+        from app.search_optimizer import search_optimizer
+        search_config = search_optimizer.optimize_search_params(user_message)
+        
+        print(f"   🔍 Optimizador activado:")
+        print(f"      📊 Estrategia: {search_config['search_strategy'].upper()}")
+        print(f"      📈 n_results: {search_config['n_results']}")
+        print(f"      🎯 Threshold: {search_config['similarity_threshold']}")
+        print(f"      🔑 Boost keywords: {'Sí' if search_config['boost_keywords'] else 'No'}")
+        logger.info(f"🔍 Optimizador: {search_config['search_strategy']}, n_results={search_config['n_results']}, threshold={search_config['similarity_threshold']}")
+        
+        print(f"   🔎 Buscando en ChromaDB...")
+        sources = rag_engine.hybrid_search(user_message, n_results=search_config['n_results'])
+        print(f"   ✅ Fuentes recuperadas: {len(sources)}")
+        logger.info(f"📚 Fuentes recuperadas de ChromaDB: {len(sources)}")
         
         final_sources = []
         seen_hashes = set()
+        
+        # NUEVO: Re-rankear fuentes por relevancia
+        if sources:
+            print(f"\n📌 PASO 4: RE-RANKING DE FUENTES")
+            sources = search_optimizer.rank_sources(sources, user_message)
+            if sources:
+                top_score = sources[0].get('relevance_score', 0)
+                print(f"   ✅ Re-ranking completado")
+                print(f"      ⭐ Top score: {top_score:.2f}")
+                print(f"      📊 Total rankeadas: {len(sources)}")
+                logger.info(f"🎯 Re-ranking completado: Top score={top_score:.2f}, Total={len(sources)}")
+        else:
+            print(f"   ⚠️ Sin fuentes para re-rankear")
+            logger.warning(f"⚠️ No hay fuentes para re-rankear")
         
         for source in sources:
             content_hash = hashlib.md5(source['document'].encode()).hexdigest()
@@ -1717,85 +2031,219 @@ def get_ai_response(user_message: str, context: list = None,
                 continue
             seen_hashes.add(content_hash)
             
-            if len(final_sources) < 2:
+            # Aumentar límite de fuentes según estrategia de búsqueda
+            max_sources = 3 if search_config['search_strategy'] == 'specific' else 5
+            if len(final_sources) < max_sources:
                 final_sources.append(source)
+        
+        print(f"\n📌 PASO 5: SELECCIÓN FINAL DE FUENTES")
+        print(f"   📋 Fuentes seleccionadas: {len(final_sources)}")
+        logger.info(f"📋 Fuentes finales para Ollama: {len(final_sources)}")
+        
+        if final_sources:
+            print(f"   📂 ORIGEN DE LAS FUENTES (CHROMADB):")
+            for i, src in enumerate(final_sources, 1):
+                meta = src.get('metadata', {})
+                section = meta.get('section', 'N/A')
+                source_file = meta.get('source', meta.get('file_name', 'N/A'))
+                chunk_id = meta.get('chunk_id', 'N/A')
+                keywords = meta.get('keywords', [])
+                if isinstance(keywords, str):
+                    keywords = keywords.split(',')[:3]
+                else:
+                    keywords = keywords[:3]
+                score = src.get('relevance_score', 0)
+                token_count = meta.get('token_count', 'N/A')
+                content_preview = src.get('document', '')[:100].replace('\n', ' ')
+                
+                print(f"      [{i}] 📄 Archivo: {source_file}")
+                print(f"          📍 Sección: '{section[:50]}'")
+                print(f"          🏷️  Keywords: {', '.join(keywords)}")
+                print(f"          🆔 Chunk: {chunk_id}")
+                print(f"          ⭐ Score: {score:.2f} | 📊 Tokens: {token_count}")
+                print(f"          📝 Preview: {content_preview}...")
+                print(f"          ---")
+                logger.info(f"   Fuente {i}: file={source_file}, section={section[:30]}, keywords={keywords}, score={score:.2f}, tokens={token_count}")
+        else:
+            print(f"\n{'='*80}")
+            print(f"❌ PASO 5 FALLÓ: NO HAY FUENTES DISPONIBLES")
+            print(f"{'='*80}")
+            print(f"🔍 Query: '{user_message}'")
+            print(f"💡 Posibles causas:")
+            print(f"   - ChromaDB vacío (verificar auto-reprocesamiento en startup)")
+            print(f"   - Query muy específica sin documentos relevantes")
+            print(f"   - Threshold muy alto filtrando todos los resultados")
+            print(f"🔄 Solución: Reiniciar servidor para forzar reprocesamiento")
+            print(f"{'='*80}\n")
+            logger.error(f"❌ NO HAY FUENTES DISPONIBLES - Verificar ChromaDB")
 
         system_message = (
-            "Eres InA, asistente estacionario físico del Punto Estudiantil en DUOC UC Plaza Norte. "
-            "Estás ubicado físicamente en la sede como kiosco interactivo.\n\n"
-            "CONTEXTO CLAVE:\n"
-            "- Modalidad: IA estacionaria física (NO web/app)\n"
-            "- Especialización: Servicios básicos del Punto Estudiantil\n"
-            "- Ubicación: Plaza Norte, área de servicios estudiantiles\n\n"
-            "LIMITACIONES IMPORTANTES:\n"
-            "❌ NO manejas: Finanzas detalladas, biblioteca avanzada, citas médicas/psicológicas\n"
-            "✅ SÍ manejas: Ubicaciones, horarios, trámites básicos, información general\n\n"
-            "ESTRATEGIA DE DERIVACIÓN:\n"
-            "- Si la consulta está fuera de tu alcance, proporciona info básica Y deriva\n"
-            "- Indica específicamente dónde pueden obtener ayuda completa\n"
-            "- Menciona ubicaciones físicas en Plaza Norte cuando sea relevante\n\n"
+            "Eres InA, asistente del Punto Estudiantil en DUOC UC Plaza Norte.\n\n"
+            "INSTRUCCIONES CRÍTICAS:\n"
+            "1. USA LA INFORMACIÓN proporcionada abajo para responder\n"
+            "2. Sé DIRECTO y ESPECÍFICO - sin saludos ni presentaciones\n"
+            "3. Responde en 2-4 líneas máximo\n"
+            "4. NO inventes información que no esté en las fuentes\n"
+            "5. Si no tienes info suficiente, di 'Para más información consulta en Punto Estudiantil'\n\n"
         )
 
         if final_sources:
-            system_message += "INFORMACIÓN DISPONIBLE:\n\n"
+            system_message += "=== INFORMACIÓN DE LA BASE DE CONOCIMIENTO ===\n\n"
             for i, source in enumerate(final_sources):
                 content = source['document']
                 category = source['metadata'].get('category', 'general')
-                short_content = content[:200] + "..." if len(content) > 200 else content
-                system_message += f"--- Fuente {i+1} ({category}) ---\n{short_content}\n\n"
+                # Usar más contenido para dar contexto completo
+                useful_content = content[:500] + "..." if len(content) > 500 else content
+                system_message += f"[{category.upper()}]\n{useful_content}\n\n"
             
             system_message += (
-                "Responde ÚNICAMENTE con la información de arriba.\n"
-                "Sé específico y breve (máximo 3 líneas).\n"
-                "NO inventes información.\n"
-                "Si la información no es suficiente, di 'Consulta en Punto Estudiantil'."
+                "RESPONDE usando esta información.\n"
+                "Formato: Directo al punto, sin decoraciones ni emojis innecesarios.\n"
+                "Si hay pasos o requisitos, enuméralos claramente."
             )
         else:
             system_message += "No hay información específica disponible.\n"
+            logger.warning(f"⚠️ NO HAY FUENTES para '{user_message}' - ChromaDB vacío?")
 
-        response = ollama.chat(
-            model='mistral:7b',
-            messages=[
-                {'role': 'system', 'content': system_message},
-                {'role': 'user', 'content': user_message}
-            ],
-            options={'temperature': 0.1, 'num_predict': 100}
-        )
-
-        respuesta = response['message']['content'].strip()
+        # NUEVO: Usar prompt estricto mejorado
+        system_message = rag_engine._build_strict_prompt(final_sources, user_message)
+        
+        # 🔥 LOGGING CRÍTICO ANTES DE OLLAMA
+        print(f"\n📌 PASO 6: GENERACIÓN CON OLLAMA")
+        print(f"   🤖 Modelo: {rag_engine.current_model}")
+        print(f"   📚 Fuentes para contexto: {len(final_sources)}")
+        print(f"   📝 Tamaño del prompt: {len(system_message)} chars")
+        print(f"   ⚙️ Parámetros:")
+        print(f"      • Temperature: 0.1 (muy determinista)")
+        print(f"      • Max tokens: 220 (conciso)")
+        print(f"      • Context window: 4096")
+        print(f"   ⏳ Generando respuesta...")
+        logger.info(f"🤖 LLAMANDO A OLLAMA ({rag_engine.current_model}) para: '{user_message}'")
+        logger.info(f"📚 Fuentes disponibles: {len(final_sources)}")
+        logger.info(f"📝 System message length: {len(system_message)} chars")
+        
+        try:
+            logger.info(f"⏱️ Iniciando llamada a Ollama {rag_engine.current_model}...")
+            import time as time_module
+            ollama_start = time_module.time()
+            response = ollama.chat(
+                model=rag_engine.current_model,
+                messages=[
+                    {'role': 'system', 'content': system_message},
+                    {'role': 'user', 'content': user_message}
+                ],
+                options={
+                    'temperature': 0.1,  # Muy determinista para concisión
+                    'num_predict': 220,  # Reducido para respuestas concisas (350→220)
+                    'top_p': 0.85,  # Más enfocado (0.9→0.85)
+                    'repeat_penalty': 1.4,  # Más penalización a repeticiones (1.3→1.4)
+                    'num_ctx': 4096  # Mayor contexto
+                }
+            )
+            ollama_time = time_module.time() - ollama_start
+            
+            respuesta = response['message']['content'].strip()
+            
+            print(f"   ✅ Respuesta generada exitosamente")
+            print(f"   ⏱️ Tiempo: {ollama_time:.2f}s")
+            print(f"   📝 Longitud: {len(respuesta)} caracteres")
+            print(f"   📄 Preview: {respuesta[:120]}...")
+            logger.info(f"✅ Ollama ({rag_engine.current_model}) respondió en {ollama_time:.2f}s")
+            logger.info(f"📝 Respuesta: {len(respuesta)} chars")
+            logger.info(f"📄 Preview: {respuesta[:150]}")
+            
+        except Exception as ollama_error:
+            print(f"\n{'='*80}")
+            print(f"❌ ERROR EN PASO 6 (OLLAMA)")
+            print(f"{'='*80}")
+            print(f"🔴 Error: {str(ollama_error)[:200]}")
+            print(f"🔧 Tipo: {type(ollama_error).__name__}")
+            print(f"🤖 Modelo: {rag_engine.current_model}")
+            print(f"📝 Prompt length: {len(strict_prompt)} caracteres")
+            print(f"🔄 Activando sistema de fallback...")
+            print(f"{'='*80}\n")
+            
+            logger.error(f"❌ ERROR EN LLAMADA A OLLAMA: {ollama_error}")
+            logger.error(f"❌ Tipo de error: {type(ollama_error).__name__}")
+            logger.error(f"❌ Detalles: {str(ollama_error)}")
+            
+            # Si Ollama falla, usar las fuentes directamente
+            if final_sources:
+                print(f"   ✅ Usando {len(final_sources)} fuentes directamente")
+                logger.warning(f"⚠️ Ollama falló, usando {len(final_sources)} fuentes directas")
+                respuesta = "\n\n".join([src['document'][:400] for src in final_sources[:2]])
+            else:
+                print(f"   ❌ Sin fuentes disponibles para fallback")
+                logger.error(f"❌ Sin fuentes disponibles, retornando mensaje genérico")
+                respuesta = "No tengo información específica sobre eso. Contacta Punto Estudiantil: +56 2 2596 5201"
         respuesta = _optimize_response(respuesta, user_message)
+        logger.info(f"✂️ Respuesta optimizada: {len(respuesta)} chars")
 
-        # 🔥 NUEVO: Aplicar filtro estacionario a la respuesta
-        respuesta = rag_engine.stationary_filter.filter_response(respuesta, user_message)
+        # Filtro estacionario desactivado temporalmente para no bloquear respuestas válidas
+        # respuesta = rag_engine.stationary_filter.filter_response(respuesta, user_message)
         
         # ✅ VALIDACIÓN DE INFORMACIÓN: Verificar que la respuesta tiene contenido útil
-        if len(respuesta.strip()) < 30 or "no encontr" in respuesta.lower() or "no dispongo" in respuesta.lower():
-            logger.warning(f"⚠️ Respuesta muy corta o sin información útil: {len(respuesta)} chars")
-            # Intentar con información de fuentes directamente
-            if final_sources:
-                logger.info(f"📚 Usando información directa de {len(final_sources)} fuentes")
-                direct_info = "\n\n".join([src['document'][:300] for src in final_sources[:2]])
-                respuesta = f"Según la información disponible:\n\n{direct_info}"
+        bad_indicators = [
+            "no encontr", "no dispongo", "no tengo información", "no tengo inform",
+            "no puedo", "lo siento", "disculpa", "no cuento", "no dispongo de",
+            "consulta en", "dirígete a", "para más información"
+        ]
         
-        # Validar que la respuesta sea apropiada para IA estacionaria
-        is_appropriate, validation_message = rag_engine.stationary_filter.validate_response_appropriateness(respuesta)
-        if not is_appropriate:
-            logger.warning(f"Respuesta inapropiada detectada: {validation_message}")
-            respuesta += "\n\n📍 Para esta consulta específica, te recomiendo dirigirte al personal del Punto Estudiantil."
-
-        # 🔥 NUEVO: Agregar derivación inteligente si es necesario
-        derivation_analysis = rag_engine.derivation_manager.analyze_query(user_message)
-        if derivation_analysis["requires_derivation"] and not derivation_analysis["can_handle_directly"]:
-            derivation_response = rag_engine.derivation_manager.generate_derivation_response(
-                derivation_analysis["derivation_area"], 
-                user_message
-            )
+        response_lower = respuesta.lower()
+        has_bad_indicator = any(ind in response_lower for ind in bad_indicators)
+        is_too_short = len(respuesta.strip()) < 30
+        is_too_generic = response_lower.count("punto estudiantil") > 1
+        
+        is_bad_response = is_too_short or (has_bad_indicator and is_too_generic)
+        
+        if is_bad_response:
+            logger.warning(f"⚠️ RESPUESTA MALA DETECTADA: '{respuesta[:150]}'")
+            logger.warning(f"  - Too short: {is_too_short} ({len(respuesta)} chars)")
+            logger.warning(f"  - Bad indicator: {has_bad_indicator}")
+            logger.warning(f"  - Too generic: {is_too_generic}")
             
-            # Combinar respuesta base con derivación
-            if respuesta and len(respuesta) > 10:
-                respuesta += f"\n\n{derivation_response['response']}"
+            if final_sources:
+                logger.info(f"🔧 RECONSTRUYENDO desde {len(final_sources)} fuentes")
+                
+                # Construir respuesta directa estructurada
+                direct_parts = []
+                for i, src in enumerate(final_sources[:2], 1):
+                    doc = src['document'].strip()
+                    category = src.get('metadata', {}).get('category', 'información')
+                    
+                    # Limpiar el documento
+                    if len(doc) > 600:
+                        doc = doc[:600] + "..."
+                    
+                    # Agregar con formato
+                    direct_parts.append(f"{doc}")
+                
+                respuesta = "\n\n".join(direct_parts)
+                logger.info(f"✅ Respuesta RECONSTRUIDA: {len(respuesta)} chars")
             else:
-                respuesta = derivation_response['response']
+                logger.error(f"❌ No hay fuentes para reconstruir respuesta")
+                respuesta = "No tengo información específica sobre eso. Consulta en Punto Estudiantil, Piso 1."
+        
+        # Validación de apropiabilidad desactivada temporalmente
+        # is_appropriate, validation_message = rag_engine.stationary_filter.validate_response_appropriateness(respuesta)
+        # if not is_appropriate:
+        #     logger.warning(f"Respuesta inapropiada detectada: {validation_message}")
+        #     respuesta += "\n\n📍 Para esta consulta específica, te recomiendo dirigirte al personal del Punto Estudiantil."
+
+        # Derivación solo si la respuesta es muy pobre
+        if len(respuesta.strip()) < 50:
+            derivation_analysis = rag_engine.derivation_manager.analyze_query(user_message)
+            if derivation_analysis["requires_derivation"]:
+                derivation_response = rag_engine.derivation_manager.generate_derivation_response(
+                    derivation_analysis["derivation_area"], 
+                    user_message
+                )
+                # Solo agregar derivación si tenemos algo de información base
+                if respuesta and len(respuesta) > 20:
+                    respuesta += f"\n\n{derivation_response['response']}"
+                # Si no hay respuesta útil, usar derivación como fallback
+                elif len(respuesta.strip()) < 20:
+                    respuesta = derivation_response['response']
 
         formatted_sources = []
         for source in final_sources:
@@ -1805,15 +2253,31 @@ def get_ai_response(user_message: str, context: list = None,
                 'similarity': round(source.get('similarity', 0.5), 3)
             })
 
-        # 🔍 DIAGNÓSTICO: Verificar calidad de información recuperada
-        logger.info(f"📊 INFO DIAGNOSIS:")
-        logger.info(f"  - Sources found: {len(final_sources)}")
-        logger.info(f"  - Response length: {len(respuesta)} chars")
-        logger.info(f"  - Query: '{user_message[:50]}...'")
+        # 🔍 DIAGNÓSTICO COMPLETO: Verificar calidad de información recuperada
+        logger.info(f"")
+        logger.info(f"═══════════════════════════════════════════════════")
+        logger.info(f"📊 DIAGNÓSTICO COMPLETO RAG")
+        logger.info(f"═══════════════════════════════════════════════════")
+        logger.info(f"📝 Query: '{user_message}'")
+        logger.info(f"🔍 Fuentes encontradas: {len(final_sources)}")
+        logger.info(f"📏 Longitud respuesta: {len(respuesta)} caracteres")
+        
         if final_sources:
             avg_similarity = sum(s.get('similarity', 0) for s in final_sources) / len(final_sources)
-            logger.info(f"  - Avg similarity: {avg_similarity:.3f}")
-            logger.info(f"  - Top source category: {final_sources[0].get('metadata', {}).get('category', 'unknown')}")
+            logger.info(f"📊 Similitud promedio: {avg_similarity:.3f}")
+            
+            for i, src in enumerate(final_sources, 1):
+                category = src.get('metadata', {}).get('category', 'unknown')
+                similarity = src.get('similarity', 0)
+                preview = src['document'][:100].replace('\n', ' ')
+                logger.info(f"  📄 Fuente {i}: [{category}] sim={similarity:.3f}")
+                logger.info(f"     '{preview}...'")
+        else:
+            logger.warning(f"⚠️ NO SE ENCONTRARON FUENTES en ChromaDB")
+        
+        logger.info(f"💬 Respuesta preview: '{respuesta[:200]}...'")
+        logger.info(f"═══════════════════════════════════════════════════")
+        logger.info(f"")
         
         # AGREGAR GENERACIÓN DE QR CODES PARA RESPUESTAS RAG (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(respuesta, user_message)
@@ -1842,16 +2306,43 @@ def get_ai_response(user_message: str, context: list = None,
             'response_time': time.time() - start_time,
             'cache_type': 'ollama_generated',
             'processing_info': processing_info,
-            'qr_codes': qr_processed_response['qr_codes'],  # Dict simple {url: qr_image}
-            'has_qr': qr_processed_response['has_qr']       # Boolean
+            'qr_codes': qr_processed_response['qr_codes'],
+            'has_qr': qr_processed_response['has_qr']
         }
 
-        rag_engine.text_cache[cache_key] = response_data
+        # 🔥 NO CACHEAR hasta que el sistema funcione correctamente
+        # rag_engine.text_cache[cache_key] = response_data
         rag_engine.metrics['successful_responses'] += 1
+        
+        # 📊 RESUMEN FINAL
+        print(f"\n{'='*80}")
+        print(f"✅ CONSULTA COMPLETADA EXITOSAMENTE")
+        print(f"{'='*80}")
+        print(f"📊 RESUMEN:")
+        print(f"   • Query: '{user_message}'")
+        print(f"   • Estrategia: {strategy.upper()}")
+        print(f"   • Fuentes usadas: {len(final_sources)}")
+        print(f"   • Modelo: {rag_engine.current_model}")
+        print(f"   • Tiempo total: {response_data['response_time']:.2f}s")
+        print(f"   • Longitud respuesta: {len(enhanced_respuesta)} chars")
+        if keyword_analysis.get('primary_keyword'):
+            print(f"   • Keyword detectada: {keyword_analysis.get('primary_keyword')}")
+        print(f"{'='*80}\n")
+        
+        logger.info(f"✅ Respuesta generada exitosamente: {len(enhanced_respuesta)} chars")
+        logger.info(f"⏱️ Tiempo total: {response_data['response_time']:.2f}s")
 
         return response_data
 
     except Exception as e:
+        print(f"\n{'='*80}")
+        print(f"❌ ERROR GENERAL EN PROCESAMIENTO")
+        print(f"{'='*80}")
+        print(f"🔴 Error: {str(e)[:200]}")
+        print(f"📝 Query: '{user_message}'")
+        print(f"📚 Fuentes disponibles: {len(final_sources) if 'final_sources' in locals() else 0}")
+        print(f"{'='*80}\n")
+        
         logger.error(f"❌ ERROR EN RAG ESTÁNDAR: {str(e)}")
         logger.error(f"   Query: '{user_message[:100]}...'")
         logger.error(f"   Sources available: {len(final_sources) if 'final_sources' in locals() else 0}")

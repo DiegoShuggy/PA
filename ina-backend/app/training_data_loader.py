@@ -16,6 +16,15 @@ except ImportError:
     DOCX_AVAILABLE = False
     logging.warning("python-docx no instalado. No se procesarán .docx")
 
+# NUEVO: Importar chunker inteligente
+try:
+    from app.intelligent_chunker import semantic_chunker
+    INTELLIGENT_CHUNKER_AVAILABLE = True
+    logging.info("✅ Chunker inteligente disponible")
+except ImportError:
+    INTELLIGENT_CHUNKER_AVAILABLE = False
+    logging.warning("⚠️ Chunker inteligente no disponible")
+
 # Soporte para documentos PDF
 try:
     import pdfplumber
@@ -35,16 +44,48 @@ class DocumentProcessor:
         logger.info("DocumentProcessor inicializado")
 
     def extract_from_docx(self, file_path: str) -> List[Dict[str, str]]:
+        """Extrae contenido de DOCX usando chunking inteligente si está disponible"""
         if not DOCX_AVAILABLE:
             logger.error("python-docx no disponible")
             return []
 
+        filename = os.path.basename(file_path)
+        
+        # NUEVO: Usar chunker inteligente si está disponible
+        if INTELLIGENT_CHUNKER_AVAILABLE:
+            logger.info(f"📄 Procesando con CHUNKER INTELIGENTE: {filename}")
+            try:
+                category = self._detect_category_from_filename(filename)
+                chunks = semantic_chunker.chunk_document_from_path(file_path, filename, category)
+                
+                # Convertir chunks a formato esperado
+                result = []
+                for chunk in chunks:
+                    result.append({
+                        'text': chunk.content,
+                        'section': chunk.section,
+                        'style': 'SemanticChunk',
+                        'is_structured': True,
+                        'page_reference': chunk.chunk_id,
+                        'keywords': chunk.keywords,
+                        'token_count': chunk.token_count,
+                        'chunk_metadata': chunk.metadata
+                    })
+                
+                total_tokens = sum(chunk.token_count for chunk in chunks)
+                avg_tokens = total_tokens // len(chunks) if chunks else 0
+                logger.info(f"✅ {filename}: {len(result)} chunks ({total_tokens} tokens, promedio {avg_tokens}/chunk)")
+                return result
+            except Exception as e:
+                logger.error(f"Error en chunker inteligente para {filename}: {e}")
+                logger.info("Usando método tradicional como fallback...")
+        
+        # FALLBACK: Método tradicional
         try:
             doc = docx.Document(file_path)
             content = []
             current_section = ""
-            filename = os.path.basename(file_path)
-            logger.info(f"Extrayendo: {filename}")
+            logger.info(f"Extrayendo (método tradicional): {filename}")
 
             # Párrafos
             for i, p in enumerate(doc.paragraphs):
@@ -477,6 +518,8 @@ class TrainingDataLoader:
                 if not category:
                     category = self._detect_category_from_content(text_content)
                 
+                # NUEVO: Pasar todos los metadatos enriquecidos del chunk
+                chunk_metadata = chunk.get('chunk_metadata', {})
                 if self._add_document_direct(enhanced, {
                     "type": f"document_{file_type}",
                     "category": category,
@@ -484,7 +527,14 @@ class TrainingDataLoader:
                     "section": chunk.get('section', ''),
                     "is_structured": chunk.get('is_structured', False),
                     "file_type": file_type,
-                    "optimized": "true"
+                    "optimized": "true",
+                    # NUEVOS metadatos del chunker inteligente
+                    "keywords": chunk.get('keywords', []),
+                    "token_count": chunk.get('token_count', 0),
+                    "chunk_id": chunk.get('page_reference', ''),
+                    "title": chunk_metadata.get('title', chunk.get('section', '')),
+                    "has_overlap": chunk_metadata.get('has_overlap', False),
+                    "fecha_procesamiento": chunk_metadata.get('fecha_procesamiento', '2025-11-26')
                 }):
                     added += 1
             
@@ -498,16 +548,27 @@ class TrainingDataLoader:
     def _add_document_direct(self, doc: str, meta: Dict = None) -> bool:
         """USO SEGURO: rag_engine.add_document() → Evita acceso directo a collection"""
         try:
+            # NUEVO: Metadatos enriquecidos con toda la información del chunker
+            enhanced_metadata = {
+                "source": meta.get('source', 'unknown'),
+                "category": meta.get('category', 'general'),
+                "type": meta.get('type', 'general'),
+                "optimized": meta.get('optimized', 'false'),
+                "section": meta.get('section', ''),
+                "is_structured": meta.get('is_structured', False),
+                # NUEVOS metadatos enriquecidos
+                "keywords": ','.join(meta.get('keywords', [])) if meta.get('keywords') else '',
+                "token_count": meta.get('token_count', 0),
+                "chunk_id": meta.get('chunk_id', ''),
+                "title": meta.get('title', ''),
+                "fecha_procesamiento": meta.get('fecha_procesamiento', datetime.now().isoformat()[:10]),
+                "has_overlap": meta.get('has_overlap', False),
+                "file_type": meta.get('file_type', 'unknown')
+            }
+            
             return rag_engine.add_document(
                 document=doc,
-                metadata={
-                    "source": meta.get('source', 'unknown'),
-                    "category": meta.get('category', 'general'),
-                    "type": meta.get('type', 'general'),
-                    "optimized": meta.get('optimized', 'false'),
-                    "section": meta.get('section', ''),
-                    "is_structured": meta.get('is_structured', False)
-                }
+                metadata=enhanced_metadata
             )
         except Exception as e:
             logger.error(f"Error añadiendo documento: {e}")
