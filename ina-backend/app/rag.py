@@ -360,53 +360,50 @@ class RAGEngine:
             return 'llama3.2:1b-instruct-q4_K_M'  # Default to our preferred lightweight model
     
     def _build_strict_prompt(self, sources: List[Dict], query: str) -> str:
-        """Construye prompt estricto con contexto enriquecido"""
+        """Construye prompt estricto: HORARIOS ESPECÍFICOS, SIN UBICACIONES"""
         if not sources:
-            return f"INSTRUCCIÓN: Responde que no tienes información específica sobre {query} y que contacten al Punto Estudiantil +56 2 2596 5201 para más detalles."
+            return f"Di brevemente que no tienes información sobre '{query}' y que pueden consultar en el Punto Estudiantil (estás al lado). Horario: lunes-viernes 08:30-22:30, sábados 08:30-14:00. Contacto: +56 2 2999 3075. NO agregues disculpas."
         
-        # Construir contexto más claro y directo
+        # Construir contexto conciso
         context_parts = []
         for i, source in enumerate(sources[:3], 1):  # Máximo 3 fuentes
-            metadata = source.get('metadata', {})
-            content = source['document'][:400]  # Reducir a 400 chars por fuente
-            section = metadata.get('section', 'General')
-            category = metadata.get('category', 'información')
-            
-            context_parts.append(f"INFORMACIÓN {i} ({category}):\n{content}")
+            content = source['document'][:300]  # 300 chars max por fuente
+            category = source.get('metadata', {}).get('category', 'info')
+            context_parts.append(f"[{i}] {content}")
         
-        full_context = "\n\n".join(context_parts)
+        context = "\n".join(context_parts)
         
-        # Prompt más estricto que fuerza el uso del contexto
-        strict_prompt = f"""Eres InA, asistente del Punto Estudiantil Duoc UC Plaza Norte.
+        # Prompt optimizado: ÉNFASIS EN HORARIOS, SIN UBICACIONES
+        prompt = f"""Eres InA, asistente al lado del Punto Estudiantil Plaza Norte. Responde en máximo 150 palabras.
 
-REGLA ABSOLUTA: Solo responde usando la INFORMACIÓN proporcionada abajo. Si no está en la INFORMACIÓN, di que no tienes datos específicos.
+DATOS DISPONIBLES:
+{context}
 
-INFORMACIÓN DISPONIBLE:
-{full_context}
+REGLAS ESTRICTAS:
+1. Responde en 2-3 oraciones SIN emojis, negritas ni formato Markdown
+2. Usa SOLO los datos de arriba - no inventes
+3. PRIORIDAD MÁXIMA: Si pide horario, da días y horas EXACTOS del servicio específico
+4. NO indiques ubicaciones físicas (la IA está al lado del Punto Estudiantil)
+5. Si pide requisitos/proceso: lista directo sin decorar
+6. NUNCA menciones otras universidades que no sean Duoc UC
+7. NO uses frases genéricas como "¡Hola!" o "Con gusto"
+8. NO uses secciones formateadas como "📍 Ubicación:" o "⏰ Horario:"
+9. Escribe texto corrido natural
 
-RESTRICCIONES ESTRICTAS:
-- SOLO habla sobre DUOC UC - NUNCA menciones otras universidades
-- NUNCA digas "Universidad Central del Valle", "Universidad de Chile" o instituciones que NO sean Duoc UC
-- Si no tienes información, deriva al Punto Estudiantil de DUOC UC Plaza Norte
-- Sede específica: DUOC UC PLAZA NORTE (no otras sedes)
+INFORMACIÓN ESPECÍFICA POR SERVICIO:
+- Punto Estudiantil: Piso 2, lunes-viernes 08:30-22:30, sábados 08:30-14:00
+- Biblioteca: Lunes-viernes 08:00-21:00, sábados 09:00-14:00
+- Bienestar: Lunes-viernes 09:00-18:00
+- Gimnasio: Lunes-viernes 07:00-22:00, sábados 09:00-14:00
+- Contacto: Mesa Central +56 2 2999 3000, Punto Estudiantil +56 2 2999 3075
 
-INSTRUCCIONES ESPECÍFICAS:
-- Responde en 2-3 oraciones máximo
-- Usa solo datos de la INFORMACIÓN de arriba
-- Si es sobre TNE: Es la Tarjeta Nacional Estudiantil para descuentos en transporte público, gestionada por JUNAEB
-- Si es sobre beneficios: Menciona becas JUNAEB, gratuidad, ayudas internas según la INFORMACIÓN
-- Incluye datos prácticos (ubicación, teléfono, costo) si están en la INFORMACIÓN
-- NUNCA inventes números de teléfono como "1-8000"
-- Contacto correcto: Mesa Central +56 2 2999 3000, Punto Estudiantil +56 2 2999 3075
-- Ubicación correcta: Calle Nueva 1660, Huechuraba (sede Plaza Norte)
-- Horario: Lunes a viernes 08:30-22:30, sábados 08:30-14:00
-- INSTITUCIÓN: Duoc UC (no otra universidad)
+IMPORTANTE: NO indiques direcciones de calle (ej: Calle Nueva 1660), solo "Piso 2" si preguntan por ubicación.
 
-PREGUNTA DEL USUARIO: {query}
+PREGUNTA: {query}
 
-RESPUESTA (solo sobre DUOC UC usando la INFORMACIÓN):"""
+RESPUESTA (texto corrido, horarios exactos, sin direcciones de calle):"""
         
-        return strict_prompt
+        return prompt
 
         # Si pregunta por beneficios, agregar instrucciones específicas
         if is_beneficios:
@@ -518,10 +515,16 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
             r'adriana vásquez': 'bienestar estudiantil adriana vasquez salud mental',
             r'complejo maiclub': 'complejo deportivo maiclub gimnasio instalaciones',
             r'gimnasio entretiempo': 'gimnasio entretiempo centro acondicionamiento físico',
+            # Modismos y variaciones coloquiales chilenas
+            r'd[oó]nde\s+(est[aá]|queda|se\s+encuentra|anda)': 'ubicación dónde',
+            r'(donde|d[oó]nde)\s+(puedo|se\s+puede|hago)': 'dónde',
+            r'(horario|hora|cuando|cu[aá]ndo)\s+(atiend|abre|funciona|est[aá]\s+abierto)': 'horario',
+            r'(plata|dinero|lucas?)\b': 'costo dinero',
+            r'(comida|almuerzo|almorzar|comer)': 'casino alimentación',
         }
         
         for pattern, replacement in duoc_patterns.items():
-            text = re.sub(pattern, replacement, text)
+            text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
         
         # Limpieza final - EVITAR DUPLICADOS Y OPTIMIZAR
         text = re.sub(r'[^\w\sáéíóúñü]', ' ', text)
@@ -566,8 +569,7 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
             logger.info(f"🎯 Smart detection: {keyword_analysis['primary_keyword']} → "
                        f"{keyword_analysis['category']}/{keyword_analysis['topic']}")
         
-        # 1. PRIMERO VERIFICAR TEMPLATES (MÁXIMA PRIORIDAD) CON DETECCIÓN DE IDIOMA MEJORADA
-        # Los templates tienen prioridad sobre la memoria para asegurar respuestas actualizadas
+        # 1. DETECCIÓN DE IDIOMA Y CATEGORÍA (UNA SOLA VEZ)
         try:
             classification_info = classifier.get_classification_info(user_message)
             detected_language = classification_info.get('language', 'es')
@@ -576,27 +578,25 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
             if priority_detection:
                 category = priority_detection['category']
                 confidence = priority_detection['confidence']
-                print(f"🔥 Categoría desde PRIORITY KEYWORD: {category} (confianza: {confidence:.2f})")
-                logger.info(f"🔥 Category forced by priority keyword: {category}")
+                print(f"🔥 Categoría: {category} (priority, conf: {confidence:.2f})")
+                logger.info(f"🔥 Category: {category} from priority keyword")
             elif keyword_analysis['confidence'] >= 80 and keyword_analysis['category']:
                 category = keyword_analysis['category']
                 confidence = keyword_analysis['confidence'] / 100.0
-                print(f"✨ Categoría desde SMART DETECTOR: {category} (confianza: {confidence:.2f})")
+                print(f"✨ Categoría: {category} (smart, conf: {confidence:.2f})")
             else:
                 category = classification_info.get('category', 'otros')
                 confidence = classification_info.get('confidence', 0.5)
             
-            print(f"🌍 Idioma detectado: {detected_language}, Categoría: {category}, Confianza: {confidence:.2f}")
-            logger.info(f"CLASIFICACIÓN COMPLETA: '{user_message}' -> {category} ({detected_language}) conf:{confidence:.2f}")
+            print(f"🌍 Idioma: {detected_language} | Categoría: {category} ({confidence:.2f})")
+            logger.info(f"🔍 '{user_message}' -> {category} ({detected_language}) {confidence:.2f}")
         except Exception as e:
-            logger.warning(f"Error obteniendo información completa, usando detección básica: {e}")
+            logger.warning(f"Error en clasificación, usando fallback: {e}")
             detected_language = self.detect_language(user_message)
             
-            # Priorizar: 1) Priority keyword, 2) Smart keyword, 3) Classifier
             if priority_detection:
                 category = priority_detection['category']
                 confidence = priority_detection['confidence']
-                logger.info(f"🔥 Fallback: usando priority keyword")
             elif keyword_analysis['confidence'] >= 80 and keyword_analysis['category']:
                 category = keyword_analysis['category']
                 confidence = keyword_analysis['confidence'] / 100.0
@@ -604,18 +604,15 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
                 category = classifier.classify_question(user_message)
                 confidence = 0.6
         
-        print(f"🌍 Idioma detectado: {detected_language}")
-        
+        # 2. VERIFICAR TEMPLATES (MÁXIMA PRIORIDAD)
         template_match = classifier.detect_template_match(user_message)
         if template_match:
-            print(f"\n📋 USANDO TEMPLATE:")
-            print(f"   🆔 ID: {template_match}")
-            print(f"   🌍 Idioma: {detected_language}")
-            print(f"   📂 Categoría: {category}")
-            logger.info(f"✅ TEMPLATE DETECTADO: '{user_message}' -> {template_match} (idioma: {detected_language})")
+            print(f"📋 Template: {template_match} ({detected_language})")
+            logger.info(f"✅ Template '{template_match}' detectado")
             return {
                 'processing_strategy': 'template',
                 'original_query': user_message,
+                'detected_language': detected_language,  # 🔥 CACHEAR IDIOMA
                 'template_id': template_match,
                 'detected_language': detected_language,
                 'category': category,
@@ -627,12 +624,12 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
         if similar_queries:
             best_match = similar_queries[0]
             if best_match['similarity'] > 0.85:  # Alta confianza en la similitud
-                print(f"\n💾 USANDO MEMORIA CACHÉ:")
-                print(f"   🎯 Similitud: {best_match['similarity']:.1%}")
-                logger.info(f"💾 Respuesta encontrada en memoria: {best_match['similarity']:.3f}")
+                print(f"💾 Memoria: {best_match['similarity']:.1%}")
+                logger.info(f"💾 Memoria: {best_match['similarity']:.3f}")
                 return {
                     'processing_strategy': 'memory',
                     'original_query': user_message,
+                    'detected_language': detected_language,  # 🔥 CACHEAR IDIOMA
                     'cached_response': best_match['response'],
                     'similarity_score': best_match['similarity'],
                     'metadata': best_match['metadata']
@@ -701,6 +698,7 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
         
         response_info = {
             'original_query': user_message,
+            'detected_language': detected_language,  # 🔥 CACHEAR IDIOMA
             'topic_classification': topic_info,
             'multiple_queries_detected': len(query_parts) > 1,
             'query_parts': query_parts,
@@ -974,16 +972,10 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
         template_id = processing_info['template_id']
         original_query = processing_info.get('original_query', '')
         
-        # DETECTAR IDIOMA - PRIORIZAR EL DEL PROCESSING_INFO SI ESTÁ DISPONIBLE
-        detected_language = processing_info.get('detected_language', None)
-        if not detected_language:
-            detected_language = self.detect_language(original_query)
-            logger.warning(f"⚠️ Usando detección de idioma de respaldo para: '{original_query}'")
-        else:
-            logger.info(f"✅ Idioma ya detectado en processing_info: '{detected_language}'")
-        
-        print(f"🗣️ Idioma FINAL usado: {detected_language} para '{original_query[:50]}...'")
-        logger.info(f"🌍 Idioma FINAL: '{detected_language}' para query: '{original_query}'")
+        # 🔥 USAR IDIOMA CACHEADO (ya detectado en process_user_query)
+        detected_language = processing_info.get('detected_language', 'es')
+        print(f"🌍 Idioma: {detected_language}")
+        logger.info(f"🌍 Idioma: {detected_language}")
         
         # CARGAR TEMPLATES - PRIORIDAD AL SISTEMA MULTIIDIOMA
         try:
@@ -1180,21 +1172,21 @@ Puedo ayudarte con:*
         start_time = time.time()
         
         response = """
-**URGENCIA - APOYO INMEDIATO DISPONIBLE**
+    **URGENCIA - APOYO INMEDIATO DISPONIBLE**
 
-*Líneas de ayuda 24/7:*
-• **Línea OPS Duoc UC**: +56 2 2820 3450
-• **Salud Responde**: 600 360 7777
-• **Fono Mayor**: 800 4000 35
+    *Líneas de ayuda 24/7:*
+    • **Línea OPS Duoc UC**: +56 2 2820 3450
+    • **Salud Responde**: 600 360 7777
+    • **Fono Mayor**: 800 4000 35
 
-*Atención en sede:*
-• **Sala primeros auxilios**: Primer piso, junto a caja
-• **Teléfono interno**: +56 2 2999 3005
+    *Atención en sede:*
+    • **Sala primeros auxilios**: Piso 2, Sede Plaza Norte
+    • **Teléfono interno**: +56 2 2999 3005
 
-*Recuerda: No estás solo/a - hay ayuda disponible*
+    *Recuerda: No estás solo/a - hay ayuda disponible*
 
-*Si es emergencia médica vital, llama al 131*
-"""
+    *Si es emergencia médica vital, llama al 131*
+    """
         
         # AGREGAR QR CODES PARA EMERGENCIA (ESTRUCTURA CORREGIDA)
         qr_processed_response = qr_generator.process_response(response, processing_info['original_query'])
@@ -1220,9 +1212,9 @@ Puedo ayudarte con:*
         response = (
             "Para esta consulta específica:\n\n"
             "🏢 **Punto Estudiantil Plaza Norte**\n"
-            "📍 Ubicación: Área de servicios estudiantiles\n"
-            "📞 Tel: +56 2 2360 6400\n"
-            "🕒 Horario: Lunes a Viernes 8:30-19:00\n\n"
+            "📍 Ubicación: Piso 2, Sede Plaza Norte\n"
+            "📞 Tel: +56 2 2999 3075\n"
+            "🕒 Horario: Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00\n\n"
             "El personal puede orientarte según tu consulta específica.\n\n"
             "💡 **También puedo ayudarte con**: TNE, bienestar, deportes o desarrollo laboral"
         )
@@ -1669,7 +1661,7 @@ Contenido:
 INSTRUCCIONES OBLIGATORIAS:
 1. Responde ÚNICAMENTE con información del CONTEXTO proporcionado abajo
 2. Si la información NO está en el contexto, responde EXACTAMENTE:
-   "No tengo información actualizada sobre eso. Te recomiendo contactar a Punto Estudiantil al +56 2 2596 5201 o visitar centroayuda.duoc.cl"
+    "No tengo información actualizada sobre eso. Te recomiendo contactar a Punto Estudiantil al +56 2 2999 3075 o visitar centroayuda.duoc.cl"
 3. Sé CONCISO: Máximo 4-5 líneas + datos de contacto
 4. Incluye información práctica: horarios, ubicaciones, teléfonos, correos
 5. Cita la sección del documento: "Según [sección], ..."
@@ -1890,9 +1882,10 @@ def get_ai_response(user_message: str, context: list = None,
         response_data['intelligent_features_applied'] = True
         return response_data
 
+    # 🔥 Inicializar sources para evitar error
+    sources = []
+    
     # 🔥 FALLBACK 1: Sistema híbrido DESACTIVADO para debugging del RAG mejorado
-    # El sistema híbrido está interceptando las consultas y no usando ChromaDB
-    # TODO: Reactivar después de verificar que el RAG mejorado funciona
     print(f"\n⚠️ Sistema híbrido DESACTIVADO - forzando RAG mejorado con ChromaDB")
     if False and HYBRID_SYSTEM_AVAILABLE:
         try:
@@ -1920,26 +1913,7 @@ def get_ai_response(user_message: str, context: list = None,
             logger.warning(f"⚠️ Sistema híbrido falló, usando RAG tradicional: {e}")
 
     # 📚 INTENTAR RAG PARA BIBLIOTECA ANTES DE DERIVAR
-    if 'biblioteca' in user_message.lower() and (not sources or len(sources) == 0):
-        logger.info("🔍 Detectada 'biblioteca' - intentando búsqueda RAG...")
-        print(f"\n🔍 Detectada consulta sobre biblioteca - buscando información...")
-        try:
-            sources_biblioteca = engine.query_optimized(
-                query=user_message,
-                category='institucionales',
-                n_results=5,
-                similarity_threshold=0.25
-            )
-            if sources_biblioteca:
-                sources = sources_biblioteca
-                strategy = 'standard_rag'
-                logger.info(f"✅ Encontradas {len(sources_biblioteca)} fuentes para biblioteca")
-                print(f"✅ Fuentes encontradas: {len(sources_biblioteca)}")
-        except Exception as e:
-            logger.warning(f"⚠️ Error buscando biblioteca: {e}")
-    
-    # 📚 INTENTAR RAG PARA BIBLIOTECA ANTES DE DERIVAR
-    if 'biblioteca' in user_message.lower() and strategy != 'template' and (not sources or len(sources) == 0):
+    if 'biblioteca' in user_message.lower() and len(sources) == 0:
         logger.info("🔍 Detectada 'biblioteca' - intentando búsqueda RAG...")
         print(f"\n🔍 Detectada consulta sobre biblioteca - buscando información...")
         try:
@@ -2097,38 +2071,29 @@ def get_ai_response(user_message: str, context: list = None,
     try:
         print(f"\n📌 PASO 3: BÚSQUEDA EN CHROMADB")
         print(f"   📊 ChromaDB status: {rag_engine.collection.count()} chunks totales")
-        # NUEVO: Optimizar parámetros de búsqueda según tipo de query
-        from app.search_optimizer import search_optimizer
-        search_config = search_optimizer.optimize_search_params(user_message)
         
-        print(f"   🔍 Optimizador activado:")
-        print(f"      📊 Estrategia: {search_config['search_strategy'].upper()}")
-        print(f"      📈 n_results: {search_config['n_results']}")
-        print(f"      🎯 Threshold: {search_config['similarity_threshold']}")
-        print(f"      🔑 Boost keywords: {'Sí' if search_config['boost_keywords'] else 'No'}")
-        logger.info(f"🔍 Optimizador: {search_config['search_strategy']}, n_results={search_config['n_results']}, threshold={search_config['similarity_threshold']}")
+        # 🔥 BÚSQUEDA SIMPLE Y DIRECTA
+        query_lower = user_message.lower()
+        if any(word in query_lower for word in ['dónde', 'donde', 'ubicación', 'horario']):
+            n_results = 4  # Reducido de 5
+        elif any(word in query_lower for word in ['qué', 'que', 'cuál', 'cual', 'lista', 'todos']):
+            n_results = 5  # Reducido de 6
+        else:
+            n_results = 3  # Reducido de 4 - más enfocado
         
-        print(f"   🔎 Buscando en ChromaDB...")
-        sources = rag_engine.hybrid_search(user_message, n_results=search_config['n_results'])
+        print(f"   🔎 Buscando {n_results} resultados en ChromaDB...")
+        sources = rag_engine.hybrid_search(user_message, n_results=n_results)
+        
+        # 🔥 FIX: Asegurar que sources siempre sea una lista
+        if sources is None:
+            sources = []
+            logger.warning("⚠️ hybrid_search retornó None, usando lista vacía")
+        
         print(f"   ✅ Fuentes recuperadas: {len(sources)}")
         logger.info(f"📚 Fuentes recuperadas de ChromaDB: {len(sources)}")
         
         final_sources = []
         seen_hashes = set()
-        
-        # NUEVO: Re-rankear fuentes por relevancia
-        if sources:
-            print(f"\n📌 PASO 4: RE-RANKING DE FUENTES")
-            sources = search_optimizer.rank_sources(sources, user_message)
-            if sources:
-                top_score = sources[0].get('relevance_score', 0)
-                print(f"   ✅ Re-ranking completado")
-                print(f"      ⭐ Top score: {top_score:.2f}")
-                print(f"      📊 Total rankeadas: {len(sources)}")
-                logger.info(f"🎯 Re-ranking completado: Top score={top_score:.2f}, Total={len(sources)}")
-        else:
-            print(f"   ⚠️ Sin fuentes para re-rankear")
-            logger.warning(f"⚠️ No hay fuentes para re-rankear")
         
         for source in sources:
             content_hash = hashlib.md5(source['document'].encode()).hexdigest()
@@ -2137,9 +2102,8 @@ def get_ai_response(user_message: str, context: list = None,
                 continue
             seen_hashes.add(content_hash)
             
-            # Aumentar límite de fuentes según estrategia de búsqueda
-            max_sources = 3 if search_config['search_strategy'] == 'specific' else 5
-            if len(final_sources) < max_sources:
+            # Máximo 3 fuentes para mantener respuestas concisas
+            if len(final_sources) < 3:
                 final_sources.append(source)
         
         # FILTRAR FUENTES DE MALA CALIDAD ANTES DE PROCESAR
@@ -2370,7 +2334,7 @@ def get_ai_response(user_message: str, context: list = None,
                 logger.info(f"✅ Respuesta RECONSTRUIDA: {len(respuesta)} chars")
             else:
                 logger.error(f"❌ No hay fuentes para reconstruir respuesta")
-                respuesta = "No tengo información específica sobre eso. Consulta en Punto Estudiantil, Piso 1."
+                respuesta = "No tengo información específica sobre eso. Consulta en Punto Estudiantil, Piso 2, Sede Plaza Norte."
         
         # Validación de apropiabilidad desactivada temporalmente
         # is_appropriate, validation_message = rag_engine.stationary_filter.validate_response_appropriateness(respuesta)

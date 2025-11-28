@@ -296,7 +296,7 @@
 |----------|---------|
 | **Secretaría Académica** | Lun-Vie: 8:30-18:00 / Sáb: 9:00-12:00 |
 | **Mesa de Servicios** | Lun-Vie: 9:00-19:00 / Sáb: 9:00-15:00 |
-| **Biblioteca** | Lun-Vie: 8:00-21:00 / Sáb: 8:00-15:00 |
+| **Biblioteca (Piso 2, Sede Plaza Norte)** | Lun-Vie: 8:00-21:00 / Sáb: 8:00-15:00 |
 | **Laboratorios** | Lun-Vie: 8:00-22:00 / Sáb: 8:00-17:00 |
 
 ### SERVICIOS DE BIENESTAR
@@ -304,7 +304,7 @@
 |----------|---------|
 | **Enfermería** | Lun-Vie: 8:00-20:00 / Sáb: 9:00-15:00 |
 | **Atención Psicológica** | Lun-Vie: 9:00-17:00 (con cita previa) |
-| **Bienestar Estudiantil** | Lun-Vie: 9:00-18:00 / Sáb: 9:00-12:00 |
+| **Bienestar Estudiantil (Piso 2, Sede Plaza Norte)** | Lun-Vie: 9:00-18:00 / Sáb: 9:00-12:00 |
 | **Pastoral** | Lun-Vie: 14:00-17:00 |
 
 ---

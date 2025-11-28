@@ -11,7 +11,7 @@
 - **Dirección**: Calle Nueva 1660, Huechuraba
 - **Teléfonos de contacto**:
   - Mesa Central: +56 2 2999 3000
-  - Punto Estudiantil: +56 2 2999 3075
+  - Punto Estudiantil: +56 2 2999 3075 (Piso 2, Sede Plaza Norte)
   - DOC DUOC (Emergencias Médicas): 600 362 3862
 
 ### Horarios de Atención
@@ -285,7 +285,7 @@ Acceso en: https://plataforma.duoc.cl/admin/login
 
 ### Directorio Telefónico
 - **Mesa Central**: +56 2 2999 3000
-- **Punto Estudiantil**: +56 2 2999 3075
+- **Punto Estudiantil**: +56 2 2999 3075 (Piso 2, Sede Plaza Norte)
 - **DOC DUOC (Emergencias Médicas)**: 600 362 3862
 - **Información General**: Consultar en punto estudiantil
 
@@ -297,7 +297,7 @@ Acceso en: https://plataforma.duoc.cl/admin/login
 ### Canales Digitales
 - **Portal Web**: https://www.duoc.cl/sedes/plaza-norte/
 - **Mesa Central**: +56 2 2999 3000
-- **Punto Estudiantil**: +56 2 2999 3075
+- **Punto Estudiantil**: +56 2 2999 3075 (Piso 2, Sede Plaza Norte)
 - **Redes Sociales**: @DuocUC
 
 ---

@@ -17,51 +17,51 @@ class ResponseEnhancer:
         # Información de contacto específica por área
         self.contact_info = {
             'plaza_norte_general': {
-                'phone': '+56 2 2596 5200',
+                'phone': '+56 2 2999 3000',
                 'address': 'Av. Américo Vespucio Norte 1630, Huechuraba',
-                'hours': 'Lunes a Viernes 8:00-18:00, Sábados 8:00-13:00',
+                'hours': 'Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00',
                 'email': 'admision@duoc.cl'
             },
             'punto_estudiantil': {
-                'phone': '+56 2 2596 5201',
-                'location': 'Piso 1, Hall Central Plaza Norte',
-                'hours': 'Lunes a Viernes 8:30-17:30',
+                'phone': '+56 2 2999 3075',
+                'location': 'Piso 2, Sede Plaza Norte',
+                'hours': 'Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00',
                 'services': 'Certificados, TNE, consultas generales'
             },
             'admision': {
-                'phone': '+56 2 2596 5202',
-                'location': 'Piso 1, Oficina de Admisión',
-                'hours': 'Lunes a Viernes 9:00-17:00',
+                'phone': '+56 2 2999 3075',
+                'location': 'Piso 2, Sede Plaza Norte',
+                'hours': 'Lunes a Viernes 09:00-18:00',
                 'email': 'admision.plazanorte@duoc.cl'
             },
             'financiamiento': {
-                'phone': '+56 2 2596 5203',
-                'location': 'Piso 1, junto a Admisión',
-                'hours': 'Lunes a Viernes 9:00-17:00',
+                'phone': '+56 2 2999 3075',
+                'location': 'Piso 2, Sede Plaza Norte',
+                'hours': 'Lunes a Viernes 09:00-18:00',
                 'services': 'CAE, Gratuidad, Becas'
             },
             'biblioteca': {
-                'phone': '+56 2 2596 5220',
-                'location': 'Piso 2, Biblioteca Central',
-                'hours': 'Lunes a Viernes 8:00-21:00, Sábados 9:00-14:00',
+                'phone': '+56 2 2999 3000',
+                'location': 'Piso 2, Sede Plaza Norte',
+                'hours': 'Lunes a Viernes 08:00-21:00, Sábados 09:00-14:00',
                 'email': 'biblioteca.plazanorte@duoc.cl'
             },
             'practicas': {
-                'phone': '+56 2 2596 5250',
-                'location': 'Piso 3, Oficina de Prácticas',
-                'hours': 'Lunes a Viernes 9:00-17:00',
+                'phone': '+56 2 2999 3075',
+                'location': 'Piso 2, Sede Plaza Norte',
+                'hours': 'Lunes a Viernes 09:00-18:00',
                 'email': 'practicas.plazanorte@duoc.cl'
             },
             'deportes': {
-                'phone': '+56 2 2596 5270',
+                'phone': '+56 2 2999 3000',
                 'location': 'Gimnasio, Subterráneo',
-                'hours': 'Lunes a Viernes 8:00-20:00, Sábados 9:00-13:00',
+                'hours': 'Lunes a Viernes 08:00-20:00, Sábados 09:00-14:00',
                 'facilities': 'Gimnasio, cancha multiuso, máquinas'
             },
             'soporte_ti': {
-                'phone': '+56 2 2596 5280',
-                'location': 'Piso 1, Mesa de Ayuda TI',
-                'hours': 'Lunes a Viernes 8:30-17:30',
+                'phone': '+56 2 2999 3000',
+                'location': 'Piso 2, Sede Plaza Norte',
+                'hours': 'Lunes a Viernes 08:30-22:30',
                 'services': 'Credenciales, WiFi, problemas técnicos'
             }
         }
@@ -148,16 +148,16 @@ class ResponseEnhancer:
         elif 'plaza norte' in query_lower and ('ubicad' in query_lower or 'servicios' in query_lower):
             return """**🏢 Sede Plaza Norte - Información:**
 
-📍 **Ubicación:** Av. Américo Vespucio Norte 1630, Huechuraba
+📍 **Ubicación:** Calle Nueva 1660, Huechuraba
 🚇 **Metro:** Línea 2, Estación Vespucio Norte (5 min caminando)
 
 🏛️ **Servicios principales:**
-• Punto Estudiantil (Piso 1)
+• Punto Estudiantil (Piso 2)
 • Biblioteca (Piso 2)  
 • Laboratorios de cómputo
 • Gimnasio y canchas
 
-📞 **Mesa de información:** +56 2 2596 5200"""
+📞 **Mesa de información:** +56 2 2999 3000"""
         
         elif 'certificado' in query_lower and 'alumno regular' in query_lower:
             return """**📜 Certificado de Alumno Regular:**
@@ -168,11 +168,11 @@ class ResponseEnhancer:
 • Descarga inmediata (sin costo)
 
 🏢 **Solicitud presencial:**
-• Punto Estudiantil, Piso 1
+• Punto Estudiantil, Piso 2
 • Presentar cédula de identidad
 • Entrega inmediata
 
-📞 **Consultas:** +56 2 2596 5201"""
+📞 **Consultas:** +56 2 2999 3075"""
         
         return response  # Si no hay patrón específico, mantener original
     
@@ -228,7 +228,7 @@ class ResponseEnhancer:
     
     def _get_general_contact(self) -> str:
         """Contacto general cuando no se detecta área específica"""
-        return "📞 **Información general:** +56 2 2596 5200\n📍 **Punto Estudiantil:** Piso 1, Plaza Norte"
+        return "📞 **Información general:** +56 2 2999 3075\n📍 **Punto Estudiantil:** Piso 2, Sede Plaza Norte"
     
     def _has_phone_number(self, response: str) -> bool:
         """Verificar si la respuesta ya tiene un número de teléfono"""
@@ -251,8 +251,8 @@ class ResponseEnhancer:
         # Agregar ubicaciones específicas dentro de la sede
         if 'donde' in query_lower or 'ubicacion' in query_lower:
             if 'punto estudiantil' in query_lower:
-                if 'piso 1' not in response.lower():
-                    response += "\n\n📍 **Ubicación:** Piso 1, Hall Central (entrada principal)"
+                if 'piso 2' not in response.lower():
+                    response += "\n\n📍 **Ubicación:** Piso 2, Sede Plaza Norte"
         
         return response
     

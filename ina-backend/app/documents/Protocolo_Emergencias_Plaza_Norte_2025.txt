@@ -123,10 +123,10 @@
 5. **Dirigirse a zona de seguridad**
 
 **Rutas de evacuación designadas**:
-- **Piso 1**: Salida principal hacia estacionamiento
-- **Piso 2**: Escalera norte y escalera sur
-- **Piso 3**: Escaleras de emergencia únicamente
-- **NO USAR ASCENSORES** bajo ninguna circunstancia
+-- **Piso 2, Sede Plaza Norte**: Salida principal hacia estacionamiento
+-- **Piso 2**: Escalera norte y escalera sur
+-- **Piso 3**: Escaleras de emergencia únicamente
+-- **NO USAR ASCENSORES** bajo ninguna circunstancia
 
 ### ZONA DE SEGURIDAD
 - **Ubicación**: Estacionamiento sur Mall Plaza Norte
@@ -383,7 +383,7 @@
 - **Megáfonos**: Para coordinadores de evacuación
 - **Linternas**: En oficinas administrativas
 
-**Enfermería** (Ubicación: Piso 1, Oficina 105):
+**Enfermería** (Ubicación: Piso 2, Oficina 205, Sede Plaza Norte):
 - **Camillas profesionales**: 2 unidades
 - **Equipo de reanimación**: DEA (Desfibrilador)
 - **Oxígeno portátil**: Para emergencias respiratorias
@@ -461,7 +461,7 @@
 **Internos DUOC UC Plaza Norte**:
 - **DOC DUOC (Emergencias Médicas)**: 600 362 3862
 - **Mesa Central**: (+56) 2 2999 3000
-- **Punto Estudiantil**: (+56) 2 2999 3075
+- **Punto Estudiantil**: (+56) 2 2999 3075 (Piso 2, Sede Plaza Norte)
 - **Servicios de Emergencia**: Contactar Mesa Central
 
 ### RESPONSABLES DE ÁREA

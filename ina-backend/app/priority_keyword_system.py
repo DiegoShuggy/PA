@@ -150,6 +150,20 @@ class PriorityKeywordSystem:
                 ]
             },
             
+            # PUNTO ESTUDIANTIL
+            "punto estudiantil": {
+                "category": "asuntos_estudiantiles",
+                "topic": "punto_estudiantil",
+                "priority": 95,
+                "avoid_expansion": True,
+                "specific_expansion": ["atención estudiantes", "trámites", "servicios estudiantiles"],
+                "patterns": [
+                    r'\bpunto\s+estudiantil\b',
+                    r'\boficina\s+estudiante\b',
+                    r'\btr[áa]mites\s+estudiantil\b'
+                ]
+            },
+            
             # SEDE Y UBICACIÓN
             "sede": {
                 "category": "institucionales",

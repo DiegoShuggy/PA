@@ -78,7 +78,7 @@
 5. **📋 DOCUMENTAR** lo ocurrido
 
 ### **Ubicación Elementos Médicos**
-🏥 **Enfermería**: Edificio Central, 1er piso
+🏥 **Enfermería**: Piso 2, Sede Plaza Norte
 📦 **Botiquines**: Cada piso de cada edificio
 🚨 **DEA**: Recepción, gimnasio, biblioteca
 🚿 **Duchas de emergencia**: Laboratorios químicos

@@ -317,13 +317,13 @@ async def warm_up_cache():
         frequent_data = [
             {
                 "key": "tne_info",
-                "value": "La TNE (Tarjeta Nacional Estudiantil) se puede obtener en el Punto Estudiantil...",
+                "value": "La TNE (Tarjeta Nacional Estudiantil) se obtiene gratuitamente en el Punto Estudiantil, Piso 2, Sede Plaza Norte. Horario: Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00. Teléfono oficial: +56 2 2999 3075.",
                 "data_type": "response",
                 "importance_score": 1.5
             },
             {
                 "key": "certificado_regular",
-                "value": "El certificado de alumno regular se solicita en el Punto Estudiantil...",
+                "value": "El certificado de alumno regular se solicita presencialmente en el Punto Estudiantil, Piso 2, Sede Plaza Norte, o vía portal institucional. Teléfono oficial: +56 2 2999 3075.",
                 "data_type": "response", 
                 "importance_score": 1.3
             }

@@ -15,7 +15,7 @@
 - **Dirección Completa**: Calle Nueva 1660, Huechuraba, Región Metropolitana
 - **Referencia Geográfica**: A pasos del Mall Plaza Norte
 - **Mesa Central**: +56 2 2999 3000
-- **Punto Estudiantil**: +56 2 2999 3075
+- **Punto Estudiantil**: +56 2 2999 3075 (Piso 2, Sede Plaza Norte)
 - **DOC DUOC (Emergencias Médicas)**: 600 362 3862
 
 ### **Horarios de Atención Oficiales**
@@ -98,10 +98,11 @@
 - **Información**: Se envía vía correo institucional @duocuc.cl
 
 ### **Proceso TNE Primera Vez** (Estudiantes nuevos en Educación Superior)
-1. **Pago**: Realizar pago del costo vigente en caja de sede
-2. **Comprobante**: Enviar comprobante según instrucciones
-3. **Fotografía**: Realizar captura online en https://capturadortne.cl/
-4. **Seguimiento**: Consultar estado en https://sistema.tne.cl/reposiciones/estado_tarjeta_alumno
+- **Costo**: GRATUITA para estudiantes regulares sin deudas
+1. **Solicitud**: Completar formulario en portal JUNAEB
+2. **Fotografía**: Realizar captura online en https://capturadortne.cl/
+3. **Seguimiento**: Consultar estado en https://sistema.tne.cl/reposiciones/estado_tarjeta_alumno
+4. **Retiro**: En Punto Estudiantil Piso 2 cuando esté lista
 
 ### **Proceso TNE Revalidación** (Estudiantes con TNE años anteriores)
 - Proceso específico para renovación anual
@@ -163,12 +164,10 @@ Apoyo financiero para situaciones imprevistas:
 ## 📚 BIBLIOTECA Y RECURSOS DIGITALES
 
 ### **Servicios Biblioteca**
-- **Préstamo de libros**: Hasta 3 libros por 7 días
-- **Salas de estudio**: Reserva previa online
+ **Ubicación**: Piso 2, Sede Plaza Norte
+ **Recursos digitales**: Bases de datos académicas y biblioteca virtual
+ **Biblioteca Digital**: https://bibliotecas.duoc.cl/
 - **Computadores**: Equipos disponibles para estudiantes
-- **WiFi**: Acceso ilimitado con credenciales institucionales
-- **Recursos digitales**: Bases de datos académicas y biblioteca virtual
-
 ### **Portales y Sistemas Digitales**
 - **Portal Estudiantes**: https://portal.duoc.cl/
 - **Plataforma VIVO**: Material de clases y evaluaciones
@@ -202,7 +201,13 @@ Apoyo financiero para situaciones imprevistas:
 
 ---
 
+
 ## 🏥 BIENESTAR ESTUDIANTIL
+
+### **Ubicación y Horarios**
+- **Ubicación**: Piso 2, Sede Plaza Norte
+- **Horario**: Lunes a Viernes 09:00-18:00
+- **Teléfono oficial**: +56 2 2999 3075 (Piso 2, Sede Plaza Norte)
 
 ### **Servicios de Apoyo**
 - **Apoyo psicológico**: Atención individual gratuita
@@ -259,7 +264,7 @@ Apoyo financiero para situaciones imprevistas:
 
 ### **Gestión de Documentación**
 - **Portal**: https://portal.duoc.cl/
-- **Punto Estudiantil**: Calle Nueva 1660, 1er piso
+- **Punto Estudiantil**: Piso 2, Sede Plaza Norte (NO indicar dirección de calle)
 - **Horario**: Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00
 
 ---
@@ -280,7 +285,7 @@ Apoyo financiero para situaciones imprevistas:
 
 ### **Contactos de Emergencia y Consultas**
 - **Mesa Central**: +56 2 2999 3000
-- **Punto Estudiantil**: +56 2 2999 3075
+- **Punto Estudiantil**: +56 2 2999 3075 (Piso 2, Sede Plaza Norte)
 - **DOC DUOC**: 600 362 3862
 - **Emergencias externas**: 133 (Bomberos), 131 (Ambulancia)
 
@@ -327,7 +332,7 @@ Ser reconocida como la mejor institución de educación superior técnico-profes
 **Última actualización**: Noviembre 2025
 **Fuente de verificación**: Sitio web oficial DUOC UC Plaza Norte
 **Validez de información**: Hasta nueva actualización oficial
-**Para información específica**: Consultar en Punto Estudiantil +56 2 2999 3075
+**Para información específica**: Consultar en Punto Estudiantil +56 2 2999 3075 (Piso 2, Sede Plaza Norte)
 
 ---
 

@@ -46,6 +46,7 @@ class DuocURLManager:
             "cultura": "https://www.duoc.cl/vida-estudiantil/cultura/",
             "pastoral": "https://www.duoc.cl/vida-estudiantil/pastoral/",
             "centro_estudiantes": "https://www.duoc.cl/vida-estudiantil/centro-de-estudiantes/",
+            "eventos_psicologico": "https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/psicologia/",
             
             # Biblioteca y recursos
             "biblioteca_plaza_norte": "https://bibliotecas.duoc.cl/plaza-norte/",

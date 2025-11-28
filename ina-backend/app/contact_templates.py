@@ -9,38 +9,37 @@ CONTACT_TEMPLATES = {
         'title': '📜 Certificado de Alumno Regular',
         'content': '''**📜 Certificado de Alumno Regular:**
 
-✅ **Solicitud online:**
-• Portal estudiantes: alumnos.duoc.cl
-• Sección "Certificados" → "Alumno Regular"
-• Descarga inmediata (GRATIS)
+    ✅ **Solicitud online:**
+    • Portal estudiantes: alumnos.duoc.cl
+    • Sección "Certificados" → "Alumno Regular"
+    • Descarga inmediata (GRATIS)
 
-🏢 **Solicitud presencial:**
-• Punto Estudiantil - Piso 1, Hall Central
-• Presentar cédula de identidad
-• Entrega inmediata
+    🏢 **Solicitud presencial:**
+    • Punto Estudiantil - Piso 2, Sede Plaza Norte
+    • Presentar cédula de identidad
+    • Entrega inmediata
 
-📞 **Consultas específicas:** +56 2 2596 5201
-🕒 **Horarios:** Lunes a Viernes 8:30-17:30''',
+    📞 **Consultas específicas:** +56 2 2999 3075
+    🕒 **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00''',
         'keywords': ['certificado', 'alumno regular', 'documento', 'constancia']
     },
     
     'tne_solicitud': {
         'title': '🎫 Tarjeta Nacional Estudiantil (TNE)',
-        'content': '''**🎫 Solicitud TNE 2024:**
+        'content': '''**🎫 Solicitud TNE 2025:**
 
-✅ **Requisitos:**
-• Ser estudiante regular matriculado
-• Cédula de identidad vigente
-• Fotografía tamaño carnet
+    ✅ **Requisitos:**
+    • Ser estudiante regular matriculado
+    • Cédula de identidad vigente
+    • Fotografía tamaño carnet
 
-🏢 **Proceso:**
-1. Completa formulario en tnechile.cl
-2. Paga $1.370 (tarifa 2024)
-3. Retira en Punto Estudiantil
+    🏢 **Proceso:**
+    1. Completa formulario en tnechile.cl
+    2. La TNE es GRATUITA para estudiantes regulares sin deudas (primera emisión)
+    3. Retira en Punto Estudiantil, Piso 2, Sede Plaza Norte
 
-📞 **Soporte TNE:** +56 2 2596 5201
-📍 **Retiro:** Piso 1, Punto Estudiantil
-🕒 **Horarios:** Lunes a Viernes 8:30-17:30''',
+    📞 **Soporte TNE:** +56 2 2999 3075
+    🕒 **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00''',
         'keywords': ['tne', 'tarjeta nacional estudiantil', 'pase escolar']
     },
     
@@ -57,9 +56,8 @@ CONTACT_TEMPLATES = {
 🌐 **Proceso online:** duoc.cl/admision
 📞 **Mesa Central:** +56 2 2999 3000
 📞 **Punto Estudiantil:** +56 2 2999 3075
-📞 **Contacto directo:** +56 2 2596 5202
-📍 **Oficina:** Piso 1, Oficina de Admisión
-🕒 **Horarios:** Lunes a Viernes 9:00-17:00''',
+📍 **Oficina:** Piso 2, Sede Plaza Norte
+🕒 **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00''',
         'keywords': ['admision', 'postular', 'requisitos', 'matricula']
     },
     
@@ -78,9 +76,9 @@ CONTACT_TEMPLATES = {
 2. Completa FUAS antes del 31 de enero
 3. Entrega documentación socioeconómica
 
-📞 **Asesoría financiera:** +56 2 2596 5203
-📍 **Ubicación:** Piso 1, junto a Admisión
-🕒 **Horarios:** Lunes a Viernes 9:00-17:00
+📞 **Asesoría financiera:** +56 2 2999 3075
+📍 **Ubicación:** Piso 2, Sede Plaza Norte
+🕒 **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00
 📧 **Email:** financiamiento.plazanorte@duoc.cl''',
         'keywords': ['financiamiento', 'becas', 'cae', 'gratuidad', 'pago', 'arancel']
     },
@@ -98,10 +96,9 @@ CONTACT_TEMPLATES = {
 🔍 **Catálogo online:** biblioteca.duoc.cl
 📖 **Recursos digitales:** Portal Académico
 
-📞 **Consultas bibliográficas:** +56 2 2596 5220
-📍 **Ubicación:** Piso 2, Biblioteca Central
-🕒 **Horarios:** Lunes a Viernes 8:00-21:00, Sábados 9:00-14:00
-📞 **Mesa Central:** +56 2 2999 3000''',
+📞 **Consultas:** +56 2 2999 3075 (Punto Estudiantil)
+📍 **Ubicación:** Piso 2, Sede Plaza Norte
+🕒 **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00''',
         'keywords': ['biblioteca', 'libros', 'estudio', 'recursos', 'sala']
     },
     
@@ -119,9 +116,9 @@ CONTACT_TEMPLATES = {
 2. Búsqueda de empresa (apoyo disponible)
 3. Convenio y supervisión académica
 
-📞 **Coordinación prácticas:** +56 2 2596 5250
-📍 **Oficina:** Piso 3, Oficina de Prácticas
-🕒 **Horarios:** Lunes a Viernes 9:00-17:00
+📞 **Coordinación prácticas:** +56 2 2999 3075
+📍 **Oficina:** Piso 2, Sede Plaza Norte
+🕒 **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00
 📧 **Email:** practicas.plazanorte@duoc.cl''',
         'keywords': ['practicas', 'profesional', 'empresa', 'laboral', 'trabajo']
     },
@@ -141,9 +138,9 @@ CONTACT_TEMPLATES = {
 • Fútbol | Martes y Jueves 17:00-18:30
 • Básquetbol | Viernes 16:00-17:30
 
-📞 **Coordinación deportes:** +56 2 2596 5270
-📍 **Ubicación:** Subterráneo, Gimnasio Principal
-🕒 **Horarios:** Lunes a Viernes 8:00-20:00, Sábados 9:00-13:00''',
+📞 **Coordinación deportes:** +56 2 2999 3075 (Punto Estudiantil)
+📍 **Ubicación:** Piso 2, Sede Plaza Norte, Gimnasio Principal
+🕒 **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00''',
         'keywords': ['deportes', 'gimnasio', 'ejercicio', 'talleres', 'futbol', 'basquet']
     },
     
@@ -162,9 +159,9 @@ CONTACT_TEMPLATES = {
 • Portal: alumnos.duoc.cl
 • Office 365: login con @duocuc.cl
 
-📞 **Mesa de ayuda:** +56 2 2596 5280
-📍 **Ubicación:** Piso 1, Mesa de Ayuda TI
-🕒 **Horarios:** Lunes a Viernes 8:30-17:30
+📞 **Mesa de ayuda:** +56 2 2999 3075 (Punto Estudiantil)
+📍 **Ubicación:** Piso 2, Sede Plaza Norte
+🕒 **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00
 💬 **Chat interno:** Portal estudiantes > Soporte''',
         'keywords': ['wifi', 'computador', 'sistema', 'plataforma', 'credenciales', 'acceso']
     },
@@ -185,7 +182,7 @@ CONTACT_TEMPLATES = {
 
 📞 **Información general:** +56 2 2999 3000
 📞 **Punto Estudiantil:** +56 2 2999 3075
-🕒 **Horarios sede:** Lunes a Viernes 7:30-22:00, Sábados 8:00-16:00''',
+🕒 **Horarios sede:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00''',
         'keywords': ['sede', 'plaza norte', 'ubicacion', 'direccion', 'como llegar', 'metro']
     }
 }
@@ -208,14 +205,14 @@ def get_template_by_keywords(query: str) -> dict:
 def get_all_contact_phones() -> dict:
     """Obtener todos los números de contacto por área"""
     phones = {
-        'general': '+56 2 2596 5200',
-        'punto_estudiantil': '+56 2 2596 5201',
-        'admision': '+56 2 2596 5202', 
-        'financiamiento': '+56 2 2596 5203',
-        'biblioteca': '+56 2 2596 5220',
-        'practicas': '+56 2 2596 5250',
-        'deportes': '+56 2 2596 5270',
-        'soporte_ti': '+56 2 2596 5280'
+        'general': '+56 2 2999 3000',
+        'punto_estudiantil': '+56 2 2999 3075',
+        'admision': '+56 2 2999 3075', 
+        'financiamiento': '+56 2 2999 3075',
+        'biblioteca': '+56 2 2999 3075',
+        'practicas': '+56 2 2999 3075',
+        'deportes': '+56 2 2999 3075',
+        'soporte_ti': '+56 2 2999 3075'
     }
     return phones
 
@@ -224,4 +221,6 @@ def get_general_location_info() -> str:
     return """📍 **Duoc UC Plaza Norte:**
 • Av. Américo Vespucio Norte 1630, Huechuraba
 • Metro Línea 2: Estación Vespucio Norte
-• 📞 Mesa de información: +56 2 2596 5200"""
+• 📍 Piso 2, Sede Plaza Norte
+• 📞 Punto Estudiantil: +56 2 2999 3075
+• 📞 Mesa Central: +56 2 2999 3000"""

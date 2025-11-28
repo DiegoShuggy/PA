@@ -296,7 +296,7 @@ class EnhancedRAGSystem:
             category = response.get('category', 'general')
             if category in ['tne', 'certificado', 'bienestar']:
                 if 'contacto' not in enhanced_text.lower():
-                    enhanced_text += "\n\n📞 Para más información, visita el Punto Estudiantil."
+                    enhanced_text += "\n\n📞 Para más información, acude al Punto Estudiantil, Piso 2, Sede Plaza Norte. Teléfono oficial: +56 2 2999 3075."
             
             # 4. Mejorar legibilidad
             if enhanced_text.count('.') > 5:  # Respuesta compleja

@@ -30,17 +30,17 @@ class StationaryAIDerivationManager:
             "finanzas": {
                 "keywords": ["pago", "arancel", "beca", "financiamiento", "deuda", "cuota", "dinero"],
                 "office": "Oficina de Finanzas",
-                "location": "Piso 2, sector administrativo Plaza Norte",
+                "location": "Piso 2, Sede Plaza Norte",
                 "hours": "Lunes a Viernes 8:30-17:30",
                 "resources": ["Portal de Pagos DUOC", "Solicitud de Becas Online"],
-                "contact": "Tel: +56 2 2596 5000",
+                "contact": "Tel: +56 2 2999 3000",
                 "urgent": False
             },
             "biblioteca": {
                 "keywords": ["libro", "reserva biblioteca", "sala estudio", "catálogo", "préstamo", "renovar libro"],
                 "office": "Biblioteca Plaza Norte",
-                "location": "Piso 1, ala este",
-                "hours": "Lunes a Viernes 8:00-21:00, Sábado 9:00-14:00",
+                "location": "Piso 2, Sede Plaza Norte",
+                "hours": "Lunes a Viernes 08:00-21:00, Sábados 09:00-14:00",
                 "resources": ["Catálogo Digital", "Reserva de Salas Online"],
                 "contact": "biblioteca.plazanorte@duoc.cl",
                 "urgent": False
@@ -48,19 +48,19 @@ class StationaryAIDerivationManager:
             "salud_mental": {
                 "keywords": ["psicólogo", "ansiedad", "depresión", "estrés", "crisis", "ayuda emocional"],
                 "office": "Unidad de Bienestar Estudiantil",
-                "location": "Piso 1, sector bienestar",
-                "hours": "Lunes a Viernes 8:30-17:00",
+                "location": "Piso 2, Sede Plaza Norte",
+                "hours": "Lunes a Viernes 09:00-18:00",
                 "resources": ["Agendamiento Online Psicología"],
-                "contact": "Tel: +56 2 2596 5100",
+                "contact": "Tel: +56 2 2999 3075",
                 "urgent": True
             },
             "enfermeria": {
                 "keywords": ["médico", "enfermería", "accidente", "medicamento", "primeros auxilios"],
                 "office": "Enfermería Plaza Norte",
-                "location": "Piso 1, cerca de acceso principal",
-                "hours": "Lunes a Viernes 8:00-20:00",
+                "location": "Piso 2, Sede Plaza Norte",
+                "hours": "Lunes a Viernes 08:00-20:00",
                 "resources": ["Atención de Urgencias"],
-                "contact": "Tel: +56 2 2596 5150",
+                "contact": "Tel: +56 2 2999 3000",
                 "urgent": True
             },
             "registro_academico": {
@@ -85,19 +85,19 @@ class StationaryAIDerivationManager:
                 "keywords": ["carrera", "programa", "ingeniería", "técnico", "plan de estudios", "perfil egreso", 
                             "campo laboral", "asignaturas", "especialización", "duración carrera"],
                 "office": "Dirección de Carrera / Admisión",
-                "location": "Piso 2, sector académico Plaza Norte",
-                "hours": "Lunes a Viernes 9:00-18:00",
+                "location": "Piso 2, Sede Plaza Norte",
+                "hours": "Lunes a Viernes 09:00-18:00",
                 "resources": ["Portal de Carreras DUOC", "Orientación Vocacional"],
-                "contact": "admision.plazanorte@duoc.cl / Tel: +56 2 2596 5300",
+                "contact": "admision.plazanorte@duoc.cl / Tel: +56 2 2999 3000",
                 "urgent": False
             },
             "matricula_admision": {
                 "keywords": ["matrícula", "inscripción", "postulación", "admisión", "vacantes", "requisitos ingreso"],
                 "office": "Oficina de Admisión y Matrícula",
-                "location": "Piso 1, hall principal Plaza Norte",
-                "hours": "Lunes a Viernes 8:30-19:00",
+                "location": "Piso 2, Sede Plaza Norte",
+                "hours": "Lunes a Viernes 08:30-22:30",
                 "resources": ["Portal de Admisión", "Matrícula Online"],
-                "contact": "admision@duoc.cl / Tel: +56 2 2596 5200",
+                "contact": "admision@duoc.cl / Tel: +56 2 2999 3075",
                 "urgent": False
             }
         }
@@ -214,10 +214,10 @@ class StationaryAIDerivationManager:
         response = (
             "🚨 **EMERGENCIA DETECTADA**\n\n"
             "Para situaciones urgentes:\n\n"
-            "🆘 **Emergencia médica**: Enfermería (Piso 1, acceso principal)\n"
-            "📞 **Tel. Emergencia**: +56 2 2596 5150\n"
-            "🧠 **Crisis emocional**: Bienestar Estudiantil (Piso 1)\n"
-            "📞 **Tel. Bienestar**: +56 2 2596 5100\n\n"
+            "🆘 **Emergencia médica**: Enfermería (Piso 2, Sede Plaza Norte)\n"
+            "📞 **Tel. Emergencia**: +56 2 2999 3000\n"
+            "🧠 **Crisis emocional**: Bienestar Estudiantil (Piso 2)\n"
+            "📞 **Tel. Bienestar**: +56 2 2999 3075\n\n"
             "Si es una emergencia grave, también contacta al **133** (ambulancia)"
         )
         

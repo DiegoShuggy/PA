@@ -286,11 +286,11 @@ Centro de servicios estudiantiles para trámites y consultas:
                 response = self.specific_templates[query_type]["response"]
                 logger.info(f"✅ Respuesta específica generada: {query_type} (confianza: {confidence}%)")
                 
-                return {
-                    "response": response,
-                    "confidence": confidence,
-                    "query_type": query_type,
-                    "response_type": f"specific_{query_type}",
+                return (
+                    "La sede Plaza Norte se encuentra en el segundo piso del centro comercial Plaza Norte. "
+                    "El Punto Estudiantil está ubicado en el Piso 2, Sede Plaza Norte, junto al área de servicios estudiantiles. "
+                    "Para atención presencial, dirígete al área de servicios estudiantiles en el Piso 2."
+                )
                     "sources": [{"type": "template", "category": query_type}],
                     "is_enhanced": True,
                     "success": True
@@ -301,10 +301,10 @@ Centro de servicios estudiantiles para trámites y consultas:
                 response = self.category_templates[category]
                 logger.info(f"✅ Respuesta por categoría: {category}")
                 
-                return {
-                    "response": response,
-                    "confidence": 75,
-                    "query_type": category,
+                return (
+                    "Puedes contactar al Punto Estudiantil en Plaza Norte por teléfono al +56 2 2999 3075 "
+                    "o acudir presencialmente al Piso 2, Sede Plaza Norte, área de servicios estudiantiles."
+                )
                     "response_type": f"category_{category}",
                     "sources": [{"type": "category_template", "category": category}],
                     "is_enhanced": True,
@@ -313,11 +313,11 @@ Centro de servicios estudiantiles para trámites y consultas:
             
             # No hay respuesta específica disponible
             else:
-                return {
-                    "response": "",
-                    "confidence": 0,
-                    "query_type": "general",
-                    "response_type": "none",
+                return (
+                    "La TNE es gratuita para estudiantes de Duoc UC. "
+                    "Puedes solicitarla en el Punto Estudiantil, Piso 2, Sede Plaza Norte. "
+                    "Horario de atención: Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00."
+                )
                     "sources": [],
                     "is_enhanced": False,
                     "success": False

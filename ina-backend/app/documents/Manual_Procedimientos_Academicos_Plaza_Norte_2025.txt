@@ -93,7 +93,7 @@
 ### DOCUMENTOS PRESENCIALES
 
 #### Oficina de Títulos y Certificados - Plaza Norte:
-- **Ubicación**: Primer piso, oficina 101
+- **Ubicación**: Piso 2, oficina 201, Sede Plaza Norte
 - **Horarios**: Lunes a Viernes 9:00-17:00, Sábados 9:00-12:00
 - **Teléfono directo**: (+56) 2 2585 6992
 
@@ -522,19 +522,19 @@
 ### OFICINAS DE ATENCIÓN - PLAZA NORTE
 
 #### Secretaría Académica:
-- **Ubicación**: Primer piso, oficina 105
+- **Ubicación**: Piso 2, oficina 205, Sede Plaza Norte
 - **Horarios**: Lunes a Viernes 8:30-18:00, Sábados 9:00-12:00
 - **Teléfono**: (+56) 2 2585 6991
 - **Email**: secretaria.plazanorte@duoc.cl
 
 #### Admisión:
-- **Ubicación**: Primer piso, hall principal
+- **Ubicación**: Piso 2, hall principal, Sede Plaza Norte
 - **Horarios**: Lunes a Viernes 9:00-19:00, Sábados 9:00-15:00
-- **Teléfonos**: (+56) 2 2999 3000 / (+56) 2 2999 3075
+- **Teléfonos**: (+56) 2 2999 3000 / (+56) 2 2999 3075 (Piso 2, Sede Plaza Norte)
 - **Email**: admision.plazanorte@duoc.cl
 
 #### Administración y Finanzas:
-- **Ubicación**: Primer piso, oficina 103
+- **Ubicación**: Piso 2, oficina 203, Sede Plaza Norte
 - **Horarios**: Lunes a Viernes 9:00-17:00
 - **Teléfono**: (+56) 2 2585 6993
 - **Email**: finanzas.plazanorte@duoc.cl

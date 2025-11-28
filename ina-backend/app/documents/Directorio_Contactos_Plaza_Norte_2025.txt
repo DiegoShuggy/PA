@@ -42,7 +42,7 @@
 ## 🎓 **SERVICIOS ESTUDIANTILES**
 
 ### **Punto Estudiantil**
-📍 **Ubicación**: Edificio Central, 1er Piso
+📍 **Ubicación**: Piso 2, Sede Plaza Norte
 📞 **Teléfono**: +56 2 2354 8100
 📧 **Email**: puntoestudiantil.plazanorte@duoc.cl
 ⏰ **Horario**: Lunes a Viernes 8:30 - 19:00
@@ -108,7 +108,7 @@
 ## 🏥 **SERVICIOS DE SALUD**
 
 ### **Enfermería**
-📍 **Ubicación**: Edificio Central, 1er Piso
+📍 **Ubicación**: Piso 2, Sede Plaza Norte
 📞 **Teléfono**: +56 2 2354 8500
 👩‍⚕️ **Enfermera**: [Nombre]
 ⏰ **Horario**: Lunes a Viernes 8:00 - 18:00
@@ -116,7 +116,7 @@
 ## 🍽️ **SERVICIOS ALIMENTARIOS**
 
 ### **Casino/Cafetería**
-📍 **Ubicación**: Edificio Central, 1er Piso  
+📍 **Ubicación**: Piso 2, Sede Plaza Norte  
 📞 **Teléfono**: +56 2 2354 8600
 ⏰ **Horario**: Lunes a Viernes 7:30 - 19:00
 
