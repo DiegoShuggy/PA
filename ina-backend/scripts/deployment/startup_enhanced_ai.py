@@ -11,8 +11,8 @@ import signal
 import sys
 from pathlib import Path
 
-# Agregar directorio actual al path
-sys.path.insert(0, str(Path(__file__).parent))
+# Agregar directorio raíz al path (3 niveles arriba desde scripts/deployment/)
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 try:
     from integrated_ai_system import IntegratedAISystem

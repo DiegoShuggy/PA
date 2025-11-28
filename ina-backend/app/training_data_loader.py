@@ -388,11 +388,15 @@ class TrainingDataLoader:
                 self._load_corrected_base_knowledge()
                 self.base_knowledge_loaded = True
 
-            # OPTIMIZACIÓN: Cargar documentos Word solo si existen y es primera carga
+            # OPTIMIZACIÓN: Cargar documentos TXT/DOCX solo si existen y es primera carga
             if not self.word_documents_loaded and os.path.exists(self.documents_path):
-                doc_count = len([f for f in os.listdir(self.documents_path) if f.endswith('.docx')])
-                if doc_count > 0:
-                    logger.info(f"📄 Cargando {doc_count} documentos Word...")
+                # Contar archivos TXT y DOCX
+                txt_count = len([f for f in os.listdir(self.documents_path) if f.endswith('.txt')])
+                docx_count = len([f for f in os.listdir(self.documents_path) if f.endswith('.docx')])
+                total_docs = txt_count + docx_count
+                
+                if total_docs > 0:
+                    logger.info(f"📄 Cargando {txt_count} TXT + {docx_count} DOCX = {total_docs} documentos...")
                     self._load_documents()
                 self.word_documents_loaded = True
 
@@ -450,36 +454,54 @@ class TrainingDataLoader:
         pdf_files = glob.glob(os.path.join(self.documents_path, "*.pdf"))
         
         total_files = len(docx_files) + len(txt_files) + len(pdf_files)
+        print(f"\n📂 CARGANDO DOCUMENTOS:")
+        print(f"   DOCX: {len(docx_files)} archivos")
+        print(f"   TXT:  {len(txt_files)} archivos")
+        print(f"   PDF:  {len(pdf_files)} archivos")
+        print(f"   TOTAL: {total_files} archivos\n")
         logger.info(f"Documentos encontrados: {len(docx_files)} DOCX, {len(txt_files)} TXT, {len(pdf_files)} PDF")
         
         total_processed = 0
+        total_chunks_added = 0
 
         # Procesar archivos DOCX
         if docx_files and DOCX_AVAILABLE:
+            print(f"🔄 Procesando {len(docx_files)} documentos DOCX...")
             logger.info("Procesando documentos Word...")
             for path in docx_files:
-                processed = self._process_single_document(path, 'docx')
-                total_processed += processed
+                chunks_added = self._process_single_document(path, 'docx')
+                total_processed += 1
+                total_chunks_added += chunks_added
+                print(f"   ✅ {os.path.basename(path)}: {chunks_added} chunks")
         elif docx_files and not DOCX_AVAILABLE:
             logger.error("Archivos .docx encontrados pero python-docx no está instalado")
 
         # Procesar archivos TXT
         if txt_files:
+            print(f"\n🔄 Procesando {len(txt_files)} documentos TXT...")
             logger.info("Procesando documentos TXT...")
-            for path in txt_files:
-                processed = self._process_single_document(path, 'txt')
-                total_processed += processed
+            for idx, path in enumerate(txt_files, 1):
+                chunks_added = self._process_single_document(path, 'txt')
+                total_processed += 1
+                total_chunks_added += chunks_added
+                print(f"   [{idx}/{len(txt_files)}] {os.path.basename(path)}: {chunks_added} chunks")
 
         # Procesar archivos PDF
         if pdf_files and PDF_AVAILABLE:
+            print(f"\n🔄 Procesando {len(pdf_files)} documentos PDF...")
             logger.info("Procesando documentos PDF...")
             for path in pdf_files:
-                processed = self._process_single_document(path, 'pdf')
-                total_processed += processed
+                chunks_added = self._process_single_document(path, 'pdf')
+                total_processed += 1
+                total_chunks_added += chunks_added
+                print(f"   ✅ {os.path.basename(path)}: {chunks_added} chunks")
         elif pdf_files and not PDF_AVAILABLE:
             logger.error("Archivos .pdf encontrados pero pdfplumber no está instalado")
 
-        logger.info(f"TOTAL DOCUMENTOS PROCESADOS: {total_processed} de {total_files} archivos")
+        print(f"\n✅ CARGA COMPLETADA:")
+        print(f"   Archivos procesados: {total_processed}/{total_files}")
+        print(f"   Chunks agregados: {total_chunks_added}\n")
+        logger.info(f"TOTAL: {total_processed} archivos procesados, {total_chunks_added} chunks agregados")
         self.word_documents_loaded = True
     
     def _process_single_document(self, file_path: str, file_type: str) -> int:

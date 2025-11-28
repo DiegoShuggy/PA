@@ -7,8 +7,8 @@ import sys
 import os
 from pathlib import Path
 
-# Agregar el directorio del proyecto al path
-sys.path.insert(0, str(Path(__file__).parent))
+# Agregar el directorio del proyecto al path (3 niveles arriba desde scripts/testing/)
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from app.web_ingest import add_url_to_rag, categorize_url
 from app.qr_generator import DuocURLManager

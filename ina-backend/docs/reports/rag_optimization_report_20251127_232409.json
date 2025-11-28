@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-11-27T23:24:05.670054",
+  "checks": {
+    "chromadb": "error",
+    "faqs": {
+      "status": "insufficient",
+      "count": 6,
+      "recommended": 50
+    }
+  },
+  "optimizations": {},
+  "recommendations": [
+    {
+      "priority": "medium",
+      "action": "Expandir FAQs de 6 a 50+ preguntas"
+    }
+  ]
+}

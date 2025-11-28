@@ -392,7 +392,7 @@ async def on_startup():
     # OPTIMIZACIÓN: NO hacer ingesta automática en startup (ralentiza mucho)
     # En su lugar, mostrar mensaje informativo
     try:
-        urls_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'urls.txt'))
+        urls_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'urls', 'urls.txt'))
         if os.path.exists(urls_path):
             try:
                 with open(urls_path, 'r', encoding='utf-8') as f:
