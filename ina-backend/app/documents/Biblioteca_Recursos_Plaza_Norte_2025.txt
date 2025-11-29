@@ -23,12 +23,62 @@
 ✅ **Impresión y fotocopiado** (autoservicio)
 ✅ **Apoyo en investigación** y búsqueda bibliográfica
 
+## 🖨️ IMPRESIÓN Y FOTOCOPIADO DE DOCUMENTOS
+
+### ¿Cómo imprimir y fotocopiar documentos en Plaza Norte?
+1. Dirígete a la Biblioteca Central (Piso 2, Sede Plaza Norte).
+2. Utiliza las máquinas de autoservicio de impresión y fotocopiado disponibles.
+3. Ingresa tus credenciales institucionales en el sistema de impresión.
+4. Selecciona el archivo desde tu pendrive, correo institucional o equipo de la biblioteca.
+5. Realiza el pago en la caja de la biblioteca o mediante el sistema de recarga.
+6. Retira tus documentos impresos o fotocopiados.
+
+💰 **Costos aproximados:**
+• Impresión blanco y negro: $50 por página
+• Impresión color: $150 por página
+• Fotocopia: $50 por página
+
+📍 **Ubicación:** Biblioteca Central, Piso 2, Sede Plaza Norte
+📞 **Contacto:** +56 2 2354 8300
+📧 **Email:** biblioteca.plazanorte@duoc.cl
+🕒 **Horario:** Lunes a Viernes 8:00-21:00, Sábados 8:00-13:00
+
 ## 💻 **RECURSOS DIGITALES**
 
 ### **Plataforma Digital**
 🌐 **Portal**: https://bibliotecas.duoc.cl/recursos-digitales/
 👤 **Acceso**: Con credenciales institucionales
 ⏰ **Disponibilidad**: 24/7
+
+## 🌐 PLATAFORMAS ACADÉMICAS Y RECURSOS DIGITALES
+
+### ¿Cómo acceder a las principales plataformas institucionales?
+
+1. **AVA Blackboard Duoc UC**
+	• Acceso: https://ava.duoc.cl
+	• Plataforma oficial de Duoc UC para cursos, materiales, tareas y comunicación académica.
+	• Ingresa con tu RUT y clave institucional.
+
+2. **Biblioteca Digital Duoc UC**
+	• Acceso: https://bibliotecas.duoc.cl/plaza-norte/
+	• Consulta libros, bases de datos, recursos digitales y tutoriales.
+
+3. **CVA (Campus Virtual de Aprendizaje)**
+	• Acceso: https://cva.duoc.cl
+	• Cursos online, recursos multimedia y autoevaluaciones.
+
+4. **Office 365 Institucional**
+	• Acceso: https://portal.office.com
+	• Herramientas de productividad (Word, Excel, PowerPoint, Teams, OneDrive).
+	• Ingresa con tu correo institucional (@duocuc.cl).
+
+5. **Otros recursos**
+	• LinkedIn Learning, Pearson MyLab, Google Scholar, JSTOR, Statista, etc.
+	• Acceso desde la biblioteca digital o portal de alumnos.
+
+📞 **Soporte y consultas Plaza Norte:**
+• Biblioteca: +56 2 2354 8300 | biblioteca.plazanorte@duoc.cl
+• Soporte TI: +56 2 2999 3075 | soporte.ti@duoc.cl
 
 ### **Bases de Datos Disponibles**
 📊 **Business Source Complete**: Base de datos de negocios

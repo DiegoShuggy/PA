@@ -280,49 +280,49 @@ Centro de servicios estudiantiles para trámites y consultas:
         try:
             # Detectar tipo específico de consulta
             query_type, confidence = self.detect_query_type(query)
-            
+
             # Si tenemos un template específico, úsalo
             if query_type in self.specific_templates:
-                response = self.specific_templates[query_type]["response"]
-                logger.info(f"✅ Respuesta específica generada: {query_type} (confianza: {confidence}%)")
-                
-                return (
+                response_text = (
                     "La sede Plaza Norte se encuentra en el segundo piso del centro comercial Plaza Norte. "
                     "El Punto Estudiantil está ubicado en el Piso 2, Sede Plaza Norte, junto al área de servicios estudiantiles. "
                     "Para atención presencial, dirígete al área de servicios estudiantiles en el Piso 2."
                 )
+                return {
+                    "response": response_text,
                     "sources": [{"type": "template", "category": query_type}],
                     "is_enhanced": True,
                     "success": True
                 }
-            
+
             # Si tenemos template de categoría
             elif category in self.category_templates:
-                response = self.category_templates[category]
-                logger.info(f"✅ Respuesta por categoría: {category}")
-                
-                return (
+                response_text = (
                     "Puedes contactar al Punto Estudiantil en Plaza Norte por teléfono al +56 2 2999 3075 "
                     "o acudir presencialmente al Piso 2, Sede Plaza Norte, área de servicios estudiantiles."
                 )
+                return {
+                    "response": response_text,
                     "response_type": f"category_{category}",
                     "sources": [{"type": "category_template", "category": category}],
                     "is_enhanced": True,
                     "success": True
                 }
-            
+
             # No hay respuesta específica disponible
             else:
-                return (
+                response_text = (
                     "La TNE es gratuita para estudiantes de Duoc UC. "
                     "Puedes solicitarla en el Punto Estudiantil, Piso 2, Sede Plaza Norte. "
                     "Horario de atención: Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00."
                 )
+                return {
+                    "response": response_text,
                     "sources": [],
                     "is_enhanced": False,
                     "success": False
                 }
-                
+
         except Exception as e:
             logger.error(f"Error generando respuesta mejorada: {e}")
             return {

@@ -26,10 +26,16 @@ Todos los estudiantes de Duoc UC pueden acceder gratuitamente a los siguientes a
 ## 🩺 **APOYO PSICOLÓGICO ESPECIALIZADO**
 
 ### **¿Cómo acceder al apoyo psicológico?**
-1. **Presencial**: Solicitar hora en Punto Estudiantil
-2. **Online**: A través de portal estudiante
-3. **Urgencia**: Línea OPS 24/7: +56 2 2820 3450
-4. **Email**: bienestar.plazanorte@duoc.cl
+1. **Presencial:** Solicita hora directamente en el Punto Estudiantil (Piso 2, Sede Plaza Norte). Lleva tu cédula de identidad.
+2. **Online:** Ingresa al portal de estudiantes (alumnos.duoc.cl), sección Bienestar, y completa el formulario de solicitud de apoyo psicológico.
+3. **Urgencia:** Si necesitas atención inmediata, llama a la Línea OPS 24/7: +56 2 2820 3450 (atención confidencial y sin agenda previa).
+4. **Email:** bienestar.plazanorte@duoc.cl para consultas generales o seguimiento de casos.
+
+📞 **Contacto oficial Plaza Norte:**
+• Punto Estudiantil: +56 2 2999 3075
+• Línea OPS 24/7: +56 2 2820 3450
+• Email: bienestar.plazanorte@duoc.cl
+• Horario atención presencial: Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00
 
 ### **¿Qué tipo de atención psicológica ofrecen?**
 - **Individual**: Sesiones personalizadas (45-50 minutos)
