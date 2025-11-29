@@ -109,7 +109,7 @@ function NavBar() {
                     </div>
 
                     <header className="app-header">
-                        <p>{t('navbar.poweredBy')}</p>
+                        
                         <h1>{t('navbar.InA')}</h1>
                     </header>
 
