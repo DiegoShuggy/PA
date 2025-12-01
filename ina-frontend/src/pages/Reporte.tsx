@@ -34,68 +34,6 @@ const Reporte = () => {
         { value: 21, label: '3 Semanas' },
         { value: 30, label: '1 Mes' }
     ];
-
-    // Función para manejar el clic en la imagen
-    const handleImageClick = () => {
-        const newCount = clickCount + 1;
-        setClickCount(newCount);
-        
-        console.log(`Clic número: ${newCount}`); // Para debugging
-        
-        // Si llega a 5 clics, mostrar video y resetear contador
-        if (newCount === 5) {
-            playVideo();
-            setClickCount(0);
-            
-            // Opcional: Mostrar mensaje de éxito
-            setSuccess('🎉 ¡Easter egg activado! Video reproducido.');
-            
-            // Limpiar mensaje después de 3 segundos
-            setTimeout(() => {
-                setSuccess('');
-            }, 3000);
-        }
-        
-        // Resetear contador después de 2 segundos si no se completan los 5 clics
-        if (newCount === 1) {
-            setTimeout(() => {
-                if (clickCount + 1 === newCount) { // Verificar que no haya más clics
-                    setClickCount(0);
-                    console.log('Contador reseteado por tiempo'); // Para debugging
-                }
-            }, 2000);
-        }
-    };
-
-    // Función para reproducir el video
-    const playVideo = () => {
-        setShowVideo(true);
-        
-        // Reproducir el video después de un pequeño delay para asegurar que se montó
-        setTimeout(() => {
-            if (videoRef.current) {
-                videoRef.current.currentTime = 0; // Reiniciar el video
-                videoRef.current.play().catch(error => {
-                    console.error('Error reproduciendo video:', error);
-                });
-            }
-        }, 100);
-    };
-
-    // Función para cerrar el video
-    const closeVideo = () => {
-        if (videoRef.current) {
-            videoRef.current.pause();
-            videoRef.current.currentTime = 0;
-        }
-        setShowVideo(false);
-    };
-
-    // Función cuando el video termina
-    const handleVideoEnd = () => {
-        setShowVideo(false);
-    };
-
     // Función para generar reporte
     const generateReport = async () => {
         setIsGenerating(true);
@@ -204,45 +142,12 @@ const Reporte = () => {
 
     return (
         <div className="reporte-container">
-            {/* Modal de video */}
-            {showVideo && (
-                <div className="video-modal-overlay" onClick={closeVideo}>
-                    <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="video-close-button" onClick={closeVideo}>
-                            ×
-                        </button>
-                        <video
-                            ref={videoRef}
-                            controls
-                            autoPlay
-                            onEnded={handleVideoEnd}
-                            className="easter-egg-video"
-                        >
-                            <source src={videoEffect} type="video/mp4" />
-                            Tu navegador no soporta el elemento de video.
-                        </video>
-                        <p className="video-caption">🎉 ¡Easter egg desbloqueado!</p>
-                    </div>
-                </div>
-            )}
-
             {/* Header con botones de navegación */}
             <div className="reporte-header">
                 <button className="back-button" onClick={handleGoBack}>
                     <span className="back-arrow">←</span>
                     {t('app.back')}
                 </button>
-                
-                <div className="navbar-brand">
-                    <img 
-                        src={ina} 
-                        alt="Logo InA" 
-                        className="navbar-logo"
-                        onClick={handleImageClick}
-                        style={{ cursor: 'pointer' }}
-                        title="Haz clic 5 veces para un easter egg"
-                    />
-                </div>
             </div>
 
             {/* Contenido principal */}
