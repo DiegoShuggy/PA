@@ -134,18 +134,6 @@ function NavBar() {
             {showModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        {/* Grid de imágenes de fondo */}
-                        <div className="modal-background-grid">
-                            <div className="grid-image"></div>
-                            <div className="grid-image"></div>
-                            <div className="grid-image"></div>
-                            <div className="grid-image"></div>
-                            <div className="grid-image"></div>
-                            <div className="grid-image"></div>
-                            <div className="grid-image"></div>
-                            <div className="grid-image"></div>
-                            <div className="grid-image"></div>
-                        </div>
 
                         <div className="modal-title">
                             <div className="Acceso">
