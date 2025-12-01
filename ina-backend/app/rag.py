@@ -43,6 +43,18 @@ except Exception as e:
     RESPONSE_ENHANCER_AVAILABLE = False
     logging.error(f"❌ Error cargando mejoras de respuesta: {e}")
 
+# NUEVO: Importar optimizador inteligente de respuestas
+try:
+    from app.intelligent_response_optimizer import intelligent_optimizer, optimize_rag_response
+    INTELLIGENT_OPTIMIZER_AVAILABLE = True
+    logging.info("✅ Optimizador inteligente cargado correctamente")
+except ImportError as e:
+    INTELLIGENT_OPTIMIZER_AVAILABLE = False
+    logging.warning(f"⚠️ Optimizador inteligente no disponible: {e}")
+except Exception as e:
+    INTELLIGENT_OPTIMIZER_AVAILABLE = False
+    logging.error(f"❌ Error cargando optimizador inteligente: {e}")
+
 logger = logging.getLogger(__name__)
 
 # FUNCIÓN AUXILIAR PARA MEJORAR RESPUESTAS
@@ -278,9 +290,21 @@ class RAGEngine:
             self.client = chromadb.Client()
             logger.warning("⚠️ Usando ChromaDB en memoria como fallback")
 
-        self.collection = self.client.get_or_create_collection(
-            name="duoc_knowledge"
-        )
+        try:
+            self.collection = self.client.get_or_create_collection(
+                name="duoc_knowledge"
+            )
+            # Verificar que la colección se creó correctamente
+            if not hasattr(self.collection, 'count'):
+                raise Exception("Colección inválida - no tiene método count()")
+            logger.info(f"✅ Colección 'duoc_knowledge' inicializada correctamente")
+        except Exception as e:
+            logger.error(f"❌ Error creando colección: {e}")
+            # Reintentar con cliente nuevo en memoria
+            import chromadb
+            self.client = chromadb.Client()
+            self.collection = self.client.get_or_create_collection(name="duoc_knowledge")
+            logger.warning("⚠️ Usando colección en memoria como último recurso")
 
         # CLASIFICADOR DE TEMAS MEJORADO
         self.topic_classifier = EnhancedTopicClassifier()
@@ -1331,7 +1355,7 @@ Puedo ayudarte con:*
         return "Consulta en Punto Estudiantil para información específica sobre este tema."
 
     def _process_with_ollama_optimized(self, query: str, sources: List[Dict]) -> Dict:
-        """VERSIÓN OPTIMIZADA PARA EQUIPO FINAL"""
+        """VERSIÓN OPTIMIZADA PARA EQUIPO FINAL CON OPTIMIZADOR INTELIGENTE"""
         try:
             limited_sources = sources[:2]
             
@@ -1357,17 +1381,50 @@ Puedo ayudarte con:*
                 }
             )
             
-            # PROCESAR RESPUESTA SIN MODIFICACIONES ADICIONALES
+            # PROCESAR RESPUESTA CON OPTIMIZADOR INTELIGENTE
             raw_response = response['message']['content'].strip()
-            # NO usar enhance_final_response aquí para evitar modificaciones
             
+            # APLICAR OPTIMIZACIÓN INTELIGENTE si está disponible
+            if INTELLIGENT_OPTIMIZER_AVAILABLE:
+                try:
+                    category = sources[0]['metadata'].get('category', 'general') if sources else 'general'
+                    optimization_result = optimize_rag_response(
+                        raw_response, 
+                        query, 
+                        category,
+                        sources=limited_sources
+                    )
+                    
+                    if optimization_result.get('success'):
+                        optimized_response = optimization_result['optimized_response']
+                        logger.info(f"✅ Respuesta optimizada: {optimization_result['original_length']} → "
+                                  f"{optimization_result['optimized_length']} chars "
+                                  f"(calidad: {optimization_result['quality_score']}/100)")
+                        
+                        return {
+                            'response': optimized_response,
+                            'sources': [{
+                                'content': source['document'][:80] + '...',
+                                'category': source['metadata'].get('category', 'general'),
+                                'similarity': round(source.get('similarity', 0.5), 3)
+                            } for source in limited_sources],
+                            'optimization_applied': True,
+                            'quality_score': optimization_result['quality_score']
+                        }
+                except Exception as opt_error:
+                    logger.warning(f"⚠️ Error en optimización, usando respuesta original: {opt_error}")
+                    # Fallback a respuesta original
+                    pass
+            
+            # Fallback: retornar respuesta sin optimización
             return {
                 'response': raw_response,
                 'sources': [{
                     'content': source['document'][:80] + '...',
                     'category': source['metadata'].get('category', 'general'),
                     'similarity': round(source.get('similarity', 0.5), 3)
-                } for source in limited_sources]
+                } for source in limited_sources],
+                'optimization_applied': False
             }
             
         except Exception as e:
@@ -1454,6 +1511,12 @@ No entiendo completamente '{original_query}'.
                     'type': 'general'
                 })
 
+            # Verificar que la colección es válida antes de agregar
+            if not hasattr(self.collection, 'add'):
+                logger.error("Colección inválida - no tiene método add()")
+                self.metrics['errors'] += 1
+                return False
+
             self.collection.add(
                 documents=[document],
                 metadatas=[enhanced_metadata],
@@ -1465,6 +1528,7 @@ No entiendo completamente '{original_query}'.
             
         except Exception as e:
             logger.error(f"Error añadiendo documento: {e}")
+            logger.debug(f"Tipo de colección: {type(self.collection)}, Tiene add: {hasattr(self.collection, 'add')}")
             self.metrics['errors'] += 1
             return False
 

@@ -58,21 +58,70 @@ def safe_chromadb_init():
         # Inicializar ChromaDB con configuración básica y segura
         import chromadb
         
-        # OPTIMIZACIÓN: Crear cliente sin verificaciones extras
-        client = chromadb.PersistentClient(
-            path="./chroma_db",
-            settings=chromadb.config.Settings(
-                anonymized_telemetry=False,
-                allow_reset=False  # No permitir reset accidental
+        # Intentar inicializar con persistencia
+        try:
+            # OPTIMIZACIÓN: Crear cliente sin verificaciones extras
+            client = chromadb.PersistentClient(
+                path="./chroma_db",
+                settings=chromadb.config.Settings(
+                    anonymized_telemetry=False,
+                    allow_reset=False  # No permitir reset accidental
+                )
             )
-        )
-        
-        elapsed = time.time() - init_start
-        logger.info(f"✅ ChromaDB inicializado ({elapsed:.2f}s)")
-        
-        return client
+            
+            # Verificar que el cliente funciona
+            test_collection = client.get_or_create_collection("_test")
+            if not hasattr(test_collection, 'count'):
+                raise Exception("Colección de prueba inválida")
+            # Eliminar colección de prueba
+            try:
+                client.delete_collection("_test")
+            except:
+                pass
+            
+            elapsed = time.time() - init_start
+            logger.info(f"✅ ChromaDB persistente inicializado ({elapsed:.2f}s)")
+            return client
+            
+        except Exception as persist_error:
+            logger.warning(f"⚠️ Error con persistencia: {persist_error}")
+            logger.info("🔄 Limpiando y recreando ChromaDB...")
+            
+            # Limpiar directorio corrupto
+            chroma_path = Path("./chroma_db")
+            if chroma_path.exists():
+                try:
+                    # Backup antes de borrar
+                    import time
+                    backup_name = f"./chroma_db_corrupted_{int(time.time())}"
+                    shutil.move(str(chroma_path), backup_name)
+                    logger.info(f"💾 Backup creado en: {backup_name}")
+                except Exception as backup_error:
+                    logger.warning(f"No se pudo hacer backup: {backup_error}")
+                    try:
+                        shutil.rmtree(chroma_path)
+                    except:
+                        pass
+            
+            # Reintentar con directorio limpio
+            client = chromadb.PersistentClient(
+                path="./chroma_db",
+                settings=chromadb.config.Settings(
+                    anonymized_telemetry=False,
+                    allow_reset=False
+                )
+            )
+            
+            elapsed = time.time() - init_start
+            logger.info(f"✅ ChromaDB recreado desde cero ({elapsed:.2f}s)")
+            return client
         
     except Exception as e:
-        logger.error(f"❌ Error con ChromaDB: {e}")
-        logger.warning("⚠️ Usando fallback mínimo")
-        return None
+        logger.error(f"❌ Error crítico con ChromaDB: {e}")
+        logger.warning("⚠️ Usando cliente en memoria como último recurso")
+        try:
+            import chromadb
+            client = chromadb.Client()  # Cliente en memoria
+            return client
+        except:
+            return None
