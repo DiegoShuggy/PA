@@ -641,13 +641,14 @@ async def chat(message: Message, request: Request):
                 logger.info("🔍 No se encontró template, intentando respuesta mejorada")
                 enhanced_response = enhanced_generator.generate_enhanced_response(question)
                 
-                if enhanced_response["is_enhanced"]:
-                    logger.info(f"🎯 Usando respuesta específica mejorada para: {enhanced_response['query_type']}")
+                if enhanced_response.get("is_enhanced"):
+                    qt = enhanced_response.get('query_type', 'general')
+                    logger.info(f"🎯 Usando respuesta específica mejorada para: {qt}")
                     response_data = {
                         "response": enhanced_response["response"],
                         "text": enhanced_response["response"],
                         "success": True,
-                        "enhanced_type": enhanced_response["query_type"],
+                        "enhanced_type": qt,
                         "has_context": True,
                         "sources": ["DuocUC Knowledge Base"],
                         "qr_codes": {},
@@ -1277,6 +1278,18 @@ async def submit_detailed_feedback(feedback: DetailedFeedbackRequest):
         
         if success:
             logger.info(f"✅ Feedback detallado guardado exitosamente para sesión: {feedback.currentFeedbackSession}")
+            
+            # Mostrar comentarios negativos destacados en el log
+            if feedback.rating and feedback.rating < 3 and feedback.userComments:
+                logger.warning(f"""
+════════════════════════════════════════════════════════════════════════════════
+⚠️  FEEDBACK NEGATIVO RECIBIDO (Rating: {feedback.rating}/5)
+════════════════════════════════════════════════════════════════════════════════
+📝 Session ID: {feedback.currentFeedbackSession}
+💬 Comentarios del usuario:
+{feedback.userComments}
+════════════════════════════════════════════════════════════════════════════════
+""")
             
             # Opcional: analizar sentimiento si hay comentarios
             if feedback.userComments:

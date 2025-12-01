@@ -94,7 +94,7 @@ Tel: +56 2 2354 8000 ext. 2250
 **Información General:**
 - Teléfono: +56 2 2354 8000
 - Mesa Central: +56 2 2999 3000
-- Dirección: Av. Américo Vespucio Norte 1630, Quilicura
+- Dirección: Calle Nueva 1660, Huechuraba
 
 **Coordinaciones Específicas:**
 👩‍💼 **Desarrollo Estudiantil:** ext. 2200

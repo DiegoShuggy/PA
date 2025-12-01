@@ -20,22 +20,27 @@ def auto_fix_chromadb():
         logger.warning("🔧 ChromaDB marcado para reparación...")
         chroma_path = Path("./chroma_db")
         
-        try:
-            # Crear backup
-            backup_path = Path(f"./chroma_db_auto_backup")
-            if backup_path.exists():
-                shutil.rmtree(backup_path)
-            shutil.copytree(chroma_path, backup_path)
-            
-            # Remover corrupto
-            shutil.rmtree(chroma_path)
-            
-            logger.info("✅ ChromaDB reparado automáticamente")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error reparando ChromaDB: {e}")
-            return False
+        import time
+        for attempt in range(3):
+            try:
+                # Crear backup
+                backup_path = Path(f"./chroma_db_auto_backup")
+                if backup_path.exists():
+                    shutil.rmtree(backup_path)
+                shutil.copytree(chroma_path, backup_path)
+                # Remover corrupto
+                shutil.rmtree(chroma_path)
+                logger.info("✅ ChromaDB reparado automáticamente")
+                return True
+            except Exception as e:
+                if hasattr(e, 'winerror') and e.winerror == 32:
+                    logger.warning("[WinError 32] Archivo en uso, reintentando en 2 segundos...")
+                    time.sleep(2)
+                else:
+                    logger.error(f"Error reparando ChromaDB: {e}")
+                    return False
+        logger.error("No se pudo reparar ChromaDB tras varios intentos.")
+        return False
     
     return False
 
@@ -70,12 +75,12 @@ def safe_chromadb_init():
             )
             
             # Verificar que el cliente funciona
-            test_collection = client.get_or_create_collection("_test")
+            test_collection = client.get_or_create_collection("test_collection")
             if not hasattr(test_collection, 'count'):
                 raise Exception("Colección de prueba inválida")
             # Eliminar colección de prueba
             try:
-                client.delete_collection("_test")
+                client.delete_collection("test_collection")
             except:
                 pass
             

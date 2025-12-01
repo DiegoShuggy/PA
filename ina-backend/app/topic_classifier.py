@@ -585,7 +585,7 @@ class TopicClassifier:
             # Artículos y conectores franceses
             'pour': 8,  # Para en francés (BAJO - puede confundirse)
             'sur': 8,   # Sobre en francés (BAJO)
-            'des': 10,  # De los/las en francés
+            # 'des': 10,  # ELIMINADO - aparece en palabras españolas como "consejos para mejorar mi habilidades"
             'sont': 15, # Son/están en francés
             'avec': 12, # Con en francés
             'sans': 12, # Sin en francés
@@ -637,7 +637,6 @@ class TopicClassifier:
             'offer': 15,
             'help': 12,
             'information': 12,
-            'exist': 15,
             'mental': 15,
             'health': 15,
             'care': 15,

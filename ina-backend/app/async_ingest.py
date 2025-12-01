@@ -134,7 +134,15 @@ async def async_add_url(url: str, client: httpx.AsyncClient, hashes: Dict[str, b
             skipped += 1
             continue
         enhanced = rag_engine.enhanced_normalize_text(chunk)
-        meta = {"source": url, "category": "web", "type": "web", "section": f"chunk_{i}"}
+        # Metadata enriquecida
+        meta = {
+            "source": url,
+            "category": "web",
+            "type": "web",
+            "section": f"chunk_{i}",
+            "keywords": rag_engine.extract_keywords(chunk),
+            "chunk_id": h
+        }
         ok = rag_engine.add_document(enhanced, metadata=meta)
         if ok:
             hashes[h] = True

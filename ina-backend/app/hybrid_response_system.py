@@ -108,7 +108,7 @@ class HybridResponseSystem:
 💬 **¿Necesitas más ayuda?**
 • Centro de Ayuda: centroayuda.duoc.cl
 • WhatsApp: +56 9 XXXX XXXX
-• Presencial: Av. Américo Vespucio Norte 1630
+• Presencial: Calle Nueva 1660, Huechuraba
 
 ⭐ **Califica esta respuesta** para ayudarnos a mejorar
 """
@@ -255,7 +255,7 @@ Para consultas sobre matrícula y admisión:
 • Llama: +56 2 2354 8000
 • Mesa Central: +56 2 2999 3000
 • Punto Estudiantil: +56 2 2999 3075
-• Presencial: Av. Américo Vespucio Norte 1630""",
+• Presencial: Calle Nueva 1660, Huechuraba""",
 
             "certificados": """📄 **Certificados y Documentos**
             
@@ -267,7 +267,7 @@ Para solicitar certificados:
             "contacto": """📞 **Contacto Plaza Norte**
             
 • Teléfono: +56 2 2354 8000
-• Dirección: Av. Américo Vespucio Norte 1630
+• Dirección: Calle Nueva 1660, Huechuraba
 • Mesa Central: +56 2 2999 3000
 • Centro de Ayuda: centroayuda.duoc.cl""",
         }
@@ -278,7 +278,7 @@ Para solicitar certificados:
 Para más información:
 • Teléfono: +56 2 2354 8000
 • Centro de Ayuda: centroayuda.duoc.cl
-• Presencial: Av. Américo Vespucio Norte 1630, Quilicura
+• Presencial: Calle Nueva 1660, Huechuraba
 """)
 
 # Función principal para usar en tu aplicación

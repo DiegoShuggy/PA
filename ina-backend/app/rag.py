@@ -247,7 +247,99 @@ class EnhancedTopicClassifier:
 
 
 class RAGEngine:
+    def extract_keywords(self, text: str) -> list:
+        """Extrae palabras clave simples del texto (puedes mejorar con NLP si lo deseas)"""
+        # Simple: palabras únicas con longitud > 4
+        words = re.findall(r'\b\w{5,}\b', text.lower())
+        return list(set(words))
+
     def __init__(self):
+        from app.memory_manager import MemoryManager
+        from app.derivation_manager import derivation_manager
+        from app.stationary_ai_filter import stationary_filter
+        # Inicializar el gestor de memoria
+        self.memory_manager = MemoryManager()
+        # Inicializar el gestor de derivación estacionaria
+        self.derivation_manager = derivation_manager
+        # Inicializar filtro específico para IA estacionaria
+        self.stationary_filter = stationary_filter
+        # Expansiones de sinónimos mejoradas
+        self.synonym_expansions = {
+            "tne": ["tarjeta nacional estudiantil", "pase escolar", "tne duoc", "beneficio tne", "tarjeta estudiante", "validación tne", "activación tne"],
+            "deporte": ["deportes", "actividad física", "taller deportivo", "entrenamiento", "gimnasio", "maiclub", "entretiempo", "acquatiempo", "deporte duoc", "selección deportiva"],
+            "certificado": ["certificados", "alumno regular", "constancia", "record académico", "concentración de notas", "documentos académicos", "solicitud certificado"],
+            "bienestar": ["salud mental", "psicológico", "apoyo emocional", "consejería", "urgencia", "crisis", "línea ops"],
+            "práctica": ["prácticas profesionales", "empleo", "duoclaboral", "bolsa de trabajo", "curriculum", "cv", "entrevista"],
+            "matrícula": ["matricular", "arancel", "pago", "postulación", "admisión"],
+            "beneficio": ["beca", "ayuda económica", "programa emergencia", "subsidio"],
+            "embajadores": ["curso embajadores", "embajadores salud mental", "módulo embajadores", "85% embajadores"]
+        }
+        # IMPORTAR chromadb AL FINAL, DESPUÉS DE QUE chroma_config.py LO HAYA DESACTIVADO
+        # INICIALIZACIÓN SEGURA DE CHROMADB CON AUTO-REPARACIÓN
+        try:
+            from app.chromadb_autofix import safe_chromadb_init
+            self.client = safe_chromadb_init()
+            if self.client is None:
+                raise Exception("No se pudo inicializar ChromaDB")
+            logger.info("✅ ChromaDB inicializado de forma segura")
+        except Exception as e:
+            logger.error(f"❌ Error con ChromaDB seguro, usando fallback básico: {e}")
+            # Fallback: usar cliente en memoria
+            import chromadb
+            self.client = chromadb.Client()
+            logger.warning("⚠️ Usando ChromaDB en memoria como fallback")
+        try:
+            self.collection = self.client.get_or_create_collection(
+                name="duoc_knowledge"
+            )
+            # Verificar que la colección se creó correctamente
+            if not hasattr(self.collection, 'count'):
+                raise Exception("Colección inválida - no tiene método count()")
+            logger.info(f"✅ Colección 'duoc_knowledge' inicializada correctamente")
+        except Exception as e:
+            logger.error(f"❌ Error creando colección: {e}")
+            # Reintentar con cliente nuevo en memoria
+            import chromadb
+            self.client = chromadb.Client()
+            self.collection = self.client.get_or_create_collection(name="duoc_knowledge")
+            logger.warning("⚠️ Usando colección en memoria como último recurso")
+        # CLASIFICADOR DE TEMAS MEJORADO
+        self.topic_classifier = EnhancedTopicClassifier()
+        # CONFIGURACIÓN ESPECÍFICA DUOC UC
+        self.duoc_context = {
+            "sede": "Plaza Norte",
+            "direccion": "Santa Elena de Huechuraba 1660, Huechuraba",
+            "horario_punto_estudiantil": "Lunes a Viernes 8:30-19:00",
+            "telefono": "+56 2 2360 6400",
+            "email": "Puntoestudiantil_pnorte@duoc.cl"
+        }
+        # CACHE SEMÁNTICO MEJORADO
+        self.semantic_cache = SemanticCache(similarity_threshold=0.65)
+        self.text_cache = {}
+        # CONFIGURACIÓN DE MODELOS OLLAMA OPTIMIZADA
+        # llama3.2:1b-instruct-q4_K_M es más liviano (807MB) y optimizado para instrucciones
+        # mistral:7b requiere 4.5GB y causa errores de memoria
+        self.ollama_models = ['llama3.2:1b-instruct-q4_K_M', 'llama3.2:3b', 'gemma3:4b']  
+        self.current_model = self._select_best_model()
+        logger.info("RAG Engine DUOC UC inicializado")
+        logger.info(f"🤖 Modelo Ollama: {self.current_model}")
+        self.metrics = {
+            'total_queries': 0,
+            'successful_responses': 0,
+            'cache_hits': 0,
+            'semantic_cache_hits': 0,
+            'text_cache_hits': 0,
+            'documents_added': 0,
+            'errors': 0,
+            'categories_used': defaultdict(int),
+            'response_times': [],
+            'derivations': 0,
+            'multiple_queries': 0,
+            'ambiguous_queries': 0,
+            'greetings': 0,
+            'emergencies': 0,
+            'template_responses': 0  # MÉTRICA PARA TEMPLATES
+        }
         from app.memory_manager import MemoryManager
         from app.derivation_manager import derivation_manager
         from app.stationary_ai_filter import stationary_filter
@@ -503,19 +595,56 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
         """NORMALIZACIÓN SUPER MEJORADA PARA DUOC UC"""
         text = text.lower().strip()
         
-        # EXPANDIR SINÓNIMOS Y VARIANTES ESPECÍFICAS DUOC
+        # EXPANDIR SINÓNIMOS Y VARIANTES ESPECÍFICAS DUOC - MEJORADO
         synonym_expansions = {
-            'tne': ['tarjeta nacional estudiantil', 'pase escolar', 'tne duoc', 'beneficio tne', 'credencial estudiantil'],
+            'tne': ['tarjeta nacional estudiantil', 'pase escolar', 'tne duoc', 'beneficio tne', 'credencial estudiantil', 'transporte público'],
             'tarjeta nacional estudiantil': ['tne', 'pase escolar', 'credencial estudiante', 'tarjeta transporte'],
             'tarjeta nacional': ['tne', 'tarjeta estudiantil', 'pase escolar'],
             'tarjeta estudiantil': ['tne', 'tarjeta nacional', 'pase escolar', 'credencial'],
-            'deporte': ['deportes', 'actividad física', 'entrenamiento', 'ejercicio', 'taller deportivo'],
-            'taller': ['talleres', 'clase', 'actividad deportiva', 'entrenamiento grupal'],
-            'gimnasio': ['gimnasio duoc', 'complejo deportivo', 'instalaciones deportivas', 'maiclub'],
-            'certificado': ['certificados', 'constancia', 'documento oficial', 'record académico'],
-            'psicológico': ['psicólogo', 'salud mental', 'bienestar', 'apoyo emocional', 'consejería'],
-            'beca': ['becas', 'ayuda económica', 'beneficio estudiantil', 'subsidio'],
-            'beneficio': ['beneficios', 'becas', 'ayuda económica', 'subsidio estudiantil'],
+            
+            # DEPORTES Y ACTIVIDADES
+            'deporte': ['deportes', 'actividad física', 'entrenamiento', 'ejercicio', 'taller deportivo', 'recreación'],
+            'deportes': ['deporte', 'actividades físicas', 'entrenamiento', 'recreación', 'talleres deportivos'],
+            'taller': ['talleres', 'clase', 'actividad deportiva', 'entrenamiento grupal', 'curso'],
+            'gimnasio': ['gimnasio duoc', 'complejo deportivo', 'instalaciones deportivas', 'maiclub', 'caf', 'fitness'],
+            'natacion': ['natación', 'piscina', 'acquatiempo', 'nadar', 'clases acuáticas'],
+            
+            # ACADÉMICO
+            'certificado': ['certificados', 'constancia', 'documento oficial', 'record académico', 'papeles'],
+            'notas': ['calificaciones', 'promedio', 'evaluaciones', 'record académico', 'concentración notas'],
+            'carrera': ['programa', 'especialidad', 'ingeniería', 'técnico', 'profesional'],
+            
+            # BIENESTAR
+            'psicológico': ['psicólogo', 'salud mental', 'bienestar', 'apoyo emocional', 'consejería', 'psicología'],
+            'bienestar': ['bienestar estudiantil', 'apoyo', 'salud mental', 'psicológico', 'asistencia'],
+            'salud': ['bienestar', 'médico', 'atención médica', 'salud mental', 'enfermería'],
+            
+            # FINANCIERO
+            'beca': ['becas', 'ayuda económica', 'beneficio estudiantil', 'subsidio', 'financiamiento'],
+            'beneficio': ['beneficios', 'becas', 'ayuda económica', 'subsidio estudiantil', 'apoyo financiero'],
+            'financiamiento': ['finanzas', 'financiero', 'económico', 'beca', 'ayuda', 'crédito'],
+            'pago': ['pagos', 'arancel', 'cuota', 'financiero', 'deuda', 'cancelar'],
+            'arancel': ['aranceles', 'pago', 'cuota', 'matrícula', 'mensualidad'],
+            
+            # SERVICIOS
+            'biblioteca': ['libros', 'préstamo', 'estudio', 'recursos académicos', 'salas estudio'],
+            'contacto': ['teléfono', 'correo', 'email', 'comunicación', 'información'],
+            'horario': ['horarios', 'atención', 'funcionamiento', 'disponibilidad'],
+            'ubicación': ['dirección', 'lugar', 'dónde', 'encuentro', 'localización'],
+            'estacionamiento': ['parking', 'estacionar', 'vehículo', 'auto', 'aparcamiento'],
+            
+            # DESARROLLO LABORAL
+            'trabajo': ['empleo', 'laboral', 'práctica', 'duoclaboral', 'profesional'],
+            'practica': ['práctica profesional', 'pasantía', 'trabajo', 'empresa', 'experiencia'],
+            'curriculum': ['cv', 'hoja vida', 'currículum vitae', 'perfil profesional'],
+            'entrevista': ['entrevistas', 'entrevista laboral', 'trabajo', 'empleo'],
+            
+            # SERVICIOS DIGITALES
+            'digital': ['digitales', 'online', 'virtual', 'internet', 'plataforma'],
+            'servicios': ['servicio', 'atención', 'apoyo', 'asistencia'],
+            'plataforma': ['portal', 'sistema', 'acceso', 'digital', 'online'],
+            'correo': ['email', 'mail', 'electrónico', 'comunicación'],
+            'contraseña': ['password', 'clave', 'acceso', 'login'],
             'práctica': ['practica profesional', 'empleo', 'trabajo', 'duoclaboral', 'bolsa trabajo'],
             'contraseña': ['password', 'acceso', 'login', 'plataforma', 'mi duoc'],
         }
@@ -863,18 +992,19 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
             # Artículos y conectores franceses
             'pour': 8,  # Para en francés (BAJO - puede confundirse)
             'sur': 8,   # Sobre en francés (BAJO)
-            'des': 10,  # De los/las en francés
+            # 'des': 10,  # ELIMINADO - aparece en palabras españolas como "consejos para mejorar mi habilidades"
             'sont': 15, # Son/están en francés
         }
         
         # ================================================================
-        # PASO 4: IDENTIFICADORES INGLESES
+        # PASO 4: IDENTIFICADORES INGLESES (SIN FALSOS POSITIVOS)
         # ================================================================
         english_indicators = {
             'how': 15, 'what': 15, 'when': 15, 'where': 12, 'why': 12,
             'student': 15, 'insurance': 15, 'emergency': 15, 'support': 12,
             'programs': 12, 'information': 12, 'categories': 12,
             'apply': 12, 'obtain': 12, 'renew': 15, 'can': 8, 'should': 8,
+            # REMOVIDO 'exist' - causa falsos positivos con 'existe' español
         }
         
         # ================================================================
@@ -934,7 +1064,7 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
             print(f"   ⛔ FRENCH PENALTY FOR SPANISH CONTEXT: -{french_penalty} points")
         
         # Si detectamos "est" en contexto español (como "existe"), penalizar francés
-        if 'est' in query_lower and any(esp_word in query_lower for esp_word in ['exist', 'cuest', 'contest']):
+        if 'est' in query_lower and any(esp_word in query_lower for esp_word in ['exist', 'cuest', 'contest', 'manifest', 'rest']):
             french_penalty = 10
             french_score -= french_penalty
             print(f"   ⛔ FRENCH 'EST' PENALTY IN SPANISH CONTEXT: -{french_penalty} points")
@@ -1371,6 +1501,7 @@ Puedo ayudarte con:*
             response = ollama.chat(
                 model=self.current_model,
                 messages=[
+                    {'role': 'system', 'content': 'Responde estrictamente en español (Chile). No uses inglés.'},
                     {'role': 'user', 'content': system_message}  # Todo en user para mayor claridad
                 ],
                 options={
@@ -1510,6 +1641,11 @@ No entiendo completamente '{original_query}'.
                     'category': 'general',
                     'type': 'general'
                 })
+            # Asegurar que keywords y chunk_id estén presentes
+            if 'keywords' not in enhanced_metadata or not enhanced_metadata['keywords']:
+                enhanced_metadata['keywords'] = ', '.join(self.extract_keywords(document))
+            if 'chunk_id' not in enhanced_metadata or not enhanced_metadata['chunk_id']:
+                enhanced_metadata['chunk_id'] = hashlib.md5(document.encode('utf-8')).hexdigest()
 
             # Verificar que la colección es válida antes de agregar
             if not hasattr(self.collection, 'add'):
@@ -1544,7 +1680,7 @@ No entiendo completamente '{original_query}'.
             logger.error(f"Error en query RAG: {e}")
             return []
 
-    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.35, 
+    def query_optimized(self, query_text: str, n_results: int = 3, score_threshold: float = 0.25, 
                         metadata_filters: Dict = None):
         """BÚSQUEDA OPTIMIZADA CON METADATA FILTERS (DeepSeek)"""
         try:
@@ -1579,7 +1715,9 @@ No entiendo completamente '{original_query}'.
                 
                 current_threshold = score_threshold
                 if 'dónde' in query_text.lower() or 'ubicación' in query_text.lower():
-                    current_threshold = 0.25
+                    current_threshold = 0.15  # Más permisivo
+                elif 'biblioteca' in query_text.lower() or 'estacionamiento' in query_text.lower():
+                    current_threshold = 0.15  # Más permisivo para temas comunes
                 
                 if similarity >= current_threshold:
                     doc_content = results['documents'][0][i]
@@ -1599,8 +1737,28 @@ No entiendo completamente '{original_query}'.
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
             
             if not filtered_docs:
-                logger.info(f"No se encontraron documentos para: {query_text}")
-                return []
+                logger.warning(f"⚠️ No documentos con threshold {score_threshold}, reintentando con threshold más bajo...")
+                # FALLBACK: Reducir threshold drásticamente 
+                fallback_threshold = 0.1
+                for i, distance in enumerate(results['distances'][0]):
+                    similarity = 1 - distance
+                    if similarity >= fallback_threshold:
+                        doc_content = results['documents'][0][i]
+                        doc_metadata = results['metadatas'][0][i]
+                        keyword_boost = self._calculate_keyword_boost(query_text, doc_metadata)
+                        adjusted_similarity = min(1.0, similarity + keyword_boost)
+                        
+                        filtered_docs.append({
+                            'document': doc_content,
+                            'metadata': doc_metadata,
+                            'similarity': adjusted_similarity
+                        })
+                        
+                if not filtered_docs:
+                    logger.info(f"❌ Sin resultados incluso con threshold {fallback_threshold} para: {query_text}")
+                    return []
+                else:
+                    logger.info(f"✅ Fallback exitoso: {len(filtered_docs)} docs con threshold {fallback_threshold}")
             
             return filtered_docs[:n_results]
 
@@ -1748,16 +1906,23 @@ RESPUESTA (basada SOLO en el contexto):"""
             processed_query = self.enhanced_normalize_text(expanded_query)
             
             # Buscar más resultados con umbral más bajo para mejor recall
-            results = self.query_optimized(processed_query, n_results * 3, score_threshold=0.25)
+            results = self.query_optimized(processed_query, n_results * 3, score_threshold=0.15)
             
             logger.info(f"🔍 Búsqueda híbrida: '{query_text[:50]}' → {len(results)} resultados")
 
             # Filtrar con umbral más permisivo
             filtered_docs = []
             for result in results:
-                if result['similarity'] >= 0.3:  # Umbral más bajo para capturar más info
+                if result['similarity'] >= 0.2:  # Umbral muy bajo para capturar más info
                     filtered_docs.append(result)
                     logger.debug(f"  ✓ Doc {result['metadata'].get('category', 'unknown')}: {result['similarity']:.3f}")
+                    
+            # Si aún no hay resultados, tomar cualquier cosa por encima de 0.1
+            if not filtered_docs:
+                for result in results:
+                    if result['similarity'] >= 0.1:
+                        filtered_docs.append(result)
+                        logger.debug(f"  ⚡ Fallback doc {result['metadata'].get('category', 'unknown')}: {result['similarity']:.3f}")
 
             # Ordenar por relevancia
             filtered_docs.sort(key=lambda x: x['similarity'], reverse=True)
@@ -1982,10 +2147,9 @@ def get_ai_response(user_message: str, context: list = None,
         print(f"\n🔍 Detectada consulta sobre biblioteca - buscando información...")
         try:
             sources_biblioteca = engine.query_optimized(
-                query=user_message,
-                category='institucionales',
+                query_text=user_message,
                 n_results=5,
-                similarity_threshold=0.25
+                score_threshold=0.25
             )
             if sources_biblioteca:
                 sources = sources_biblioteca
@@ -2194,7 +2358,8 @@ def get_ai_response(user_message: str, context: list = None,
             else:
                 logger.warning(f"🗑️ Fuente de mala calidad filtrada: {content[:100]}...")
         
-        final_sources = quality_sources
+        # Si el filtrado eliminó todas las fuentes, usar las originales para no quedar sin contexto
+        final_sources = quality_sources if quality_sources else final_sources
         logger.info(f"🔍 Fuentes de calidad seleccionadas: {len(final_sources)}")
         
         print(f"\n📌 PASO 5: SELECCIÓN FINAL DE FUENTES")
@@ -2290,6 +2455,7 @@ def get_ai_response(user_message: str, context: list = None,
             response = ollama.chat(
                 model=rag_engine.current_model,
                 messages=[
+                    {'role': 'system', 'content': 'Responde estrictamente en español (Chile). No uses inglés.'},
                     {'role': 'system', 'content': system_message},
                     {'role': 'user', 'content': user_message}
                 ],

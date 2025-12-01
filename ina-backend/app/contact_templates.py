@@ -102,6 +102,159 @@ CONTACT_TEMPLATES = {
         'keywords': ['biblioteca', 'libros', 'estudio', 'recursos', 'sala']
     },
     
+    'bienestar_estudiantil': {
+        'title': '🧠 Bienestar Estudiantil',
+        'content': '''**🧠 Servicios de Bienestar:**
+
+✅ **Apoyo psicológico:**
+• Atención psicológica individual
+• Línea de apoyo OPS 24/7: +56 2 2820 3450
+• Talleres de manejo del estrés
+• Programa Embajadores en Salud Mental
+
+🏥 **Bienestar integral:**
+• Actividades de autocuidado
+• Charlas sobre salud mental
+• Apoyo en crisis
+
+📞 **Coordinación Bienestar:** +56 2 2999 3075
+📍 **Ubicación:** Piso 2, Sede Plaza Norte
+🕒 **Horarios:** Lunes a Viernes 08:30-22:30
+📧 **Email:** bienestar.plazanorte@duoc.cl''',
+        'keywords': ['bienestar', 'psicologo', 'salud mental', 'apoyo', 'estres']
+    },
+    
+    'servicios_digitales': {
+        'title': '💻 Servicios Digitales',
+        'content': '''**💻 Servicios Digitales Duoc:**
+
+✅ **Plataformas disponibles:**
+• Portal Académico (notas, horarios)
+• MiClase (clases virtuales)
+• Correo institucional (@duocuc.cl)
+• WiFi Campus
+
+🔧 **Soporte técnico:**
+• Mesa de ayuda IT
+• Recuperación de contraseñas
+• Problemas de acceso a plataformas
+
+📞 **Mesa de Ayuda:** +56 2 2999 3000
+💬 **Chat online:** duoc.cl/soporte
+📍 **Soporte presencial:** Piso 1, Informática
+🕒 **Horarios:** Lunes a Viernes 08:00-21:00''',
+        'keywords': ['servicios digitales', 'plataforma', 'correo', 'wifi', 'contraseña', 'miclase']
+    },
+    
+    'desarrollo_laboral': {
+        'title': '💼 Desarrollo Laboral',
+        'content': '''**💼 Desarrollo Profesional:**
+
+✅ **Servicios disponibles:**
+• Bolsa de trabajo DuocLaboral
+• Asesoría curricular personalizada
+• Simulación de entrevistas
+• Talleres de empleabilidad
+
+🎯 **Práctica profesional:**
+• Gestión de práctica obligatoria
+• Convenios con empresas
+• Seguimiento durante práctica
+
+📞 **Contacto:** Claudia Cortés - ccortesn@duoc.cl
+📍 **Ubicación:** Piso 2, Sede Plaza Norte
+🕒 **Horarios:** Lunes a Viernes 09:00-18:00
+🌐 **Portal:** duoclaboral.cl''',
+        'keywords': ['trabajo', 'practica', 'empleo', 'curriculum', 'cv', 'entrevista']
+    },
+    
+    'deportes_talleres': {
+        'title': '⚽ Deportes y Talleres',
+        'content': '''**⚽ Actividades Deportivas:**
+
+✅ **Talleres disponibles:**
+• Fútbol, básquetbol, vóleibol
+• Natación (piscina Acquatiempo)
+• Gimnasio CAF (Centro Acondicionamiento Físico)
+• Entrenamiento funcional, boxeo
+
+📝 **Inscripciones:**
+• Talleres GRATUITOS para estudiantes
+• Inscripción en Punto Estudiantil
+• Cupos limitados
+
+📞 **Coordinación Deportes:** +56 2 2999 3075
+📍 **Instalaciones:** Complejo MaiClub / Gimnasio Entretiempo
+🕒 **Horarios variables** según taller
+📧 **Email:** deportes.plazanorte@duoc.cl''',
+        'keywords': ['deportes', 'talleres', 'futbol', 'gimnasio', 'natacion', 'caf']
+    },
+    
+    'contacto_general': {
+        'title': '📞 Información y Contactos',
+        'content': '''**📞 Contactos Sede Plaza Norte:**
+
+📱 **Teléfonos principales:**
+• Mesa Central: +56 2 2999 3000
+• Punto Estudiantil: +56 2 2999 3075
+• Finanzas: +56 2 2596 5000
+• Biblioteca: +56 2 2999 3000 ext. 300
+
+📧 **Correos por área:**
+• General: info.plazanorte@duoc.cl
+• Admisión: admision.plazanorte@duoc.cl
+• Finanzas: finanzas.plazanorte@duoc.cl
+
+📍 **Ubicación:** Calle Nueva 1660, Piso 2, Huechuraba
+🕒 **Horarios:** Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00''',
+        'keywords': ['contacto', 'telefono', 'correo', 'direccion', 'ubicacion']
+    },
+    
+    'seguros_estudiantiles': {
+        'title': '🛡️ Seguro Estudiantil',
+        'content': '''**🛡️ Seguro de Accidentes:**
+
+✅ **Cobertura 24/7:**
+• Accidentes en actividades académicas
+• Trayecto casa-institución-casa
+• Actividades deportivas institucionales
+• Sin costo adicional para estudiantes
+
+🚨 **En caso de accidente:**
+• Llamar DOC DUOC: 600 362 3862
+• Informar en Punto Estudiantil
+• Conservar comprobantes médicos
+
+📞 **Información:** +56 2 2999 3075
+📍 **Reporte:** Piso 2, Sede Plaza Norte
+🕒 **Atención:** Lunes a Viernes 08:30-22:30
+📧 **Email:** seguros@duoc.cl''',
+        'keywords': ['seguro', 'accidente', 'cobertura', 'doc duoc']
+    },
+    
+    'financiamiento_info': {
+        'title': '💰 Información Financiera',
+        'content': '''**💰 Oficina de Finanzas:**
+
+✅ **Servicios:**
+• Consultas de pagos y aranceles
+• Estados de cuenta
+• Convenios de pago
+• Formas de pago disponibles
+
+💳 **Métodos de pago:**
+• WebPay online
+• Transferencia bancaria
+• Pago en cuotas
+• Tarjetas de crédito/débito
+
+📞 **Finanzas:** +56 2 2596 5000
+📍 **Ubicación:** Piso 2, sector administrativo
+🕒 **Horarios:** Lunes a Viernes 8:30-17:30
+🌐 **Portal de Pagos:** portal.duoc.cl''',
+        'keywords': ['finanzas', 'pago', 'arancel', 'deuda', 'cuotas']
+    },
+    
     'practicas_profesionales': {
         'title': '💼 Prácticas Profesionales',
         'content': '''**💼 Prácticas Profesionales:**
@@ -171,7 +324,7 @@ CONTACT_TEMPLATES = {
         'content': '''**🏢 Sede Duoc UC Plaza Norte:**
 
 📍 **Ubicación completa:**
-• Dirección: Av. Américo Vespucio Norte 1630, Huechuraba
+• Dirección: Calle Nueva 1660, Huechuraba
 • Comuna: Huechuraba, Región Metropolitana
 • Referencia: Mall Plaza Norte (al lado)
 
@@ -219,8 +372,90 @@ def get_all_contact_phones() -> dict:
 def get_general_location_info() -> str:
     """Información general de la sede"""
     return """📍 **Duoc UC Plaza Norte:**
-• Av. Américo Vespucio Norte 1630, Huechuraba
+• Calle Nueva 1660, Huechuraba
 • Metro Línea 2: Estación Vespucio Norte
 • 📍 Piso 2, Sede Plaza Norte
 • 📞 Punto Estudiantil: +56 2 2999 3075
 • 📞 Mesa Central: +56 2 2999 3000"""
+
+# Templates adicionales para desarrollo profesional y estacionamiento
+ADDITIONAL_CONTACT_TEMPLATES = {
+    'desarrollo_profesional': {
+        'consejos_laborales': {
+            'title': '💼 Desarrollo Profesional - DuocUC Plaza Norte',
+            'content': '''💼 **Consejos para Desarrollo Profesional - DuocUC Plaza Norte**
+
+**Servicios de Orientación Laboral:**
+• **Asesoría CV:** Optimización de currículum vitae
+• **Simulacro entrevistas:** Preparación para procesos de selección  
+• **Desarrollo competencias:** Talleres de habilidades blandas
+• **Networking:** Eventos de conexión con empresas
+• **Mentorías:** Acompañamiento personalizado
+
+**Mejora tus habilidades:**
+• **Comunicación efectiva:** Talleres de expresión oral y escrita
+• **Liderazgo:** Desarrollo de capacidades directivas
+• **Trabajo en equipo:** Dinámicas colaborativas
+• **Adaptabilidad:** Gestión del cambio y flexibilidad
+• **Pensamiento crítico:** Resolución de problemas complejos
+
+**Recursos disponibles:**
+• **Portal Laboral:** https://www.duoc.cl/empleabilidad/
+• **Bolsa de trabajo:** https://bolsa.duoc.cl/
+• **Capacitaciones:** Cursos de actualización profesional
+• **Eventos empresariales:** Ferias laborales y seminarios
+
+📍 **Desarrollo Laboral Plaza Norte:** Edificio A, 2do piso
+📞 **Contacto:** +56 2 2354 8000 ext. 2300
+📧 **Email:** desarrollolaboral.plazanorte@duoc.cl
+🕒 **Horarios:** Lunes a Viernes 09:00-18:00
+
+💡 *Construye tu futuro profesional con nuestro apoyo especializado*''',
+            'keywords': ['consejos', 'habilidades', 'trabajo', 'laboral', 'desarrollo', 'profesional', 'orientacion']
+        }
+    },
+    
+    'institucionales': {
+        'estacionamiento_plaza_norte': {
+            'title': '🚗 Estacionamiento Mall Plaza Norte',
+            'content': '''🚗 **Estacionamiento Mall Plaza Norte - Tarifas 2025**
+
+**Ubicación:**
+- Subterráneo Mall Plaza Norte
+- Acceso por Av. Américo Vespucio Norte 1314
+- Señalética "DuocUC" desde ingreso principal
+
+**Tarifas Vigentes Mall Plaza Norte:**
+• **Primera hora:** $1.200 (lunes a domingo)
+• **Cada 15 min adicionales:** $300
+• **Hora completa adicional:** $1.200
+• **Máximo día completo:** $8.000
+• **Nocturno (20:00-08:00):** $2.500 fijo
+
+**Beneficios Estudiantes DuocUC:**
+- **Descuento 20%** presentando credencial vigente
+- **Espacios preferenciales** en niveles -1 y -2
+- **Validación automática** con tarjeta universitaria
+
+**Formas de Pago:**
+✅ App Copec (15% descuento adicional)  
+✅ App Banco Falabella (10% descuento)
+✅ Tarjetas de crédito/débito
+✅ Efectivo en cajas automáticas
+
+**Horarios de Funcionamiento:**
+• **Lunes a Viernes:** 07:00 - 24:00
+• **Sábados:** 08:00 - 24:00  
+• **Domingos y festivos:** 09:00 - 23:00
+
+**Información y Consultas:**
+📞 **Mall Plaza Norte:** +56 2 2837 9000
+📞 **DuocUC Plaza Norte:** +56 2 2354 8000 ext. 2200
+🌐 **Tarifas actualizadas:** https://www.mallplaza.com/cl/
+
+⚠️ *Tarifas sujetas a cambios por Mall Plaza Norte*
+💡 *Usa las apps móviles para mejores descuentos*''',
+            'keywords': ['estacionamiento', 'parking', 'auto', 'vehiculo', 'tarifa', 'precio']
+        }
+    }
+}

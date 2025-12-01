@@ -297,4 +297,130 @@ TEMPLATES_ES = {
    • *Solo una vez durante la carrera*
 💡 *Documentación debe ser consistente con el motivo de postulación*
 """,
+
+    # NUEVOS TEMPLATES DE BENEFICIOS
+    "gratuidad": """
+🎓 **Gratuidad de Educación Superior:**
+
+La Gratuidad es un beneficio estatal que **cubre el 100% del arancel** para estudiantes de familias vulnerables.
+
+**📋 Requisitos principales:**
+• Pertenecer al 50% más vulnerable según Registro Social de Hogares
+• Estudiar en institución acreditada (Duoc UC ✅)
+• No tener título profesional previo
+• Cumplir requisitos académicos mínimos
+
+**🔄 Postulación:**
+• Via FUAS: https://fuas.mineduc.cl/
+• Fechas: Noviembre-Enero cada año
+• Renovación: Automática si cumples requisitos
+
+**⚠️ Importante:**
+• Cubre solo arancel (no matrícula ni otros gastos)
+• Matrícula debe pagarse igual
+• Pérdida por bajo rendimiento académico
+
+📞 **Consultas financiamiento:** +56 2 2999 3075
+🌐 **Portal FUAS:** https://fuas.mineduc.cl/
+📍 **Punto Estudiantil:** Piso 2, Sede Plaza Norte
+""",
+
+    "cae_credito": """
+💳 **Crédito con Garantía Estatal (CAE):**
+
+El CAE es un **crédito estatal** para financiar estudios superiores.
+
+**💰 Características:**
+• Cobertura: Hasta 100% del arancel de referencia
+• Tasa: 2% anual
+• Pago: Después de egreso (máximo 20 años)
+• Cuotas: Proporcionales a tus ingresos
+
+**📋 Requisitos:**
+• Postulación via FUAS
+• Situación socioeconómica acreditada
+• Promedio PSU/PDT mínimo según carrera
+• Renovación anual automática (con requisitos)
+
+**⚡ Ventajas:**
+• Pagas solo cuando trabajas
+• Máximo 10% de tu salario mensual
+• Condonación por invalidez o muerte
+• Sin aval ni garantías
+
+**🔄 Postulación:**
+• Fechas: Noviembre-Enero
+• Portal: https://fuas.mineduc.cl/
+
+📞 **Asesoría financiamiento:** +56 2 2999 3075
+📍 **Oficina:** Punto Estudiantil, Piso 2
+""",
+
+    "junaeb": """
+🍎 **JUNAEB - Junta Nacional de Auxilio Escolar y Becas:**
+
+JUNAEB ofrece **múltiples beneficios** para estudiantes de educación superior.
+
+**🎯 Principales beneficios:**
+• **Beca de Alimentación:** Almuerzo gratuito en casino institucional
+• **Tarjeta Nacional Estudiantil (TNE):** Descuentos en transporte público
+• **Beca de Mantención:** Ayuda económica mensual
+• **Residencia Familiar Estudiantil:** Apoyo habitacional
+
+**📋 Requisitos generales:**
+• Estar matriculado en institución acreditada
+• Pertenecer a familias vulnerables
+• Mantener avance académico adecuado
+
+**🔄 Postulación:**
+• TNE: Automática con matrícula
+• Becas: Via FUAS (https://fuas.mineduc.cl/)
+• Fechas: Noviembre-Enero cada año
+
+**📱 Gestión TNE:**
+• Portal: https://www.tne.cl/
+• Solicitud/reposición: https://www.tne.cl/
+
+📞 **Punto Estudiantil:** +56 2 2999 3075
+🌐 **JUNAEB:** https://www.junaeb.cl/
+📍 **Oficina:** Piso 2, Sede Plaza Norte
+""",
+
+    "becas_internas": """
+🏛️ **Becas Internas Duoc UC:**
+
+Duoc UC ofrece **becas propias** para apoyar a estudiantes destacados.
+
+**🎯 Tipos de becas disponibles:**
+
+**1. 🏆 Beca Excelencia Académica:**
+• Cobertura: 25% a 100% del arancel
+• Requisito: Promedio destacado (6.0+)
+• Renovación: Mantener rendimiento
+
+**2. 💙 Beca Socioeconómica:**
+• Cobertura: 20% a 60% del arancel
+• Para familias de escasos recursos
+• Compatible con otros beneficios
+
+**3. 🏃‍♂️ Beca Deportiva:**
+• Para deportistas destacados
+• Representar a Duoc UC en competencias
+• Cobertura parcial del arancel
+
+**4. 🎨 Beca Talento:**
+• Estudiantes con habilidades especiales
+• Áreas: Artes, tecnología, liderazgo
+• Evaluación por portafolio
+
+**📋 Postulación:**
+• Fechas: Marzo y Agosto
+• Documentos: RSH, certificados, notas
+• Evaluación: Comité de becas
+
+📞 **Consultas becas:** +56 2 2999 3075
+📧 **Email:** becas.plazanorte@duoc.cl
+📍 **Oficina:** Punto Estudiantil, Piso 2
+🌐 **Portal:** https://www.duoc.cl/becas/
+""",
 }

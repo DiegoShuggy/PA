@@ -101,9 +101,41 @@ class SmartKeywordDetector:
             },
             "trabajo": {
                 "category": "desarrollo_profesional",
-                "topic": "empleo",
-                "weight": 90,
+                "topic": "trabajo",
+                "weight": 95,
                 "variations": ["trabajo", "empleo", "laboral", "duoclaboral"]
+            },
+            
+            # SEGURIDAD Y EMERGENCIAS
+            "seguridad": {
+                "category": "institucionales",
+                "topic": "seguridad",
+                "weight": 90,
+                "variations": ["seguridad", "emergencia", "urgencia", "accidente", "protocolo"]
+            },
+            
+            # ESTACIONAMIENTO
+            "estacionamiento": {
+                "category": "institucionales", 
+                "topic": "estacionamiento",
+                "weight": 90,
+                "variations": ["estacionamiento", "parking", "aparcamiento", "auto", "vehiculo", "carro"]
+            },
+            
+            # CONSEJOS Y HABILIDADES LABORALES  
+            "consejos": {
+                "category": "desarrollo_profesional",
+                "topic": "consejos_laborales",
+                "weight": 85,
+                "variations": ["consejos", "habilidades", "competencias", "mejorar", "orientacion", "capacitacion"]
+            },
+            
+            # DESARROLLO PROFESIONAL
+            "desarrollo": {
+                "category": "desarrollo_profesional",
+                "topic": "desarrollo_profesional",
+                "weight": 80,
+                "variations": ["desarrollo", "crecimiento", "formacion", "profesional"]
             },
             "curriculum": {
                 "category": "desarrollo_profesional",
@@ -111,8 +143,12 @@ class SmartKeywordDetector:
                 "weight": 90,
                 "variations": ["curriculum", "cv", "hoja de vida", "vitae"]
             },
-            
-            # BECAS Y BENEFICIOS
+            "titulado": {
+                "category": "desarrollo_profesional",
+                "topic": "titulados",
+                "weight": 85,
+                "variations": ["titulado", "titulados", "egresado", "egresados"]
+            },            # BECAS Y BENEFICIOS
             "beca": {
                 "category": "asuntos_estudiantiles",
                 "topic": "becas",
@@ -151,7 +187,7 @@ class SmartKeywordDetector:
                 "category": "institucionales",
                 "topic": "biblioteca",
                 "weight": 90,
-                "variations": ["biblioteca", "bibliotecas", "libros", "prestamo"]
+                "variations": ["biblioteca", "bibliotecas", "libros", "prestamo", "recurso", "estudio"]
             },
             
             # ACADÉMICO - CARRERA Y MALLA
@@ -186,6 +222,90 @@ class SmartKeywordDetector:
                 "topic": "estacionamiento",
                 "weight": 90,
                 "variations": ["estacionamiento", "parqueo", "parking", "estacionar"]
+            },
+            
+            # SERVICIOS DIGITALES
+            "servicios": {
+                "category": "institucionales",
+                "topic": "servicios", 
+                "weight": 85,
+                "variations": ["servicios", "servicio", "servicios digitales", "digital"]
+            },
+            "digitales": {
+                "category": "institucionales",
+                "topic": "servicios_digitales",
+                "weight": 90,
+                "variations": ["digitales", "digital", "servicios digitales", "plataforma"]
+            },
+            
+            # BIENESTAR ESTUDIANTIL - KEYWORDS PRINCIPALES
+            "bienestar": {
+                "category": "bienestar_estudiantil",
+                "topic": "bienestar",
+                "weight": 90,
+                "variations": ["bienestar", "bienestar estudiantil", "apoyo", "apoyo estudiantil"]
+            },
+            "estudiantil": {
+                "category": "bienestar_estudiantil",
+                "topic": "estudiantil",
+                "weight": 85,
+                "variations": ["estudiantil", "estudiantiles", "estudiante", "estudiantes"]
+            },
+            
+            # FINANZAS Y FINANCIAMIENTO
+            "finanzas": {
+                "category": "asuntos_estudiantiles",
+                "topic": "finanzas",
+                "weight": 90,
+                "variations": ["finanzas", "financiero", "financiera", "financiera"]
+            },
+            "financiamiento": {
+                "category": "asuntos_estudiantiles",
+                "topic": "financiamiento",
+                "weight": 90,
+                "variations": ["financiamiento", "financiar", "financiacion", "credito"]
+            },
+            
+            # CONTACTOS Y COMUNICACIÓN
+            "contacto": {
+                "category": "institucionales",
+                "topic": "contacto",
+                "weight": 85,
+                "variations": ["contacto", "contactos", "comunicar", "telefono", "correo"]
+            },
+            "correo": {
+                "category": "institucionales",
+                "topic": "correo",
+                "weight": 80,
+                "variations": ["correo", "correos", "email", "mail", "electronico"]
+            },
+            "telefono": {
+                "category": "institucionales",
+                "topic": "telefono",
+                "weight": 80,
+                "variations": ["telefono", "telefonos", "numero", "numeros", "llamar"]
+            },
+            
+            # ASUNTOS ESTUDIANTILES GENERAL
+            "asuntos": {
+                "category": "asuntos_estudiantiles",
+                "topic": "asuntos",
+                "weight": 85,
+                "variations": ["asuntos", "asunto", "asuntos estudiantiles", "tramite"]
+            },
+            "beneficio": {
+                "category": "asuntos_estudiantiles",
+                "topic": "beneficios",
+                "weight": 85,
+                "variations": ["beneficio", "beneficios", "beneficios estudiantiles", "ayuda"]
+            },
+            
+            # PASTORAL
+            "pastoral": {
+                "category": "pastoral",
+                "topic": "pastoral",
+                "weight": 90,
+                "variations": ["pastoral", "capellan", "capilla", "espiritual", "fe"]
             }
         }
         

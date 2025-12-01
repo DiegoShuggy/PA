@@ -16,7 +16,6 @@ class DuocURLManager:
             "inscripciones": "https://www.duoc.cl/admision/",
             "portal_alumnos": "https://www.duoc.cl/alumnos/",
             "biblioteca": "https://bibliotecas.duoc.cl/inicio/",
-            "ayuda": "https://centroayuda.duoc.cl/hc/es-419",
             "certificados": "https://certificados.duoc.cl/",
             "practicas": "https://www2.duoc.cl/practica/login",
             "beneficios": "https://www.duoc.cl/beneficios/salud-autocuidado/",
@@ -29,11 +28,9 @@ class DuocURLManager:
             "plaza_norte_servicios": "https://www.duoc.cl/sedes/plaza-norte/servicios/",
             "plaza_norte_carreras": "https://www.duoc.cl/sedes/plaza-norte/carreras/",
             "plaza_norte_biblioteca": "https://www.duoc.cl/sedes/plaza-norte/biblioteca/",
-            "plaza_norte_laboratorios": "https://www.duoc.cl/sedes/plaza-norte/laboratorios/",
             "plaza_norte_como_llegar": "https://www.duoc.cl/sedes/plaza-norte/como-llegar/",
             "plaza_norte_horarios": "https://www.duoc.cl/sedes/plaza-norte/horarios/",
             "plaza_norte_calendario": "https://www.duoc.cl/sedes/plaza-norte/calendario-academico/",
-            "plaza_norte_estacionamiento": "https://www.duoc.cl/sedes/plaza-norte/estacionamiento/",
             "plaza_norte_casino": "https://www.duoc.cl/sedes/plaza-norte/casino/",
             "plaza_norte_enfermeria": "https://www.duoc.cl/sedes/plaza-norte/enfermeria/",
             "plaza_norte_transporte": "https://www.duoc.cl/sedes/plaza-norte/transporte/",
@@ -70,8 +67,9 @@ class DuocURLManager:
             
             # Empleo y prácticas
             "empleabilidad": "https://www.duoc.cl/empleabilidad/",
-            "portal_laboral": "https://www.duoc.cl/empleabilidad/portal-laboral/",
+            "portal_laboral": "https://duoclaboral.cl/",
             "bolsa_trabajo": "https://bolsa.duoc.cl/",
+            "duoclaboral": "https://duoclaboral.cl/",
             "practicas_estudiantes": "https://www.duoc.cl/alumnos/practicas/",
             
             # TNE y transporte
@@ -79,9 +77,8 @@ class DuocURLManager:
             "beneficios_tne": "https://www.duoc.cl/alumnos/beneficios-tne/",
             
             # Ayuda y soporte
-            "centro_ayuda": "https://centroayuda.duoc.cl/hc/es-419",
-            "ayuda_online": "https://centrodeayudaonline.duoc.cl/hc/es-419/",
-            "experiencia_vivo": "https://centrodeayudaonline.duoc.cl/hc/es-419/articles/32100564564621-Portal-Experiencia-Vivo",
+            "ayuda_online": "https://centroayuda.duoc.cl",
+            "experiencia_vivo": "https://www.duoc.cl/alumnos/",
             "chat_online": "https://www.duoc.cl/contacto/chat-online/",
             
             # Docentes
@@ -149,17 +146,12 @@ class DuocURLManager:
             "horario": "plaza_norte_horarios",
             "horarios": "plaza_norte_horarios",
             "calendario": "plaza_norte_calendario",
-            "estacionamiento": "plaza_norte_estacionamiento",
-            "auto": "plaza_norte_estacionamiento",
-            "parking": "plaza_norte_estacionamiento",
             "casino": "plaza_norte_casino",
             "comida": "plaza_norte_casino",
             "almuerzo": "plaza_norte_casino",
             "enfermeria": "plaza_norte_enfermeria",
             "salud": "plaza_norte_enfermeria",
             "primeros auxilios": "plaza_norte_enfermeria",
-            "laboratorio": "plaza_norte_laboratorios",
-            "lab": "plaza_norte_laboratorios",
             "contacto": "plaza_norte_contacto",
             "telefono": "plaza_norte_contacto",
             
@@ -186,12 +178,12 @@ class DuocURLManager:
             "representacion": "centro_estudiantes",
             
             # Ayuda y soporte
-            "ayuda": "centro_ayuda",
-            "soporte": "centro_ayuda",
-            "problema": "centro_ayuda",
-            "error": "centro_ayuda",
-            "duda": "centro_ayuda",
-            "consulta": "centro_ayuda",
+            "ayuda": "ayuda_online",
+            "soporte": "ayuda_online",
+            "problema": "ayuda_online",
+            "error": "ayuda_online",
+            "duda": "ayuda_online",
+            "consulta": "ayuda_online",
             "chat": "chat_online",
             "online": "ayuda_online",
             "experiencia vivo": "experiencia_vivo",
@@ -580,10 +572,10 @@ class QRGenerator:
         elif any(word in question_lower for word in ['embajador', 'salud mental']):
             return [self.duoc_manager.duoc_urls['embajadores_salud']]
         
-        # Por defecto, ofrecer portal de alumnos y ayuda
+        # Por defecto, ofrecer portal de alumnos y ayuda online
         return [
             self.duoc_manager.duoc_urls['portal_alumnos'],
-            self.duoc_manager.duoc_urls['ayuda']
+            self.duoc_manager.duoc_urls['ayuda_online']
         ]
 
     def validate_and_generate_qr(self, url: str, size: int = 200) -> Optional[str]:

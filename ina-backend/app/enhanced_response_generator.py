@@ -13,31 +13,6 @@ logger = logging.getLogger(__name__)
 class EnhancedResponseGenerator:
     def __init__(self):
         self.specific_templates = {
-            # ESTACIONAMIENTO
-            "estacionamiento": {
-                "patterns": [r"estacionamient", r"aparc", r"auto", r"veh[íi]culo", r"parking"],
-                "response": """🚗 **Estacionamiento DuocUC Plaza Norte**
-
-**Ubicación:**
-- Subterráneo del mall Plaza Norte
-- Acceso por Av. Américo Vespucio Norte
-
-**Tarifas Estudiantes:**
-- Primera hora: $800
-- Cada hora adicional: $600  
-- Máximo día: $4.500
-
-**Horarios:**
-- Lunes a Viernes: 7:00 - 23:00
-- Sábados: 8:00 - 20:00
-
-**Beneficios:**
-- Descuento con credencial DuocUC
-- Espacios reservados estudiantes
-
-📞 **Consultas:** +56 2 2354 8000 ext. 2200"""
-            },
-            
             # CERTIFICADOS
             "certificados": {
                 "patterns": [r"certificad", r"document", r"concentraci[óo]n", r"alumno regular", r"papel"],
@@ -178,7 +153,7 @@ Tel: +56 2 2354 8000 ext. 2250"""
             
             # SALUD ESTUDIANTIL
             "salud": {
-                "patterns": [r"salud", r"psic[óo]log", r"bienestar", r"apoyo", r"ayuda"],
+                "patterns": [r"salud", r"psic[óo]log", r"bienestar"],
                 "response": """🏥 **Salud y Bienestar Estudiantil**
 
 **Servicios Disponibles:**
@@ -203,6 +178,91 @@ Tel: +56 2 2354 8000 ext. 2250"""
 📍 **Ubicación:** Enfermería, Edificio B, 1er piso
 📞 **Emergencias:** +56 2 2354 8000 ext. 911
 📧 **Citas:** bienestar.plazanorte@duoc.cl"""
+            },
+            
+            # DESARROLLO LABORAL - Nuevo template específico
+            "desarrollo_laboral": {
+                "patterns": [r"ayuda.*laboral", r"trabajo", r"empleo", r"cv", r"curriculum", r"entrevista", r"laboral"],
+                "response": """💼 **Desarrollo Laboral - DuocUC Plaza Norte**
+
+**Servicios Disponibles:**
+• **Asesoría de CV:** Revisión y optimización de currículum
+• **Preparación entrevistas:** Simulacros y técnicas
+• **Bolsa de trabajo:** Ofertas exclusivas para estudiantes
+• **Talleres empleabilidad:** Competencias laborales
+• **Networking empresarial:** Conexión con empleadores
+
+**Contacto Desarrollo Laboral:**
+📍 **Ubicación:** Piso 2, Sede Plaza Norte
+📞 **Teléfono:** +56 2 2354 8000 ext. 2300
+📧 **Email:** desarrollolaboral.plazanorte@duoc.cl
+🌐 **Portal:** https://duoclaboral.cl/
+🕒 **Horarios:** Lunes a Viernes 09:00-18:00
+
+💡 *También ofrecemos apoyo para prácticas profesionales y seguimiento de titulados*"""
+            },
+            
+            # CRISIS EMOCIONAL / EMERGENCIA MENTAL
+            "crisis_emocional": {
+                "patterns": [r"suicid", r"morir", r"quiero morir", r"matarme", r"autolesion", r"cortarme", 
+                            r"no quiero vivir", r"acabar con mi vida", r"quiero terminar", r"ya no puedo",
+                            r"siento.*mal.*urgente", r"necesito.*ayuda.*urgente", r"crisis.*emocional",
+                            r"pensamientos.*suicidas", r"me siento.*muy mal"],
+                "use_template": "institucionales.crisis_emocional"
+            },
+            
+            # AYUDA AMBIGUA
+            "ayuda_ambigua": {
+                "patterns": [r"^necesito ayuda$", r"^ayuda$", r"^help$", r"ayúdame", r"ayudenme",
+                            r"no sé.*hacer", r"necesito.*orientación", r"me puedes.*ayudar",
+                            r"me puedes.*orientar", r"qué hago"],
+                "use_template": "institucionales.ayuda_ambigua"
+            },
+            
+            # ÁREAS GENERALES
+            "areas_generales": {
+                "patterns": [r"qu[ée].*[áa]reas", r"que.*areas.*existen", r"qu[ée].*servicios",
+                            r"qu[ée].*[áa]reas.*hay", r"listar.*[áa]reas", r"mostrar.*[áa]reas",
+                            r"cuales.*[áa]reas", r"qu[ée].*pueden.*ayudar", r"lista.*[áa]reas",
+                            r"departamentos.*existen", r"qu[ée].*departamentos", r"[áa]reas.*institucionales",
+                            r"servicios.*duoc", r"[áa]reas.*sede"],
+                "use_template": "institucionales.areas_generales"
+            },
+            
+            # SESIONES PSICOLÓGICAS
+            "sesiones_psicologicas": {
+                "patterns": [r"sesion.*psicol[óo]g", r"atenci[óo]n.*psicol[óo]g", r"apoyo.*psicol[óo]g",
+                            r"psic[óo]logo", r"ayuda.*emocional", r"salud.*mental", r"agendo.*psic",
+                            r"pedir.*hora.*psic", r"cita.*psic", r"apoyo.*psicol[óo]gico.*sede"],
+                "use_template": "bienestar_estudiantil.sesiones_psicologicas"
+            },
+            
+            # CONTACTOS DIRECTOS
+            "contactos_areas": {
+                "patterns": [r"contacto.*punto.*estudiantil", r"correo.*area", r"email.*area",
+                            r"tel[ée]fono.*area", r"contacto.*bienestar", r"contacto.*desarrollo"],
+                "use_template": "institucionales.contactos_areas"
+            },
+            
+            # BENEFICIOS ESTUDIANTILES
+            "gratuidad": {
+                "patterns": [r"gratuidad", r"qué.*es.*gratuidad", r"como.*funciona.*gratuidad"],
+                "use_template": "asuntos_estudiantiles.gratuidad"
+            },
+            
+            "cae_credito": {
+                "patterns": [r"\bcae\b", r"crédito.*garantía.*estatal", r"como.*funciona.*cae"],
+                "use_template": "asuntos_estudiantiles.cae_credito"
+            },
+            
+            "junaeb": {
+                "patterns": [r"junaeb", r"beca.*junaeb", r"postulo.*junaeb", r"beneficios.*junaeb"],
+                "use_template": "asuntos_estudiantiles.junaeb"
+            },
+            
+            "becas_internas": {
+                "patterns": [r"becas.*internas", r"beneficios.*internos.*duoc", r"becas.*duoc"],
+                "use_template": "asuntos_estudiantiles.becas_internas"
             }
         }
         
@@ -283,24 +343,20 @@ Centro de servicios estudiantiles para trámites y consultas:
 
             # Si tenemos un template específico, úsalo
             if query_type in self.specific_templates:
-                response_text = (
-                    "La sede Plaza Norte se encuentra en el segundo piso del centro comercial Plaza Norte. "
-                    "El Punto Estudiantil está ubicado en el Piso 2, Sede Plaza Norte, junto al área de servicios estudiantiles. "
-                    "Para atención presencial, dirígete al área de servicios estudiantiles en el Piso 2."
-                )
+                template = self.specific_templates[query_type]
+                response_text = template["response"]
                 return {
                     "response": response_text,
                     "sources": [{"type": "template", "category": query_type}],
                     "is_enhanced": True,
-                    "success": True
+                    "success": True,
+                    "response_type": f"specific_{query_type}"
                 }
 
             # Si tenemos template de categoría
             elif category in self.category_templates:
-                response_text = (
-                    "Puedes contactar al Punto Estudiantil en Plaza Norte por teléfono al +56 2 2999 3075 "
-                    "o acudir presencialmente al Piso 2, Sede Plaza Norte, área de servicios estudiantiles."
-                )
+                template = self.category_templates[category]
+                response_text = template["response"].format(contact_info=self._get_contact_info())
                 return {
                     "response": response_text,
                     "response_type": f"category_{category}",
@@ -309,18 +365,15 @@ Centro de servicios estudiantiles para trámites y consultas:
                     "success": True
                 }
 
-            # No hay respuesta específica disponible
+            # No hay respuesta específica disponible - devolver None
             else:
-                response_text = (
-                    "La TNE es gratuita para estudiantes de Duoc UC. "
-                    "Puedes solicitarla en el Punto Estudiantil, Piso 2, Sede Plaza Norte. "
-                    "Horario de atención: Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00."
-                )
+                logger.info(f"No hay template específico para query_type='{query_type}', category='{category}'")
                 return {
-                    "response": response_text,
+                    "response": None,
                     "sources": [],
                     "is_enhanced": False,
-                    "success": False
+                    "success": False,
+                    "reason": "no_template_available"
                 }
 
         except Exception as e:
@@ -442,7 +495,7 @@ Nuestro personal especializado estará encantado de ayudarte con información de
 💬 **¿Necesitas más ayuda?**
 • Centro de Ayuda: centroayuda.duoc.cl
 • WhatsApp: +56 9 XXXX XXXX
-• Presencial: Av. Américo Vespucio Norte 1630
+• Presencial: Calle Nueva 1660, Huechuraba
 
 ⭐ **Califica esta respuesta** para ayudarnos a mejorar"""
 

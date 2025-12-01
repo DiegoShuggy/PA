@@ -18,7 +18,7 @@ class ResponseEnhancer:
         self.contact_info = {
             'plaza_norte_general': {
                 'phone': '+56 2 2999 3000',
-                'address': 'Av. Américo Vespucio Norte 1630, Huechuraba',
+                'address': 'Calle Nueva 1660, Huechuraba',
                 'hours': 'Lunes a Viernes 08:30-22:30, Sábados 08:30-14:00',
                 'email': 'admision@duoc.cl'
             },

@@ -20,6 +20,13 @@ class ContentFilter:
             # Datos sensibles
             "contraseña duoc", "clave portal", "número tarjeta", "datos bancarios", "pin bancario"
         ]
+        
+        # OFF-TOPIC keywords (solo bloqueadas cuando NO están en contexto institucional)
+        self.off_topic_keywords = [
+            "sexo", "drogas", "droga", "alcohol", "videojuegos", "video juegos", 
+            "juegos", "marihuana", "cerveza", "trago", "fiesta",
+            "discoteca", "carrete", "copete"
+        ]
 
         # PATRONES PELIGROSOS (regex)
         self.suspicious_patterns = [
@@ -245,31 +252,34 @@ class ContentFilter:
                 "reason": "Término institucional fuerte detectado",
                 "category": category or "institucionales"
             }
-                # BLOQUEO DE SOLICITUDES DE OPINIÓN
+        
+        # PRIORIDAD 3: TÉRMINOS PERMITIDOS Y CONTEXTOS ESPECÍFICOS
+        if self._contains_allowed_terms(question_lower) or self._is_in_allowed_context(question_lower):
+            logger.info(f"Pregunta permitida por términos institucionales o contexto: {question}")
+            return {
+                "allowed": True,
+                "reason": "Contexto o términos institucionales detectados",
+                "category": category or "institucionales"
+            }
+        
+        # BLOQUEO DE TEMAS OFF-TOPIC (solo si NO hay contexto institucional)
+        off_topic_word = self._contains_off_topic_keyword(question_lower)
+        if off_topic_word:
+            logger.warning(f"Pregunta bloqueada por tema off-topic: {off_topic_word}")
+            return {
+                "allowed": False,
+                "reason": f"No puedo responder consultas sobre '{off_topic_word}' fuera del contexto institucional. Pregúntame sobre servicios de Duoc UC.",
+                "category": None,
+                "block_reason": "off_topic"
+            }
+        
+        # BLOQUEO DE SOLICITUDES DE OPINIÓN
         if self._is_opinion_request(question_lower):
             return {
                 "allowed": False,
                 "reason": "No puedo ofrecer opiniones personales. Puedo proporcionarte información objetiva sobre los servicios del Punto Estudiantil.",
                 "category": None,
                 "block_reason": "opinion_request"
-            }
-
-        # PRIORIDAD 3: TÉRMINOS PERMITIDOS
-        if self._contains_allowed_terms(question_lower):
-            logger.info(f"Pregunta permitida por términos institucionales: {question}")
-            return {
-                "allowed": True,
-                "reason": "Términos institucionales detectados",
-                "category": category or "institucionales"
-            }
-
-        # PRIORIDAD 4: CONTEXTOS ESPECÍFICOS
-        if self._is_in_allowed_context(question_lower):
-            logger.info(f"Pregunta permitida por contexto institucional: {question}")
-            return {
-                "allowed": True,
-                "reason": "Contexto institucional detectado",
-                "category": category or "institucionales"
             }
 
         # BLOQUEO: Solo contenido realmente peligroso
@@ -326,6 +336,13 @@ class ContentFilter:
 
     def _contains_blocked_keyword(self, question: str) -> str:
         for keyword in self.blocked_keywords:
+            if keyword in question:
+                return keyword
+        return ""
+    
+    def _contains_off_topic_keyword(self, question: str) -> str:
+        """Check for off-topic keywords (sexo, drogas, alcohol, videojuegos) when not in institutional context"""
+        for keyword in self.off_topic_keywords:
             if keyword in question:
                 return keyword
         return ""
