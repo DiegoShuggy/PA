@@ -35,16 +35,26 @@ sys.path.insert(0, str(project_root))
 from app.intelligent_chunker import semantic_chunker
 from app.rag import rag_engine
 
-# Configurar logging detallado
+# Configurar logging detallado - FORZAR CONSOLA
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    format='%(message)s',  # Formato simple para consola
     handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler(f'logs/ingesta_md_json_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
-    ]
+        logging.StreamHandler()  # Solo consola, sin archivo
+    ],
+    force=True  # Forzar reconfiguración
 )
 logger = logging.getLogger(__name__)
+
+# Intentar agregar archivo de log (opcional, no bloqueante)
+try:
+    import os
+    os.makedirs('logs', exist_ok=True)
+    file_handler = logging.FileHandler(f'logs/ingesta_md_json_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log', encoding='utf-8')
+    file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+    logger.addHandler(file_handler)
+except Exception as e:
+    print(f"⚠️ No se pudo crear archivo de log: {e} (continuando en consola)")
 
 
 class MarkdownJsonIngester:
@@ -106,6 +116,9 @@ class MarkdownJsonIngester:
             raise
     
     def process_markdown_directory(self) -> Tuple[int, int]:
+        logger.info(f"\n{'='*80}")
+        logger.info(f"📄 PROCESANDO ARCHIVOS MARKDOWN")
+        logger.info(f"{'='*80}\n")
         """
         Procesa todos los archivos .md del directorio data/markdown/
         
@@ -121,32 +134,30 @@ class MarkdownJsonIngester:
         logger.info(f"{'='*80}\n")
         
         md_files = list(self.markdown_dir.rglob('*.md'))
-        logger.info(f"📂 Encontrados {len(md_files)} archivos Markdown")
+        print(f"📂 Encontrados {len(md_files)} archivos Markdown")
+        if not md_files:
+            print("⚠️ No se encontraron archivos Markdown para procesar.")
+            return 0, 0
         
         files_processed = 0
         chunks_generated = 0
         
         for md_file in md_files:
             try:
-                logger.info(f"\n  📄 Procesando: {md_file.relative_to(self.markdown_dir)}")
-                
-                # Detectar categoría del subdirectorio
+                print(f"\n  📄 Procesando: {md_file.relative_to(self.markdown_dir)}")
                 category = md_file.parent.name if md_file.parent != self.markdown_dir else 'general'
-                
-                # Usar intelligent_chunker para procesar
                 chunks = semantic_chunker.chunk_markdown_file(
                     md_path=str(md_file),
                     source_name=md_file.stem,
                     category=category
                 )
-                
                 if chunks:
-                    logger.info(f"    ✓ Generados {len(chunks)} chunks")
-                    logger.info(f"    📊 Metadata: categoria={chunks[0].get('metadata', {}).get('category', 'N/A')}")
-                    
-                    # Agregar chunks a RAG
-                    if not self.dry_run:
-                        for chunk in chunks:
+                    print(f"    ✓ Generados {len(chunks)} chunks")
+                    for idx, chunk in enumerate(chunks):
+                        meta = chunk.get('metadata', {})
+                        print(f"      [{idx+1}] chunk_id: {meta.get('chunk_id', 'N/A')[:20]}..., section: {meta.get('section', 'N/A')[:30]}, keywords: {str(meta.get('keywords', 'N/A'))[:40]}")
+                        # Agregar chunks a RAG
+                        if not self.dry_run:
                             success = rag_engine.add_document(
                                 document=chunk['text'],
                                 metadata=chunk['metadata']
@@ -155,22 +166,18 @@ class MarkdownJsonIngester:
                                 chunks_generated += 1
                                 self.stats['total_chunks_added'] += 1
                             else:
-                                logger.warning(f"    ⚠️  Falló agregar chunk {chunk['metadata'].get('chunk_id')}")
-                    else:
-                        chunks_generated += len(chunks)
-                        logger.info(f"    🔍 [DRY-RUN] {len(chunks)} chunks simulados")
-                    
+                                print(f"    ⚠️  Falló agregar chunk {meta.get('chunk_id')}")
                     files_processed += 1
                     self.stats['categories'][category] = self.stats['categories'].get(category, 0) + len(chunks)
-                    
                 else:
-                    logger.warning(f"    ⚠️  No se generaron chunks para {md_file.name}")
-                    
+                    print(f"    ⚠️  No se generaron chunks para {md_file.name}")
             except Exception as e:
-                logger.error(f"    ❌ Error procesando {md_file.name}: {e}")
+                print(f"    ❌ Error procesando {md_file.name}: {e}")
+                import traceback
+                traceback.print_exc()
                 self.stats['errors'] += 1
         
-        logger.info(f"\n📊 Markdown Summary: {files_processed} archivos → {chunks_generated} chunks")
+        print(f"\n📊 Markdown Summary: {files_processed} archivos → {chunks_generated} chunks")
         return files_processed, chunks_generated
     
     def process_json_directory(self) -> Tuple[int, int]:
@@ -300,34 +307,34 @@ class MarkdownJsonIngester:
         """Imprime resumen detallado de la ingesta"""
         elapsed = time.time() - self.stats['start_time']
         
-        logger.info(f"\n{'='*80}")
-        logger.info(f"📊 RESUMEN DE INGESTA MD/JSON")
-        logger.info(f"{'='*80}\n")
+        print(f"\n{'='*80}")
+        print(f"📊 RESUMEN DE INGESTA MD/JSON")
+        print(f"{'='*80}\n")
         
-        logger.info(f"⏱️  Tiempo total: {elapsed:.2f}s")
-        logger.info(f"📄 Archivos Markdown procesados: {self.stats['markdown_files_processed']}")
-        logger.info(f"📋 Archivos JSON procesados: {self.stats['json_files_processed']}")
-        logger.info(f"📦 Total chunks generados: {self.stats['total_chunks_generated']}")
-        logger.info(f"✅ Chunks agregados a ChromaDB: {self.stats['total_chunks_added']}")
-        logger.info(f"❌ Errores: {self.stats['errors']}")
+        print(f"⏱️  Tiempo total: {elapsed:.2f}s")
+        print(f"📄 Archivos Markdown procesados: {self.stats['markdown_files_processed']}")
+        print(f"📋 Archivos JSON procesados: {self.stats['json_files_processed']}")
+        print(f"📦 Total chunks generados: {self.stats['total_chunks_generated']}")
+        print(f"✅ Chunks agregados a ChromaDB: {self.stats['total_chunks_added']}")
+        print(f"❌ Errores: {self.stats['errors']}")
         
         if self.stats['categories']:
-            logger.info(f"\n📊 Distribución por categorías:")
+            print(f"\n📊 Distribución por categorías:")
             for category, count in sorted(self.stats['categories'].items(), key=lambda x: -x[1]):
-                logger.info(f"   • {category}: {count} chunks")
+                print(f"   • {category}: {count} chunks")
         
         # Calcular métricas
         if elapsed > 0:
             rate = self.stats['total_chunks_added'] / elapsed
-            logger.info(f"\n⚡ Velocidad: {rate:.1f} chunks/segundo")
+            print(f"\n⚡ Velocidad: {rate:.1f} chunks/segundo")
         
         # Estado final
-        logger.info(f"\n{'='*80}")
+        print(f"\n{'='*80}")
         if self.stats['errors'] == 0:
-            logger.info(f"✅ INGESTA COMPLETADA EXITOSAMENTE")
+            print(f"✅ INGESTA COMPLETADA EXITOSAMENTE")
         else:
-            logger.warning(f"⚠️  INGESTA COMPLETADA CON {self.stats['errors']} ERRORES")
-        logger.info(f"{'='*80}\n")
+            print(f"⚠️  INGESTA COMPLETADA CON {self.stats['errors']} ERRORES")
+        print(f"{'='*80}\n")
 
 
 def main():
@@ -375,6 +382,11 @@ def main():
             else:
                 logger.info("❌ Limpieza cancelada")
                 return
+        
+        # FORZAR procesamiento de archivos incluso si hay documentos
+        logger.info("\n" + "="*80)
+        logger.info("📂 INICIANDO PROCESAMIENTO DE ARCHIVOS")
+        logger.info("="*80 + "\n")
         
         # Procesar archivos
         md_files, md_chunks = ingester.process_markdown_directory()
