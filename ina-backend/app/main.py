@@ -308,22 +308,42 @@ async def on_startup():
             else:
                 # Verificar metadata enriquecida
                 results = collection.query(query_texts=["tne"], n_results=1)
-                if results['metadatas'] and results['metadatas'][0]:
-                    meta = results['metadatas'][0][0]
-                    has_section = 'section' in meta and meta['section'] and meta['section'] != 'N/A'
-                    has_keywords = 'keywords' in meta and meta['keywords']
-                    has_chunk_id = 'chunk_id' in meta and meta['chunk_id']
-                    
-                    if not (has_section and has_keywords and has_chunk_id):
-                        print(f"   ⚠️  Chunks sin metadata enriquecida")
-                        print(f"      - Sección: {'✓' if has_section else '✗'}")
-                        print(f"      - Keywords: {'✓' if has_keywords else '✗'}")
-                        print(f"      - Chunk ID: {'✓' if has_chunk_id else '✗'}")
-                        print(f"   📌 Ejecuta: python scripts/ingest/ingest_markdown_json.py --clean")
-                        logger.warning("⚠️  Metadata no enriquecida. Usa ingest_markdown_json.py")
-                    else:
-                        print(f"   ✅ ChromaDB OK: {total_chunks} chunks con metadata enriquecida")
-                        logger.info(f"✅ ChromaDB verificado: {total_chunks} chunks válidos")
+
+                # Seguridad: proteger contra resultados inesperados (None, estructuras incompletas)
+                meta = None
+                try:
+                    if results and isinstance(results, dict):
+                        metadatas = results.get('metadatas')
+                        if metadatas and isinstance(metadatas, list) and len(metadatas) > 0 and metadatas[0]:
+                            # metadatas[0] suele ser una lista con al menos un dict
+                            if isinstance(metadatas[0], list) and len(metadatas[0]) > 0:
+                                meta = metadatas[0][0]
+                            else:
+                                meta = metadatas[0]
+                except Exception as parse_err:
+                    logger.warning(f"Error parsing ChromaDB query results: {parse_err}")
+                    meta = None
+
+                # Comprobar campos dentro de meta de forma segura
+                has_section = False
+                has_keywords = False
+                has_chunk_id = False
+
+                if meta and isinstance(meta, dict):
+                    has_section = bool(meta.get('section') and meta.get('section') != 'N/A')
+                    has_keywords = bool(meta.get('keywords'))
+                    has_chunk_id = bool(meta.get('chunk_id'))
+
+                if not (has_section and has_keywords and has_chunk_id):
+                    print(f"   ⚠️  Chunks sin metadata enriquecida")
+                    print(f"      - Sección: {'✓' if has_section else '✗'}")
+                    print(f"      - Keywords: {'✓' if has_keywords else '✗'}")
+                    print(f"      - Chunk ID: {'✓' if has_chunk_id else '✗'}")
+                    print(f"   📌 Ejecuta: python scripts/ingest/ingest_markdown_json.py --clean")
+                    logger.warning("⚠️  Metadata no enriquecida. Usa ingest_markdown_json.py")
+                else:
+                    print(f"   ✅ ChromaDB OK: {total_chunks} chunks con metadata enriquecida")
+                    logger.info(f"✅ ChromaDB verificado: {total_chunks} chunks válidos")
             
             # 🗑️ REPROCESAMIENTO AUTOMÁTICO DESHABILITADO (FASE 3)
             # El código de reprocesamiento automático fue comentado porque:
