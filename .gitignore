@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# ChromaDB - Demasiado pesado para Git
+ina-backend/chroma_db/
+ina-backend/chroma_db_*/
+
+# Logs
+*.log
+ina-backend/logs/
+ina-backend/production_logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
