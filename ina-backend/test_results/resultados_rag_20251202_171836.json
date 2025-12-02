@@ -1,0 +1,85 @@
+{
+  "timestamp": "2025-12-02T17:18:36.645984",
+  "metricas": {
+    "total_consultas": 4,
+    "exitosas": 4,
+    "fallidas": 0,
+    "tiempo_promedio": 5.456738531589508,
+    "tiempos": [
+      6.2290918827056885,
+      4.620645046234131,
+      4.745637893676758,
+      6.231579303741455
+    ]
+  },
+  "resultados": [
+    {
+      "id": 1,
+      "categoria": "Académico",
+      "query": "¿Qué carreras de Ingeniería se imparten en Plaza Norte?",
+      "dificultad": 2,
+      "archivo": "CONSULTAS_PRUEBA_RAG_PURO",
+      "tiene_template": false,
+      "status": "exitosa",
+      "tiempo_respuesta": 6.2290918827056885,
+      "respuesta": "Error técnico. Intenta nuevamente.",
+      "categoria_detectada": "institucionales",
+      "tiene_contexto": true,
+      "metodo_clasificacion": "",
+      "keywords_extraidas": {},
+      "qr_generados": 3,
+      "timestamp": "2025-12-02T17:18:19.041049"
+    },
+    {
+      "id": 2,
+      "categoria": "Académico",
+      "query": "¿Cómo puedo revisar mis notas del semestre?",
+      "dificultad": 2,
+      "archivo": "CONSULTAS_PRUEBA_RAG_PURO",
+      "tiene_template": false,
+      "status": "exitosa",
+      "tiempo_respuesta": 4.620645046234131,
+      "respuesta": "📊 **Consulta de Notas**\n\n**Portal Estudiante:**\n1. Ingresa a vivo.duoc.cl\n2. Usuario: RUT sin puntos ni dígito verificador\n3. Clave: entregada en matrícula\n4. Ve a \"Mis Notas\"\n\n**Información Disponible:**\n- Notas parciales y finales\n- Promedio por asignatura\n- Promedio general\n- Estado académico\n- Calendario de evaluaciones\n\n**Plazos de Publicación:**\n- Evaluaciones: Máximo 10 días hábiles\n- Exámenes: 5 días hábiles\n- Notas finales: 3 días post examen\n\n🆘 **Problemas de acceso:** soporte@duoc.cl\n📞 **Mesa de ayuda:** +56 2 2354 8000 ext. 1234",
+      "categoria_detectada": "otros",
+      "tiene_contexto": true,
+      "metodo_clasificacion": "",
+      "keywords_extraidas": {},
+      "qr_generados": 2,
+      "timestamp": "2025-12-02T17:18:24.162934"
+    },
+    {
+      "id": 101,
+      "categoria": "Lenguaje Informal",
+      "query": "wn tengo cacho con mi tne, se me perdio y no se que hacer",
+      "dificultad": 3,
+      "archivo": "CONSULTAS_CONVERSACIONALES_SIN_TEMPLATES",
+      "tiene_template": true,
+      "status": "exitosa",
+      "tiempo_respuesta": 4.745637893676758,
+      "respuesta": "Error técnico. Intenta nuevamente.",
+      "categoria_detectada": "asuntos_estudiantiles",
+      "tiene_contexto": true,
+      "metodo_clasificacion": "",
+      "keywords_extraidas": {},
+      "qr_generados": 2,
+      "timestamp": "2025-12-02T17:18:29.409784"
+    },
+    {
+      "id": 102,
+      "categoria": "Lenguaje Informal",
+      "query": "ando corto de plata este mes, hay algun beneficio o ayuda pa estudiantes?",
+      "dificultad": 4,
+      "archivo": "CONSULTAS_CONVERSACIONALES_SIN_TEMPLATES",
+      "tiene_template": true,
+      "status": "exitosa",
+      "tiempo_respuesta": 6.231579303741455,
+      "respuesta": "Error técnico. Intenta nuevamente.",
+      "categoria_detectada": "institucionales",
+      "tiene_contexto": true,
+      "metodo_clasificacion": "",
+      "keywords_extraidas": {},
+      "qr_generados": 3,
+      "timestamp": "2025-12-02T17:18:36.142576"
+    }
+  ]
+}
