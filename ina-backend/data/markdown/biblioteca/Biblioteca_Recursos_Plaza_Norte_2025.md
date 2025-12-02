@@ -1,0 +1,284 @@
+---
+id: biblioteca_Biblioteca_Recursos_Plaza_Norte_2025
+source: Biblioteca_Recursos_Plaza_Norte_2025.txt
+source_type: txt_converted
+categoria: biblioteca
+fecha_conversion: '2025-12-01'
+fecha_modificacion_original: '2025-11-29'
+departamento: biblioteca
+keywords:
+- biblioteca
+- libro
+- digital
+- prestamo
+prioridad: media
+tipo_contenido: directorio
+titulo: EXPANSIÓN MASIVA DE RECURSOS ACADÉMICOS Y DIGITALES
+---
+
+[3 lines of pre-context]
+
+---
+
+## EXPANSIÓN MASIVA DE RECURSOS ACADÉMICOS Y DIGITALES
+
+### Recursos Digitales Avanzados
+- Acceso a cursos online, talleres y webinars sobre investigación, tecnología y productividad.
+- Bibliotecas digitales especializadas en áreas de estudio y bienestar.
+
+### Comunidad Académica
+- Espacios de encuentro y colaboración entre estudiantes, docentes y expertos.
+- Foros y eventos para compartir experiencias y buenas prácticas académicas.
+
+### Plataformas Digitales Especializadas
+- LinkedIn Learning, Pearson MyLab, Google Scholar, JSTOR, Statista, entre otros.
+- Acceso desde la biblioteca digital o portal de alumnos.
+
+### Soporte y Consultas
+- Biblioteca: +56 2 2354 8300 | biblioteca.plazanorte@duoc.cl
+- Soporte TI: +56 2 2999 3075 | soporte.ti@duoc.cl
+
+### Instructivos Avanzados
+- Guías para uso de bases de datos, gestión de referencias, acceso remoto y tutoriales multimedia.
+- Manuales y videos sobre productividad académica y herramientas digitales.
+# 📚 BIBLIOTECA Y RECURSOS ACADÉMICOS PLAZA NORTE
+
+## 📖 **BIBLIOTECA CENTRAL**
+
+### **Ubicación y Horarios**
+📍 **Ubicación**: Piso 2, Sede Plaza Norte
+📞 **Teléfono**: +56 2 2354 8300
+📧 **Email**: biblioteca.plazanorte@duoc.cl
+🌐 **Portal**: https://bibliotecas.duoc.cl/plaza-norte/
+
+### **Horarios de Atención**
+📅 **Lunes a Viernes**: 8:00 - 21:00 hrs
+📅 **Sábados**: 8:00 - 13:00 hrs
+📅 **Domingos**: Cerrado
+🎄 **Vacaciones**: Horario especial (consultar)
+
+### **Servicios Principales**
+✅ **Préstamo de libros** (domiciliario y sala)
+✅ **Acceso a computadores** (40 equipos disponibles)
+✅ **WiFi gratuito** en toda la biblioteca
+✅ **Salas de estudio grupal** (reserva previa)
+✅ **Cubículos individuales** para estudio silencioso
+✅ **Impresión y fotocopiado** (autoservicio)
+✅ **Apoyo en investigación** y búsqueda bibliográfica
+
+## 🖨️ IMPRESIÓN Y FOTOCOPIADO DE DOCUMENTOS
+
+### ¿Cómo imprimir y fotocopiar documentos en Plaza Norte?
+1. Dirígete a la Biblioteca Central (Piso 2, Sede Plaza Norte).
+2. Utiliza las máquinas de autoservicio de impresión y fotocopiado disponibles.
+3. Ingresa tus credenciales institucionales en el sistema de impresión.
+4. Selecciona el archivo desde tu pendrive, correo institucional o equipo de la biblioteca.
+5. Realiza el pago en la caja de la biblioteca o mediante el sistema de recarga.
+6. Retira tus documentos impresos o fotocopiados.
+
+💰 **Costos aproximados:**
+• Impresión blanco y negro: $50 por página
+• Impresión color: $150 por página
+• Fotocopia: $50 por página
+
+📍 **Ubicación:** Biblioteca Central, Piso 2, Sede Plaza Norte
+📞 **Contacto:** +56 2 2354 8300
+📧 **Email:** biblioteca.plazanorte@duoc.cl
+🕒 **Horario:** Lunes a Viernes 8:00-21:00, Sábados 8:00-13:00
+
+## 💻 **RECURSOS DIGITALES**
+
+### **Plataforma Digital**
+🌐 **Portal**: https://bibliotecas.duoc.cl/recursos-digitales/
+👤 **Acceso**: Con credenciales institucionales
+⏰ **Disponibilidad**: 24/7
+
+## 🌐 PLATAFORMAS ACADÉMICAS Y RECURSOS DIGITALES
+
+### ¿Cómo acceder a las principales plataformas institucionales?
+
+1. **AVA Blackboard Duoc UC**
+	• Acceso: https://ava.duoc.cl
+	• Plataforma oficial de Duoc UC para cursos, materiales, tareas y comunicación académica.
+	• Ingresa con tu RUT y clave institucional.
+
+2. **Biblioteca Digital Duoc UC**
+	• Acceso: https://bibliotecas.duoc.cl/plaza-norte/
+	• Consulta libros, bases de datos, recursos digitales y tutoriales.
+
+3. **CVA (Campus Virtual de Aprendizaje)**
+	• Acceso: https://cva.duoc.cl
+	• Cursos online, recursos multimedia y autoevaluaciones.
+
+4. **Office 365 Institucional**
+	• Acceso: https://portal.office.com
+	• Herramientas de productividad (Word, Excel, PowerPoint, Teams, OneDrive).
+	• Ingresa con tu correo institucional (@duocuc.cl).
+
+5. **Otros recursos**
+	• LinkedIn Learning, Pearson MyLab, Google Scholar, JSTOR, Statista, etc.
+	• Acceso desde la biblioteca digital o portal de alumnos.
+
+📞 **Soporte y consultas Plaza Norte:**
+• Biblioteca: +56 2 2354 8300 | biblioteca.plazanorte@duoc.cl
+• Soporte TI: +56 2 2999 3075 | soporte.ti@duoc.cl
+
+### **Bases de Datos Disponibles**
+📊 **Business Source Complete**: Base de datos de negocios
+🔬 **Academic Search Complete**: Multidisciplinaria
+📰 **Newspaper Source Plus**: Periódicos internacionales
+💼 **Euromonitor**: Investigación de mercado
+📚 **Ebooks Academic Collection**: Libros electrónicos
+🎓 **Education Database**: Base educativa especializada
+
+### **Plataformas Especializadas**
+💻 **LinkedIn Learning**: Cursos profesionales gratuitos
+📖 **Pearson MyLab**: Laboratorios virtuales
+🔍 **Google Scholar**: Acceso institucional
+📚 **JSTOR**: Artículos académicos
+📊 **Statista**: Estadísticas globales
+
+### **E-Books Disponibles**
+📚 **+15,000 títulos** en español e inglés
+🎓 **Áreas**: Informática, Administración, Inglés, Matemáticas
+📱 **Acceso móvil**: App disponible iOS/Android
+⬇️ **Descarga offline**: Disponible para algunos títulos
+
+## 📖 **COLECCIÓN FÍSICA**
+
+### **Acervo Bibliográfico**
+📚 **+8,000 títulos** especializados
+📊 **Distribución por área**:
+- Informática y Telecomunicaciones: 40%
+- Administración y Negocios: 35%
+- Formación General: 15%
+- Referencias y Consulta: 10%
+
+### **Material Especializado**
+💻 **Manuales técnicos** actualizados
+📊 **Casos de estudio** empresariales
+🔧 **Guías de laboratorio**
+📈 **Revistas especializadas**
+📰 **Prensa nacional** (último mes)
+
+### **Condiciones de Préstamo**
+📅 **Estudiantes regulares**: 5 libros x 7 días
+📅 **Estudiantes vespertinos**: 3 libros x 10 días
+📅 **Egresados**: 2 libros x 5 días
+🔄 **Renovaciones**: 2 veces (si no hay reservas)
+💰 **Multas**: $200 por día de atraso
+
+## 🎯 **SERVICIOS DE APOYO ACADÉMICO**
+
+### **Apoyo en Investigación**
+👩‍🎓 **Bibliotecaria Especialista**: Apoyo personalizado
+📖 **Talleres de búsqueda bibliográfica**
+📚 **Orientación en normas APA**
+🔍 **Estrategias de búsqueda avanzada**
+📊 **Evaluación de fuentes confiables**
+
+### **Normas APA y Referencias**
+🌐 **Portal especializado**: https://bibliotecas.duoc.cl/normas-apa/
+📚 **Guías descargables** en PDF
+💻 **Talleres presenciales** mensuales
+🎬 **Tutoriales en video**
+📧 **Consultas**: apa.plazanorte@duoc.cl
+
+### **Talleres y Capacitaciones**
+📅 **Calendario mensual** de talleres
+🎯 **Temas disponibles**:
+- Técnicas de estudio efectivas
+- Búsqueda en bases de datos
+- Citación y referencias APA
+- Uso de herramientas digitales
+- Elaboración de bibliografías
+
+📝 **Inscripciones**: biblioteca.plazanorte@duoc.cl
+👥 **Cupos limitados**: 15 personas por taller
+
+## 💻 **ESPACIOS Y TECNOLOGÍA**
+
+### **Zonas de Estudio**
+📚 **Sala de lectura silenciosa**: 60 puestos
+👥 **Salas grupales**: 4 salas (6 personas c/u)
+💻 **Zona computadores**: 40 equipos
+☕ **Área de descanso**: Con expendedores
+
+### **Equipamiento Tecnológico**
+💻 **Computadores**: Windows 11, Office 365
+🖨️ **Impresoras**: Color y B/N autoservicio
+📷 **Scanner**: Digitalización gratuita
+🔌 **Puntos de carga**: Para dispositivos móviles
+🌐 **WiFi**: Red "DUOC-Estudiantes"
+
+### **Software Disponible**
+💼 **Microsoft Office 365** completo
+💻 **Programación**: Visual Studio, Eclipse, NetBeans
+📊 **Análisis**: SPSS, R Studio
+🎨 **Diseño**: Adobe Creative Suite (licencia estudiantil)
+🌐 **Navegadores**: Chrome, Firefox, Edge
+
+## 📱 **SERVICIOS DIGITALES**
+
+### **App Biblioteca Duoc**
+📱 **Descarga**: Play Store / App Store
+🔍 **Funciones**:
+- Búsqueda en catálogo
+- Renovación de préstamos
+- Reserva de material
+- Consulta de multas
+- Acceso a recursos digitales
+
+### **Portal Mi Biblioteca**
+🌐 **Acceso**: https://bibliotecas.duoc.cl/mi-biblioteca/
+👤 **Con credenciales institucionales**
+📊 **Funciones**:
+- Estado de préstamos
+- Historial de lecturas  
+- Recomendaciones personalizadas
+- Lista de favoritos
+
+### **Tutoriales Online**
+🎬 **Canal YouTube**: Biblioteca Duoc UC
+📚 **Tutoriales disponibles**:
+- Cómo usar el catálogo online
+- Acceso a bases de datos
+- Descarga de e-books
+- Configuración de referencias APA
+🌐 **Portal**: https://bibliotecas.duoc.cl/tutoriales/
+
+## 🌐 **SITIOS WEB RECOMENDADOS**
+
+### **Recursos Académicos Gratuitos**
+🌐 **Portal**: https://biblioteca.duoc.cl/sitios-web/
+📚 **Categorías disponibles**:
+- Informática y Programación
+- Administración de Empresas
+- Contabilidad y Finanzas
+- Inglés y Idiomas
+- Matemáticas
+- Emprendimiento
+
+### **Bases de Datos Especializadas**
+🌐 **Portal**: https://bibliotecas.duoc.cl/bases-de-datos/
+🔐 **Acceso**: Requiere credenciales institucionales
+📊 **Cobertura**: Textos completos y resúmenes
+
+## 📞 **CONTACTOS BIBLIOTECA**
+
+### **Personal Especializado**
+👩‍💼 **Jefa de Biblioteca**: [Nombre]
+📧 **Email**: biblioteca.plazanorte@duoc.cl
+
+👩‍🎓 **Bibliotecaria de Referencia**: [Nombre]  
+📧 **Email**: referencia.plazanorte@duoc.cl
+
+### **Consultas Específicas**
+📚 **Préstamos y devoluciones**: ext. 8301
+🔍 **Búsquedas bibliográficas**: ext. 8302
+💻 **Soporte técnico**: ext. 8303
+📝 **Normas APA**: apa.plazanorte@duoc.cl
+
+### **Redes Sociales**
+📘 **Facebook**: @BibliotecaDuocPlazaNorte
+📸 **Instagram**: @biblio_duoc_pn

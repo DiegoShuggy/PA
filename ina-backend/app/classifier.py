@@ -13,6 +13,7 @@ class QuestionClassifier:
     def __init__(self):
         # Categorías alineadas con el nuevo sistema de filtros
         self.categories = [
+            "academico",  # 🔥 NUEVO: titulación, SCT, convalidación, requisitos
             "asuntos_estudiantiles",
             "desarrollo_profesional", 
             "bienestar_estudiantil",
@@ -25,6 +26,30 @@ class QuestionClassifier:
         
         # PATRONES MEJORADOS Y EXPANDIDOS - MANTENIENDO TODOS LOS ORIGINALES
         self.keyword_patterns = {
+            "academico": [
+                # TITULACIÓN Y EGRESO
+                r'\b(titularme|titulación|titulo|titularse|requisitos.*titulación)\b',
+                r'\b(proceso.*titulación|ceremonia.*titulación|documentos.*titulación)\b',
+                r'\b(trámites.*egreso|egresar|egreso|graduación|graduarse)\b',
+                r'\b(obtener.*titulo|como.*titularme|cuando.*me.*titulo)\b',
+                # SISTEMA DE CRÉDITOS SCT
+                r'\b(sct|créditos.*sct|sistema.*créditos|créditos.*transferibles)\b',
+                r'\b(carga.*académica|créditos|crédito|cuantos.*créditos)\b',
+                r'\b(como.*funciona.*sct|horas.*cronológicas|carga.*horaria)\b',
+                r'\b(créditos.*asignatura|calcular.*créditos)\b',
+                # CONVALIDACIÓN
+                r'\b(convalidar|convalidación|homologación|equivalencia)\b',
+                r'\b(reconocimiento|convalidar.*asignaturas|equivalencia.*asignaturas)\b',
+                r'\b(homologar.*ramos|reconocimiento.*estudios|validar.*asignaturas)\b',
+                r'\b(traspasar.*notas|convalidación.*otra.*institución)\b',
+                # REQUISITOS ACADÉMICOS
+                r'\b(requisitos|requisito|exigencias|condiciones.*académicas)\b',
+                r'\b(que.*necesito|cuales.*requisitos|requisitos.*para)\b',
+                # MALLA CURRICULAR Y CARRERA
+                r'\b(carrera|carreras|programa|ingeniería|técnico)\b',
+                r'\b(malla|malla.*curricular|plan.*de.*estudios|asignaturas)\b',
+                r'\b(ramos|curso|cursos|plan.*estudios)\b',
+            ],
             "asuntos_estudiantiles": [
                 # PATRONES CRÍTICOS MEJORADOS - PROGRAMA EMERGENCIA
                 r'\b(programa.*emergencia|emergencia.*duoc|ayuda.*emergencia|200\.000)\b',
@@ -243,6 +268,11 @@ class QuestionClassifier:
                 r'\b(contacto|teléfono|email|información.*general)\b',
                 r'\b(servicio.*duoc|sedes|directorio|duoc.*uc)\b',
                 r'\b(plaza norte|santa elena|huechuraba)\b',
+                
+                # Calendario académico y semestre 2026 - NUEVO
+                r'\b(semestre.*2026|cuándo.*empieza.*2026|inicio.*semestre.*2026)\b',
+                r'\b(calendario.*2026|fechas.*2026|inicio.*clases.*2026)\b',
+                r'\b(cuándo.*comienza.*2026|inicio.*año.*2026)\b',
                 
                 # Saludos y conversación - EXPANDIDO
                 r'\b(ina|hola|buenos.*días|buenas.*tardes|buenas.*noches)\b',
@@ -750,9 +780,13 @@ class QuestionClassifier:
                 r'créneaux.*disponibles', r'programmer.*séance', r'réserver.*session',
                 r'comment.*obtenir.*rendez.*vous', r'soins.*psychologiques.*rendez.*vous'
             ],
-            "agendar_atencion_psicologica": [
-                r'agendar.*atención.*psicológica', r'cómo.*pedir.*hora', r'proceso.*agendar',
-                r'cita.*psicológica', r'reserva.*sesión', r'eventos\.duoc\.cl'
+            "apoyo_psicologico_principal": [
+                r'agendar.*atención.*psicológica', r'cómo.*agendo.*atención.*psicológica',
+                r'agendar.*hora.*psicológica', r'agendar.*sesión.*psicológica',
+                r'cómo.*pedir.*hora.*psicólog', r'pedir.*hora.*psicólogo',
+                r'solicitar.*atención.*psicológica', r'reservar.*hora.*psicológica',
+                r'cita.*psicológica', r'reserva.*sesión', r'eventos\.duoc\.cl',
+                r'cómo.*accedo.*apoyo.*psicológico', r'dónde.*agendar.*psicólogo'
             ],
             "apoyo_discapacidad": [
                 # ESPAÑOL - EXPANDIDO
@@ -1163,6 +1197,13 @@ class QuestionClassifier:
                 r'becas.*beneficios', r'todos.*beneficios', r'beneficios.*duoc',
                 r'ayudas.*estudiantiles', r'becas.*internas', r'programas.*apoyo',
                 r'qué.*beneficios.*hay', r'beneficios.*disponibles'
+            ],
+            "calendario_academico_2026": [
+                r'calendario.*académico.*2026', r'cuándo.*empieza.*semestre.*2026',
+                r'cuándo.*comienza.*2026', r'fechas.*2026', r'inicio.*semestre.*2026',
+                r'semestre.*otoño.*2026', r'semestre.*primavera.*2026',
+                r'calendario.*2026', r'inicio.*clases.*2026', r'fechas.*importantes.*2026',
+                r'cuándo.*empiezan.*clases.*2026', r'inicio.*año.*académico.*2026'
             ],
             "calendario_academico": [
                 r'calendario.*académico', r'fechas.*importantes', r'cuándo.*empiezan.*clases',

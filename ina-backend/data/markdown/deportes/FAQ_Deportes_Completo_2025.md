@@ -1,0 +1,264 @@
+---
+id: deportes_FAQ_Deportes_Completo_2025
+source: FAQ_Deportes_Completo_2025.txt
+source_type: txt_converted
+categoria: deportes
+fecha_conversion: '2025-12-01'
+fecha_modificacion_original: '2025-11-26'
+departamento: deportes
+keywords:
+- deporte
+- gimnasio
+- taller
+- actividad
+prioridad: media
+tipo_contenido: faq
+titulo: ⚽ PREGUNTAS FRECUENTES - DEPORTES Y ACTIVIDAD FÍSICA PLAZA NORTE
+---
+
+# ⚽ PREGUNTAS FRECUENTES - DEPORTES Y ACTIVIDAD FÍSICA PLAZA NORTE
+
+## 🏃‍♂️ **TALLERES DEPORTIVOS DISPONIBLES**
+
+### **¿Qué talleres deportivos tienen?**
+- **Fútbol masculino**
+- **Futbolito damas**
+- **Voleibol mixto**
+- **Basquetbol mixto**
+- **Natación mixta**
+- **Tenis de mesa mixto**
+- **Ajedrez mixto**
+- **Entrenamiento funcional mixto**
+- **Boxeo mixto**
+- **Powerlifting mixto**
+
+### **¿Dónde están ubicados los talleres?**
+
+#### **🏟️ Complejo Maiclub**
+📍 **Ubicación**: Canchas detrás del Duoc
+🎯 **Talleres disponibles**:
+- Fútbol masculino
+- Futbolito damas
+- Voleibol mixto
+
+#### **🏀 Gimnasio Entretiempo**
+📍 **Ubicación**: Av. Ejército Libertador 341, Santiago Centro - Metro Los Héroes
+🎯 **Talleres disponibles**:
+- Voleibol mixto
+- Basquetbol mixto
+
+#### **🏊‍♀️ Piscina Acquatiempo**
+📍 **Ubicación**: Av. Ejército Libertador 346, Santiago Centro - Metro Los Héroes
+🎯 **Talleres disponibles**:
+- Natación mixta
+
+#### **💪 CAF (Centro de Bienestar y Acondicionamiento Físico)**
+📍 **Ubicación**: Piso -1 del Duoc Plaza Norte
+🎯 **Talleres disponibles**:
+- Entrenamiento funcional mixto
+- Boxeo mixto
+- Powerlifting mixto
+- Entrenamientos de gimnasio
+
+## 📅 **HORARIOS DE TALLERES 2025**
+
+### **💪 Entrenamiento Funcional Mixto (CAF)**
+- **Lunes**: 10:00-11:20 y 16:00-17:20
+- **Martes**: 10:00-11:20 y 16:00-17:20
+- **Miércoles**: 10:00-11:20, 11:30-12:50, 13:00-14:20, 16:00-17:20 y 17:30-18:50
+- **Jueves**: 10:00-11:20 y 17:30-18:50
+- **Viernes**: 10:00-11:20 y 11:30-12:50
+
+### **🥊 Boxeo Mixto (CAF)**
+- **Lunes**: 10:00-11:20 y 11:30-12:50
+- **Martes**: 11:30-12:50, 13:00-14:20 y 17:30-18:50
+- **Miércoles**: 10:00-11:20
+- **Jueves**: 11:30-12:50 y 16:00-17:50
+- **Viernes**: 14:30-15:50
+
+### **🏋️‍♂️ Powerlifting Mixto (CAF)**
+- **Martes**: 11:30-12:50 y 13:00-14:20
+- **Miércoles**: 13:00-14:20
+- **Jueves**: 11:30-12:50 y 13:00-14:20
+- **Viernes**: 13:00-14:20 y 11:30-12:50
+
+### **🏐 Voleibol Mixto**
+- **Miércoles**: 13:00-14:20
+- **Viernes**: 11:30-12:50
+
+### **🏀 Basquetbol Mixto**
+- **Martes**: 13:00-14:20
+- **Jueves**: 13:00-14:20
+- **Viernes**: 15:11-16:40
+
+### **🏊‍♀️ Natación Mixta**
+- **Jueves**: 16:00-17:20
+
+### **⚽ Fútbol y Futbolito**
+- **Martes**: 10:00-11:20
+- **Jueves**: 10:00-11:20
+- **Miércoles**: 11:30-12:50
+
+### **🏓 Tenis de Mesa Mixto**
+- **Viernes**: 11:30-12:50 y 13:00-14:20
+- **Sábado**: 13:00-14:20 y 14:30-15:50
+
+## 📝 **INSCRIPCIONES Y REGLAMENTOS**
+
+### **¿Cómo inscribo los Optativos Deportivos?**
+1. **Toma regular de asignaturas**: Durante período de matrícula
+2. **Solicitud en línea**: Después del período regular
+   - Via Vivo Duoc o Vivo Web
+   - Mismo proceso que cualquier asignatura regular
+
+### **¿Los talleres tienen nota?**
+**No**. Solo finalizarán como **Logrado** o **No Logrado**.
+- **No Logrado**: No te permitirá tomar el mismo taller el próximo semestre
+
+### **¿Qué pasa si falto una o más veces a los talleres?**
+- **2 inasistencias**: Retiro automático del taller (puedes volver a inscribirte)
+- **Menos del 50% asistencia**: Estado "No Logrado"
+- **Estado No Logrado**: No puedes tomar el mismo taller el próximo semestre
+
+### **¿Cómo puedo des-inscribirme?**
+Revisa las fechas del calendario académico, las cuales no deben superar al menos la **tercera semana en curso**.
+
+**⚠️ Importante**: El Optativo de Deportes tiene el mismo reglamento académico que una asignatura regular.
+
+## 🏋️‍♂️ **GIMNASIO CAF (Centro de Acondicionamiento Físico)**
+
+### **¿Cómo puedo inscribirme al gimnasio (CAF)?**
+1. **Acércate al CAF** (piso -1 del Duoc)
+2. **Habla con el preparador físico**
+3. **Evaluación correspondiente**
+4. **Inicio de servicios** una vez aprobado
+
+### **¿Puedo ir en cualquier horario?**
+**No**, solo en los horarios establecidos y **dos veces por semana máximo**.
+
+#### **🕐 Horarios CAF 2025:**
+- **Lunes, Martes y Miércoles**: 13:00 - 20:20
+- **Jueves y Viernes**: 13:00 - 19:20  
+- **Sábado por medio**: 09:00 - 13:20
+
+### **¿Si tengo horario disponible y no hay profesores puedo ocupar el gimnasio?**
+**No**. No se puede usar el CAF si no se encuentran profesores presentes.
+
+### **¿Qué servicios incluye el CAF?**
+- **Equipos de musculación**: Máquinas y pesas libres
+- **Área cardio**: Trotadoras, bicicletas, elípticas
+- **Evaluación física**: Al inicio y seguimiento
+- **Rutinas personalizadas**: Según objetivos
+- **Supervisión profesional**: Preparadores físicos
+
+## 🏆 **SELECCIONES DEPORTIVAS**
+
+### **¿Qué selecciones deportivas existen?**
+- **Fútbol masculino**
+- **Futsal varones**
+- **Futsal sala damas**
+- **Voleibol varones**
+- **Voleibol damas**
+- **Basquetbol varones**
+- **Basquetbol damas**
+
+### **¿Cómo postular a selecciones?**
+1. **Requisito**: Haber cursado al menos un semestre
+2. **Información**: Te llegará correo a inicios de cada semestre
+3. **Proceso**: Los requisitos se comparten al inicio del período
+4. **Pruebas**: Según cada disciplina deportiva
+
+### **¿Qué beneficios tienen los seleccionados?**
+- **Entrenamiento especializado**
+- **Competencias inter-sedes**
+- **Representación institucional**
+- **Equipamiento deportivo**
+- **Horarios preferenciales**
+
+## 🎯 **REQUISITOS GENERALES**
+
+### **¿Quién puede participar en talleres deportivos?**
+- **Estudiantes regulares** de Duoc UC Plaza Norte
+- **Al día en aranceles**
+- **Certificado médico** para actividades de alto rendimiento
+- **Inscripción en período establecido**
+
+### **¿Necesito experiencia previa?**
+**No**. Los talleres están diseñados para todos los niveles:
+- **Principiantes**: Enseñanza básica
+- **Intermedios**: Perfeccionamiento técnico
+- **Avanzados**: Entrenamiento especializado
+
+### **¿Qué debo llevar?**
+#### **🎽 Vestimenta**
+- **Ropa deportiva** cómoda
+- **Zapatillas** apropiadas para cada actividad
+- **Toalla** (para gimnasio y natación)
+
+#### **🏊‍♀️ Para Natación**
+- **Traje de baño**
+- **Gorro de natación**
+- **Antiparras** (opcional)
+- **Sandalias** antideslizantes
+
+#### **🥊 Para Boxeo/Powerlifting**
+- **Guantes** (se pueden arrendar)
+- **Vendas** (proporcionadas en el lugar)
+- **Ropa ajustada** y segura
+
+## 📞 **CONTACTOS DEPORTES**
+
+### **Coordinación Deportes Plaza Norte**
+👨‍💼 **Coordinador Deportes**: [Nombre]
+📞 **Teléfono**: +56 2 2354 8140
+📧 **Email**: deportes.plazanorte@duoc.cl
+🏢 **Oficina**: CAF, Piso -1
+⏰ **Horario**: Lunes a Viernes 8:30-17:30
+
+### **Preparadores Físicos**
+💪 **CAF**: preparadorfisico.plazanorte@duoc.cl
+🏊‍♂️ **Natación**: natacion.plazanorte@duoc.cl
+⚽ **Deportes Colectivos**: deportescolectivos.plazanorte@duoc.cl
+
+### **Selecciones Deportivas**
+🏆 **Coordinador Selecciones**: selecciones.plazanorte@duoc.cl
+📧 **Postulaciones**: postulaciones.deportes@duoc.cl
+
+## 🗓️ **CALENDARIO DEPORTIVO**
+
+### **Períodos de Inscripción**
+- **Primer Semestre**: Enero - Febrero
+- **Segundo Semestre**: Julio - Agosto
+- **Inscripciones tardías**: Primera semana de clases
+
+### **Eventos Deportivos**
+- **Torneos Inter-sedes**: Mayo y Octubre
+- **Olimpiadas Duoc**: Noviembre
+- **Competencias Regionales**: Durante el año
+- **Actividades Recreativas**: Mensual
+
+### **Fechas Importantes 2025**
+📅 **Inicio talleres primer semestre**: 10 de Marzo
+📅 **Evaluaciones CAF**: 15-30 de Marzo
+📅 **Torneo Inter-sedes**: 15-20 de Mayo
+📅 **Inicio talleres segundo semestre**: 5 de Agosto
+📅 **Olimpiadas Duoc**: 10-15 de Noviembre
+
+## 🎖️ **BENEFICIOS DEPORTIVOS**
+
+### **Para Todos los Estudiantes**
+- **Talleres gratuitos** (incluidos en arancel)
+- **Uso CAF gratuito**
+- **Equipos básicos** proporcionados
+- **Evaluación física** sin costo
+
+### **Para Seleccionados**
+- **Becas deportivas** (según rendimiento)
+- **Equipamiento completo**
+- **Viajes a competencias** pagados
+- **Certificación de participación**
+- **Prioridad en inscripciones**
+
+---
+
+**🏃‍♂️ ¡MUÉVETE Y SIENTE LA DIFERENCIA!** El deporte no solo mejora tu condición física, sino que también potencia tu rendimiento académico y bienestar general. ¡Te esperamos en nuestras instalaciones!

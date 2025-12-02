@@ -1,0 +1,2061 @@
+{
+  "version": "2.0",
+  "fecha_actualizacion": "2025-12-01",
+  "fuente": "expanded_faqs.txt",
+  "total_categorias": 9,
+  "total_faqs": 90,
+  "categorias": {
+    "tne": {
+      "titulo": "TNE (Tarjeta Nacional Estudiantil)",
+      "categoria_normalizada": "tne",
+      "total_faqs": 10,
+      "faqs": [
+        {
+          "id": "tne_faq_001",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿Dónde puedo renovar mi TNE en Plaza Norte?",
+          "tipo": "faq",
+          "keywords": [
+            "tne",
+            "renovar"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        },
+        {
+          "id": "tne_faq_002",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿Cuánto cuesta sacar la TNE?",
+          "tipo": "faq",
+          "keywords": [
+            "tne",
+            "cuesta"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        },
+        {
+          "id": "tne_faq_003",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿Qué documentos necesito para retirar mi TNE?",
+          "tipo": "faq",
+          "keywords": [
+            "tne",
+            "documentos",
+            "retirar"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        },
+        {
+          "id": "tne_faq_004",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿Cómo valido mi TNE en el Metro?",
+          "tipo": "faq",
+          "keywords": [
+            "tne",
+            "valido"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        },
+        {
+          "id": "tne_faq_005",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿Cuándo vence mi TNE?",
+          "tipo": "faq",
+          "keywords": [
+            "tne"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        },
+        {
+          "id": "tne_faq_006",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿Puedo sacar TNE si soy alumno nuevo?",
+          "tipo": "faq",
+          "keywords": [
+            "tne",
+            "alumno"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        },
+        {
+          "id": "tne_faq_007",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿Qué hago si perdí mi TNE?",
+          "tipo": "faq",
+          "keywords": [
+            "tne"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        },
+        {
+          "id": "tne_faq_008",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿La TNE sirve para buses?",
+          "tipo": "faq",
+          "keywords": [
+            "tne"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        },
+        {
+          "id": "tne_faq_009",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿Cuánto demora el trámite de la TNE?",
+          "tipo": "faq",
+          "keywords": [
+            "tne",
+            "demora",
+            "trámite"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        },
+        {
+          "id": "tne_faq_010",
+          "categoria": "tne",
+          "categoria_titulo": "TNE (Tarjeta Nacional Estudiantil)",
+          "pregunta": "¿Necesito foto para la TNE?",
+          "tipo": "faq",
+          "keywords": [
+            "tne"
+          ],
+          "prioridad": "alta",
+          "departamento": "asuntos_estudiantiles",
+          "tema": "tne_transporte",
+          "keywords_adicionales": [
+            "tne",
+            "tarjeta",
+            "metro",
+            "transporte",
+            "bus",
+            "nacional_estudiantil"
+          ]
+        }
+      ],
+      "departamento": "asuntos_estudiantiles",
+      "prioridad": "alta",
+      "tema": "tne_transporte"
+    },
+    "certificados": {
+      "titulo": "CERTIFICADOS",
+      "categoria_normalizada": "certificados",
+      "total_faqs": 10,
+      "faqs": [
+        {
+          "id": "certificados_faq_001",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿Cómo solicito un certificado de alumno regular?",
+          "tipo": "faq",
+          "keywords": [
+            "certificado",
+            "alumno"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        },
+        {
+          "id": "certificados_faq_002",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿Cuánto demora un certificado?",
+          "tipo": "faq",
+          "keywords": [
+            "certificado",
+            "demora"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        },
+        {
+          "id": "certificados_faq_003",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿Los certificados tienen costo?",
+          "tipo": "faq",
+          "keywords": [
+            "certificado",
+            "certificados",
+            "tienen"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        },
+        {
+          "id": "certificados_faq_004",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿Puedo solicitar certificados online?",
+          "tipo": "faq",
+          "keywords": [
+            "certificado",
+            "solicitar",
+            "certificados",
+            "online"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        },
+        {
+          "id": "certificados_faq_005",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿Qué certificados puedo obtener en el Punto Estudiantil?",
+          "tipo": "faq",
+          "keywords": [
+            "certificado",
+            "certificados",
+            "obtener",
+            "estudiantil"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        },
+        {
+          "id": "certificados_faq_006",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿Cómo solicito una concentración de notas?",
+          "tipo": "faq",
+          "keywords": [
+            "concentración"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        },
+        {
+          "id": "certificados_faq_007",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿Necesito certificado para postular a beca?",
+          "tipo": "faq",
+          "keywords": [
+            "certificado",
+            "beca",
+            "postular"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        },
+        {
+          "id": "certificados_faq_008",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿Puedo obtener certificado en inglés?",
+          "tipo": "faq",
+          "keywords": [
+            "certificado",
+            "obtener",
+            "inglés"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        },
+        {
+          "id": "certificados_faq_009",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿Cómo solicito un certificado de egreso?",
+          "tipo": "faq",
+          "keywords": [
+            "certificado",
+            "egreso"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        },
+        {
+          "id": "certificados_faq_010",
+          "categoria": "certificados",
+          "categoria_titulo": "CERTIFICADOS",
+          "pregunta": "¿El certificado de alumno regular sirve para trámites legales?",
+          "tipo": "faq",
+          "keywords": [
+            "certificado",
+            "alumno",
+            "regular"
+          ],
+          "prioridad": "alta",
+          "departamento": "registro_academico",
+          "tema": "certificados_academicos",
+          "keywords_adicionales": [
+            "certificado",
+            "documento",
+            "alumno_regular",
+            "concentracion_notas",
+            "titulo"
+          ]
+        }
+      ],
+      "departamento": "registro_academico",
+      "prioridad": "alta",
+      "tema": "certificados_academicos"
+    },
+    "deportes": {
+      "titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+      "categoria_normalizada": "deportes",
+      "total_faqs": 10,
+      "faqs": [
+        {
+          "id": "deportes_faq_001",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿Cuál es el horario del gimnasio en Plaza Norte?",
+          "tipo": "faq",
+          "keywords": [
+            "gimnasio",
+            "horario"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        },
+        {
+          "id": "deportes_faq_002",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿Cómo me inscribo en talleres deportivos?",
+          "tipo": "faq",
+          "keywords": [
+            "inscribo",
+            "talleres",
+            "deportivos"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        },
+        {
+          "id": "deportes_faq_003",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿Los talleres deportivos tienen costo?",
+          "tipo": "faq",
+          "keywords": [
+            "talleres",
+            "deportivos",
+            "tienen"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        },
+        {
+          "id": "deportes_faq_004",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿Qué talleres deportivos hay disponibles?",
+          "tipo": "faq",
+          "keywords": [
+            "talleres",
+            "deportivos",
+            "disponibles"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        },
+        {
+          "id": "deportes_faq_005",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿Dónde está ubicado el gimnasio?",
+          "tipo": "faq",
+          "keywords": [
+            "gimnasio",
+            "ubicado"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        },
+        {
+          "id": "deportes_faq_006",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿Puedo usar el gimnasio sin ser alumno de Duoc?",
+          "tipo": "faq",
+          "keywords": [
+            "gimnasio",
+            "alumno"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        },
+        {
+          "id": "deportes_faq_007",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿Hay selecciones deportivas en Plaza Norte?",
+          "tipo": "faq",
+          "keywords": [
+            "selecciones",
+            "deportivas"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        },
+        {
+          "id": "deportes_faq_008",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿Cómo me inscribo en una selección deportiva?",
+          "tipo": "faq",
+          "keywords": [
+            "inscribo",
+            "selección",
+            "deportiva"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        },
+        {
+          "id": "deportes_faq_009",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿Qué necesito para usar el gimnasio?",
+          "tipo": "faq",
+          "keywords": [
+            "gimnasio"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        },
+        {
+          "id": "deportes_faq_010",
+          "categoria": "deportes",
+          "categoria_titulo": "DEPORTES Y ACTIVIDAD FÍSICA",
+          "pregunta": "¿El gimnasio tiene casilleros?",
+          "tipo": "faq",
+          "keywords": [
+            "gimnasio",
+            "casilleros"
+          ],
+          "prioridad": "media",
+          "departamento": "deportes_recreacion",
+          "tema": "deportes_recreacion",
+          "keywords_adicionales": [
+            "gimnasio",
+            "caf",
+            "complejo_deportivo",
+            "maiclub",
+            "entrenamiento",
+            "fitness",
+            "talleres"
+          ]
+        }
+      ],
+      "departamento": "deportes_recreacion",
+      "prioridad": "media",
+      "tema": "deportes_recreacion"
+    },
+    "bienestar": {
+      "titulo": "BIENESTAR ESTUDIANTIL",
+      "categoria_normalizada": "bienestar",
+      "total_faqs": 10,
+      "faqs": [
+        {
+          "id": "bienestar_faq_001",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿Cómo puedo agendar hora con el psicólogo?",
+          "tipo": "faq",
+          "keywords": [
+            "psicólogo",
+            "agendar"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        },
+        {
+          "id": "bienestar_faq_002",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿El apoyo psicológico es gratuito?",
+          "tipo": "faq",
+          "keywords": [
+            "psicológico",
+            "gratuito"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        },
+        {
+          "id": "bienestar_faq_003",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿Qué es la línea OPS?",
+          "tipo": "faq",
+          "keywords": [],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        },
+        {
+          "id": "bienestar_faq_004",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿Dónde está la oficina de Bienestar Estudiantil?",
+          "tipo": "faq",
+          "keywords": [
+            "oficina",
+            "bienestar",
+            "estudiantil"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        },
+        {
+          "id": "bienestar_faq_005",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿Qué servicios ofrece Bienestar?",
+          "tipo": "faq",
+          "keywords": [
+            "servicios",
+            "ofrece",
+            "bienestar"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        },
+        {
+          "id": "bienestar_faq_006",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿Cómo solicito apoyo económico de emergencia?",
+          "tipo": "faq",
+          "keywords": [
+            "económico",
+            "emergencia"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        },
+        {
+          "id": "bienestar_faq_007",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿Hay programas de apoyo para estudiantes con discapacidad?",
+          "tipo": "faq",
+          "keywords": [
+            "programas",
+            "estudiantes",
+            "discapacidad"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        },
+        {
+          "id": "bienestar_faq_008",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿Qué hago si tengo una crisis emocional?",
+          "tipo": "faq",
+          "keywords": [
+            "crisis",
+            "emocional"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        },
+        {
+          "id": "bienestar_faq_009",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿El seguro estudiantil cubre atención psicológica?",
+          "tipo": "faq",
+          "keywords": [
+            "seguro",
+            "estudiantil",
+            "atención"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        },
+        {
+          "id": "bienestar_faq_010",
+          "categoria": "bienestar",
+          "categoria_titulo": "BIENESTAR ESTUDIANTIL",
+          "pregunta": "¿Puedo llevar a un familiar a las sesiones?",
+          "tipo": "faq",
+          "keywords": [
+            "llevar",
+            "familiar",
+            "sesiones"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "salud_mental",
+          "keywords_adicionales": [
+            "psicologico",
+            "salud_mental",
+            "apoyo_emocional",
+            "consejeria",
+            "bienestar",
+            "ops"
+          ]
+        }
+      ],
+      "departamento": "bienestar_estudiantil",
+      "prioridad": "alta",
+      "tema": "salud_mental"
+    },
+    "practicas": {
+      "titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+      "categoria_normalizada": "practicas",
+      "total_faqs": 10,
+      "faqs": [
+        {
+          "id": "practicas_faq_001",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿Cómo accedo a DuocLaboral?",
+          "tipo": "faq",
+          "keywords": [
+            "duoclaboral",
+            "accedo"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        },
+        {
+          "id": "practicas_faq_002",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿Dónde puedo hacer mi práctica profesional?",
+          "tipo": "faq",
+          "keywords": [
+            "práctica",
+            "profesional"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        },
+        {
+          "id": "practicas_faq_003",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿DuocLaboral ayuda a hacer el CV?",
+          "tipo": "faq",
+          "keywords": [
+            "duoclaboral"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        },
+        {
+          "id": "practicas_faq_004",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿Cómo me preparo para una entrevista laboral?",
+          "tipo": "faq",
+          "keywords": [
+            "preparo",
+            "entrevista",
+            "laboral"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        },
+        {
+          "id": "practicas_faq_005",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿Hay empresas que buscan practicantes en DuocLaboral?",
+          "tipo": "faq",
+          "keywords": [
+            "duoclaboral",
+            "empresas",
+            "buscan",
+            "practicantes"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        },
+        {
+          "id": "practicas_faq_006",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿Puedo subir mi CV a la bolsa de trabajo?",
+          "tipo": "faq",
+          "keywords": [
+            "trabajo"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        },
+        {
+          "id": "practicas_faq_007",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿DuocLaboral ofrece talleres de empleabilidad?",
+          "tipo": "faq",
+          "keywords": [
+            "duoclaboral",
+            "ofrece",
+            "talleres"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        },
+        {
+          "id": "practicas_faq_008",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿Necesito estar en último semestre para usar DuocLaboral?",
+          "tipo": "faq",
+          "keywords": [
+            "duoclaboral",
+            "último",
+            "semestre"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        },
+        {
+          "id": "practicas_faq_009",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿Cómo contacto a Claudia Cortés de DuocLaboral?",
+          "tipo": "faq",
+          "keywords": [
+            "duoclaboral",
+            "contacto",
+            "claudia",
+            "cortés"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        },
+        {
+          "id": "practicas_faq_010",
+          "categoria": "practicas",
+          "categoria_titulo": "DUOCLABORAL (PRÁCTICAS Y EMPLEO)",
+          "pregunta": "¿DuocLaboral ayuda con contratos de práctica?",
+          "tipo": "faq",
+          "keywords": [
+            "práctica",
+            "duoclaboral",
+            "contratos"
+          ],
+          "prioridad": "alta",
+          "departamento": "desarrollo_laboral",
+          "tema": "practicas_empleo",
+          "keywords_adicionales": [
+            "practica",
+            "laboral",
+            "empleo",
+            "cv",
+            "duoclaboral",
+            "bolsa_trabajo"
+          ]
+        }
+      ],
+      "departamento": "desarrollo_laboral",
+      "prioridad": "alta",
+      "tema": "practicas_empleo"
+    },
+    "biblioteca": {
+      "titulo": "BIBLIOTECA",
+      "categoria_normalizada": "biblioteca",
+      "total_faqs": 10,
+      "faqs": [
+        {
+          "id": "biblioteca_faq_001",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿Cuál es el horario de la biblioteca?",
+          "tipo": "faq",
+          "keywords": [
+            "biblioteca",
+            "horario"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        },
+        {
+          "id": "biblioteca_faq_002",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿Cómo saco libros en préstamo?",
+          "tipo": "faq",
+          "keywords": [
+            "libros",
+            "préstamo"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        },
+        {
+          "id": "biblioteca_faq_003",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿Cuántos libros puedo llevar prestados?",
+          "tipo": "faq",
+          "keywords": [
+            "cuántos",
+            "libros",
+            "llevar"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        },
+        {
+          "id": "biblioteca_faq_004",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿Por cuánto tiempo puedo tener un libro?",
+          "tipo": "faq",
+          "keywords": [
+            "tiempo"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        },
+        {
+          "id": "biblioteca_faq_005",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿Hay salas de estudio en la biblioteca?",
+          "tipo": "faq",
+          "keywords": [
+            "biblioteca",
+            "estudio"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        },
+        {
+          "id": "biblioteca_faq_006",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿La biblioteca tiene computadores disponibles?",
+          "tipo": "faq",
+          "keywords": [
+            "biblioteca",
+            "computadores",
+            "disponibles"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        },
+        {
+          "id": "biblioteca_faq_007",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿Cómo accedo a recursos digitales?",
+          "tipo": "faq",
+          "keywords": [
+            "accedo",
+            "recursos",
+            "digitales"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        },
+        {
+          "id": "biblioteca_faq_008",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿La biblioteca ayuda con normas APA?",
+          "tipo": "faq",
+          "keywords": [
+            "biblioteca",
+            "normas"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        },
+        {
+          "id": "biblioteca_faq_009",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿Puedo renovar un libro prestado?",
+          "tipo": "faq",
+          "keywords": [
+            "renovar",
+            "prestado"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        },
+        {
+          "id": "biblioteca_faq_010",
+          "categoria": "biblioteca",
+          "categoria_titulo": "BIBLIOTECA",
+          "pregunta": "¿Qué pasa si pierdo un libro de la biblioteca?",
+          "tipo": "faq",
+          "keywords": [
+            "biblioteca",
+            "pierdo"
+          ],
+          "prioridad": "media",
+          "departamento": "biblioteca",
+          "tema": "servicios_biblioteca",
+          "keywords_adicionales": [
+            "biblioteca",
+            "prestamo",
+            "libro",
+            "recurso",
+            "bibliografico",
+            "sala_estudio"
+          ]
+        }
+      ],
+      "departamento": "biblioteca",
+      "prioridad": "media",
+      "tema": "servicios_biblioteca"
+    },
+    "becas": {
+      "titulo": "BECAS Y BENEFICIOS",
+      "categoria_normalizada": "becas",
+      "total_faqs": 10,
+      "faqs": [
+        {
+          "id": "becas_faq_001",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿Qué becas están disponibles para estudiantes de Duoc?",
+          "tipo": "faq",
+          "keywords": [
+            "beca",
+            "disponibles",
+            "estudiantes"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        },
+        {
+          "id": "becas_faq_002",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿Cómo postulo a la Beca de Alimentación?",
+          "tipo": "faq",
+          "keywords": [
+            "beca",
+            "postulo",
+            "alimentación"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        },
+        {
+          "id": "becas_faq_003",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿Qué es el Programa de Emergencia Estudiantil?",
+          "tipo": "faq",
+          "keywords": [
+            "programa",
+            "emergencia",
+            "estudiantil"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        },
+        {
+          "id": "becas_faq_004",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿Cómo sé si tengo Gratuidad?",
+          "tipo": "faq",
+          "keywords": [
+            "gratuidad"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        },
+        {
+          "id": "becas_faq_005",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿Qué beneficios entrega JUNAEB?",
+          "tipo": "faq",
+          "keywords": [
+            "beneficios",
+            "entrega",
+            "junaeb"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        },
+        {
+          "id": "becas_faq_006",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿Puedo postular a más de una beca?",
+          "tipo": "faq",
+          "keywords": [
+            "beca",
+            "postular"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        },
+        {
+          "id": "becas_faq_007",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿Dónde consulto el estado de mi beca?",
+          "tipo": "faq",
+          "keywords": [
+            "beca",
+            "consulto",
+            "estado"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        },
+        {
+          "id": "becas_faq_008",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿Cuándo se entregan las becas?",
+          "tipo": "faq",
+          "keywords": [
+            "beca",
+            "entregan"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        },
+        {
+          "id": "becas_faq_009",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿La beca cubre toda la matrícula?",
+          "tipo": "faq",
+          "keywords": [
+            "beca",
+            "matrícula"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        },
+        {
+          "id": "becas_faq_010",
+          "categoria": "becas",
+          "categoria_titulo": "BECAS Y BENEFICIOS",
+          "pregunta": "¿Qué hago si rechazan mi beca?",
+          "tipo": "faq",
+          "keywords": [
+            "beca",
+            "rechazan"
+          ],
+          "prioridad": "alta",
+          "departamento": "bienestar_estudiantil",
+          "tema": "apoyo_economico",
+          "keywords_adicionales": [
+            "beca",
+            "economico",
+            "financiamiento",
+            "junaeb",
+            "gratuidad",
+            "apoyo_economico"
+          ]
+        }
+      ],
+      "departamento": "bienestar_estudiantil",
+      "prioridad": "alta",
+      "tema": "apoyo_economico"
+    },
+    "matricula": {
+      "titulo": "MATRÍCULA Y PAGOS",
+      "categoria_normalizada": "matricula",
+      "total_faqs": 10,
+      "faqs": [
+        {
+          "id": "matricula_faq_001",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Cuándo son las fechas de matrícula?",
+          "tipo": "faq",
+          "keywords": [
+            "matrícula",
+            "fechas"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        },
+        {
+          "id": "matricula_faq_002",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Cómo pago mi matrícula?",
+          "tipo": "faq",
+          "keywords": [
+            "matrícula",
+            "pago"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        },
+        {
+          "id": "matricula_faq_003",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Puedo pagar en cuotas?",
+          "tipo": "faq",
+          "keywords": [
+            "cuotas"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        },
+        {
+          "id": "matricula_faq_004",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Dónde veo mi estado de cuenta?",
+          "tipo": "faq",
+          "keywords": [
+            "estado",
+            "cuenta"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        },
+        {
+          "id": "matricula_faq_005",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Qué pasa si me atraso en un pago?",
+          "tipo": "faq",
+          "keywords": [
+            "pago",
+            "atraso"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        },
+        {
+          "id": "matricula_faq_006",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Cómo solicito una rebaja de arancel?",
+          "tipo": "faq",
+          "keywords": [
+            "rebaja",
+            "arancel"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        },
+        {
+          "id": "matricula_faq_007",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Puedo congelar mi matrícula?",
+          "tipo": "faq",
+          "keywords": [
+            "matrícula",
+            "congelar"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        },
+        {
+          "id": "matricula_faq_008",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Qué documentos necesito para matricularme?",
+          "tipo": "faq",
+          "keywords": [
+            "documentos",
+            "matricularme"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        },
+        {
+          "id": "matricula_faq_009",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Hay descuentos por pago anticipado?",
+          "tipo": "faq",
+          "keywords": [
+            "pago",
+            "descuentos",
+            "anticipado"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        },
+        {
+          "id": "matricula_faq_010",
+          "categoria": "matricula",
+          "categoria_titulo": "MATRÍCULA Y PAGOS",
+          "pregunta": "¿Cómo elimino una deuda universitaria?",
+          "tipo": "faq",
+          "keywords": [
+            "elimino",
+            "universitaria"
+          ],
+          "prioridad": "media",
+          "departamento": "registro_academico",
+          "tema": "matricula_pagos",
+          "keywords_adicionales": [
+            "matricula",
+            "pago",
+            "arancel",
+            "inscripcion",
+            "financiamiento"
+          ]
+        }
+      ],
+      "departamento": "registro_academico",
+      "prioridad": "media",
+      "tema": "matricula_pagos"
+    },
+    "general": {
+      "titulo": "GENERAL PLAZA NORTE",
+      "categoria_normalizada": "general",
+      "total_faqs": 10,
+      "faqs": [
+        {
+          "id": "general_faq_001",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿Cuál es la dirección exacta de la sede Plaza Norte?",
+          "tipo": "faq",
+          "keywords": [
+            "dirección",
+            "exacta"
+          ],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        },
+        {
+          "id": "general_faq_002",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿Cómo llego en Metro a Plaza Norte?",
+          "tipo": "faq",
+          "keywords": [],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        },
+        {
+          "id": "general_faq_003",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿Hay estacionamiento en la sede?",
+          "tipo": "faq",
+          "keywords": [
+            "estacionamiento"
+          ],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        },
+        {
+          "id": "general_faq_004",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿Cuál es el número de teléfono de la sede?",
+          "tipo": "faq",
+          "keywords": [
+            "número",
+            "teléfono"
+          ],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        },
+        {
+          "id": "general_faq_005",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿La sede abre los fines de semana?",
+          "tipo": "faq",
+          "keywords": [
+            "semana"
+          ],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        },
+        {
+          "id": "general_faq_006",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿Dónde puedo comer en la sede?",
+          "tipo": "faq",
+          "keywords": [],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        },
+        {
+          "id": "general_faq_007",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿Hay cajeros automáticos en la sede?",
+          "tipo": "faq",
+          "keywords": [
+            "cajeros",
+            "automáticos"
+          ],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        },
+        {
+          "id": "general_faq_008",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿Cómo me conecto al WiFi de Duoc?",
+          "tipo": "faq",
+          "keywords": [
+            "conecto"
+          ],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        },
+        {
+          "id": "general_faq_009",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿Dónde está la secretaría académica?",
+          "tipo": "faq",
+          "keywords": [
+            "secretaría",
+            "académica"
+          ],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        },
+        {
+          "id": "general_faq_010",
+          "categoria": "general",
+          "categoria_titulo": "GENERAL PLAZA NORTE",
+          "pregunta": "¿Hay enfermería en la sede Plaza Norte?",
+          "tipo": "faq",
+          "keywords": [
+            "enfermería"
+          ],
+          "prioridad": "baja",
+          "departamento": "general",
+          "tema": "informacion_general",
+          "keywords_adicionales": [
+            "informacion",
+            "duoc",
+            "sede",
+            "plaza_norte"
+          ]
+        }
+      ],
+      "departamento": "general",
+      "prioridad": "baja",
+      "tema": "informacion_general"
+    }
+  }
+}

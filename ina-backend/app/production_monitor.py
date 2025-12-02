@@ -186,17 +186,18 @@ class ProductionMonitor:
                 health_data["status"] = "degraded"
 
             # 3. Verificar Sistema Híbrido
-            try:
-                from app.hybrid_response_system import HybridResponseSystem
-                hybrid = HybridResponseSystem()
-                test_result = hybrid.generate_smart_response("test", "")
-                health_data["checks"]["hybrid_system"] = {
-                    "status": "online",
-                    "strategy": test_result.get("strategy", "unknown")
-                }
-            except Exception as e:
-                health_data["checks"]["hybrid_system"] = {"status": "error", "error": str(e)}
-                health_data["recommendations"].append("Revisar sistema híbrido")
+            # ❌ ELIMINADO EN LIMPIEZA - hybrid_response_system.py no se usaba
+            # try:
+            #     from app.hybrid_response_system import HybridResponseSystem
+            #     hybrid = HybridResponseSystem()
+            #     test_result = hybrid.generate_smart_response("test", "")
+            #     health_data["checks"]["hybrid_system"] = {
+            #         "status": "online",
+            #         "strategy": test_result.get("strategy", "unknown")
+            #     }
+            # except Exception as e:
+            health_data["checks"]["hybrid_system"] = {"status": "disabled", "note": "Módulo eliminado en limpieza"}
+            #     health_data["recommendations"].append("Revisar sistema híbrido")
 
             # 4. Verificar Templates
             template_count = 0

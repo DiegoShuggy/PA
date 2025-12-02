@@ -1,0 +1,80 @@
+---
+id: bienestar_RESUMEN AREAS DDE
+source: RESUMEN AREAS DDE.docx
+source_type: docx_converted
+categoria: bienestar
+fecha_conversion: '2025-12-01'
+fecha_modificacion_original: '2025-11-13'
+departamento: bienestar_estudiantil
+keywords:
+- psicologico
+- salud_mental
+- apoyo_emocional
+- consejeria
+- bienestar
+- ops
+prioridad: alta
+tema: salud_mental
+tipo_contenido: informativo
+titulo: RESUMEN AREAS DDE
+---
+
+RESUMEN AREAS DDE
+NOMBRE: Natalia Varela Muñoz
+AREA: Asuntos estudiantiles
+CORREO: nvarelam@duoc.cl
+DESCRIPCION DE LA LABOR QUE CUMPLE EN EL AREA: El área de **Asuntos Estudiantiles** tiene como propósito acompañar, orientar y apoyar a los estudiantes durante su proceso formativo, promoviendo su desarrollo integral tanto en el ámbito académico como personal. Entre sus principales labores se destacan la **planificación y ejecución de actividades extracurriculares** orientadas al fortalecimiento del **liderazgo estudiantil**, el desarrollo de **habilidades de comunicación** y la adquisición de **estrategias de estudio** que favorezcan un desempeño académico exitoso.
+Asimismo, el área coordina diversas **Estrategias de Apoyo a los Estudiantes**, tales como la entrega de información y orientación sobre beneficios institucionales, el **Seguro Escolar de Accidentes**, y las gestiones vinculadas a la **Tarjeta Nacional Estudiantil (TNE)**.
+Otro ámbito relevante es la vinculación con los **Consejeros de Carrera**, promoviendo la participación activa, la representación estudiantil y el trabajo colaborativo.
+NOMBRE: Claudia Cortes
+AREA: Desarrollo Laboral y titulados
+CORREO: ccortesn@duoc.cl
+Orientación y herramientas para tu desarrollo profesional:
+Desarrollo Laboral y titulados 
+El área de Desarrollo Laboral y titulados es el área encargada de potenciar la inserción laboral y el crecimiento profesional continuo de la comunidad. Ofrecemos un **apoyo integral y especializado** que acompaña a los usuarios desde su etapa de formación hasta su posicionamiento en el mercado laboral.
+- Asesoría en Currículum Vitae
+- Tips para entrevistas laborales
+- Apoyo en LinkedIn profesional
+- Gestión} Alumno Ayudante
+- Gestión Duoc Laboral (estudiantes)
+- Gestión CDP - Centro Desarrollo Profesional
+NOMBRE: Nicolas Leiva 
+AREA: PF CAF
+CORREO: nleivas@duoc.cl
+______________________________________________________________
+NOMBRE: Cesar Pino
+AREA: jefe de deportes y actividad física
+CORREO: 
+El **Área de Deportes y Actividad Física** gestiona integralmente talleres y disciplinas deportivas para estudiantes. Su labor abarca la **promoción, difusión, inscripción y coordinación** de todas las actividades.
+Administra el **CAF** (Centro de Acondicionamiento Físico y Bienestar), un gimnasio que promueve la vida saludable y el entrenamiento personalizado con apoyo de preparadores físicos, accesible tras una evaluación de ingreso.
+El área desarrolla **Talleres BIM** (Bienestar Integral en Movimiento) e intervenciones en espacios comunes para fomentar la participación y convivencia.
+Además, brinda **orientación personalizada** sobre alternativas, becas deportivas y selecciones representativas.
+Anualmente, organiza y participa en grandes eventos como los **Torneos Intersedes** y los **Juegos Olímpicos Duoc UC**, promoviendo el espíritu deportivo, la sana competencia y el bienestar integral de la comunidad.
+NOMBRE: Adriana Vasquez
+AREA: Bienestar Estudiantil
+CORREO: avasquezm@duoc.cl
+El **Área de Bienestar Estudiantil** se enfoca en el desarrollo de actividades y la provisión de apoyos para **fortalecer la salud mental y el bienestar integral** de los estudiantes.
+Sus programas principales cubren: **Salud Mental, Nutrición Consciente, Prevención del Consumo de Alcohol y Drogas, Convivencia e Inclusión**.
+Ofrece **Atención Psicológica Virtual Gratuita** de hasta ocho sesiones anuales con profesionales especializados.
+Dispone de la **Línea OPS (228203450)**, un número gratuito para **Emergencias Psicológicas** disponible 24/7, que brinda contención inmediata en crisis.
+Imparte el **Curso de Embajadores en Salud Mental** para fortalecer habilidades de apoyo emocional en la comunidad.
+Semanalmente, realiza **Charlas Virtuales** sobre bienestar psicológico y general, promoviendo hábitos saludables.
+También desarrolla **Talleres y Charlas Presenciales** en coordinación con las carreras para impulsar la sana convivencia y la prevención.
+En resumen, el área asegura un **acompañamiento especializado y oportuno** para el equilibrio emocional y físico de sus estudiantes.
+Su labor es **clave para el desarrollo integral** dentro del entorno universitario.
+Así, el área contribuye activamente a una **experiencia estudiantil saludable y de apoyo**.
+PASTORAL
+CAMILA CELEDON
+GESTOR PASTORAL
+## CCELEDON@DUOC.CL
+El Área de Pastoral de Duoc UC busca **promover el encuentro personal y comunitario con Jesucristo** en toda la comunidad.
+Su misión es acompañar la vida de fe de **alumnos, docentes y colaboradores**, integrando la fe con el quehacer diario.
+Camila Gestor Pastoral, trabaja en conjunto con el Padre Luck Jamb y la Hermana Rut Gallardo.
+La **Eucaristía** se establece como el centro y cumbre de la experiencia pastoral y la vida cristiana.
+Ofrece medios para una **vida sacramental y espiritual plena**, a través de espacios de oración y celebración de sacramentos.
+El área se constituye como una **comunidad cristiana viva** al interior de Duoc UC, buscando ser testimonio de Cristo y transformar la sociedad.
+Organiza **actividades de servicio y servicio a otros** como son las Misiones Solidarias de verano y invierno al igual que nos apostolados mensuales.
+Busca **acrecentar la fe católica** a partir del diálogo entre fe y cultura.
+Participa activamente en la **formación de personas** con un claro sello ético-cristiano.
+Su labor impulsa a la comunidad a **descubrir el sentido de su vida** y a vivir los valores del Evangelio.
+En resumen, la Pastoral es el área que **anima la vida de fe** y acompaña espiritualmente a la comunidad Duoc UC.

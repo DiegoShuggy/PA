@@ -1,24 +1,30 @@
-# intelligent_chunker.py - Sistema de chunking semántico inteligente
+# intelligent_chunker_v2.py - Sistema de chunking mejorado para MD/JSON
 """
 Sistema de segmentación inteligente de documentos para RAG.
-Divide por secciones lógicas (títulos, párrafos) en lugar de caracteres fijos.
-Implementa las mejores prácticas de DeepSeek para chunking.
+Versión 2.0 - Optimizado para Markdown y JSON
+
+FORMATOS SOPORTADOS:
+- ✅ Markdown (.md) con frontmatter YAML  
+- ✅ JSON estructurado (FAQs)
+- ✅ Texto plano (.txt)
+- ❌ DOCX (deprecado - usar conversión a MD primero)
 """
 
 import re
 import logging
+import json
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
+from pathlib import Path
 import hashlib
 from datetime import datetime
 
 try:
-    import docx
-    from docx.document import Document
-    DOCX_AVAILABLE = True
+    import frontmatter
+    FRONTMATTER_AVAILABLE = True
 except ImportError:
-    DOCX_AVAILABLE = False
-    logging.warning("python-docx no disponible")
+    FRONTMATTER_AVAILABLE = False
+    logging.warning("⚠️ python-frontmatter no disponible. Instalar: pip install python-frontmatter")
 
 logger = logging.getLogger(__name__)
 
@@ -34,12 +40,27 @@ class Chunk:
     chunk_id: str
     token_count: int
     overlap_with_previous: bool = False
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convierte el chunk a diccionario para compatibilidad con ingesta"""
+        return {
+            'text': self.content,
+            'metadata': {
+                **self.metadata,
+                'chunk_id': self.chunk_id,
+                'title': self.title,
+                'section': self.section,
+                'keywords': ', '.join(self.keywords) if isinstance(self.keywords, list) else self.keywords,
+                'tokens': self.token_count,
+                'overlap': self.overlap_with_previous
+            }
+        }
 
 
 class SemanticChunker:
     """
-    Chunker inteligente que divide documentos por secciones semánticas
-    en lugar de límites arbitrarios de caracteres.
+    Chunker inteligente optimizado para Markdown y JSON.
+    Divide documentos por secciones semánticas.
     """
     
     def __init__(self, chunk_size: int = 512, overlap: int = 100, min_chunk_size: int = 50):
@@ -59,10 +80,10 @@ class SemanticChunker:
             r'^\d+\.\s+[A-Z].+$',  # Numerados (1. Título)
             r'^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s]{5,60}$',  # TODO MAYÚSCULAS
             r'^\*\*[^*]+\*\*$',  # **Negrita**
-            r'^¿[^?]+\?$',  # Preguntas como títulos (¿Cómo saco mi TNE?)
+            r'^¿[^?]+\?$',  # Preguntas como títulos
         ]
         
-        # Palabras clave institucionales para extracción automática
+        # Keywords institucionales para extracción automática
         self.institutional_keywords = [
             'tne', 'certificado', 'práctica', 'beca', 'seguro', 'matrícula',
             'deporte', 'gimnasio', 'biblioteca', 'duoclaboral', 'bienestar',
@@ -71,203 +92,267 @@ class SemanticChunker:
             'documentación', 'registro', 'académico', 'sede', 'beneficio',
             'cultura', 'arancel', 'inscripción', 'carrera', 'asignatura'
         ]
-        
-    def chunk_document_from_path(self, file_path: str, source_name: str, 
+    
+    def chunk_document_from_path(self, file_path: str, source_name: str = None,
                                   category: str = "general") -> List[Chunk]:
         """
-        Procesa un documento DOCX y lo divide en chunks semánticos.
+        Procesa un documento y lo divide en chunks semánticos.
+        Detecta automáticamente el formato (.md, .json, .txt).
         
         Args:
-            file_path: Ruta al archivo DOCX
-            source_name: Nombre del documento fuente
-            category: Categoría del documento
+            file_path: Ruta al archivo
+            source_name: Nombre del documento (opcional)
+            category: Categoría del documento (opcional)
             
         Returns:
             Lista de chunks con metadatos enriquecidos
         """
-        if not DOCX_AVAILABLE:
-            logger.error("python-docx no disponible, no se puede procesar DOCX")
-            return []
+        path = Path(file_path)
+        
+        if source_name is None:
+            source_name = path.name
+        
+        extension = path.suffix.lower()
         
         try:
-            doc = docx.Document(file_path)
-            return self.chunk_docx(doc, source_name, category)
+            if extension == '.md':
+                return self.chunk_markdown_file(file_path, source_name, category)
+            elif extension == '.json':
+                return self.chunk_json_file(file_path, source_name)
+            elif extension == '.txt':
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    text = f.read()
+                return self.chunk_text(text, source_name, category)
+            else:
+                logger.error(f"❌ Formato no soportado: {extension}. Use .md, .json o .txt")
+                return []
         except Exception as e:
-            logger.error(f"Error procesando {file_path}: {e}")
+            logger.error(f"❌ Error procesando {file_path}: {e}")
             return []
     
-    def chunk_docx(self, doc: Document, source_name: str, 
-                   category: str = "general") -> List[Chunk]:
+    def chunk_markdown_file(self, md_path: str, source_name: str,
+                           category: str = "general") -> List[Chunk]:
         """
-        Procesa un documento DOCX cargado y lo divide en chunks.
+        Procesa un archivo Markdown con frontmatter YAML.
         
-        Strategy:
-        1. Identificar secciones por títulos/headers
-        2. Agrupar párrafos bajo cada sección
-        3. Si una sección es muy grande (>chunk_size), subdividir
-        4. Agregar overlap entre chunks consecutivos
-        5. Extraer keywords de cada chunk
+        Args:
+            md_path: Ruta al archivo Markdown
+            source_name: Nombre del documento
+            category: Categoría por defecto
+            
+        Returns:
+            Lista de chunks con metadata del frontmatter
         """
+        if not FRONTMATTER_AVAILABLE:
+            logger.warning("⚠️ Procesando sin frontmatter (python-frontmatter no disponible)")
+            with open(md_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            return self.chunk_text(content, source_name, category)
+        
+        try:
+            with open(md_path, 'r', encoding='utf-8') as f:
+                post = frontmatter.load(f)
+            
+            doc_metadata = post.metadata
+            content = post.content
+            
+            # Sobrescribir categoría si está en frontmatter
+            if 'categoria' in doc_metadata:
+                category = doc_metadata['categoria']
+            
+            logger.info(f"📄 Markdown: {source_name} (categoría: {category})")
+            
+            chunks = self._chunk_markdown_content(content, source_name, category, doc_metadata)
+            
+            logger.info(f"✅ {len(chunks)} chunks generados")
+            # Convertir a diccionarios para compatibilidad con ingesta
+            return [chunk.to_dict() for chunk in chunks]
+        except Exception as e:
+            logger.error(f"❌ Error: {e}")
+            return []
+    
+    def _chunk_markdown_content(self, content: str, source_name: str,
+                                category: str, doc_metadata: Dict) -> List[Chunk]:
+        """Procesa contenido Markdown dividiendo por headers."""
         chunks = []
-        current_section = {
-            'title': '',
-            'content': [],
-            'paragraphs': []
-        }
+        lines = content.split('\n')
         
-        logger.info(f"📄 Procesando documento: {source_name}")
+        current_section = {'title': '', 'content': []}
         
-        for para_idx, para in enumerate(doc.paragraphs):
-            text = para.text.strip()
+        for line in lines:
+            # Detectar headers Markdown (# ## ###)
+            header_match = re.match(r'^(#{1,6})\s+(.+)$', line)
             
-            # Ignorar párrafos vacíos o muy cortos
-            if len(text) < 3:
-                continue
-            
-            # Detectar si es un título/header
-            is_header = self._is_header(para, text)
-            
-            if is_header:
-                # Guardar sección anterior si tiene contenido
+            if header_match:
+                # Guardar sección anterior
                 if current_section['content']:
-                    chunks.extend(
-                        self._create_chunks_from_section(
-                            current_section, source_name, category, len(chunks)
-                        )
-                    )
+                    chunks.extend(self._create_chunks_from_section(
+                        current_section, source_name, category, len(chunks), doc_metadata
+                    ))
                 
-                # Iniciar nueva sección
-                current_section = {
-                    'title': text,
-                    'content': [],
-                    'paragraphs': []
-                }
-                logger.debug(f"  📌 Sección detectada: {text[:50]}...")
+                # Nueva sección
+                title = header_match.group(2).strip()
+                current_section = {'title': title, 'content': []}
+                logger.debug(f"  📌 Header: {title[:50]}...")
             else:
-                # Agregar párrafo a sección actual
-                current_section['content'].append(text)
-                current_section['paragraphs'].append({
-                    'text': text,
-                    'index': para_idx
-                })
+                if line.strip():
+                    current_section['content'].append(line)
         
-        # Procesar última sección
+        # Última sección
         if current_section['content']:
-            chunks.extend(
-                self._create_chunks_from_section(
-                    current_section, source_name, category, len(chunks)
-                )
-            )
+            chunks.extend(self._create_chunks_from_section(
+                current_section, source_name, category, len(chunks), doc_metadata
+            ))
         
-        logger.info(f"✅ {source_name}: {len(chunks)} chunks generados")
         return chunks
     
-    def chunk_text(self, text: str, source_name: str = "text", 
+    def chunk_json_file(self, json_path: str, source_name: str = None) -> List[Chunk]:
+        """
+        Procesa un archivo JSON estructurado (FAQs).
+        
+        Formato esperado:
+        {
+          "categorias": {
+            "tne": {
+              "faqs": [{"id": "...", "pregunta": "...", ...}]
+            }
+          }
+        }
+        """
+        if source_name is None:
+            source_name = Path(json_path).name
+        
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            logger.info(f"📄 JSON: {source_name}")
+            
+            chunks = []
+            
+            if 'categorias' in data:
+                for cat_key, cat_data in data['categorias'].items():
+                    if 'faqs' in cat_data:
+                        for faq in cat_data['faqs']:
+                            chunk = self._create_chunk_from_faq(faq, source_name, len(chunks))
+                            if chunk:
+                                chunks.append(chunk)
+            
+            logger.info(f"✅ {len(chunks)} FAQs procesadas")
+            # Convertir a diccionarios para compatibilidad con ingesta
+            return [chunk.to_dict() for chunk in chunks]
+        except Exception as e:
+            logger.error(f"❌ Error: {e}")
+            return []
+    
+    def _create_chunk_from_faq(self, faq: Dict, source_name: str,
+                              chunk_index: int) -> Optional[Chunk]:
+        """Crea un chunk a partir de una FAQ JSON."""
+        try:
+            faq_id = faq.get('id', f'faq_{chunk_index:03d}')
+            pregunta = faq.get('pregunta', '')
+            categoria = faq.get('categoria', 'general')
+            keywords = faq.get('keywords', [])
+            
+            if not pregunta:
+                return None
+            
+            content = f"Pregunta: {pregunta}\n"
+            if 'respuesta' in faq:
+                content += f"\nRespuesta: {faq['respuesta']}"
+            
+            metadata = {
+                'source': source_name,
+                'category': categoria,
+                'tipo_contenido': 'faq',
+                'faq_id': faq_id,
+                'chunk_index': chunk_index,
+                'keywords': ', '.join(keywords) if isinstance(keywords, list) else keywords,
+                'type': 'json_faq',
+                'fecha_procesamiento': datetime.now().strftime('%Y-%m-%d')
+            }
+            
+            for key in ['departamento', 'tema', 'prioridad', 'keywords_adicionales']:
+                if key in faq:
+                    metadata[key] = faq[key]
+            
+            token_count = len(content) // 4
+            
+            return Chunk(
+                content=content,
+                title=pregunta,
+                section='FAQ',
+                keywords=keywords if isinstance(keywords, list) else [],
+                metadata=metadata,
+                chunk_id=faq_id,
+                token_count=token_count,
+                overlap_with_previous=False
+            )
+        except Exception as e:
+            logger.error(f"❌ Error creando chunk FAQ: {e}")
+            return None
+    
+    def chunk_text(self, text: str, source_name: str = "text",
                    category: str = "general") -> List[Chunk]:
-        """
-        Procesa texto plano dividiéndolo en chunks semánticos.
-        Útil para archivos TXT o strings.
-        """
+        """Procesa texto plano dividiéndolo en chunks semánticos."""
         chunks = []
         lines = text.split('\n')
         
-        current_section = {
-            'title': '',
-            'content': [],
-            'paragraphs': []
-        }
+        current_section = {'title': '', 'content': []}
         
-        for line_idx, line in enumerate(lines):
+        for line in lines:
             line = line.strip()
             if not line:
                 continue
             
-            # Detectar títulos en texto plano
             if self._is_text_header(line):
                 if current_section['content']:
-                    chunks.extend(
-                        self._create_chunks_from_section(
-                            current_section, source_name, category, len(chunks)
-                        )
-                    )
-                
-                current_section = {
-                    'title': line,
-                    'content': [],
-                    'paragraphs': []
-                }
+                    chunks.extend(self._create_chunks_from_section(
+                        current_section, source_name, category, len(chunks)
+                    ))
+                current_section = {'title': line, 'content': []}
             else:
                 current_section['content'].append(line)
-                current_section['paragraphs'].append({
-                    'text': line,
-                    'index': line_idx
-                })
         
-        # Última sección
         if current_section['content']:
-            chunks.extend(
-                self._create_chunks_from_section(
-                    current_section, source_name, category, len(chunks)
-                )
-            )
+            chunks.extend(self._create_chunks_from_section(
+                current_section, source_name, category, len(chunks)
+            ))
         
-        return chunks
-    
-    def _is_header(self, para, text: str) -> bool:
-        """Detecta si un párrafo es un título/header en DOCX"""
-        # Verificar estilo del párrafo
-        style_name = para.style.name.lower()
-        if 'heading' in style_name or 'título' in style_name:
-            return True
-        
-        # Verificar formato (negrita, tamaño)
-        if any(run.bold for run in para.runs):
-            # Si está en negrita y es corto (<80 chars), probablemente es título
-            if len(text) < 80:
-                return True
-        
-        # Verificar patrones de texto
-        return self._is_text_header(text)
+        # Convertir a diccionarios para compatibilidad con ingesta
+        return [chunk.to_dict() for chunk in chunks]
     
     def _is_text_header(self, text: str) -> bool:
-        """Detecta si un texto parece un título usando patrones"""
-        # Patrones específicos de headers
+        """Detecta si un texto parece un título."""
         for pattern in self.header_patterns:
             if re.match(pattern, text):
                 return True
         
-        # Heurísticas adicionales
         if len(text) < 10 or len(text) > 100:
             return False
         
-        # Termina con : y no tiene punto final
         if text.endswith(':') and not text.endswith('.'):
             return True
         
-        # Está en mayúsculas y es razonablemente corto
         if text.isupper() and 10 < len(text) < 60:
             return True
         
-        # Es una pregunta (útil para FAQs)
         if text.startswith('¿') and text.endswith('?'):
             return True
         
         return False
     
     def _create_chunks_from_section(self, section: Dict, source_name: str,
-                                     category: str, chunk_index_offset: int) -> List[Chunk]:
-        """
-        Crea chunks a partir de una sección, subdividiéndola si es necesaria.
-        """
+                                     category: str, chunk_index_offset: int,
+                                     doc_metadata: Dict = None) -> List[Chunk]:
+        """Crea chunks a partir de una sección."""
         chunks = []
         title = section['title']
         content_parts = section['content']
         
-        # Unir todo el contenido
         full_content = '\n'.join(content_parts)
-        token_count = self._estimate_tokens(full_content)
+        token_count = len(full_content) // 4
         
-        # Si la sección es pequeña, crear un solo chunk
         if token_count <= self.chunk_size:
             if token_count >= self.min_chunk_size:
                 chunk = self._create_chunk(
@@ -276,34 +361,30 @@ class SemanticChunker:
                     section=title,
                     source_name=source_name,
                     category=category,
-                    chunk_index=chunk_index_offset
+                    chunk_index=chunk_index_offset,
+                    doc_metadata=doc_metadata
                 )
                 chunks.append(chunk)
         else:
-            # Subdividir en múltiples chunks con overlap
             sub_chunks = self._split_large_section(
-                content_parts, title, source_name, category, chunk_index_offset
+                content_parts, title, source_name, category, chunk_index_offset, doc_metadata
             )
             chunks.extend(sub_chunks)
         
         return chunks
     
-    def _split_large_section(self, paragraphs: List[str], title: str, 
-                             source_name: str, category: str, 
-                             chunk_index_offset: int) -> List[Chunk]:
-        """
-        Divide una sección grande en múltiples chunks con overlap.
-        """
+    def _split_large_section(self, paragraphs: List[str], title: str,
+                             source_name: str, category: str,
+                             chunk_index_offset: int, doc_metadata: Dict = None) -> List[Chunk]:
+        """Divide una sección grande en múltiples chunks con overlap."""
         chunks = []
         current_chunk_parts = []
         current_token_count = 0
         
         for para in paragraphs:
-            para_tokens = self._estimate_tokens(para)
+            para_tokens = len(para) // 4
             
-            # Si agregar este párrafo excede el tamaño, crear chunk
             if current_token_count + para_tokens > self.chunk_size and current_chunk_parts:
-                # Crear chunk con contenido actual
                 chunk_content = '\n'.join(current_chunk_parts)
                 chunk = self._create_chunk(
                     content=chunk_content,
@@ -312,22 +393,21 @@ class SemanticChunker:
                     source_name=source_name,
                     category=category,
                     chunk_index=chunk_index_offset + len(chunks),
-                    overlap_with_previous=len(chunks) > 0
+                    overlap_with_previous=len(chunks) > 0,
+                    doc_metadata=doc_metadata
                 )
                 chunks.append(chunk)
                 
-                # Mantener overlap: últimas N palabras
                 overlap_text = self._get_overlap_text(current_chunk_parts)
                 current_chunk_parts = [overlap_text, para] if overlap_text else [para]
-                current_token_count = self._estimate_tokens('\n'.join(current_chunk_parts))
+                current_token_count = len('\n'.join(current_chunk_parts)) // 4
             else:
                 current_chunk_parts.append(para)
                 current_token_count += para_tokens
         
-        # Crear último chunk si hay contenido
         if current_chunk_parts:
             chunk_content = '\n'.join(current_chunk_parts)
-            if self._estimate_tokens(chunk_content) >= self.min_chunk_size:
+            if len(chunk_content) // 4 >= self.min_chunk_size:
                 chunk = self._create_chunk(
                     content=chunk_content,
                     title=title,
@@ -335,63 +415,62 @@ class SemanticChunker:
                     source_name=source_name,
                     category=category,
                     chunk_index=chunk_index_offset + len(chunks),
-                    overlap_with_previous=len(chunks) > 0
+                    overlap_with_previous=len(chunks) > 0,
+                    doc_metadata=doc_metadata
                 )
                 chunks.append(chunk)
         
         return chunks
     
     def _get_overlap_text(self, parts: List[str]) -> str:
-        """Obtiene las últimas N palabras para overlap entre chunks"""
+        """Obtiene las últimas N palabras para overlap."""
         if not parts:
             return ""
         
-        # Unir todo y tomar últimas N palabras
         full_text = ' '.join(parts)
         words = full_text.split()
-        
-        # Tomar aproximadamente 'overlap' tokens (palabras)
         overlap_words = words[-self.overlap:] if len(words) > self.overlap else words
         return ' '.join(overlap_words)
     
     def _create_chunk(self, content: str, title: str, section: str,
                       source_name: str, category: str, chunk_index: int,
-                      overlap_with_previous: bool = False) -> Chunk:
-        """Crea un objeto Chunk con metadatos enriquecidos según DeepSeek"""
-        # Extraer keywords mejorados
+                      overlap_with_previous: bool = False,
+                      doc_metadata: Dict = None) -> Chunk:
+        """Crea un objeto Chunk con metadatos enriquecidos."""
         keywords = self._extract_keywords(content)
-        
-        # Detectar departamento/área
         departamento = self._detect_department(content, category)
-        
-        # Detectar tema específico
         tema = self._detect_topic(content, keywords)
-        
-        # Clasificar tipo de contenido
         content_type = self._classify_content_type(content)
-        
-        # Generar ID único
         chunk_id = self._generate_chunk_id(source_name, chunk_index)
+        token_count = len(content) // 4
         
-        # Estimar tokens
-        token_count = self._estimate_tokens(content)
-        
-        # Metadatos enriquecidos con filtros semánticos (DeepSeek)
         metadata = {
             'source': source_name,
             'category': category,
-            'departamento': departamento,  # NUEVO: filtrado por área
-            'tema': tema,                  # NUEVO: filtrado por tema
+            'departamento': departamento,
+            'tema': tema,
             'section': section,
             'title': title,
             'chunk_index': chunk_index,
             'token_count': token_count,
             'has_overlap': overlap_with_previous,
-            'keywords': ', '.join(keywords),  # String para ChromaDB
-            'content_type': content_type,     # FAQ, horario, ubicación, etc.
+            'keywords': ', '.join(keywords),
+            'content_type': content_type,
             'type': 'semantic_chunk',
             'fecha_procesamiento': datetime.now().strftime('%Y-%m-%d')
         }
+        
+        # Enriquecer con metadata del documento (frontmatter)
+        if doc_metadata:
+            for key in ['departamento', 'prioridad', 'tema', 'tipo_contenido', 'id', 'source_type']:
+                if key in doc_metadata:
+                    metadata[key] = doc_metadata[key]
+            
+            if 'keywords' in doc_metadata and doc_metadata['keywords']:
+                doc_keywords = doc_metadata['keywords']
+                if isinstance(doc_keywords, list):
+                    combined = list(set(keywords + doc_keywords))
+                    metadata['keywords'] = ', '.join(combined[:20])
         
         return Chunk(
             content=content,
@@ -405,10 +484,10 @@ class SemanticChunker:
         )
     
     def _detect_department(self, content: str, category: str) -> str:
-        """Detecta el departamento/área basado en contenido"""
+        """Detecta el departamento/área basado en contenido."""
         content_lower = content.lower()
         
-        department_mapping = {
+        dept_mapping = {
             'Admisiones': ['requisitos', 'postulación', 'matrícula', 'inscripción'],
             'Asuntos Estudiantiles': ['tne', 'certificado', 'tarjeta', 'alumno regular'],
             'Bienestar': ['beca', 'económico', 'gratuidad', 'financiamiento', 'junaeb'],
@@ -419,14 +498,14 @@ class SemanticChunker:
             'Académico': ['nota', 'evaluación', 'examen', 'asignatura']
         }
         
-        for dept, keywords_dept in department_mapping.items():
-            if any(kw in content_lower for kw in keywords_dept):
+        for dept, keywords in dept_mapping.items():
+            if any(kw in content_lower for kw in keywords):
                 return dept
         
         return 'General'
     
     def _detect_topic(self, content: str, keywords: List[str]) -> str:
-        """Detecta el tema específico del contenido"""
+        """Detecta el tema específico del contenido."""
         content_lower = content.lower()
         
         if any(kw in content_lower for kw in ['tne', 'tarjeta nacional']):
@@ -445,7 +524,7 @@ class SemanticChunker:
             return keywords[0] if keywords else 'general'
     
     def _classify_content_type(self, content: str) -> str:
-        """Clasifica el tipo de contenido"""
+        """Clasifica el tipo de contenido."""
         content_lower = content.lower()
         
         if '?' in content and len(content) < 200:
@@ -462,75 +541,44 @@ class SemanticChunker:
             return 'informativo'
     
     def _extract_keywords(self, text: str) -> List[str]:
-        """Extrae keywords relevantes del texto con análisis mejorado"""
+        """Extrae keywords relevantes del texto."""
         text_lower = text.lower()
         keywords = []
         
-        # PASO 1: Buscar keywords institucionales (prioridad alta)
+        # Buscar keywords institucionales
         for keyword in self.institutional_keywords:
             if keyword in text_lower:
                 keywords.append(keyword)
         
-        # PASO 2: Extraer entidades importantes (nombres propios, lugares)
-        # Detectar palabras capitalizadas (lugares, nombres)
-        capitalized = re.findall(r'\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{3,}\b', text)
-        keywords.extend([w.lower() for w in capitalized[:3]])
-        
-        # PASO 3: Extraer palabras importantes (longitud 6+, frecuencia)
+        # Extraer palabras importantes
         words = re.findall(r'\b[a-záéíóúñ]{6,}\b', text_lower)
         
-        # Stopwords expandidas
         stopwords = {
             'información', 'alumno', 'estudiante', 'consulta', 'realizar',
             'solicitar', 'proceso', 'servicio', 'sistema', 'general',
-            'además', 'después', 'durante', 'entonces', 'siguiente',
-            'anterior', 'importante', 'necesario', 'ejemplo', 'diferentes'
+            'además', 'después', 'durante', 'entonces', 'siguiente'
         }
         
-        # Contar frecuencias
         word_freq = {}
         for word in words:
             if word not in stopwords:
                 word_freq[word] = word_freq.get(word, 0) + 1
         
-        # Top palabras por frecuencia
         frequent_words = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
         keywords.extend([w for w, _ in frequent_words[:5]])
         
-        # PASO 4: Extraer categorías detectadas
-        category_keywords = {
-            'tne': ['transporte', 'tarjeta', 'metro', 'bus'],
-            'beca': ['económico', 'financiamiento', 'junaeb', 'gratuidad'],
-            'salud': ['psicológico', 'médico', 'enfermería', 'bienestar'],
-            'deporte': ['gimnasio', 'caf', 'entrenamiento', 'fitness'],
-            'certificado': ['documento', 'alumno regular', 'práctica', 'título'],
-            'biblioteca': ['préstamo', 'libro', 'recurso', 'estudio']
-        }
-        
-        for category, terms in category_keywords.items():
-            if any(term in text_lower for term in terms):
-                keywords.append(category)
-        
-        # Limpiar y retornar máximo 15 keywords únicos
-        unique_keywords = list(dict.fromkeys(keywords))  # Preservar orden
+        unique_keywords = list(dict.fromkeys(keywords))
         return unique_keywords[:15]
     
     def _generate_chunk_id(self, source_name: str, chunk_index: int) -> str:
-        """Genera un ID único para el chunk"""
-        # Limpiar nombre del archivo
+        """Genera un ID único para el chunk."""
         clean_name = re.sub(r'[^\w\s-]', '', source_name)
         clean_name = re.sub(r'\s+', '_', clean_name)
-        
-        # Hash corto del nombre + índice
         hash_short = hashlib.md5(clean_name.encode()).hexdigest()[:8]
         return f"{hash_short}_{chunk_index}"
     
-    def _estimate_tokens(self, text: str) -> int:
-        """Estima número de tokens (aprox 4 caracteres = 1 token en español)"""
-        return len(text) // 4
-    
     def get_stats(self) -> Dict[str, Any]:
-        """Retorna estadísticas del chunker"""
+        """Retorna estadísticas del chunker."""
         return {
             'chunk_size': self.chunk_size,
             'overlap': self.overlap,
@@ -539,5 +587,5 @@ class SemanticChunker:
         }
 
 
-# Instancia global para fácil importación
+# Instancia global
 semantic_chunker = SemanticChunker(chunk_size=512, overlap=100, min_chunk_size=50)

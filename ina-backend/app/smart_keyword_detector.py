@@ -210,6 +210,68 @@ class SmartKeywordDetector:
                 "variations": ["titulo", "titulacion", "egreso", "graduacion"]
             },
             
+            # NUEVOS KEYWORDS CRÍTICOS PARA DOCUMENTOS RECIÉN CREADOS
+            "titularme": {
+                "category": "academico",
+                "topic": "requisitos_titulacion",
+                "weight": 95,
+                "variations": ["titularme", "titulacion", "titulo", "requisitos titulacion", "ceremonia", "egreso"]
+            },
+            "sct": {
+                "category": "academico",
+                "topic": "creditos_sct",
+                "weight": 95,
+                "variations": ["sct", "creditos sct", "sistema creditos", "creditos transferibles", "carga academica"]
+            },
+            "creditos": {
+                "category": "academico",
+                "topic": "creditos",
+                "weight": 90,
+                "variations": ["creditos", "credito", "sct", "carga", "horas"]
+            },
+            "convalidar": {
+                "category": "academico",
+                "topic": "convalidacion",
+                "weight": 95,
+                "variations": ["convalidar", "convalidacion", "homologacion", "equivalencia", "reconocimiento"]
+            },
+            "convalidacion": {
+                "category": "academico",
+                "topic": "convalidacion",
+                "weight": 95,
+                "variations": ["convalidacion", "convalidar", "homologacion", "equivalencia asignaturas"]
+            },
+            "extracurricular": {
+                "category": "bienestar_estudiantil",
+                "topic": "talleres_extracurriculares",
+                "weight": 90,
+                "variations": ["extracurricular", "extracurriculares", "talleres", "actividades complementarias"]
+            },
+            "talleres": {
+                "category": "bienestar_estudiantil",
+                "topic": "talleres",
+                "weight": 85,
+                "variations": ["talleres", "taller", "actividades", "extracurricular", "complementarios"]
+            },
+            "grupos": {
+                "category": "bienestar_estudiantil",
+                "topic": "participacion_estudiantil",
+                "weight": 90,
+                "variations": ["grupos", "centro alumnos", "federacion", "organizaciones estudiantiles", "participacion"]
+            },
+            "eventos": {
+                "category": "institucionales",
+                "topic": "eventos_calendario",
+                "weight": 85,
+                "variations": ["eventos", "evento", "actividades", "calendario", "celebraciones", "ferias"]
+            },
+            "requisitos": {
+                "category": "academico",
+                "topic": "requisitos",
+                "weight": 90,
+                "variations": ["requisitos", "requisito", "exigencias", "condiciones", "necesario"]
+            },
+            
             # SEDE Y UBICACIÓN
             "sede": {
                 "category": "institucionales",

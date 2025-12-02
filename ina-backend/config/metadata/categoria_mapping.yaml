@@ -1,0 +1,156 @@
+# ============================================
+# MAPEO DE CATEGORÍAS INSTITUCIONALES
+# ============================================
+# Duoc UC Plaza Norte - Punto Estudiantil
+# Fecha: 01 Diciembre 2025
+# ============================================
+
+tne:
+  categoria: tne
+  departamento: asuntos_estudiantiles
+  keywords_base:
+    - tne
+    - tarjeta
+    - metro
+    - transporte
+    - bus
+    - nacional_estudiantil
+  prioridad: alta
+  tema_principal: tne_transporte
+  tipo_contenido: procedimiento
+
+certificados:
+  categoria: certificado
+  departamento: registro_academico
+  keywords_base:
+    - certificado
+    - documento
+    - alumno_regular
+    - concentracion_notas
+    - titulo
+  prioridad: alta
+  tema_principal: certificados_academicos
+  tipo_contenido: procedimiento
+
+deportes:
+  categoria: deporte
+  departamento: deportes_recreacion
+  keywords_base:
+    - gimnasio
+    - caf
+    - complejo_deportivo
+    - maiclub
+    - entrenamiento
+    - fitness
+    - talleres
+  prioridad: media
+  tema_principal: deportes_recreacion
+  tipo_contenido: informativo
+
+bienestar:
+  categoria: bienestar
+  departamento: bienestar_estudiantil
+  keywords_base:
+    - psicologico
+    - salud_mental
+    - apoyo_emocional
+    - consejeria
+    - bienestar
+    - ops
+  prioridad: alta
+  tema_principal: salud_mental
+  tipo_contenido: informativo
+
+biblioteca:
+  categoria: biblioteca
+  departamento: biblioteca
+  keywords_base:
+    - biblioteca
+    - prestamo
+    - libro
+    - recurso
+    - bibliografico
+    - sala_estudio
+  prioridad: media
+  tema_principal: servicios_biblioteca
+  tipo_contenido: informativo
+
+becas:
+  categoria: beca
+  departamento: bienestar_estudiantil
+  keywords_base:
+    - beca
+    - economico
+    - financiamiento
+    - junaeb
+    - gratuidad
+    - apoyo_economico
+  prioridad: alta
+  tema_principal: apoyo_economico
+  tipo_contenido: procedimiento
+
+practicas:
+  categoria: practica
+  departamento: desarrollo_laboral
+  keywords_base:
+    - practica
+    - laboral
+    - empleo
+    - cv
+    - duoclaboral
+    - bolsa_trabajo
+  prioridad: alta
+  tema_principal: practicas_empleo
+  tipo_contenido: procedimiento
+
+matricula:
+  categoria: matricula
+  departamento: registro_academico
+  keywords_base:
+    - matricula
+    - pago
+    - arancel
+    - inscripcion
+    - financiamiento
+  prioridad: media
+  tema_principal: matricula_pagos
+  tipo_contenido: procedimiento
+
+emergencia:
+  categoria: emergencia
+  departamento: seguridad
+  keywords_base:
+    - emergencia
+    - seguridad
+    - primeros_auxilios
+    - evacuacion
+    - urgencia
+  prioridad: critica
+  tema_principal: protocolos_emergencia
+  tipo_contenido: procedimiento
+
+contacto:
+  categoria: contacto
+  departamento: punto_estudiantil
+  keywords_base:
+    - contacto
+    - telefono
+    - correo
+    - ubicacion
+    - direccion
+    - horario
+  prioridad: alta
+  tema_principal: informacion_contacto
+  tipo_contenido: contacto
+
+general:
+  categoria: general
+  departamento: general
+  keywords_base:
+    - informacion
+    - duoc
+    - sede
+    - plaza_norte
+  prioridad: baja
+  tema_principal: informacion_general
+  tipo_contenido: informativo

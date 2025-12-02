@@ -241,7 +241,7 @@ async def admin_training_status():
 
 # 👇 NUEVAS IMPORTACIONES PARA EL SISTEMA DE FEEDBACK
 from app.response_feedback import response_feedback_system
-from app.sentiment_analyzer import sentiment_analyzer
+# from app.sentiment_analyzer import sentiment_analyzer  # ❌ ELIMINADO EN LIMPIEZA
 from app.feedback_rewards import feedback_rewards
 import glob
 import os
@@ -288,24 +288,23 @@ async def on_startup():
         engine_time = time.time() - knowledge_start
         logger.info(f"✅ RAG Engine inicializado correctamente ({engine_time:.2f}s)")
         
-        # 🔍 AUTO-DETECCIÓN DE CHUNKS ANTIGUOS
-        print(f"\n🔍 VERIFICANDO CALIDAD DE CHUNKS EN CHROMADB...")
+        # 🔍 VERIFICACIÓN RÁPIDA DE CHROMADB (Sin Reprocesamiento Automático)
+        # ⚠️ FASE 3: El reprocesamiento automático fue DESHABILITADO (38s delay)
+        # 📌 Para reconstruir ChromaDB, ejecuta manualmente:
+        #    python scripts/ingest/ingest_markdown_json.py --clean --verify
+        print(f"\n🔍 VERIFICANDO CHROMADB...")
         try:
-            from app.intelligent_chunker import semantic_chunker
             collection = engine.collection
             total_chunks = collection.count()
             
-            needs_reprocess = False
-            reason = ""
-            
             if total_chunks == 0:
-                needs_reprocess = True
-                reason = "ChromaDB está vacío"
                 print(f"   ⚠️  ChromaDB VACÍO (0 chunks)")
+                print(f"   📌 Ejecuta: python scripts/ingest/ingest_markdown_json.py --clean")
+                logger.warning("⚠️  ChromaDB vacío. Usa ingest_markdown_json.py para poblarlo")
             elif total_chunks < 100:
-                needs_reprocess = True
-                reason = f"Solo {total_chunks} chunks (esperados: 500+)"
                 print(f"   ⚠️  Pocos chunks: {total_chunks} (esperados: 500+)")
+                print(f"   📌 Ejecuta: python scripts/ingest/ingest_markdown_json.py --clean")
+                logger.warning(f"⚠️  Solo {total_chunks} chunks. Considera ejecutar ingesta")
             else:
                 # Verificar metadata enriquecida
                 results = collection.query(query_texts=["tne"], n_results=1)
@@ -316,47 +315,25 @@ async def on_startup():
                     has_chunk_id = 'chunk_id' in meta and meta['chunk_id']
                     
                     if not (has_section and has_keywords and has_chunk_id):
-                        needs_reprocess = True
-                        reason = "Metadata no enriquecida (falta section/keywords/chunk_id)"
                         print(f"   ⚠️  Chunks sin metadata enriquecida")
                         print(f"      - Sección: {'✓' if has_section else '✗'}")
                         print(f"      - Keywords: {'✓' if has_keywords else '✗'}")
                         print(f"      - Chunk ID: {'✓' if has_chunk_id else '✗'}")
+                        print(f"   📌 Ejecuta: python scripts/ingest/ingest_markdown_json.py --clean")
+                        logger.warning("⚠️  Metadata no enriquecida. Usa ingest_markdown_json.py")
                     else:
                         print(f"   ✅ ChromaDB OK: {total_chunks} chunks con metadata enriquecida")
                         logger.info(f"✅ ChromaDB verificado: {total_chunks} chunks válidos")
             
-            # 🔄 REPROCESAR AUTOMÁTICAMENTE SI ES NECESARIO
-            if needs_reprocess:
-                print(f"\n🔄 REPROCESAMIENTO AUTOMÁTICO REQUERIDO")
-                print(f"   Razón: {reason}")
-                print(f"   Iniciando reprocesamiento con chunking inteligente...")
-                logger.warning(f"⚠️  Reprocesamiento automático: {reason}")
-                
-                # Limpiar ChromaDB
-                try:
-                    collection.delete(where={})
-                    print(f"   ✅ ChromaDB limpiado")
-                except:
-                    pass
-                
-                # Forzar recarga con chunker inteligente
-                training_loader.data_loaded = False
-                training_loader.base_knowledge_loaded = False
-                training_loader.word_documents_loaded = False
-                
-                reprocess_start = time.time()
-                success = training_loader.load_all_training_data()
-                reprocess_time = time.time() - reprocess_start
-                
-                if success:
-                    new_count = collection.count()
-                    print(f"   ✅ Reprocesamiento completado en {reprocess_time:.2f}s")
-                    print(f"   📊 Nuevos chunks: {new_count}")
-                    logger.info(f"✅ Reprocesamiento automático exitoso: {new_count} chunks en {reprocess_time:.2f}s")
-                else:
-                    print(f"   ❌ Error en reprocesamiento")
-                    logger.error(f"❌ Reprocesamiento automático falló")
+            # 🗑️ REPROCESAMIENTO AUTOMÁTICO DESHABILITADO (FASE 3)
+            # El código de reprocesamiento automático fue comentado porque:
+            # 1. Causaba 38.51s de delay en cada startup
+            # 2. Los scripts de ingesta (ingest_markdown_json.py) son más eficientes
+            # 3. Permite control manual sobre cuándo reconstruir ChromaDB
+            
+            # Si necesitas reprocesar, ejecuta MANUALMENTE:
+            # python scripts/ingest/ingest_markdown_json.py --clean --verify
+            
         except Exception as check_error:
             print(f"   ⚠️  Error verificando chunks: {check_error}")
             logger.warning(f"No se pudo verificar calidad de chunks: {check_error}")
@@ -1294,7 +1271,7 @@ async def submit_detailed_feedback(feedback: DetailedFeedbackRequest):
             # Opcional: analizar sentimiento si hay comentarios
             if feedback.userComments:
                 try:
-                    sentiment = sentiment_analyzer.analyze_feedback_sentiment(feedback.userComments)
+                    sentiment = None  # sentiment_analyzer.analyze_feedback_sentiment(feedback.userComments)  # ❌ Módulo eliminado
                     logger.info(f"🎭 Sentimiento del feedback: {sentiment}")
                 except Exception as sentiment_error:
                     logger.warning(f"⚠️ No se pudo analizar sentimiento: {sentiment_error}")
@@ -1413,7 +1390,7 @@ async def analyze_feedback_sentiment(session_id: str):
             if not feedback or not feedback.comments:
                 return {"error": "No hay comentarios para analizar"}
             
-            sentiment = sentiment_analyzer.analyze_feedback_sentiment(feedback.comments)
+            sentiment = None  # sentiment_analyzer.analyze_feedback_sentiment(feedback.comments)  # ❌ Módulo eliminado
             return {
                 "session_id": session_id,
                 "comments": feedback.comments,
@@ -1465,7 +1442,7 @@ async def feedback_health():
             "status": "healthy",
             "total_feedback_stored": len(total_feedback),
             "active_feedback_sessions": active_sessions,
-            "sentiment_analyzer_available": sentiment_analyzer.analyzer is not None,
+            "sentiment_analyzer_available": False,  # sentiment_analyzer.analyzer is not None,  # ❌ Módulo eliminado
             "rewards_system_available": True
         }
     except Exception as e:
@@ -2193,12 +2170,14 @@ if __name__ == "__main__":
 # ============================================================
 
 # Integrar monitoreo de producción
-try:
-    from app.monitoring_interface import setup_monitoring_routes
-    setup_monitoring_routes(app)
-    logger.info("✅ Rutas de monitoreo integradas - Acceso: http://localhost:8000/monitoring")
-except Exception as e:
-    logger.error(f"❌ Error integrando monitoreo: {e}")
+# ❌ ELIMINADO EN LIMPIEZA - monitoring_interface.py no se usaba
+# try:
+#     from app.monitoring_interface import setup_monitoring_routes
+#     setup_monitoring_routes(app)
+#     logger.info("✅ Rutas de monitoreo integradas - Acceso: http://localhost:8000/monitoring")
+# except Exception as e:
+#     logger.error(f"❌ Error integrando monitoreo: {e}")
+logger.info("ℹ️ Monitoreo de producción deshabilitado (módulo eliminado)")
 
 # Middleware para logging de requests en producción
 @app.middleware("http")

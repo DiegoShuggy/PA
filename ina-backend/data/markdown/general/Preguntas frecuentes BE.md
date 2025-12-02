@@ -1,0 +1,92 @@
+---
+id: general_Preguntas_frecuentes_BE
+source: Preguntas frecuentes BE.txt
+source_type: txt_converted
+categoria: general
+fecha_conversion: '2025-12-01'
+fecha_modificacion_original: '2025-11-28'
+departamento: institucional
+keywords:
+- informacion
+- general
+prioridad: media
+tipo_contenido: faq
+titulo: Preguntas frecuentes BE
+---
+
+# Preguntas frecuentes BE
+# Convertido de DOCX a TXT: 2025-11-28 00:31:30
+# Archivo original: Preguntas frecuentes BE.docx
+# ======================================================================
+
+Preguntas Frecuentes – Bienestar Estudiantil
+
+🟢 Apoyos y programas generales
+
+1. ¿Qué apoyos en salud mental existen en Duoc UC?
+
+Todos los estudiantes de Duoc UC pueden acceder gratuitamente a los siguientes apoyos:
+
+1.1. Acompañamiento psicológico urgente
+Si necesitas atención psicológica inmediata, comunícate con la Línea OPS, disponible las 24 horas del día para urgencias psicológicas, llamando al +56 2 2820 3450.
+Este servicio es gratuito y confidencial.
+
+1.2. Acompañamiento psicológico virtual gratuito
+Puedes acceder a sesiones online de atención psicológica a través de eventos.duoc.cl.
+
+Ingresa con tu usuario institucional (correo Duoc UC) y tu contraseña.
+
+Si es tu primera vez, selecciona la pestaña “Apoyo Psicológico”, regístrate y crea una contraseña.
+
+En esta misma plataforma encontrarás charlas, micro webinars y talleres sobre bienestar emocional y salud mental.
+
+1.3. Apoyo en crisis dentro de la sede
+Si experimentas una crisis de pánico o angustia mientras te encuentras en la sede, puedes acudir a la sala de primeros auxilios, ubicada en el Piso 2, Sede Plaza Norte, junto a la caja.
+Teléfono de contacto: +56 2 2999 3075.
+
+2. ¿Existe atención psicológica presencial?
+
+No. Actualmente, Duoc UC ofrece exclusivamente atención psicológica virtual, disponible incluso los fines de semana y días festivos.
+
+3. ¿Qué debo hacer si tengo una crisis o me siento mal estando en la sede?
+
+Puedes acudir directamente a la sala de primeros auxilios, ubicada en el Piso 2, Sede Plaza Norte, junto a la caja, o comunicarte al +56 2 2999 3075 para recibir apoyo inmediato.
+
+4. Intenté agendar atención psicológica, pero no encuentro horas disponibles
+
+Si no logras encontrar horas disponibles, escribe a Adriana Vásquez, Coordinadora de Bienestar Estudiantil, al correo avasquezm@duoc.cl, o agenda directamente una cita con ella a través de Agenda Norte.
+Ella podrá ayudarte a revisar la disponibilidad o derivar tu caso al área correspondiente.
+
+5. ¿Cuántas sesiones psicológicas puedo tener al año?
+
+Puedes acceder a hasta 8 sesiones de atención psicológica por año.
+
+6. ¿El psicólogo virtual puede otorgar licencia médica?
+
+No. Los psicólogos no están facultados para emitir licencias médicas.
+
+7. ¿Qué puedo hacer si sé que un/a compañero/a está pasando por un mal momento pero no quiere pedir ayuda?
+
+Puedes motivarle a solicitar una hora de atención psicológica virtual, un servicio confidencial y gratuito.
+Si sientes que te faltan herramientas para apoyar adecuadamente, te recomendamos realizar el curso “Embajadores en Salud Mental”, donde aprenderás estrategias para acompañar a personas que estén atravesando momentos difíciles.
+Accede al curso en embajadores.duoc.cl.
+
+8. ¿Existe algún apoyo para estudiantes con discapacidad?
+
+Sí. Duoc UC cuenta con el Programa de Acompañamiento a Estudiantes con Discapacidad (PAEDIS).
+Para conocer sus requisitos y beneficios, contacta a Elizabeth Domínguez, Coordinadora de Inclusión de la sede, al correo edominguezs@duoc.cl.
+
+🔵 Curso “Embajadores en Salud Mental”
+
+9. Comencé el curso de Embajadores, pero no puedo avanzar al siguiente módulo
+
+Para avanzar, debes obtener un 85% o más de respuestas correctas en cada actividad. Si no alcanzas ese porcentaje, la plataforma no te permitirá continuar.
+
+10. ¿Cómo sé si terminé el curso de Embajadores?
+
+Al finalizar el curso, la plataforma mostrará un mensaje indicando que “Eres un embajador”, lo que confirma que completaste exitosamente la formación.
+
+11. ¿Tengo alguna responsabilidad adicional al realizar el curso de Embajadores?
+
+No. El curso no implica tareas ni compromisos posteriores.
+Su propósito es fortalecer una comunidad empática, solidaria y preparada para apoyar la salud mental dentro de Duoc UC.

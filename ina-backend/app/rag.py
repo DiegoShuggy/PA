@@ -20,16 +20,17 @@ from app.topic_classifier import TopicClassifier
 from app.classifier import classifier  # IMPORTAR CLASIFICADOR
 
 # NUEVO: Importar sistema híbrido
-try:
-    from app.hybrid_response_system import HybridResponseSystem
-    HYBRID_SYSTEM_AVAILABLE = True
-    logging.info("✅ Sistema híbrido cargado correctamente")
-except ImportError as e:
-    HYBRID_SYSTEM_AVAILABLE = False
-    logging.warning(f"⚠️ Sistema híbrido no disponible: {e}")
-except Exception as e:
-    HYBRID_SYSTEM_AVAILABLE = False
-    logging.error(f"❌ Error cargando sistema híbrido: {e}")
+# ❌ ELIMINADO EN LIMPIEZA - hybrid_response_system.py no se usaba
+# try:
+#     from app.hybrid_response_system import HybridResponseSystem
+#     HYBRID_SYSTEM_AVAILABLE = True
+#     logging.info("✅ Sistema híbrido cargado correctamente")
+# except ImportError as e:
+HYBRID_SYSTEM_AVAILABLE = False
+#     logging.warning(f"⚠️ Sistema híbrido no disponible: {e}")
+# except Exception as e:
+#     HYBRID_SYSTEM_AVAILABLE = False
+#     logging.error(f"❌ Error cargando sistema híbrido: {e}")
 
 # NUEVO: Importar sistema de mejora de respuestas
 try:
@@ -256,13 +257,13 @@ class RAGEngine:
     def __init__(self):
         from app.memory_manager import MemoryManager
         from app.derivation_manager import derivation_manager
-        from app.stationary_ai_filter import stationary_filter
+        # from app.stationary_ai_filter import stationary_filter  # ❌ ELIMINADO EN LIMPIEZA
         # Inicializar el gestor de memoria
         self.memory_manager = MemoryManager()
         # Inicializar el gestor de derivación estacionaria
         self.derivation_manager = derivation_manager
         # Inicializar filtro específico para IA estacionaria
-        self.stationary_filter = stationary_filter
+        self.stationary_filter = None  # stationary_filter  # ❌ Módulo eliminado
         # Expansiones de sinónimos mejoradas
         self.synonym_expansions = {
             "tne": ["tarjeta nacional estudiantil", "pase escolar", "tne duoc", "beneficio tne", "tarjeta estudiante", "validación tne", "activación tne"],
@@ -342,7 +343,7 @@ class RAGEngine:
         }
         from app.memory_manager import MemoryManager
         from app.derivation_manager import derivation_manager
-        from app.stationary_ai_filter import stationary_filter
+        # from app.stationary_ai_filter import stationary_filter  # ❌ ELIMINADO EN LIMPIEZA
         
         # Inicializar el gestor de memoria
         self.memory_manager = MemoryManager()
@@ -351,7 +352,7 @@ class RAGEngine:
         self.derivation_manager = derivation_manager
         
         # Inicializar filtro específico para IA estacionaria
-        self.stationary_filter = stationary_filter
+        self.stationary_filter = None  # stationary_filter  # ❌ Módulo eliminado
         
         # Expansiones de sinónimos mejoradas
         self.synonym_expansions = {
@@ -829,10 +830,32 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
                 'query_parts': [user_message]
             }
         
-        # 5. VERIFICAR SI ES DERIVACIÓN
-        if self.topic_classifier.should_derive(user_message):
-            topic_info = self.topic_classifier.classify_topic(user_message)
-            logger.info(f"DERIVACIÓN DETECTADA: {user_message} -> {topic_info.get('category', 'unknown')}")
+        # 5. BUSCAR EN CHROMADB PRIMERO antes de decidir derivar
+        topic_info = self.topic_classifier.classify_topic(user_message)
+        
+        # 🔥 NUEVO: Intentar búsqueda en ChromaDB ANTES de derivar
+        chromadb_has_info = False
+        try:
+            logger.info(f"🔍 Pre-búsqueda en ChromaDB para: '{user_message}'")
+            test_search = self.hybrid_search(user_message, n_results=10)  # Buscar más resultados
+            
+            # Verificar si hay resultados con relevancia razonable
+            if test_search and len(test_search) > 0:
+                best_score = test_search[0].get('similarity', 0.0)
+                if best_score >= 0.20:  # Umbral MÁS bajo para capturar nuevos documentos
+                    chromadb_has_info = True
+                    logger.info(f"✅ ChromaDB tiene información: {len(test_search)} docs, mejor score: {best_score:.3f}")
+                else:
+                    logger.info(f"⚠️ ChromaDB: relevancia baja (mejor: {best_score:.3f})")
+            else:
+                logger.info(f"⚠️ ChromaDB: sin resultados")
+        except Exception as e:
+            logger.warning(f"⚠️ Error en pre-búsqueda ChromaDB: {e}")
+        
+        # 5b. DERIVAR SOLO SI ChromaDB NO TIENE INFORMACIÓN
+        should_derive = self.topic_classifier.should_derive(user_message)
+        if should_derive and not chromadb_has_info:
+            logger.info(f"DERIVACIÓN ACTIVADA: ChromaDB sin info + should_derive=True")
             self.metrics['derivations'] += 1
             return {
                 'processing_strategy': 'derivation',
@@ -842,9 +865,8 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
                 'multiple_queries_detected': False,
                 'query_parts': [user_message]
             }
-        
-        # 5. Clasificar tema
-        topic_info = self.topic_classifier.classify_topic(user_message)
+        elif should_derive and chromadb_has_info:
+            logger.info(f"🎯 ANULANDO DERIVACIÓN: ChromaDB tiene información relevante")
         
         # 6. Detectar consultas múltiples SOLO para temas institucionales
         query_parts = self.topic_classifier.detect_multiple_queries(user_message)
@@ -1612,13 +1634,27 @@ No entiendo completamente '{original_query}'.
         }
 
     def add_document(self, document: str, metadata: Dict = None) -> bool:
-        """AGREGAR DOCUMENTO AL RAG"""
+        """AGREGAR DOCUMENTO AL RAG - OPTIMIZADO PARA MD/JSON CON METADATA ENRIQUECIDA"""
         try:
             doc_id = f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}_{hash(document) % 10000}"
 
             # Preservar todo el metadata que venga del loader (section, is_structured, optimized, etc.)
             enhanced_metadata = {"timestamp": datetime.now().isoformat()}
+            
+            # 🔥 FASE 3: Logging de metadata enriquecida MD/JSON
+            source_type = 'unknown'
+            
             if isinstance(metadata, dict):
+                # Detectar tipo de fuente
+                if 'source_type' in metadata:
+                    source_type = metadata['source_type']
+                elif metadata.get('type') == 'json_faq':
+                    source_type = 'json_faq'
+                elif metadata.get('type') == 'markdown_chunk':
+                    source_type = 'markdown'
+                elif 'departamento' in metadata or 'tema_principal' in metadata:
+                    source_type = 'markdown_frontmatter'
+                
                 # No sobrescribir timestamp si viene en metadata
                 for k, v in metadata.items():
                     if k == 'timestamp':
@@ -1631,16 +1667,26 @@ No entiendo completamente '{original_query}'.
                         enhanced_metadata[k] = json.dumps(v) if v else '{}'
                     else:
                         enhanced_metadata[k] = v
+                
                 # Asegurar claves mínimas si faltan
                 enhanced_metadata.setdefault('source', metadata.get('source', 'unknown'))
                 enhanced_metadata.setdefault('category', metadata.get('category', 'general'))
                 enhanced_metadata.setdefault('type', metadata.get('type', 'general'))
+                
+                # 🔥 FASE 3: Logging mejorado para debugging
+                if source_type in ['markdown', 'markdown_frontmatter', 'json_faq']:
+                    logger.debug(f"✅ Agregando chunk {source_type}: "
+                               f"cat={enhanced_metadata.get('category', 'N/A')}, "
+                               f"dept={enhanced_metadata.get('departamento', 'N/A')}, "
+                               f"keywords={enhanced_metadata.get('keywords', '')[:40]}...")
+                
             else:
                 enhanced_metadata.update({
                     'source': 'unknown',
                     'category': 'general',
                     'type': 'general'
                 })
+            
             # Asegurar que keywords y chunk_id estén presentes
             if 'keywords' not in enhanced_metadata or not enhanced_metadata['keywords']:
                 enhanced_metadata['keywords'] = ', '.join(self.extract_keywords(document))
@@ -1905,22 +1951,22 @@ RESPUESTA (basada SOLO en el contexto):"""
             expanded_query = self._expand_query(query_text)
             processed_query = self.enhanced_normalize_text(expanded_query)
             
-            # Buscar más resultados con umbral más bajo para mejor recall
-            results = self.query_optimized(processed_query, n_results * 3, score_threshold=0.15)
+            # 🔥 MEJORA: Buscar MÁS resultados (10x) con umbral MÁS BAJO para capturar documentos nuevos
+            results = self.query_optimized(processed_query, n_results * 10, score_threshold=0.08)
             
             logger.info(f"🔍 Búsqueda híbrida: '{query_text[:50]}' → {len(results)} resultados")
 
-            # Filtrar con umbral más permisivo
+            # 🔥 MEJORA: Filtrar con umbral AÚN MÁS PERMISIVO para nuevos documentos
             filtered_docs = []
             for result in results:
-                if result['similarity'] >= 0.2:  # Umbral muy bajo para capturar más info
+                if result['similarity'] >= 0.12:  # Reducido de 0.15 a 0.12
                     filtered_docs.append(result)
                     logger.debug(f"  ✓ Doc {result['metadata'].get('category', 'unknown')}: {result['similarity']:.3f}")
                     
-            # Si aún no hay resultados, tomar cualquier cosa por encima de 0.1
+            # Si aún no hay resultados, tomar cualquier cosa por encima de 0.06 (reducido de 0.08)
             if not filtered_docs:
                 for result in results:
-                    if result['similarity'] >= 0.1:
+                    if result['similarity'] >= 0.06:
                         filtered_docs.append(result)
                         logger.debug(f"  ⚡ Fallback doc {result['metadata'].get('category', 'unknown')}: {result['similarity']:.3f}")
 
@@ -2160,15 +2206,19 @@ def get_ai_response(user_message: str, context: list = None,
             logger.warning(f"⚠️ Error buscando biblioteca: {e}")
     
     # 🔥 FALLBACK 2: Análisis de derivación para IA estacionaria
-    derivation_analysis = engine.derivation_manager.analyze_query(user_message)
-    logger.info(f"🔍 ANÁLISIS DERIVACIÓN: {derivation_analysis}")
+    derivation_analysis = {"should_derive": False, "is_inappropriate": False, "is_emergency": False}
+    if hasattr(engine, 'derivation_manager') and engine.derivation_manager:
+        derivation_analysis = engine.derivation_manager.analyze_query(user_message)
+        logger.info(f"🔍 ANÁLISIS DERIVACIÓN: {derivation_analysis}")
     
     # 🔥 FALLBACK: Filtro específico para IA estacionaria
-    stationary_analysis = engine.stationary_filter.analyze_query(user_message)
-    logger.info(f"🛡️ ANÁLISIS FILTRO ESTACIONARIO: {stationary_analysis}")
+    stationary_analysis = {"has_auto_response": False}
+    if hasattr(engine, 'stationary_filter') and engine.stationary_filter:
+        stationary_analysis = engine.stationary_filter.analyze_query(user_message)
+        logger.info(f"🛡️ ANÁLISIS FILTRO ESTACIONARIO: {stationary_analysis}")
     
     # Manejar respuestas automáticas para consultas fuera de alcance
-    if stationary_analysis["has_auto_response"]:
+    if stationary_analysis["has_auto_response"] and engine.stationary_filter:
         auto_response = engine.stationary_filter.get_auto_response(stationary_analysis["auto_response_key"])
         logger.info(f"🤖 RESPUESTA AUTOMÁTICA ACTIVADA: {stationary_analysis['auto_response_key']}")
         
@@ -2196,7 +2246,7 @@ def get_ai_response(user_message: str, context: list = None,
         }
     
     # Manejar emergencias
-    if derivation_analysis["is_emergency"]:
+    if derivation_analysis["is_emergency"] and engine.derivation_manager:
         emergency_response = engine.derivation_manager.generate_emergency_response()
         return {
             "response": emergency_response["response"],
@@ -2300,14 +2350,16 @@ def get_ai_response(user_message: str, context: list = None,
         print(f"\n📌 PASO 3: BÚSQUEDA EN CHROMADB")
         print(f"   📊 ChromaDB status: {rag_engine.collection.count()} chunks totales")
         
-        # 🔥 BÚSQUEDA SIMPLE Y DIRECTA
+        # 🔥 BÚSQUEDA AMPLIADA para mejorar recall de documentos nuevos
         query_lower = user_message.lower()
         if any(word in query_lower for word in ['dónde', 'donde', 'ubicación', 'horario']):
-            n_results = 4  # Reducido de 5
+            n_results = 7  # Ampliado de 4 a 7
         elif any(word in query_lower for word in ['qué', 'que', 'cuál', 'cual', 'lista', 'todos']):
-            n_results = 5  # Reducido de 6
+            n_results = 10  # Ampliado de 5 a 10
+        elif any(word in query_lower for word in ['requisitos', 'cómo', 'como', 'proceso']):
+            n_results = 8  # Nuevo caso para consultas procedimentales
         else:
-            n_results = 3  # Reducido de 4 - más enfocado
+            n_results = 5  # Ampliado de 3 a 5 - mejor cobertura
         
         print(f"   🔎 Buscando {n_results} resultados en ChromaDB...")
         sources = rag_engine.hybrid_search(user_message, n_results=n_results)
@@ -2573,7 +2625,7 @@ def get_ai_response(user_message: str, context: list = None,
         #     respuesta += "\n\n📍 Para esta consulta específica, te recomiendo dirigirte al personal del Punto Estudiantil."
 
         # Derivación solo si la respuesta es muy pobre
-        if len(respuesta.strip()) < 50:
+        if len(respuesta.strip()) < 50 and hasattr(rag_engine, 'derivation_manager') and rag_engine.derivation_manager:
             derivation_analysis = rag_engine.derivation_manager.analyze_query(user_message)
             if derivation_analysis["requires_derivation"]:
                 derivation_response = rag_engine.derivation_manager.generate_derivation_response(

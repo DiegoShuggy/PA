@@ -5,6 +5,36 @@ Incluye TNE, certificados, beneficios económicos, programa de emergencia, etc.
 """
 
 TEMPLATES_ES = {
+    "calendario_academico_2026": """
+📅 **Calendario Académico 2026 - Duoc UC**
+
+**SEMESTRE OTOÑO 2026 (1er Semestre):**
+• **Inicio de clases:** 9 de Marzo 2026
+• **Último día de clases:** 26 de Junio 2026
+• **Vacaciones de invierno:** 29 Junio - 10 Julio 2026
+• **Exámenes finales:** 13-24 de Julio 2026
+• **Publicación notas:** 31 de Julio 2026
+
+**SEMESTRE PRIMAVERA 2026 (2do Semestre):**
+• **Inicio de clases:** 17 de Agosto 2026
+• **Último día de clases:** 4 de Diciembre 2026
+• **Exámenes finales:** 7-18 de Diciembre 2026
+• **Publicación notas:** 23 de Diciembre 2026
+
+📋 **Fechas importantes:**
+• **Matrículas 1er semestre:** 6-10 de Enero 2026
+• **Matrículas 2do semestre:** 27-31 de Julio 2026
+• **Feriados importantes:** 28-29 Marzo (Semana Santa), 1 Mayo, 21 Mayo, 18-19 Septiembre, 12 Octubre, 1 Noviembre
+
+🎓 **Estructura académica:**
+• Sistema semestral: 18 semanas por semestre
+• 16 semanas de clases + 2 semanas de exámenes
+• Modalidades: Presencial diurna y vespertina
+
+🔗 **Más información:** https://www.duoc.cl/alumnos/
+💡 *Planifica tu año académico con anticipación*
+""",
+    
     "tne_documentos_primera_vez": """
 📋 **Documentos para TNE por primera vez:**
 • **Cédula de identidad** (original y copia)

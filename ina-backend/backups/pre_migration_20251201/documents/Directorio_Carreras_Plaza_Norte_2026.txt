@@ -1,0 +1,387 @@
+# DIRECTORIO DE CARRERAS PLAZA NORTE 2026
+
+**DUOC UC - Sede Plaza Norte**  
+**Oferta Académica Completa**  
+**Proceso de Admisión 2026**
+
+---
+
+## ESCUELA DE INFORMÁTICA Y TELECOMUNICACIONES
+
+### INGENIERÍA EN INFORMÁTICA
+**Duración**: 4 años (8 semestres)  
+**Título**: Ingeniero en Informática  
+**Modalidad**: Diurna y Vespertina
+
+#### Perfil Profesional:
+Profesional capacitado para liderar proyectos de desarrollo de software, administración de sistemas informáticos, análisis de datos y transformación digital empresarial.
+
+#### Campo Laboral:
+- Desarrollador de software
+- Arquitecto de sistemas
+- Analista de sistemas
+- Jefe de proyectos TI
+- Consultor en transformación digital
+
+#### Malla Curricular Destacada:
+**Primer Año:**
+- Fundamentos de Programación
+- Matemática para Informática
+- Arquitectura de Computadores
+- Inglés Técnico I
+
+**Áreas de Especialización:**
+- Desarrollo de aplicaciones móviles
+- Inteligencia artificial y machine learning
+- Desarrollo web full-stack
+- Ciberseguridad
+
+#### Convenios y Certificaciones:
+- Microsoft Azure Fundamentals
+- AWS Cloud Practitioner
+- Oracle Database Certification
+- Certificación JAVA SE
+
+### INGENIERÍA EN REDES Y TELECOMUNICACIONES
+**Duración**: 4 años (8 semestres)  
+**Título**: Ingeniero en Redes y Telecomunicaciones  
+**Modalidad**: Diurna
+
+#### Perfil Profesional:
+Especialista en diseño, implementación y administración de infraestructuras de red, sistemas de telecomunicaciones y soluciones de conectividad empresarial.
+
+#### Campo Laboral:
+- Ingeniero de redes
+- Administrador de infraestructura TI
+- Especialista en telecomunicaciones
+- Consultor en conectividad
+- Gerente de operaciones TI
+
+#### Laboratorios Especializados:
+- Laboratorio Cisco Networking
+- Laboratorio de Fibra Óptica
+- Laboratorio de Radiofrecuencia
+- Simuladores de red empresarial
+
+#### Certificaciones Incluidas:
+- Cisco CCNA (Routing & Switching)
+- CompTIA Network+
+- Certificación en Fibra Óptica
+- ITIL Foundation
+
+### INGENIERÍA EN MARKETING DIGITAL
+**Duración**: 4 años (8 semestres)  
+**Título**: Ingeniero en Marketing Digital  
+**Modalidad**: Diurna y Vespertina
+
+#### Perfil Profesional:
+Profesional que combina conocimientos de marketing tradicional con herramientas digitales, analítica web y estrategias de transformación digital.
+
+#### Campo Laboral:
+- Gerente de marketing digital
+- Especialista en SEO/SEM
+- Community manager estratégico
+- Analista de marketing data-driven
+- Consultor en e-commerce
+
+#### Herramientas y Tecnologías:
+- Google Analytics y Google Ads
+- Facebook Business Manager
+- HubSpot Marketing Hub
+- Salesforce CRM
+- Herramientas de automatización
+
+---
+
+## ESCUELA DE ADMINISTRACIÓN Y NEGOCIOS
+
+### INGENIERÍA EN ADMINISTRACIÓN - MENCIÓN GESTIÓN DE PERSONAS
+**Duración**: 4 años (8 semestres)  
+**Título**: Ingeniero en Administración Mención Gestión de Personas  
+**Modalidad**: Diurna y Vespertina
+
+#### Perfil Profesional:
+Líder en gestión del talento humano, desarrollo organizacional y estrategias de recursos humanos en entornos empresariales modernos.
+
+#### Campo Laboral:
+- Gerente de recursos humanos
+- Consultor organizacional
+- Especialista en desarrollo del talento
+- Analista de compensaciones
+- Jefe de selección y reclutamiento
+
+#### Áreas de Especialización:
+- Psicología organizacional
+- Gestión del cambio
+- Análtica de recursos humanos
+- Liderazgo y coaching
+- Negociación colectiva
+
+### INGENIERÍA EN ADMINISTRACIÓN - MENCIÓN FINANZAS
+**Duración**: 4 años (8 semestres)  
+**Título**: Ingeniero en Administración Mención Finanzas  
+**Modalidad**: Diurna y Vespertina
+
+#### Perfil Profesional:
+Especialista en análisis financiero, gestión de inversiones, evaluación de proyectos y asesoría financiera empresarial.
+
+#### Campo Laboral:
+- Analista financiero
+- Gerente de finanzas corporativas
+- Asesor de inversiones
+- Controller financiero
+- Risk manager
+
+#### Laboratorios y Software:
+- Bloomberg Terminal
+- Reuters Eikon
+- Simuladores de trading
+- Software de análisis financiero
+- Modelamiento financiero avanzado
+
+### INGENIERÍA EN GESTIÓN LOGÍSTICA
+**Duración**: 4 años (8 semestres)  
+**Título**: Ingeniero en Gestión Logística  
+**Modalidad**: Diurna
+
+#### Perfil Profesional:
+Experto en optimización de la cadena de suministro, gestión de inventarios y distribución, con enfoque en eficiencia y sostenibilidad.
+
+#### Campo Laboral:
+- Gerente de supply chain
+- Jefe de distribución
+- Analista de inventarios
+- Especialista en comercio exterior
+- Consultor logístico
+
+#### Convenios Empresariales:
+- Empresas portuarias (San Antonio, Valparaíso)
+- Retailers (Falabella, Ripley, Walmart)
+- Operadores logísticos (DHL, FedEx)
+- Empresas manufactureras
+
+### TÉCNICO EN ADMINISTRACIÓN
+**Duración**: 2 años (4 semestres)  
+**Título**: Técnico en Administración  
+**Modalidad**: Diurna y Vespertina
+
+#### Perfil Profesional:
+Técnico capacitado para apoyar procesos administrativos, gestión de oficina y operaciones comerciales básicas.
+
+#### Campo Laboral:
+- Asistente administrativo
+- Coordinador de oficina
+- Apoyo en recursos humanos
+- Ejecutivo de atención al cliente
+- Asistente comercial
+
+#### Continuidad de Estudios:
+Articulación directa con Ingenierías en Administración (convalidación de asignaturas)
+
+---
+
+## ESCUELA DE INGENIERÍA Y RECURSOS NATURALES
+
+### INGENIERÍA EN ELECTRICIDAD Y AUTOMATIZACIÓN INDUSTRIAL
+**Duración**: 4 años (8 semestres)  
+**Título**: Ingeniero en Electricidad y Automatización Industrial  
+**Modalidad**: Diurna
+
+#### Perfil Profesional:
+Ingeniero especializado en sistemas eléctricos industriales, automatización de procesos y control de sistemas productivos.
+
+#### Campo Laboral:
+- Ingeniero de mantención industrial
+- Especialista en automatización
+- Supervisor de planta
+- Consultor en eficiencia energética
+- Project manager industrial
+
+#### Laboratorios Especializados:
+- Laboratorio de máquinas eléctricas
+- Laboratorio de automatización (PLCs)
+- Laboratorio de energías renovables
+- Taller de electricidad industrial
+
+#### Tecnologías Enseñadas:
+- Programación de PLCs (Siemens, Allen Bradley)
+- Sistemas SCADA
+- Variadores de frecuencia
+- Robótica industrial básica
+- Sistemas fotovoltaicos
+
+### INGENIERÍA EN MECÁNICA AUTOMOTRIZ Y AUTOTRÓNICA
+**Duración**: 4 años (8 semestres)  
+**Título**: Ingeniero en Mecánica Automotriz y Autotrónica  
+**Modalidad**: Diurna
+
+#### Perfil Profesional:
+Especialista en sistemas mecánicos y electrónicos vehiculares, diagnóstico automotriz avanzado y tecnologías emergentes del sector.
+
+#### Campo Laboral:
+- Jefe de taller automotriz
+- Especialista en diagnóstico electrónico
+- Asesor técnico automotriz
+- Supervisor de mantención de flotas
+- Consultor en movilidad eléctrica
+
+#### Talleres y Equipamiento:
+- Taller de motores convencionales
+- Laboratorio de inyección electrónica
+- Taller de transmisiones automáticas
+- Laboratorio de vehículos híbridos
+- Banco de pruebas dinamométrico
+
+### TÉCNICO EN ELECTRICIDAD Y ENERGÍAS RENOVABLES
+**Duración**: 2 años (4 semestres)  
+**Título**: Técnico en Electricidad y Energías Renovables  
+**Modalidad**: Diurna
+
+#### Perfil Profesional:
+Técnico especializado en instalaciones eléctricas y sistemas de energías renovables, con énfasis en sustentabilidad.
+
+#### Campo Laboral:
+- Instalador eléctrico certificado
+- Técnico en sistemas fotovoltaicos
+- Operador de subestaciones
+- Técnico en eficiencia energética
+- Mantenimiento de equipos eléctricos
+
+#### Certificaciones Obtenidas:
+- Instalador electricista autorizado (SEC)
+- Certificación en sistemas fotovoltaicos
+- Operación de equipos de alta tensión
+- Primeros auxilios en electricidad
+
+---
+
+## INFORMACIÓN GENERAL DE ADMISIÓN
+
+### PROCESO DE ADMISIÓN 2026
+
+#### Fechas Importantes:
+- **Postulación online**: Octubre 2025 - Enero 2026
+- **Entrega de documentos**: Hasta 31 de enero 2026
+- **Matrícula anticipada**: Diciembre 2025 - Enero 2026
+- **Matrícula regular**: Febrero 2026
+- **Inicio de clases**: Lunes 9 de marzo 2026
+
+### REQUISITOS DE ADMISIÓN
+
+#### Para Carreras Técnicas:
+- **Educación Media completa**: Licencia de enseñanza media
+- **Promedio mínimo**: 4.5 en enseñanza media
+- **Sin requisito PSU/PDT**: Admisión directa
+
+#### Para Ingenierías:
+- **Educación Media completa**: Licencia de enseñanza media
+- **PSU/PDT**: Puntaje mínimo según carrera (450-550 puntos)
+- **Promedio enseñanza media**: Consideración en proceso
+
+#### Puntajes Mínimos PSU/PDT 2026:
+- **Ing. Informática**: 500 puntos
+- **Ing. Redes y Telecomunicaciones**: 480 puntos
+- **Ing. Marketing Digital**: 520 puntos
+- **Ing. Administración (todas las menciones)**: 500 puntos
+- **Ing. Gestión Logística**: 480 puntos
+- **Ing. Electricidad**: 450 puntos
+- **Ing. Mecánica Automotriz**: 450 puntos
+
+### ARANCELES 2026
+
+#### Carreras Técnicas (valor anual):
+- **Técnico en Administración**: $2.400.000
+- **Técnico en Electricidad**: $2.600.000
+- **Técnico en Gestión Logística**: $2.500.000
+
+#### Ingenierías (valor anual):
+- **Informática y Telecomunicaciones**: $3.200.000 - $3.400.000
+- **Administración y Negocios**: $3.100.000 - $3.300.000
+- **Electricidad y Mecánica**: $3.400.000 - $3.600.000
+
+#### Desglose de Costos:
+- **Matrícula anual**: $120.000 - $150.000
+- **Arancel básico**: Costo principal de la carrera
+- **Servicios complementarios**: $80.000 - $120.000
+- **Laboratorios especializados**: $150.000 - $200.000 (según carrera)
+
+### BENEFICIOS Y BECAS DISPONIBLES
+
+#### Gratuidad:
+- **Quintiles 1-6**: Según carrera y puntaje PSU/PDT
+- **Cobertura**: 100% arancel de referencia
+- **Requisitos**: Matrícula oportuna y rendimiento académico
+
+#### Becas Estatales:
+- **Beca Bicentenario**: Para técnicos destacados
+- **Beca Juan Gómez Millas**: Estudiantes vulnerables destacados
+- **Beca Nuevo Milenio**: Carreras técnicas prioritarias
+
+#### Becas Internas DUOC UC:
+- **Excelencia Académica**: 25-50% descuento
+- **Hermanos DUOC**: 15-20% descuento
+- **Deportiva**: 10-30% según representación
+- **Hijo de Funcionario**: 50% descuento
+
+### MODALIDADES DE ESTUDIO
+
+#### Jornada Diurna:
+- **Horarios**: 8:00 - 18:00 hrs aproximadamente
+- **Duración**: Tiempo estándar de carrera
+- **Prácticas**: Integradas en horario normal
+
+#### Jornada Vespertina:
+- **Horarios**: 18:30 - 22:30 hrs
+- **Duración**: Mismo tiempo que diurna
+- **Dirigida a**: Trabajadores y personas con responsabilidades diurnas
+
+#### Modalidad Online:
+- **Disponibilidad**: Carreras seleccionadas
+- **Flexibilidad**: Estudio a tu ritmo
+- **Apoyo**: Tutorías virtuales y presenciales
+
+### SERVICIOS INCLUIDOS
+
+#### Todos los estudiantes tienen acceso a:
+- **Biblioteca especializada**: Recursos físicos y digitales
+- **Laboratorios de última generación**: Según área de estudio
+- **Plataforma educativa**: Material digital y herramientas
+- **WiFi en toda la sede**: Conectividad gratuita
+- **Deportes y cultura**: Actividades extracurriculares
+- **Bienestar estudiantil**: Apoyo psicológico y social
+- **Seguro estudiantil**: Cobertura contra accidentes
+
+---
+
+## CONTACTO Y INFORMACIÓN
+
+### Oficina de Admisión Plaza Norte:
+- **Dirección**: Calle Nueva 1660, Huechuraba
+- **Teléfonos**: (+56) 2 2999 3000 / (+56) 2 2999 3075 (Piso 2, Sede Plaza Norte)
+- **Email**: admision.plazanorte@duoc.cl
+- **WhatsApp**: +56 9 5814 2089
+
+### Horarios de Atención:
+- **Lunes a Viernes**: 9:00 - 19:00 hrs
+- **Sábados**: 9:00 - 15:00 hrs
+- **Domingos**: Solo durante proceso de matrícula
+
+### Visitas y Tours:
+- **Solicitud**: vía WhatsApp o teléfono
+- **Duración**: 45 minutos aproximadamente
+- **Incluye**: Instalaciones, laboratorios, biblioteca
+- **Horarios**: Lunes a Viernes 10:00-16:00 hrs
+
+### Charlas Informativas:
+- **Modalidad**: Presencial y online
+- **Frecuencia**: Todos los sábados 11:00 hrs
+- **Contenido**: Carreras, proceso admisión, beneficios
+- **Inscripción**: Via portal web o WhatsApp
+
+---
+
+**Para más información actualizada**: https://www.duoc.cl/sedes/plaza-norte/  
+**Portal de postulación**: https://www.duoc.cl/admision/
+
+**Documento actualizado**: Noviembre 2025  
+**Válido para proceso de admisión**: 2026

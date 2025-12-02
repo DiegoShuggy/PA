@@ -11,6 +11,31 @@ class TopicClassifier:
     def __init__(self):
         # TEMAS PERMITIDOS EXPANDIDOS Y MEJORADOS
         self.allowed_categories = {
+            "academico": [
+                # TITULACIÓN Y EGRESO
+                "titularme", "titulacion", "titulo", "titularse", "requisitos titulacion", "proceso titulacion",
+                "ceremonia titulacion", "documentos titulacion", "trámites egreso", "egresar", "egreso",
+                "graduacion", "graduarse", "obtener titulo", "requisitos titulo", "como titularme",
+                "cuales son requisitos", "que necesito titularme", "cuando me titulo", "fecha titulacion",
+                # SISTEMA DE CRÉDITOS SCT
+                "sct", "creditos sct", "sistema creditos", "creditos transferibles", "carga academica",
+                "creditos", "credito", "cuantos creditos", "como funciona sct", "sistema sct",
+                "horas cronologicas", "carga horaria", "creditos asignatura", "calcular creditos",
+                # CONVALIDACIÓN
+                "convalidar", "convalidacion", "homologacion", "equivalencia", "reconocimiento",
+                "convalidar asignaturas", "equivalencia asignaturas", "homologar ramos",
+                "reconocimiento estudios", "validar asignaturas", "traspasar notas",
+                "convalidacion otra institucion", "convalidar universidad", "proceso convalidacion",
+                # REQUISITOS ACADÉMICOS
+                "requisitos", "requisito", "exigencias", "condiciones", "necesario",
+                "que necesito", "cuales requisitos", "requisitos para", "condiciones academicas",
+                # MALLA CURRICULAR Y CARRERA
+                "carrera", "carreras", "programa", "ingenieria", "tecnico",
+                "malla", "malla curricular", "plan de estudios", "asignaturas",
+                "ramos", "curso", "cursos", "plan estudios",
+                # BIBLIOTECA Y RECURSOS
+                "biblioteca", "bibliotecas", "libros", "prestamo", "recurso", "estudio"
+            ],
             "asuntos_estudiantiles": [
                 "tne", "tarjeta nacional estudiantil", "pase escolar", "validar tne", "renovar tne", "revalidar tne",
                 "sacar tne", "obtener tne", "primera tne", "nueva tne", "tne por primera vez",
@@ -102,6 +127,16 @@ class TopicClassifier:
                     "psicólogo virtual licencia", "otorgar licencia psicológico",
                     "talleres bienestar", "charlas bienestar", "micro webinars", "taller salud mental",
                     "taller manejo estrés", "charla ansiedad", "webinar bienestar", "actividad bienestar",
+                    # TALLERES EXTRACURRICULARES
+                    "talleres", "taller", "extracurricular", "extracurriculares", "actividades complementarias",
+                    "talleres extracurriculares", "que talleres hay", "talleres disponibles",
+                    "ademas deportes", "aparte deportes", "talleres culturales", "talleres artisticos",
+                    "talleres tecnologia", "talleres idiomas", "actividades extracurriculares",
+                    # GRUPOS ESTUDIANTILES
+                    "grupos", "grupos estudiantiles", "centro alumnos", "centro de alumnos",
+                    "federacion", "federacion estudiantes", "organizaciones estudiantiles",
+                    "participacion estudiantil", "existen grupos", "hay grupos", "grupos estudiantes",
+                    "organizaciones", "colectivos estudiantiles", "clubes estudiantiles",
                     "adriana vásquez", "avasquezm", "coordinadora bienestar", "bienestar estudiantil",
                     "crisis de pánico", "angustia", "sala primeros auxilios", "apoyo en crisis",
                     "me siento mal", "urgencia psicológica", "atención inmediata", "emergencia emocional",
@@ -142,6 +177,15 @@ class TopicClassifier:
                     "soutien handicap", "programme inclusion", "étudiants besoins spéciaux"
                 ]
             },
+            "institucionales": [
+                # EVENTOS Y CALENDARIO
+                "eventos", "evento", "eventos especiales", "que eventos", "eventos año",
+                "calendario", "calendario anual", "calendario eventos", "actividades", "celebraciones",
+                "ferias", "feria", "semana", "semanas tematicas", "dia del", "mes de",
+                "cuando eventos", "que actividades", "eventos plaza norte", "actividades especiales",
+                "encuentros", "jornadas", "ceremonias", "festivales", "competencias",
+                "durante el año", "se realizan", "hay eventos", "se celebra", "celebraciones anuales"
+            ],
             "deportes": [
                 "ubicados", "lugar", "ubicación", "des inscribirme", "cancelar", "retirarme",
                 "en qué lugar están ubicados", "dónde están ubicados", "ubicación", 

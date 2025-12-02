@@ -1,0 +1,126 @@
+# ============================================
+# FAQs EXPANDIDAS - DUOC UC PLAZA NORTE
+# ============================================
+# Actualizado: 27 de Noviembre 2025
+# Total: 60 preguntas frecuentes institucionales
+# ============================================
+
+# ========== TNE (Tarjeta Nacional Estudiantil) ==========
+¿Dónde puedo renovar mi TNE en Plaza Norte?
+¿Cuánto cuesta sacar la TNE?
+¿Qué documentos necesito para retirar mi TNE?
+¿Cómo valido mi TNE en el Metro?
+¿Cuándo vence mi TNE?
+¿Puedo sacar TNE si soy alumno nuevo?
+¿Qué hago si perdí mi TNE?
+¿La TNE sirve para buses?
+¿Cuánto demora el trámite de la TNE?
+¿Necesito foto para la TNE?
+
+# ========== CERTIFICADOS ==========
+¿Cómo solicito un certificado de alumno regular?
+¿Cuánto demora un certificado?
+¿Los certificados tienen costo?
+¿Puedo solicitar certificados online?
+¿Qué certificados puedo obtener en el Punto Estudiantil?
+¿Cómo solicito una concentración de notas?
+¿Necesito certificado para postular a beca?
+¿Puedo obtener certificado en inglés?
+¿Cómo solicito un certificado de egreso?
+¿El certificado de alumno regular sirve para trámites legales?
+
+# ========== DEPORTES Y ACTIVIDAD FÍSICA ==========
+¿Cuál es el horario del gimnasio en Plaza Norte?
+¿Cómo me inscribo en talleres deportivos?
+¿Los talleres deportivos tienen costo?
+¿Qué talleres deportivos hay disponibles?
+¿Dónde está ubicado el gimnasio?
+¿Puedo usar el gimnasio sin ser alumno de Duoc?
+¿Hay selecciones deportivas en Plaza Norte?
+¿Cómo me inscribo en una selección deportiva?
+¿Qué necesito para usar el gimnasio?
+¿El gimnasio tiene casilleros?
+
+# ========== BIENESTAR ESTUDIANTIL ==========
+¿Cómo puedo agendar hora con el psicólogo?
+¿El apoyo psicológico es gratuito?
+¿Qué es la línea OPS?
+¿Dónde está la oficina de Bienestar Estudiantil?
+¿Qué servicios ofrece Bienestar?
+¿Cómo solicito apoyo económico de emergencia?
+¿Hay programas de apoyo para estudiantes con discapacidad?
+¿Qué hago si tengo una crisis emocional?
+¿El seguro estudiantil cubre atención psicológica?
+¿Puedo llevar a un familiar a las sesiones?
+
+# ========== DUOCLABORAL (PRÁCTICAS Y EMPLEO) ==========
+¿Cómo accedo a DuocLaboral?
+¿Dónde puedo hacer mi práctica profesional?
+¿DuocLaboral ayuda a hacer el CV?
+¿Cómo me preparo para una entrevista laboral?
+¿Hay empresas que buscan practicantes en DuocLaboral?
+¿Puedo subir mi CV a la bolsa de trabajo?
+¿DuocLaboral ofrece talleres de empleabilidad?
+¿Necesito estar en último semestre para usar DuocLaboral?
+¿Cómo contacto a Claudia Cortés de DuocLaboral?
+¿DuocLaboral ayuda con contratos de práctica?
+
+# ========== BIBLIOTECA ==========
+¿Cuál es el horario de la biblioteca?
+¿Cómo saco libros en préstamo?
+¿Cuántos libros puedo llevar prestados?
+¿Por cuánto tiempo puedo tener un libro?
+¿Hay salas de estudio en la biblioteca?
+¿La biblioteca tiene computadores disponibles?
+¿Cómo accedo a recursos digitales?
+¿La biblioteca ayuda con normas APA?
+¿Puedo renovar un libro prestado?
+¿Qué pasa si pierdo un libro de la biblioteca?
+
+# ========== BECAS Y BENEFICIOS ==========
+¿Qué becas están disponibles para estudiantes de Duoc?
+¿Cómo postulo a la Beca de Alimentación?
+¿Qué es el Programa de Emergencia Estudiantil?
+¿Cómo sé si tengo Gratuidad?
+¿Qué beneficios entrega JUNAEB?
+¿Puedo postular a más de una beca?
+¿Dónde consulto el estado de mi beca?
+¿Cuándo se entregan las becas?
+¿La beca cubre toda la matrícula?
+¿Qué hago si rechazan mi beca?
+
+# ========== MATRÍCULA Y PAGOS ==========
+¿Cuándo son las fechas de matrícula?
+¿Cómo pago mi matrícula?
+¿Puedo pagar en cuotas?
+¿Dónde veo mi estado de cuenta?
+¿Qué pasa si me atraso en un pago?
+¿Cómo solicito una rebaja de arancel?
+¿Puedo congelar mi matrícula?
+¿Qué documentos necesito para matricularme?
+¿Hay descuentos por pago anticipado?
+¿Cómo elimino una deuda universitaria?
+
+# ========== PUNTO ESTUDIANTIL ==========
+¿Cuál es el horario de atención del Punto Estudiantil?
+¿Dónde está ubicado el Punto Estudiantil?
+¿Qué trámites puedo hacer en el Punto Estudiantil?
+¿Necesito hora para ir al Punto Estudiantil?
+¿Cuál es el teléfono del Punto Estudiantil?
+¿El Punto Estudiantil atiende sábados?
+¿Puedo hacer trámites online sin ir al Punto?
+¿Qué hacer si el Punto Estudiantil está cerrado?
+¿El Punto Estudiantil resuelve problemas de notas?
+¿Puedo enviar un correo al Punto Estudiantil?
+
+# ========== GENERAL PLAZA NORTE ==========
+¿Cuál es la dirección exacta de la sede Plaza Norte?
+¿Cómo llego en Metro a Plaza Norte?
+¿Hay estacionamiento en la sede?
+¿Cuál es el número de teléfono de la sede?
+¿La sede abre los fines de semana?
+¿Dónde puedo comer en la sede?
+¿Hay cajeros automáticos en la sede?
+¿Cómo me conecto al WiFi de Duoc?
+¿Dónde está la secretaría académica?
+¿Hay enfermería en la sede Plaza Norte?

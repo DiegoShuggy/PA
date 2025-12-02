@@ -72,6 +72,19 @@ class DuocURLManager:
             "duoclaboral": "https://duoclaboral.cl/",
             "practicas_estudiantes": "https://www.duoc.cl/alumnos/practicas/",
             
+            # Académico - NUEVOS DOCUMENTOS 2025
+            "requisitos_titulacion": "https://www.duoc.cl/alumnos/proceso-titulacion/",
+            "titulacion": "https://www.duoc.cl/alumnos/proceso-titulacion/",
+            "creditos_sct": "https://www.duoc.cl/academicos/sistema-creditos-sct/",
+            "convalidacion": "https://www.duoc.cl/alumnos/convalidacion-asignaturas/",
+            
+            # Vida estudiantil - NUEVOS DOCUMENTOS 2025
+            "talleres_extracurriculares": "https://www.duoc.cl/vida-estudiantil/talleres/",
+            "participacion_estudiantil": "https://www.duoc.cl/vida-estudiantil/participacion/",
+            "delegados": "https://www.duoc.cl/vida-estudiantil/participacion/",
+            "eventos_calendario": "https://www.duoc.cl/vida-estudiantil/calendario-academico/",
+            "eventos_anuales": "https://www.duoc.cl/vida-estudiantil/eventos/",
+            
             # TNE y transporte
             "tne": "https://www.duoc.cl/sedes/info-tne/",
             "beneficios_tne": "https://www.duoc.cl/alumnos/beneficios-tne/",
@@ -225,6 +238,32 @@ class DuocURLManager:
             "nacional": "tne",
             "estudiantil": "tne",
             "beneficio tne": "beneficios_tne",
+            
+            # NUEVOS KEYWORDS - ACADÉMICO 2025
+            "titularme": "requisitos_titulacion",
+            "titulacion": "titulacion",
+            "requisitos titulo": "requisitos_titulacion",
+            "como titularme": "requisitos_titulacion",
+            "sct": "creditos_sct",
+            "creditos": "creditos_sct",
+            "sistema creditos": "creditos_sct",
+            "convalidar": "convalidacion",
+            "convalidacion": "convalidacion",
+            "homologacion": "convalidacion",
+            "equivalencia": "convalidacion",
+            
+            # NUEVOS KEYWORDS - VIDA ESTUDIANTIL 2025
+            "talleres": "talleres_extracurriculares",
+            "extracurricular": "talleres_extracurriculares",
+            "talleres culturales": "talleres_extracurriculares",
+            "grupos": "participacion_estudiantil",
+            "grupos estudiantiles": "participacion_estudiantil",
+            "organizaciones": "participacion_estudiantil",
+            "delegados": "delegados",
+            "eventos": "eventos_calendario",
+            "calendario eventos": "eventos_calendario",
+            "eventos anuales": "eventos_anuales",
+            "actividades especiales": "eventos_anuales",
             
             # Servicios digitales
             "wifi": "wifi",

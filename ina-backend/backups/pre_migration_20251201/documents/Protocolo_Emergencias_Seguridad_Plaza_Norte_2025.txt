@@ -1,0 +1,232 @@
+# 🚨 PROTOCOLO DE EMERGENCIAS Y SEGURIDAD PLAZA NORTE
+
+## 📞 **CONTACTOS DE EMERGENCIA**
+
+### **Emergencias Internas Campus**
+🚨 **Central de Emergencias**: +56 2 2354 8911
+📞 **Extensión interna**: 911
+👮 **Jefe de Seguridad**: [Nombre]
+🏥 **Enfermería**: +56 2 2354 8500
+
+### **Servicios de Emergencia Externos**
+🚑 **SAMU (Emergencias Médicas)**: 131
+🚒 **Bomberos**: 132
+👮 **Carabineros**: 133
+⚡ **CGE (Cortes eléctricos)**: 600 696 0000
+
+### **Servicios Específicos Zona**
+🚒 **4ta Compañía Bomberos Huechuraba**: +56 2 2747 8132
+👮 **54ta Comisaría Huechuraba**: +56 2 2927 0054
+🏥 **Hospital Salvador**: +56 2 2575 8000
+🚑 **Mutual de Seguridad**: +56 2 2515 3000
+
+## 🔥 **PROTOCOLO DE INCENDIO**
+
+### **Al Detectar Fuego o Humo**
+1. **🚨 ACTIVAR alarma** más cercana inmediatamente
+2. **📞 LLAMAR** a emergencias internas (ext. 911)
+3. **👥 ALERTAR** a personas en el área
+4. **🚪 EVACUAR** por ruta más segura
+5. **🚫 NO usar ascensores**
+
+### **Evacuación por Edificio**
+🏢 **Edificio Central**: Escaleras este y oeste
+🏢 **Edificio Laboratorios**: Escaleras norte y sur  
+🏢 **Biblioteca**: Escalera principal y emergencia
+🏢 **Gimnasio**: Salidas laterales y principal
+
+### **Puntos de Encuentro**
+📍 **Punto 1**: Estacionamiento principal (Edificio Central)
+📍 **Punto 2**: Cancha deportiva (Edificio Laboratorios)
+📍 **Punto 3**: Plaza de acceso (Biblioteca)
+📍 **Punto 4**: Zona verde posterior (Gimnasio)
+
+### **Brigadas de Emergencia**
+👨‍🚒 **Líder Brigada**: [Nombre] - ext. 912
+👩‍🚒 **Sub-líder**: [Nombre] - ext. 913
+🔥 **Equipos**: 15 brigadistas capacitados por edificio
+
+## 🌍 **PROTOCOLO SISMO**
+
+### **Durante el Sismo**
+1. **⬇️ AGÁCHARSE** bajo mesa resistente
+2. **🛡️ CUBRIRSE** cabeza y cuello
+3. **🤝 AFIRMARSE** del mueble
+4. **🚫 NO correr** hacia salidas
+5. **⚠️ ALEJARSE** de ventanas y estantes
+
+### **Después del Sismo**
+1. **🔍 VERIFICAR** lesiones propias y cercanas
+2. **🚪 EVACUAR** calmadamente si es seguro
+3. **📞 REPORTAR** heridos a emergencias
+4. **📍 DIRIGIRSE** al punto de encuentro
+5. **⏰ ESPERAR** instrucciones oficiales
+
+### **Zonas de Seguridad Sísmicas**
+🏢 **Edificio Central**: Bajo vigas estructurales
+🧪 **Laboratorios**: Alejado de equipos y químicos
+📚 **Biblioteca**: Pasillos centrales
+🏃 **Gimnasio**: Centro de canchas
+
+## 🏥 **PROTOCOLO EMERGENCIAS MÉDICAS**
+
+### **Primeros Auxilios Básicos**
+1. **🔍 EVALUAR** la situación y seguridad
+2. **📞 LLAMAR** a emergencias inmediatamente
+3. **🩹 APLICAR** primeros auxilios básicos
+4. **👩‍⚕️ ESPERAR** personal médico
+5. **📋 DOCUMENTAR** lo ocurrido
+
+### **Ubicación Elementos Médicos**
+🏥 **Enfermería**: Piso 2, Sede Plaza Norte
+📦 **Botiquines**: Cada piso de cada edificio
+🚨 **DEA**: Recepción, gimnasio, biblioteca
+🚿 **Duchas de emergencia**: Laboratorios químicos
+
+### **Personal Capacitado**
+👩‍⚕️ **Enfermera Jefe**: [Nombre] - ext. 500
+👨‍⚕️ **Auxiliar de Enfermería**: [Nombre] - ext. 501
+🩺 **Brigadistas Médicos**: 8 personas capacitadas
+
+### **Casos Específicos**
+❤️ **Infarto/ACV**: Llamar SAMU, usar DEA si está disponible
+🩸 **Hemorragias**: Presión directa, elevar extremidad
+🦴 **Fracturas**: No mover, inmovilizar
+🤢 **Intoxicaciones**: No inducir vómito, llamar emergencias
+
+## ⚡ **PROTOCOLO CORTE DE ENERGÍA**
+
+### **Acciones Inmediatas**
+1. **💡 ENCENDER** linternas de emergencia
+2. **📞 REPORTAR** a mantención (ext. 920)
+3. **🔌 DESCONECTAR** equipos sensibles
+4. **🚫 NO usar velas** o llamas abiertas
+5. **⏰ ESPERAR** restablecimiento oficial
+
+### **Sistema de Respaldo**
+🔋 **Generador de emergencia**: 30 minutos autonomía
+💡 **Iluminación de emergencia**: 2 horas
+🔌 **UPS sistemas críticos**: 15 minutos
+📞 **Comunicaciones**: Central telefónica con backup
+
+### **Equipos Prioritarios**
+🚨 **Sistema de seguridad**: Cámaras y alarmas
+🏥 **Equipos médicos**: Enfermería y DEA
+💻 **Servidores críticos**: TI y académicos
+🔥 **Detección de humo**: Sistema completo
+
+## 💧 **PROTOCOLO EMERGENCIA HÍDRICA**
+
+### **Corte de Agua**
+📞 **Reportar**: Mantención ext. 920
+🚰 **Agua de emergencia**: 500 litros almacenados
+🚽 **Baños**: Uso restringido
+⏰ **Duración**: Protocolo según tiempo estimado
+
+### **Inundaciones/Filtraciones**
+🔌 **Cortar electricidad** en área afectada
+⚠️ **Aislar zona** con señalética
+📞 **Llamar mantención** urgente
+👥 **Evacuar** si es necesario
+
+## 🔒 **PROTOCOLO SEGURIDAD**
+
+### **Emergencia por Intrusos**
+📞 **Llamar seguridad**: ext. 800
+👮 **Contactar Carabineros**: 133
+🚪 **Asegurar puertas** y ventanas
+👥 **Mantener calma** y silencio
+📍 **Reunirse** en lugar seguro
+
+### **Robo o Hurto**
+📞 **No perseguir** al delincuente
+🚨 **Activar alarma** si es seguro
+👮 **Llamar Carabineros** inmediatamente
+📋 **Preservar evidencia**
+📝 **Denunciar** en comisaría
+
+### **Comportamiento Agresivo**
+🤝 **Mantener calma** y distancia
+📞 **Llamar seguridad** ext. 800
+👥 **No confrontar** directamente
+🚪 **Buscar salida** segura
+👮 **Solicitar apoyo** policial si es necesario
+
+## 📋 **BRIGADAS DE EMERGENCIA**
+
+### **Organización**
+👨‍🚒 **Coordinador General**: Director de Sede
+👩‍🚒 **Sub-coordinador**: Jefe de Seguridad
+🔥 **Brigadistas**: 30 personas capacitadas
+📞 **Central de comunicaciones**: Recepción
+
+### **Brigadas Especializadas**
+🚒 **Brigada de Incendio**: 12 brigadistas
+🌍 **Brigada de Evacuación**: 10 brigadistas
+🏥 **Brigada de Primeros Auxilios**: 8 brigadistas
+
+### **Capacitaciones**
+📅 **Frecuencia**: Trimestral
+🏢 **Simulacros**: Bimestrales
+🎓 **Certificación**: Bomberos y Mutual de Seguridad
+📚 **Material**: Manual de procedimientos actualizado
+
+## 🛡️ **PREVENCIÓN Y MANTENCIÓN**
+
+### **Inspecciones Regulares**
+🔍 **Extintores**: Mensual
+🚨 **Alarmas**: Quincenal  
+💡 **Iluminación emergencia**: Semanal
+🚪 **Salidas de emergencia**: Diaria
+🔌 **Sistemas eléctricos**: Semestral
+
+### **Equipamiento de Seguridad**
+🧯 **Extintores**: 45 unidades (CO2, Polvo, Agua)
+🚨 **Detectores de humo**: 120 unidades
+📢 **Sistema de altavoces**: Cobertura total
+🔦 **Linternas emergencia**: 25 unidades
+🩹 **Botiquines**: 15 unidades completos
+
+### **Señalética de Seguridad**
+🚪 **Rutas de evacuación**: Claramente marcadas
+📍 **Puntos de encuentro**: Señalizados
+🧯 **Ubicación extintores**: Visible
+🏥 **Primeros auxilios**: Identificado
+☎️ **Teléfonos emergencia**: Publicados
+
+## 📱 **APLICACIÓN DE EMERGENCIAS**
+
+### **App "Duoc Seguro"**
+📱 **Descarga**: App Store / Play Store
+🚨 **Botón pánico**: Conexión directa a seguridad
+📍 **Ubicación GPS**: Automática
+📞 **Contactos**: Emergencias predefinidos
+
+### **Funciones Principales**
+🚨 **Alerta emergencia**: Un toque
+📞 **Llamada directa**: Seguridad campus
+🗺️ **Mapa evacuación**: Interactivo
+📋 **Reporte incidentes**: Rápido y fácil
+
+## 📞 **DIRECTORIO COMPLETO EMERGENCIAS**
+
+### **Campus Plaza Norte**
+🚨 **Central Emergencias**: +56 2 2354 8911 (ext. 911)
+👮 **Seguridad**: +56 2 2354 8800 (ext. 800)
+🏥 **Enfermería**: +56 2 2354 8500 (ext. 500)
+🔧 **Mantención**: +56 2 2354 8920 (ext. 920)
+
+### **Emergencias Públicas**
+🚑 **SAMU**: 131
+🚒 **Bomberos**: 132  
+👮 **Carabineros**: 133
+📞 **Fono Drogas**: 1412
+💜 **Violencia contra la mujer**: 1455
+
+### **Servicios Médicos Cercanos**
+🏥 **Hospital Salvador**: +56 2 2575 8000
+🚑 **Mutual de Seguridad**: +56 2 2515 3000
+🏥 **Clínica Las Condes**: +56 2 2610 8000
+🚑 **Help (Emergencias)**: +56 2 2444 4000
+
+⚠️ **RECORDATORIO**: Mantén siempre visible este protocolo y conoce las rutas de evacuación de tu área de trabajo o estudio.

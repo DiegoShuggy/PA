@@ -1,0 +1,480 @@
+---
+id: general_Guia_Completa_Plaza_Norte_2025
+source: Guia_Completa_Plaza_Norte_2025.txt
+source_type: txt_converted
+categoria: general
+fecha_conversion: '2025-12-01'
+fecha_modificacion_original: '2025-11-29'
+departamento: institucional
+keywords:
+- informacion
+- general
+- duoc
+- sede
+prioridad: media
+tipo_contenido: faq
+titulo: BIBLIOTECA Y RECURSOS ACADÉMICOS
+---
+
+---
+## BIBLIOTECA Y RECURSOS ACADÉMICOS
+**Ubicación:** Piso 2, Sede Plaza Norte  
+**Teléfono:** +56 2 2354 8300  
+**Email:** biblioteca.plazanorte@duoc.cl  
+**Portal:** https://bibliotecas.duoc.cl/plaza-norte/
+
+**Servicios:** Préstamo de libros, acceso a computadores, WiFi, salas grupales, cubículos individuales, impresión y fotocopiado, apoyo en investigación.
+
+**Instructivo de Impresión/Fotocopiado:**
+1. Dirígete a la Biblioteca Central.
+2. Usa las máquinas de autoservicio.
+3. Ingresa tus credenciales institucionales.
+4. Selecciona el archivo desde pendrive, correo o equipo.
+5. Realiza el pago en caja o sistema de recarga.
+6. Retira tus documentos.
+**Costos:** B/N $50, color $150, fotocopia $50 por página.
+
+**Plataformas Digitales:**
+- AVA Blackboard: https://ava.duoc.cl
+- Recursos digitales: https://bibliotecas.duoc.cl/recursos-digitales/
+---
+## DIRECTORIO DE CONTACTOS PRINCIPALES
+
+**Dirección General:**
+- Director General Plaza Norte
+- Mesa Central: +56 2 2999 3000
+- Email: direccion.plazanorte@duoc.cl
+
+**Subdirección Académica:**
+- Teléfono: +56 2 2354 8001
+- Email: subacademico.plazanorte@duoc.cl
+
+**Escuelas y Carreras:**
+- Informática y Telecomunicaciones: informatica.plazanorte@duoc.cl
+- Administración y Negocios: administracion.plazanorte@duoc.cl
+
+**Servicios Estudiantiles:**
+- Punto Estudiantil: +56 2 2354 8100, puntoestudiantil.plazanorte@duoc.cl
+- Asuntos Estudiantiles: +56 2 2354 8110, asuntosestudiantiles.plazanorte@duoc.cl
+- Bienestar Estudiantil: +56 2 2354 8120, bienestar.plazanorte@duoc.cl
+
+---
+## DEPORTES Y ACTIVIDAD FÍSICA
+
+**Gimnasio CAF:**
+- Ubicación: Sede Plaza Norte, sector deportivo
+- Horario: L-V 13:00-20:20, Sábados 09:00-13:20
+- Acceso con credencial vigente
+
+**Talleres Deportivos:**
+- Fútbol, voleibol, basquetbol, natación, boxeo, powerlifting, funcional
+- Gratuitos, inscripción en Punto Estudiantil o eventos.duoc.cl
+
+**Eventos y Actividades:**
+- Torneos internos, ferias deportivas, integración intersede
+
+**Innovación:**
+- Tecnología avanzada, plataformas digitales, simuladores y realidad virtual
+
+**Contacto Deportes:** puntoestudiantil_pnorte@duoc.cl
+
+---
+## EMERGENCIAS Y SEGURIDAD
+
+**Protocolo:**
+- Seguir instrucciones del personal de seguridad
+- Puntos de encuentro señalizados
+- Simulacros semestrales
+- Evacuación: mantener la calma, no usar ascensores
+
+**Contactos de Seguridad:**
+- Seguridad Plaza Norte: +56 2 2820 3400
+- Punto Estudiantil: puntoestudiantil_pnorte@duoc.cl
+
+**Primeros Auxilios:**
+- Personal capacitado, botiquines en áreas comunes
+
+**Apoyo en Crisis:**
+- Línea OPS 24/7: +56 2 2820 3450
+- Protocolo para violencia, acoso, bullying
+
+**Prevención:**
+- Campañas de autocuidado, charlas, seguros institucionales
+
+**Salud Mental en Emergencias:**
+- Apoyo psicológico y contención emocional
+
+**Simulacros Digitales:**
+- Capacitaciones online en gestión de emergencias
+[3 lines of pre-context]
+
+---
+
+## PROTOCOLOS Y RECURSOS OFICIALES 2025
+
+### Programas y Protocolos Institucionales
+- **PAEDIS**: Programa de Acompañamiento para Estudiantes con Discapacidad. Requisitos y apoyos personalizados. [Detalles](https://centroayuda.duoc.cl/hc/es-419/sections/38323361292941-Programa-de-Acompa%C3%B1amiento-Estudiantes-en-situaci%C3%B3n-de-Discapacidad-PAEDIS)
+- **Movilidad Académica Saliente (PMAS)**: Becas internacionales, requisitos y preguntas frecuentes. [Detalles](https://centroayuda.duoc.cl/hc/es-419/sections/36572556072717-Programa-de-Movilidad-Acad%C3%A9mica-Saliente)
+- **Talleres Extracurriculares**: Inscripción y beneficios para alumnos de continuidad y nuevos ingresos. [Detalles](https://centroayuda.duoc.cl/hc/es-419/sections/35332260906125-Inscripci%C3%B3n-de-Talleres-Extracurriculares-para-alumnos-de-continuidad)
+- **Violencia y Discriminación**: Canal de denuncias, conductas causales, contacto con unidad de apoyo. [Detalles](https://centroayuda.duoc.cl/hc/es-419/categories/31890297128845-Violencia-y-Discriminaci%C3%B3n)
+- **Bienestar y Salud Mental**: Semana del Bienestar, apoyo psicológico, centro virtual de aprendizaje. [Detalles](https://centroayuda.duoc.cl/hc/es-419/sections/34877029895181-Bienestar)
+- **Convenios Tecnológicos**: Microsoft 365, Azure, Adobe, Autodesk para estudiantes. [Detalles](https://centroayuda.duoc.cl/hc/es-419/sections/31266025601293-Herramientas-Tecnol%C3%B3gicas-y-Convenios)
+- **Seguridad Informática**: Activación de MFA, tips de protección, amenazas comunes. [Detalles](https://centroayuda.duoc.cl/hc/es-419/sections/31266086162189-Seguridad-Inform%C3%A1tica)
+- **Sostenedor**: Solicitudes y certificados para padres/tutores. [Detalles](https://centroayuda.duoc.cl/hc/es-419/sections/30224587860493-Solicitudes)
+- **Titulación Especial y Cuenta de Titulados**: Ceremonias, certificados, credenciales y problemas de acceso. [Detalles](https://centroayuda.duoc.cl/hc/es-419/categories/30142093504141-Titulados)
+
+### Noticias y Actualidad
+- **Junaeb**: Campañas de equidad de género, alimentación escolar, convivencia, ferias regionales, participación ciudadana. [Noticias](https://www.junaeb.cl/noticias/)
+- **Duoc Laboral**: Tendencias de empleabilidad, realidad virtual en formación, alianzas con empresas, actividades y ofertas laborales. [Tips y actualidad](https://duoclaboral.cl/contenido/tips-y-actualidad)
+- **Plaza Norte**: Innovación, actividades STEM, ciberseguridad, voluntariado, eventos deportivos, asesoría tributaria, cursos de energía, Expo Autos, SummIT de Ciberseguridad. [Noticias](https://www.duoc.cl/sedes/plaza-norte/noticias/)
+
+### Recursos Digitales y Tutoriales
+- Videos sobre traslado, reserva de agenda, uso de dispensadores de agua, seguridad en transporte, embajadores de salud mental, ciberseguridad, biblioteca y servicios digitales. [Videos y tutoriales](https://www.duoc.cl/sedes/plaza-norte/servicios/)
+
+---
+
+**Para más información y recursos actualizados, revisa los enlaces oficiales y redes sociales institucionales.**
+# GUÍA COMPLETA SEDE PLAZA NORTE - DUOC UC 2025
+
+**Documento informativo para estudiantes y postulantes**  
+**Actualizado: Noviembre 2025**
+
+---
+
+## 1. INFORMACIÓN GENERAL DE LA SEDE
+
+### Ubicación y Contacto
+- **Dirección**: Calle Nueva 1660, Huechuraba
+- **Teléfonos de contacto**:
+  - Mesa Central: +56 2 2999 3000
+  - Punto Estudiantil: +56 2 2999 3075 (Piso 2, Sede Plaza Norte)
+  - DOC DUOC (Emergencias Médicas): 600 362 3862
+
+### Horarios de Atención
+- **Lunes a Viernes**: 08:30 - 22:30 hrs
+- **Sábados**: 08:30 - 14:00 hrs
+- **Biblioteca**: Lunes a Viernes horario extendido según necesidades
+
+### Cómo Llegar
+**Transporte Público:**
+- Conexiones desde Santiago Centro hacia Huechuraba/Plaza Norte
+- Múltiples líneas de buses hacia la zona
+- Referencia: Mall Plaza Norte (ubicación conocida)
+
+**Automóvil:**
+- Acceso directo desde rutas principales hacia Huechuraba
+- Estacionamientos disponibles en Mall Plaza Norte
+- Ubicación estratégica en sector comercial
+
+---
+
+## 2. CARRERAS DISPONIBLES EN PLAZA NORTE
+
+### Escuela de Informática y Telecomunicaciones
+**Ingenierías (4 años):**
+- Ingeniería en Informática
+- Ingeniería en Redes y Telecomunicaciones  
+- Ingeniería en Marketing Digital
+
+**Técnicos (2 años):**
+- Técnico en Informática
+- Técnico en Telecomunicaciones
+
+### Escuela de Administración y Negocios
+**Ingenierías (4 años):**
+- Ingeniería en Administración Mención Gestión de Personas
+- Ingeniería en Administración Mención Innovación y Emprendimiento
+- Ingeniería en Administración Mención Finanzas
+- Ingeniería en Gestión Logística
+- Ingeniería en Comercio Exterior
+
+**Técnicos (2 años):**
+- Técnico en Administración
+- Técnico en Gestión Logística
+- Contabilidad General Mención Legislación Tributaria
+
+### Escuela de Ingeniería y Recursos Naturales
+**Ingenierías (4 años):**
+- Ingeniería en Electricidad y Automatización Industrial
+- Ingeniería en Mecánica Automotriz y Autotrónica
+
+**Técnicos (2 años):**
+- Técnico en Electricidad y Automatización Industrial
+- Técnico en Electricidad y Energías Renovables
+- Técnico en Mecánica Automotriz y Autotrónica
+
+---
+
+## 3. SERVICIOS ESTUDIANTILES
+
+### Bienestar Estudiantil
+La Unidad de Apoyo y Bienestar Estudiantil de Plaza Norte ofrece:
+
+**Apoyo Psicológico:**
+- Atención individual gratuita
+- Talleres de manejo del estrés
+- Apoyo en crisis emocionales
+- Orientación vocacional
+
+**Beneficios Sociales:**
+- Evaluación socioeconómica para becas
+- Apoyo alimentario para estudiantes vulnerables
+- Programas de apoyo habitacional
+- Conectividad digital
+
+**Salud y Autocuidado:**
+- Enfermería en sede
+- Primeros auxilios
+- Campañas de salud preventiva
+- Seguro estudiantil contra accidentes
+
+### Deportes y Actividad Física
+**Deportes Disponibles:**
+- Fútbol (masculino y femenino)
+- Básquetbol
+- Vóleibol
+- Tenis de mesa
+- Ajedrez
+
+**Instalaciones:**
+- Gimnasio multiuso
+- Canchas deportivas
+- Sala de fitness
+
+### Actividades Culturales
+- Talleres de teatro y música
+- Grupos folklóricos
+- Exposiciones de arte
+- Eventos culturales semestrales
+
+### Pastoral Universitaria
+- Acompañamiento espiritual
+- Retiros y jornadas de reflexión
+- Voluntariado social
+- Actividades de solidaridad
+
+---
+
+## 4. BIBLIOTECA PLAZA NORTE
+
+### Servicios Disponibles
+- **Préstamo de libros**: Hasta 3 libros por 7 días
+- **Salas de estudio grupal**: Reserva previa en línea
+- **Computadores**: 30 equipos disponibles para estudiantes
+- **WiFi gratuito**: Acceso ilimitado con credenciales institucionales
+- **Impresión**: Servicio de impresión a bajo costo
+
+### Recursos Digitales
+- Acceso a bases de datos académicas
+- Biblioteca virtual con +10,000 títulos
+- Recursos APA para citas y referencias
+- Tutoriales de búsqueda académica
+
+### Horarios
+- **Lunes a Viernes**: 8:00 - 21:00 hrs
+- **Sábados**: 8:00 - 15:00 hrs
+- **Vacaciones**: Horario reducido (consultar)
+
+---
+
+## 5. SERVICIOS DIGITALES
+
+### Portal del Estudiante
+Acceso en: https://www.duoc.cl/alumnos/
+- Consulta de notas y horarios
+- Certificados online
+- Estado financiero
+- Solicitud de documentos
+
+### Plataforma Educativa VIVO
+Acceso en: https://plataforma.duoc.cl/admin/login
+- Material de clases
+- Tareas y evaluaciones
+- Foros de discusión
+- Calendario académico
+
+### Correo Institucional
+- **Dominio**: @duocuc.cl
+- **Configuración**: Disponible en servicios digitales
+- **Capacidad**: 15 GB de almacenamiento
+- **Acceso**: Outlook Web App o clientes de correo
+
+### WiFi Estudiantil
+- **Red**: DUOC-Estudiantes
+- **Acceso**: Con credenciales institucionales
+- **Cobertura**: Toda la sede incluye exteriores
+
+---
+
+## 6. FINANCIAMIENTO Y BECAS
+
+### Opciones de Financiamiento
+**Estatales:**
+- Gratuidad (estudiantes de quintiles 1-6)
+- Beca Bicentenario
+- Beca Juan Gómez Millas
+- Crédito con Aval del Estado (CAE)
+
+**Internas DUOC UC:**
+- Beca de Excelencia Académica
+- Beca Hermanos DUOC
+- Beca Deportiva
+- Beca Hijo de Funcionario
+
+**Privadas:**
+- Crédito CORFO
+- Financiamiento directo con DUOC UC
+- Convenios empresariales
+
+### Portal de Pagos
+- **Acceso**: https://www.duoc.cl/portal-de-pago/
+- **Métodos**: Webpay, transferencia, efectivo
+- **Cuotas**: Hasta 10 cuotas sin interés (según carrera)
+
+---
+
+## 7. PRÁCTICAS PROFESIONALES
+
+### Portal de Prácticas
+**Acceso**: https://www2.duoc.cl/practica/login
+
+### Proceso de Prácticas
+1. **Búsqueda de empresa**: Base de datos con +2000 empresas
+2. **Postulación**: Sistema online
+3. **Entrevistas**: Coordinadas por DUOC UC
+4. **Seguimiento**: Supervisor académico asignado
+5. **Evaluación**: Empresa y estudiante
+
+### Empleabilidad
+- **Tasa de empleabilidad**: 85% al primer año de egreso
+- **Bolsa de trabajo**: Acceso permanente para egresados
+- **Ferias laborales**: Semestrales en la sede
+
+---
+
+## 8. PROCESOS ADMINISTRATIVOS
+
+### Certificados y Documentos
+**Disponibles online**:
+- Certificado de alumno regular
+- Concentración de notas
+- Certificado de ranking
+- Programa de asignaturas
+
+**Documentos presenciales**:
+- Títulos y diplomas originales
+- Legalización de documentos
+- Duplicados de certificados
+
+### TNE (Tarjeta Nacional Estudiantil)
+**Requisitos**:
+- Ser alumno regular
+- Estar al día en pagos
+- Fotocopia de cédula de identidad
+
+**Proceso**:
+1. Solicitud online en portal estudiantil
+2. Validación automática de datos
+3. Retiro en oficina de asuntos estudiantiles
+4. Activación inmediata
+
+---
+
+## 9. CALENDARIO ACADÉMICO 2025
+
+### Primer Semestre
+- **Inicio clases**: 25 de marzo
+- **Semana de receso**: 13-17 de mayo
+- **Evaluaciones finales**: 1-12 de julio
+- **Fin primer semestre**: 12 de julio
+
+### Segundo Semestre
+- **Inicio clases**: 5 de agosto
+- **Semana de receso**: 14-18 de octubre
+- **Evaluaciones finales**: 25 noviembre - 6 diciembre
+- **Fin segundo semestre**: 6 de diciembre
+
+### Fechas Importantes
+- **Matrículas 2026**: Diciembre 2025 - Febrero 2026
+- **Proceso de admisión**: Octubre 2025 - Enero 2026
+- **Inicio año académico 2026**: Marzo 2026
+
+---
+
+## 10. NOTICIAS Y NOVEDADES 2025
+
+### Octubre 2025
+- **24 de Octubre**: Jornada "Ingeniosas 2025" promoviendo participación femenina en carreras STEM
+- **16 de Octubre**: Experiencia internacional: Estudiante de Plaza Norte viaja a Canadá para intercambio académico
+
+### Septiembre 2025
+- **30 de Septiembre**: DUOC UC celebra el Mes de la Ciberseguridad con actividades especiales
+
+### Proyectos Destacados
+- Modernización de laboratorios de informática
+- Implementación de nuevas tecnologías en automatización
+- Convenios internacionales para intercambios estudiantiles
+
+---
+
+## 11. CONTACTO Y EMERGENCIAS
+
+### Directorio Telefónico
+- **Mesa Central**: +56 2 2999 3000
+- **Punto Estudiantil**: +56 2 2999 3075 (Piso 2, Sede Plaza Norte)
+- **DOC DUOC (Emergencias Médicas)**: 600 362 3862
+- **Información General**: Consultar en punto estudiantil
+
+### Emergencias
+- **Primeros Auxilios/Emergencias Médicas**: DOC DUOC 600 362 3862
+- **Mesa Central**: +56 2 2999 3000
+- **Emergencias Externas**: 133 (Bomberos), 131 (Ambulancia)
+
+### Canales Digitales
+
+
+---
+
+## 12. NOVEDADES, INSTRUCTIVOS Y RECURSOS DIGITALES 2025
+
+### Noticias y Actividades Recientes
+- Jornada “Ingeniosas 2025”: Promoción de la participación femenina en carreras STEM, testimonios y actividades educativas.
+- Experiencia internacional: Estudiantes de Plaza Norte participan en intercambios académicos (ejemplo: Canadá).
+- Mes de la Ciberseguridad: Talleres y campañas sobre seguridad digital y prevención de riesgos tecnológicos.
+- Corrida Familiar Solidaria: Evento deportivo con donación de alimentos a fundaciones benéficas.
+- Implementación de realidad virtual en formación práctica de Telecomunicaciones.
+- Academia Logística: Alianza con CCU para impulsar el desarrollo de trabajadores del transporte.
+
+### Protocolos y Trámites Digitales
+- Comisaría Virtual: Plataforma para denuncias, constancias, reclamos y salvoconductos online. [https://www.comisariavirtual.cl/](https://www.comisariavirtual.cl/)
+- Trámites relevantes: Pérdida de documentos, abandono de hogar, pensión de alimentos, régimen de visitas, reclamos policiales, reencuentros familiares.
+- Tutoriales y guías sobre trámites digitales disponibles en Centro de Ayuda Duoc y Junaeb.
+
+### Becas y Alimentación
+- Junaeb: Programa de Alimentación Escolar, becas de alimentación y transporte, campañas de convivencia y equidad de género. [https://www.junaeb.cl/](https://www.junaeb.cl/)
+- Plato de estudiantes Duoc UC será parte de plan piloto en Junaeb.
+
+### Recursos y Tutoriales Digitales
+- Videos tutoriales sobre reserva de agenda, uso de plataformas, seguridad en transporte, ciberseguridad, embajadores de salud mental y servicios digitales.
+- Tips de seguridad para viajes, prevención de malware, uso de redes seguras, y apoyo en salud mental.
+- Ejemplos: [Tutorial Reserva Agenda Norte](https://www.youtube.com/watch?v=OFf4LezcpJI), [Embajadores de la salud mental](https://embajadores.duoc.cl/), [Ciberseguridad](https://www.instagram.com/p/DBQ42SlJur_/)
+
+### Empleabilidad y Tendencias Laborales
+- Duoclaboral.cl: Ofertas de prácticas, empleos, actividades, y tendencias sobre el futuro del trabajo y perfil profesional. [https://duoclaboral.cl/](https://duoclaboral.cl/)
+- Incorporación de realidad virtual y alianzas con empresas líderes.
+
+### Inclusión y Sostenibilidad
+- Comisaría Virtual y Junaeb destacan la inclusión (videos en lenguas étnicas) y sostenibilidad (reducción de papel, oficina verde).
+- Participación ciudadana, equidad de género, transparencia y acceso a trámites digitales.
+
+### Recursos Especiales y Enlaces
+- Tutoriales y guías descargables en Junaeb y Duoc.
+- Enlaces a redes sociales, contacto directo, y plataformas de beneficios.
+- Centro de Ayuda Duoc: [https://centroayuda.duoc.cl/hc/es-419](https://centroayuda.duoc.cl/hc/es-419)
+
+---
+
+**Para más información y recursos actualizados, revisa los enlaces oficiales y redes sociales institucionales.**
+---
+
+**Este documento es una guía de referencia. Para información actualizada, visita www.duoc.cl o contacta directamente con la sede.**

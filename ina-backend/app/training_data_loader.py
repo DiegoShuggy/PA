@@ -448,54 +448,77 @@ class TrainingDataLoader:
             logger.warning("Carpeta documents/ no encontrada")
             return
 
-        # Buscar todos los tipos de archivos soportados
-        docx_files = glob.glob(os.path.join(self.documents_path, "*.docx"))
-        txt_files = glob.glob(os.path.join(self.documents_path, "*.txt"))
-        pdf_files = glob.glob(os.path.join(self.documents_path, "*.pdf"))
+        # ✅ FASE 3: Buscar archivos Markdown y JSON desde data/
+        # La estructura es: ./data/markdown/ y ./data/json/ (raíz del proyecto)
+        markdown_dir = "./data/markdown"
+        json_dir = "./data/json"
         
-        total_files = len(docx_files) + len(txt_files) + len(pdf_files)
-        print(f"\n📂 CARGANDO DOCUMENTOS:")
-        print(f"   DOCX: {len(docx_files)} archivos")
-        print(f"   TXT:  {len(txt_files)} archivos")
-        print(f"   PDF:  {len(pdf_files)} archivos")
-        print(f"   TOTAL: {total_files} archivos\n")
-        logger.info(f"Documentos encontrados: {len(docx_files)} DOCX, {len(txt_files)} TXT, {len(pdf_files)} PDF")
+        markdown_files = []
+        json_files = []
+        
+        # Buscar archivos Markdown recursivamente
+        if os.path.exists(markdown_dir):
+            for root, _, files in os.walk(markdown_dir):
+                for file in files:
+                    if file.endswith('.md'):
+                        markdown_files.append(os.path.join(root, file))
+        
+        # Buscar archivos JSON
+        if os.path.exists(json_dir):
+            for file in os.listdir(json_dir):
+                if file.endswith('.json'):
+                    json_files.append(os.path.join(json_dir, file))
+        
+        total_files = len(markdown_files) + len(json_files)
+        print(f"\n📂 CARGANDO DOCUMENTOS (FASE 3 - MD/JSON):")
+        print(f"   MARKDOWN: {len(markdown_files)} archivos")
+        print(f"   JSON:     {len(json_files)} archivos")
+        print(f"   TOTAL:    {total_files} archivos\n")
+        logger.info(f"Documentos encontrados: {len(markdown_files)} MD, {len(json_files)} JSON")
+        
+        # ⚡ OPTIMIZACIÓN FASE 3: Si ChromaDB ya tiene chunks, no recargar
+        from app.rag import rag_engine
+        try:
+            existing_chunks = rag_engine.collection.count()
+            if existing_chunks >= 500:
+                print(f"✅ ChromaDB OK ({existing_chunks} chunks), saltando recarga de documentos")
+                logger.info(f"✅ Carga omitida: ChromaDB ya tiene {existing_chunks} chunks")
+                return
+        except Exception as e:
+            logger.warning(f"No se pudo verificar ChromaDB: {e}")
+        
+        if total_files == 0:
+            print("⚠️  No se encontraron archivos MD/JSON en data/")
+            print("   Ejecuta: python scripts/ingest/ingest_markdown_json.py --clean")
+            logger.warning("No hay archivos MD/JSON para cargar. Usa ingest_markdown_json.py")
+            return
         
         total_processed = 0
         total_chunks_added = 0
 
-        # Procesar archivos DOCX
-        if docx_files and DOCX_AVAILABLE:
-            print(f"🔄 Procesando {len(docx_files)} documentos DOCX...")
-            logger.info("Procesando documentos Word...")
-            for path in docx_files:
-                chunks_added = self._process_single_document(path, 'docx')
+        # Procesar archivos Markdown
+        if markdown_files:
+            print(f"🔄 Procesando {len(markdown_files)} documentos Markdown...")
+            logger.info("Procesando documentos Markdown con frontmatter...")
+            for idx, path in enumerate(markdown_files, 1):
+                chunks_added = self._process_single_document(path, 'markdown')
                 total_processed += 1
                 total_chunks_added += chunks_added
-                print(f"   ✅ {os.path.basename(path)}: {chunks_added} chunks")
-        elif docx_files and not DOCX_AVAILABLE:
-            logger.error("Archivos .docx encontrados pero python-docx no está instalado")
+                print(f"   [{idx}/{len(markdown_files)}] {os.path.basename(path)}: {chunks_added} chunks")
 
-        # Procesar archivos TXT
-        if txt_files:
-            print(f"\n🔄 Procesando {len(txt_files)} documentos TXT...")
-            logger.info("Procesando documentos TXT...")
-            for idx, path in enumerate(txt_files, 1):
-                chunks_added = self._process_single_document(path, 'txt')
+        # Procesar archivos JSON
+        if json_files:
+            print(f"\n🔄 Procesando {len(json_files)} archivos JSON...")
+            logger.info("Procesando archivos JSON estructurados...")
+            for idx, path in enumerate(json_files, 1):
+                chunks_added = self._process_single_document(path, 'json')
                 total_processed += 1
                 total_chunks_added += chunks_added
-                print(f"   [{idx}/{len(txt_files)}] {os.path.basename(path)}: {chunks_added} chunks")
+                print(f"   [{idx}/{len(json_files)}] {os.path.basename(path)}: {chunks_added} chunks")
 
-        # Procesar archivos PDF
-        if pdf_files and PDF_AVAILABLE:
-            print(f"\n🔄 Procesando {len(pdf_files)} documentos PDF...")
-            logger.info("Procesando documentos PDF...")
-            for path in pdf_files:
-                chunks_added = self._process_single_document(path, 'pdf')
-                total_processed += 1
-                total_chunks_added += chunks_added
-                print(f"   ✅ {os.path.basename(path)}: {chunks_added} chunks")
-        elif pdf_files and not PDF_AVAILABLE:
+        # 🗑️ LEGACY CODE - DOCX/PDF ya no se usan (FASE 3)
+        # Los archivos DOCX/PDF fueron convertidos a Markdown
+        # Si necesitas procesar DOCX/PDF, usa los scripts de conversión primero
             logger.error("Archivos .pdf encontrados pero pdfplumber no está instalado")
 
         print(f"\n✅ CARGA COMPLETADA:")
@@ -505,30 +528,37 @@ class TrainingDataLoader:
         self.word_documents_loaded = True
     
     def _process_single_document(self, file_path: str, file_type: str) -> int:
-        """Procesa un solo documento según su tipo"""
+        """Procesa un solo documento según su tipo (✅ FASE 3: MD/JSON con intelligent_chunker)"""
         name = os.path.basename(file_path)
         logger.info(f"Procesando {file_type.upper()}: {name}")
         
         try:
-            # Extraer contenido según el tipo
-            if file_type == 'docx':
-                chunks = self.document_processor.extract_from_docx(file_path)
+            # ✅ FASE 3: Usar intelligent_chunker para MD/JSON
+            from app.intelligent_chunker import semantic_chunker
+            
+            if file_type == 'markdown':
+                chunks = semantic_chunker.chunk_markdown_file(file_path, source_name=name)
+            elif file_type == 'json':
+                chunks = semantic_chunker.chunk_json_file(file_path)
             elif file_type == 'txt':
                 chunks = self.document_processor.extract_from_txt(file_path)
             elif file_type == 'pdf':
                 chunks = self.document_processor.extract_from_pdf(file_path)
+            elif file_type == 'docx':
+                chunks = self.document_processor.extract_from_docx(file_path)
             else:
-                logger.error(f"Tipo de archivo no soportado: {file_type}")
+                logger.error(f"❌ Formato no soportado: {file_type}")
                 return 0
             
             if not chunks:
                 logger.warning(f"No se extrajo contenido de {name}")
                 return 0
 
-            # Procesar y agregar chunks al RAG
+            # ✅ FASE 3: Procesar chunks con metadata enriquecida del intelligent_chunker
             added = 0
             for chunk in chunks:
-                # Usar 'text' para TXT/PDF y 'content' para DOCX
+                # MD/JSON chunks ya vienen como dict con text, metadata, keywords, etc.
+                # TXT/PDF chunks usan 'text' o 'content'
                 text_content = chunk.get('text') or chunk.get('content', '')
                 if not text_content:
                     continue
@@ -540,23 +570,26 @@ class TrainingDataLoader:
                 if not category:
                     category = self._detect_category_from_content(text_content)
                 
-                # NUEVO: Pasar todos los metadatos enriquecidos del chunk
-                chunk_metadata = chunk.get('chunk_metadata', {})
+                # ✅ FASE 3: Usar metadata del intelligent_chunker directamente
+                chunk_metadata = chunk.get('metadata', {})
                 if self._add_document_direct(enhanced, {
                     "type": f"document_{file_type}",
                     "category": category,
                     "source": name,
-                    "section": chunk.get('section', ''),
+                    "section": chunk.get('section') or chunk_metadata.get('section', ''),
                     "is_structured": chunk.get('is_structured', False),
                     "file_type": file_type,
                     "optimized": "true",
-                    # NUEVOS metadatos del chunker inteligente
+                    # ✅ NUEVOS metadatos del intelligent_chunker
                     "keywords": chunk.get('keywords', []),
                     "token_count": chunk.get('token_count', 0),
-                    "chunk_id": chunk.get('page_reference', ''),
-                    "title": chunk_metadata.get('title', chunk.get('section', '')),
+                    "chunk_id": chunk.get('chunk_id') or chunk.get('page_reference', ''),
+                    "title": chunk_metadata.get('title') or chunk.get('section', ''),
                     "has_overlap": chunk_metadata.get('has_overlap', False),
-                    "fecha_procesamiento": chunk_metadata.get('fecha_procesamiento', '2025-11-26')
+                    "fecha_procesamiento": chunk_metadata.get('fecha_procesamiento', datetime.now().isoformat()[:10]),
+                    # Metadata de frontmatter (MD)
+                    "source_type": chunk_metadata.get('source_type', file_type),
+                    "original_filename": chunk_metadata.get('original_filename', name)
                 }):
                     added += 1
             

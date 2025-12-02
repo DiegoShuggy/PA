@@ -81,6 +81,48 @@ TEMPLATES_ES = {
 💙 *No estás solo/a - hay ayuda disponible siempre*
 """,
 
+    "apoyo_psicologico_principal": """
+🧠 **Atención Psicológica Virtual - Agendar Hora**
+
+**Duoc UC ofrece apoyo psicológico gratuito** para todos los estudiantes regulares.
+
+📱 **Cómo agendar tu hora:**
+1. **Ingresa a:** https://eventos.duoc.cl
+2. **Inicia sesión** con tu correo institucional @duocuc.cl
+3. **Si es tu primera vez:**
+   • Selecciona pestaña "Apoyo Psicológico"
+   • Regístrate y crea una contraseña
+4. **Elige** fecha y hora disponible
+5. **Confirma** tu cita por videollamada
+
+✅ **Características del servicio:**
+• **8 sesiones gratuitas** por año académico
+• **Atención 100% virtual** (videollamada)
+• **Disponible fines de semana y festivos**
+• **Profesionales especializados** en salud estudiantil
+• **Confidencialidad** garantizada
+
+🚨 **Si no encuentras horas disponibles:**
+• **Contacta a:** Adriana Vásquez (Coordinadora Bienestar)
+• **Email:** avasquezm@duoc.cl
+• **Agenda Norte:** Solicita cita directa
+
+⚠️ **Para urgencias psicológicas 24/7:**
+• **Línea OPS:** +56 2 2820 3450
+• Atención inmediata y confidencial
+
+🆘 **Crisis en sede:**
+• **Sala de Primeros Auxilios:** Piso 2, junto a caja
+• **Teléfono:** +56 2 2999 3075
+
+🔗 **Recursos adicionales:**
+• **Plataforma citas:** https://eventos.duoc.cl
+• **Centro Virtual Aprendizaje:** https://cva.duoc.cl
+• **Curso Embajadores:** https://embajadores.duoc.cl
+
+💡 *Tu bienestar mental es fundamental para tu éxito académico*
+""",
+
     "apoyo_discapacidad": """
 ♿ **Programa de Acompañamiento a Estudiantes con Discapacidad (PAEDIS):**
 **Apoyo especializado** para estudiantes con discapacidad.
