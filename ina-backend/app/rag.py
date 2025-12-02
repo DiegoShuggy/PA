@@ -2376,6 +2376,11 @@ def get_ai_response(user_message: str, context: list = None,
         seen_hashes = set()
         
         for source in sources:
+            # 🔥 FIX: Validar que document no sea None
+            if not source.get('document'):
+                logger.warning(f"⚠️ Source con documento None detectado, saltando...")
+                continue
+                
             content_hash = hashlib.md5(source['document'].encode()).hexdigest()
             
             if content_hash in seen_hashes:
