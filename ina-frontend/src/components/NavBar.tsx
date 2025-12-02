@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/NavBar.css"
 import { useTranslation } from "react-i18next";
-import logo from '../img/pto.png';
+import logo from '../img/puntoestudiantil.png';
 // Agregar import de VoiceSearch
 import VoiceSearch from '../components/VoiceSearch';
 
@@ -103,9 +103,15 @@ function NavBar() {
         <>
             <nav className="navbar">
                 <div className="navbar-menu_container">
-                    {/* Logo con funcionalidad secreta */}
                     <div className="navbar-brand">
-                        <img src={logo} alt="Logo" className="navbar-logo" onClick={handleSecretClick} />
+                        <div className="logo-container">
+                            <img 
+                                src={logo} 
+                                alt="Logo" 
+                                className="navbar-logo" 
+                                onClick={handleSecretClick} 
+                            />
+                        </div>
                     </div>
 
                     <header className="app-header">

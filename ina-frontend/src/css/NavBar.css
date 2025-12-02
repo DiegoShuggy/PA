@@ -1,5 +1,5 @@
 .navbar {
-  background: radial-gradient(circle at 0, rgb(0, 24, 59) 10%, rgb(255, 171, 31) 100px);
+  background: radial-gradient(circle at 0, rgb(255,171,31) 10%, rgb(0, 24, 59) 100px);
   padding: 1rem 0;
   display: flex;
   justify-content: center;
@@ -44,17 +44,11 @@
   color: rgb(0, 0, 0);
 }
 
-.app-header p {
-  margin: 0;
-  font-size: 0.8rem;
-  opacity: 0.8;
-  margin-bottom: 0.2rem;
-}
-
 .app-header h1 {
   margin: 0;
   font-size: 1.2rem;
   font-weight: normal;
+  color : rgb(255, 255, 255);
 }
 
 .navbar-links {
@@ -66,13 +60,28 @@
   /* Alinea a la derecha */
 }
 
-.navbar-logo {
-  height: 65px;
-  width: auto;
+.logo-container {
+  display: flex; /* Usa flex para mejor control */
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  height: 65px; /* Altura fija del navbar */
+  width: auto; /* Ancho automático basado en la imagen */
+  overflow: visible; /* Permite que la imagen crezca fuera */
+  position: relative; /* Para posicionamiento relativo */
+  margin-left: -3rem; /* Mueve todo el contenedor a la izquierda */
+  margin-top: -1rem; /* Mueve todo el contenedor hacia arriba */
+  
 }
 
+.navbar-logo {
+  height: 200%; /* Ocupa el 100% del contenedor */
+  width: auto; /* Mantiene proporción */
+  object-fit: contain; /* Asegura que la imagen se ajuste sin deformarse */
+}
+
+
 .navbar-links a {
-  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
   text-decoration: none;
   font-size: 1rem;
   padding: 0.5rem 1rem;

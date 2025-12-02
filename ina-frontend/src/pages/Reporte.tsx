@@ -2,9 +2,6 @@ import React, { useState, useRef } from 'react';
 import '../css/Reporte.css';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
-import ina from '../img/InA6.png';
-// Importa tu archivo MP4 - ajusta la ruta según donde lo coloques
-import videoEffect from '../assets/videos/wah.mp4'; // Ajusta esta ruta
 
 const Reporte = () => {
     const { t } = useTranslation();
@@ -20,11 +17,6 @@ const Reporte = () => {
     const [email, setEmail] = useState<string>('');
     const [showEmailForm, setShowEmailForm] = useState<boolean>(false);
     const [advancedReport, setAdvancedReport] = useState<boolean>(true); // Reporte avanzado por defecto
-    
-    // Estados para el contador de clics y el video
-    const [clickCount, setClickCount] = useState<number>(0);
-    const [showVideo, setShowVideo] = useState<boolean>(false);
-    const videoRef = useRef<HTMLVideoElement | null>(null);
 
     // Opciones de período
     const periodOptions = [
