@@ -1640,10 +1640,9 @@ No entiendo completamente '{original_query}'.
 
             # Preservar todo el metadata que venga del loader (section, is_structured, optimized, etc.)
             enhanced_metadata = {"timestamp": datetime.now().isoformat()}
-            
-            # 🔥 FASE 3: Logging de metadata enriquecida MD/JSON
+
             source_type = 'unknown'
-            
+
             if isinstance(metadata, dict):
                 # Detectar tipo de fuente
                 if 'source_type' in metadata:
@@ -1654,7 +1653,7 @@ No entiendo completamente '{original_query}'.
                     source_type = 'markdown'
                 elif 'departamento' in metadata or 'tema_principal' in metadata:
                     source_type = 'markdown_frontmatter'
-                
+
                 # No sobrescribir timestamp si viene en metadata
                 for k, v in metadata.items():
                     if k == 'timestamp':
@@ -1665,33 +1664,51 @@ No entiendo completamente '{original_query}'.
                     # Convertir diccionarios a strings JSON para ChromaDB
                     elif isinstance(v, dict):
                         enhanced_metadata[k] = json.dumps(v) if v else '{}'
+                    # Convertir cualquier otro tipo a string si no es básico
+                    elif not isinstance(v, (str, int, float, bool)):
+                        enhanced_metadata[k] = str(v)
                     else:
                         enhanced_metadata[k] = v
-                
+
                 # Asegurar claves mínimas si faltan
                 enhanced_metadata.setdefault('source', metadata.get('source', 'unknown'))
                 enhanced_metadata.setdefault('category', metadata.get('category', 'general'))
                 enhanced_metadata.setdefault('type', metadata.get('type', 'general'))
-                
+
+            # FINAL FLATTENING: Ensure all metadata values are primitive types
+            for k, v in list(enhanced_metadata.items()):
+                if not isinstance(v, (str, int, float, bool)):
+                    # If still not primitive, convert to string
+                    enhanced_metadata[k] = str(v)
+
                 # 🔥 FASE 3: Logging mejorado para debugging
                 if source_type in ['markdown', 'markdown_frontmatter', 'json_faq']:
                     logger.debug(f"✅ Agregando chunk {source_type}: "
                                f"cat={enhanced_metadata.get('category', 'N/A')}, "
                                f"dept={enhanced_metadata.get('departamento', 'N/A')}, "
                                f"keywords={enhanced_metadata.get('keywords', '')[:40]}...")
-                
+
             else:
                 enhanced_metadata.update({
                     'source': 'unknown',
                     'category': 'general',
                     'type': 'general'
                 })
-            
+
             # Asegurar que keywords y chunk_id estén presentes
             if 'keywords' not in enhanced_metadata or not enhanced_metadata['keywords']:
                 enhanced_metadata['keywords'] = ', '.join(self.extract_keywords(document))
             if 'chunk_id' not in enhanced_metadata or not enhanced_metadata['chunk_id']:
                 enhanced_metadata['chunk_id'] = hashlib.md5(document.encode('utf-8')).hexdigest()
+
+            # Convertir todos los valores a tipos serializables (string, int, float, bool)
+            for k, v in enhanced_metadata.items():
+                if isinstance(v, dict):
+                    enhanced_metadata[k] = json.dumps(v)
+                elif isinstance(v, list):
+                    enhanced_metadata[k] = ', '.join(str(item) for item in v)
+                elif not isinstance(v, (str, int, float, bool)):
+                    enhanced_metadata[k] = str(v)
 
             # Verificar que la colección es válida antes de agregar
             if not hasattr(self.collection, 'add'):
@@ -1699,18 +1716,44 @@ No entiendo completamente '{original_query}'.
                 self.metrics['errors'] += 1
                 return False
 
+            # CRITICAL: Validate document type before adding to ChromaDB
+            if not isinstance(document, str):
+                logger.error(f"❌ Document must be string, got {type(document)}. Skipping.")
+                self.metrics['errors'] += 1
+                return False
+            
+            # Validate document is not empty
+            if not document or len(document.strip()) == 0:
+                logger.warning("⚠️  Empty document, skipping")
+                return False
+            
+            # Validate all metadata values are primitive types
+            for k, v in enhanced_metadata.items():
+                if not isinstance(v, (str, int, float, bool)):
+                    logger.error(f"❌ Metadata '{k}' has non-primitive type {type(v)}. Skipping document.")
+                    self.metrics['errors'] += 1
+                    return False
+
             self.collection.add(
                 documents=[document],
                 metadatas=[enhanced_metadata],
                 ids=[doc_id]
             )
-            
+
             self.metrics['documents_added'] += 1
             return True
-            
+
         except Exception as e:
             logger.error(f"Error añadiendo documento: {e}")
+            logger.error(f"Tipo de error: {type(e).__name__}")
             logger.debug(f"Tipo de colección: {type(self.collection)}, Tiene add: {hasattr(self.collection, 'add')}")
+            
+            # Log additional context for 'dimensionality' errors
+            if 'dimensionality' in str(e).lower():
+                logger.error("❌ ERROR CRÍTICO: ChromaDB corrupto detectado")
+                logger.error("   Solución: Ejecuta 'python fix_chromadb.py' para limpiar y reconstruir")
+                logger.error(f"   Document type: {type(document)}, Metadata keys: {list(enhanced_metadata.keys()) if 'enhanced_metadata' in locals() else 'N/A'}")
+            
             self.metrics['errors'] += 1
             return False
 

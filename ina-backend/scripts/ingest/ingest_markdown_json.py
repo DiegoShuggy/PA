@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import List, Dict, Tuple
 import time
 from datetime import datetime
+import chromadb
 
 # Agregar directorio raíz al path
 project_root = Path(__file__).parent.parent.parent
@@ -80,8 +81,56 @@ class MarkdownJsonIngester:
         logger.info(f"📂 Markdown dir: {self.markdown_dir}")
         logger.info(f"📂 JSON dir: {self.json_dir}")
     
+    def force_delete_collection(self):
+        """Elimina la colección 'duoc_knowledge' si existe."""
+        try:
+            # Inicializar el cliente de ChromaDB si no está inicializado
+            if not hasattr(self, 'client'):
+                self.client = chromadb.Client()
+
+            # Verificar y eliminar la colección
+            if 'duoc_knowledge' in [col.name for col in self.client.list_collections()]:
+                self.client.delete_collection('duoc_knowledge')
+                print("✅ Colección 'duoc_knowledge' eliminada forzosamente.")
+        except Exception as e:
+            print(f"❌ Error eliminando la colección 'duoc_knowledge': {e}")
+
+    def reset_chromadb(self):
+        """Elimina completamente la base de datos persistente de ChromaDB."""
+        try:
+            # Ruta de la base de datos persistente
+            chroma_db_path = "./app/chroma_db"
+            import shutil
+            import os
+
+            # Verificar si la carpeta existe y eliminarla
+            if os.path.exists(chroma_db_path):
+                shutil.rmtree(chroma_db_path)
+                print("✅ Base de datos persistente de ChromaDB eliminada completamente.")
+            else:
+                print("ℹ️ No se encontró la base de datos persistente de ChromaDB.")
+        except Exception as e:
+            print(f"❌ Error eliminando la base de datos persistente de ChromaDB: {e}")
+
+    def initialize_chromadb(self):
+        """Inicializa ChromaDB desde cero, eliminando cualquier colección corrupta."""
+        try:
+            # Eliminar la base de datos persistente
+            self.reset_chromadb()
+
+            # Inicializar el cliente de ChromaDB
+            self.client = chromadb.Client()
+            print("✅ Cliente de ChromaDB inicializado correctamente.")
+
+            # Crear la colección desde cero
+            self.collection = self.client.get_or_create_collection("duoc_knowledge")
+            print("✅ Colección 'duoc_knowledge' creada correctamente.")
+        except Exception as e:
+            print(f"❌ Error inicializando ChromaDB: {e}")
+
     def clean_chromadb(self):
-        """Limpia ChromaDB antes de re-ingestar (en lotes para evitar límite de 5,461)"""
+        """Limpia la base de datos ChromaDB."""
+        self.initialize_chromadb()  # Reinicializar la base de datos desde cero
         if self.dry_run:
             logger.info("🔍 [DRY-RUN] Simulando limpieza de ChromaDB")
             return
@@ -359,6 +408,11 @@ def main():
         action='store_true',
         help='Simula ingesta sin modificar ChromaDB'
     )
+    parser.add_argument(
+        '--yes', '-y',
+        action='store_true',
+        help='Confirma automáticamente sin preguntar (para scripts)'
+    )
     
     args = parser.parse_args()
     
@@ -376,12 +430,17 @@ def main():
         
         # Limpiar si se solicita
         if args.clean and not args.dry_run:
-            confirm = input("⚠️  ¿Confirmar limpieza de ChromaDB? (s/N): ")
-            if confirm.lower() == 's':
+            if args.yes:
+                # Ejecución automática sin confirmación
+                print("Limpiando ChromaDB (modo automatico)...")
                 ingester.clean_chromadb()
             else:
-                logger.info("❌ Limpieza cancelada")
-                return
+                confirm = input("Confirmar limpieza de ChromaDB? (s/N): ")
+                if confirm.lower() == 's':
+                    ingester.clean_chromadb()
+                else:
+                    logger.info("Limpieza cancelada")
+                    return
         
         # FORZAR procesamiento de archivos incluso si hay documentos
         logger.info("\n" + "="*80)
