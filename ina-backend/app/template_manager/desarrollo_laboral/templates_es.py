@@ -183,4 +183,34 @@ Es el área institucional que te acompaña en tu proceso de inserción y desarro
 
 💡 *Tu puente hacia el éxito profesional*
 """,
+
+    "desarrollo_laboral": """
+💼 **Desarrollo Laboral Plaza Norte**
+
+**Coordinadora:** Claudia Cortés Núñez
+📧 ccortesn@duoc.cl
+📞 Ext. 8200
+📍 Piso 2
+🕐 Lun-Vie: 9:00-17:00 hrs
+
+**Servicios:**
+✅ Asesoría personalizada CV
+✅ Simulación entrevistas laborales
+✅ Talleres empleabilidad (CV, marca personal, liderazgo)
+✅ Acceso Bolsa de Empleo
+✅ Apoyo búsqueda prácticas profesionales
+
+**Bolsa de Empleo:**
+🌐 **duoclaboral.cl**
+📱 Acceso: Credenciales institucionales
+📝 Crea tu CV en formato Oxford
+🎯 Ofertas exclusivas para estudiantes y titulados
+
+**Beneficios Titulados:**
+• Acceso permanente sin costo
+• Talleres y charlas de actualización
+• Networking y eventos de empleabilidad
+
+💡 *Aprovecha las asesorías personalizadas para mejorar tu empleabilidad*
+""",
 }

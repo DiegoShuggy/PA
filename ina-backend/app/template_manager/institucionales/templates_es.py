@@ -178,4 +178,215 @@ Si estás atravesando una crisis emocional o tienes pensamientos de autolesión/
 
 💡 *¿Con qué área necesitas contactarte?*
 """,
+
+    # ========== NUEVOS TEMPLATES 2025 ==========
+    
+    "wifi": """
+📶 **WiFi DuocUC**
+
+🌐 **Red:** DUOC_ACAD
+👤 **Usuario:** Tu número de alumno (sin puntos ni guión)
+🔑 **Contraseña:** La misma de portal.duoc.cl
+
+🛠️ **¿Problemas de conexión?**
+📍 **Servicios Digitales** - Edificio A, Piso 4
+📞 **Ext:** 1234
+📧 soporte.plazanorte@duoc.cl
+⏰ Lun-Vie 8:30-18:00
+
+🌐 **Centro de Ayuda:** https://centroayuda.duoc.cl
+""",
+
+    "eventos_anuales": """
+📅 **Eventos y Calendario Duoc UC 2025-2026**
+
+🎓 **Consulta eventos actualizados:**
+
+🌐 **Calendario Académico Oficial:**
+https://www.duoc.cl/vida-estudiantil/calendario-academico/
+
+📍 **Eventos Sede Plaza Norte:**
+https://www.duoc.cl/sedes/plaza-norte/eventos/
+
+📱 **Portal Estudiante:** https://portal.duoc.cl
+Sección "Eventos y Actividades"
+
+📸 **Instagram Sede:** @duocplazanorte
+Publicaciones semanales con fechas actualizadas
+
+💡 *Las fechas varían cada año, revisa siempre fuentes oficiales*
+""",
+
+    "examenes": """
+📝 **Exámenes 2026**
+
+📅 **Primer Semestre:**
+• Exámenes: 30 jun - 11 jul 2026
+• Recuperativos: 14-18 jul 2026
+
+📅 **Segundo Semestre:**
+• Exámenes: 1-12 dic 2026
+• Recuperativos: 15-19 dic 2026
+
+📋 **Calendario completo publicado 60 días antes**
+
+🌐 **Portal:** https://portal.duoc.cl
+📞 **Consultas:** Ext. 8100
+📧 academico.plazanorte@duoc.cl
+
+💡 *Consulta en portal.duoc.cl fechas exactas de tus evaluaciones*
+""",
+
+    "salas_estudio": """
+📚 **Reserva de Salas de Estudio**
+
+🌐 **Sistema de reserva:**
+https://bibliotecas.duoc.cl
+
+📍 **Biblioteca Plaza Norte**
+Edificio A, Piso 2
+
+📞 **Ext:** 8300
+📧 biblioteca.plazanorte@duoc.cl
+⏰ Lun-Vie 8:00-21:00, Sáb 8:00-13:00
+
+💡 *Reserva online con tu correo institucional*
+""",
+
+    "pagos_matricula": """
+💳 **Pagos y Matrícula**
+
+💻 **Pago Online (24/7):**
+https://portal.duoc.cl
+Sección "Pagos y Aranceles"
+
+🏦 **Presencial:**
+📍 **Finanzas/Caja** - Edificio A, Piso 1
+📞 **Ext:** 8050
+📧 finanzas.plazanorte@duoc.cl
+⏰ Lun-Vie 9:00-17:00
+
+💡 *Portal disponible 24/7 para pagos con tarjeta o transferencia*
+""",
+
+    "gratuidad": """
+✅ **Gratuidad en Duoc UC**
+
+**SÍ, Duoc UC tiene Gratuidad**
+Cubre 100% matrícula + arancel para primeros 6 deciles.
+
+📋 **Postulación:**
+1. Completa FUAS en www.fuas.cl (oct-nov)
+2. Espera resultados (dic-ene)
+3. Matricúlate normalmente
+
+🏦 **Consultas:**
+📍 **Finanzas** - Edificio A, Piso 1
+📞 **Ext:** 8050
+📧 finanzas.plazanorte@duoc.cl
+⏰ Lun-Vie 9:00-17:00
+
+🌐 **Info oficial:**
+https://www.duoc.cl/admision/financiamiento/becas-estatales/
+
+💡 *Renovación automática si cumples requisitos académicos*
+""",
+
+    "becas": """
+💰 **Becas y Financiamiento**
+
+🎓 **Tipos de becas disponibles:**
+• Becas Estatales (Gratuidad, BEA, BAES)
+• Becas Internas Duoc
+• CAE (Crédito con Aval del Estado)
+• Fondo Solidario
+
+🏦 **Asesoría y consultas:**
+📍 **Finanzas** - Edificio A, Piso 1
+📞 **Ext:** 8050
+📧 finanzas.plazanorte@duoc.cl
+⏰ Lun-Vie 9:00-17:00
+
+🌐 **Portal oficial:**
+https://www.duoc.cl/admision/financiamiento/
+
+💡 *Postula a través de FUAS en www.fuas.cl*
+""",
+
+    "horarios_sede": """
+🕒 **Horarios Sede Plaza Norte**
+
+🏢 **Punto Estudiantil:**
+📍 Piso 2
+⏰ Lun-Vie 8:30-22:30
+⏰ Sábados 8:30-14:00
+📞 +56 2 2999 3075
+
+📚 **Biblioteca:**
+📍 Edificio A, Piso 2
+⏰ Lun-Vie 8:00-21:00
+⏰ Sábados 8:00-13:00
+📞 Ext. 8300
+
+🏦 **Finanzas/Caja:**
+📍 Edificio A, Piso 1
+⏰ Lun-Vie 9:00-17:00
+📞 Ext. 8050
+
+💻 **Servicios Digitales:**
+📍 Edificio A, Piso 4
+⏰ Lun-Vie 8:30-18:00
+📞 Ext. 1234
+
+💡 *Horarios pueden variar en periodo de exámenes y vacaciones*
+""",
+
+    "emergencias": """
+🚨 **Emergencias Plaza Norte**
+
+**Contactos Emergencia Campus:**
+📞 Central: Ext. 911 o +56 2 2354 8911
+🏥 Enfermería: Ext. 500, Piso 2
+
+**Emergencias Externas:**
+🚑 SAMU: 131
+🚒 Bomberos: 132
+👮 Carabineros: 133
+
+**Protocolos Básicos:**
+🔥 **Incendio**: Activar alarma → Ext. 911 → Evacuar (NO ascensores)
+🌍 **Sismo**: Agacharse, cubrirse, afirmarse. NO correr
+🏥 **Emergencia Médica**: Enfermería Piso 2. DEA disponibles
+
+**Puntos de Encuentro:**
+• Estacionamiento principal
+• Cancha deportiva
+• Plaza central
+
+💡 *Mantén la calma y sigue instrucciones del personal de seguridad*
+""",
+
+    "biblioteca_servicios": """
+📚 **Biblioteca Plaza Norte**
+
+**Ubicación:** Piso 2, Edificio A
+📞 Ext. 8300 | biblioteca.plazanorte@duoc.cl
+
+**Horarios:**
+🕐 Lun-Vie: 8:00-21:00 hrs
+🕐 Sábados: 8:00-13:00 hrs
+
+**Servicios:**
+✅ Préstamo libros (domiciliario y sala)
+✅ 40 computadores disponibles
+✅ WiFi gratuito
+✅ Salas estudio grupal (reserva previa)
+✅ Impresión y fotocopiado ($50 B/N, $150 color)
+✅ Apoyo investigación
+
+🌐 **Recursos digitales 24/7:** bibliotecas.duoc.cl
+📱 **Acceso:** Credenciales institucionales
+
+💡 *Recursos digitales incluyen LinkedIn Learning, JSTOR, Statista*
+""",
 }

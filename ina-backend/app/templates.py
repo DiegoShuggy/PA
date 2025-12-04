@@ -842,6 +842,71 @@ Resumen rápido:
 🔗 **Portail CVA :** https://cva.duoc.cl
 💡 *Votre participation contribue à un environnement universitaire plus solidaire*
 """
+    },
+    
+    # ✅ WIFI - CRÍTICO
+    'wifi': {
+        'es': """📶 **WiFi DuocUC**
+🌐 Red: DUOC_ACAD
+👤 Usuario: Número alumno (sin puntos)
+🔑 Contraseña: Misma del portal
+🛠️ Soporte: Servicios Digitales Piso 4, ext. 1234""",
+        'en': """📶 **WiFi DuocUC**
+🌐 Network: DUOC_ACAD
+👤 User: Student number
+🔑 Password: Same as portal""",
+        'fr': """📶 **WiFi DuocUC**
+🌐 Réseau: DUOC_ACAD
+👤 Utilisateur: Numéro étudiant"""
+    },
+    
+    # ✅ GRATUIDAD - CRÍTICO
+    'gratuidad': {
+        'es': """✅ **SÍ, Duoc UC tiene Gratuidad**
+🏦 Finanzas: Edificio A piso 1, ext. 8050
+📧 finanzas.plazanorte@duoc.cl
+⏰ Lun-Vie 9:00-17:00""",
+        'en': """✅ **YES, Duoc UC has Gratuity**
+🏦 Finance: Building A floor 1, ext. 8050""",
+        'fr': """✅ **OUI, Duoc UC a la Gratuité**
+🏦 Finances: Bâtiment A étage 1"""
+    },
+    
+    # ✅ PAGOS - CRÍTICO
+    'pagos_matricula': {
+        'es': """💳 **Pagos Matrícula**
+🏦 Finanzas/Caja: Edificio A piso 1, ext. 8050
+💻 Online: portal.duoc.cl (24/7)
+⏰ Lun-Vie 9:00-17:00""",
+        'en': """💳 **Tuition Payments**
+🏦 Finance: Building A floor 1, ext. 8050""",
+        'fr': """💳 **Paiements**
+🏦 Finances: Bâtiment A étage 1"""
+    },
+    
+    # ✅ EXAMENES - CRÍTICO
+    'examenes': {
+        'es': """📝 **Exámenes 2026**
+📅 1er Sem: 30 jun-11 jul
+📅 2do Sem: 1-12 dic
+📞 Consultas: ext. 8100""",
+        'en': """📝 **Exams 2026**
+📅 1st Sem: Jun 30-Jul 11
+📅 2nd Sem: Dec 1-12""",
+        'fr': """📝 **Examens 2026**
+📅 1er Sem: 30 juin-11 juil"""
+    },
+    
+    # ✅ SALAS - CRÍTICO
+    'salas_estudio': {
+        'es': """📚 **Reserva Salas**
+🌐 bibliotecas.duoc.cl
+📍 Biblioteca: Edificio A piso 2
+📞 ext. 8300""",
+        'en': """📚 **Room Reservation**
+🌐 bibliotecas.duoc.cl""",
+        'fr': """📚 **Réservation Salles**
+🌐 bibliotecas.duoc.cl"""
     }
 }
 
@@ -2206,39 +2271,18 @@ A pasos del Mall Plaza Norte
 🔗 **Catálogo online:** https://catalogo.duoc.cl
 💡 *Acceso 24/7 a recursos digitales con tu cuenta institucional*
 """,
-        # 🎯 PLATAFORMAS DIGITALES DESDE DOCUMENTOS
+        # 🎯 PLATAFORMAS DIGITALES - VERSIÓN CORTA Y EFICIENTE
         "plataformas_digitales": """
-💻 **Plataformas Digitales Duoc UC**
-**Acceso a todos los sistemas institucionales:**
-🔗 **Portal Mi Duoc:**
-• **URL:** https://portal.duoc.cl
-• **Uso:** Notas, horarios, pagos, certificados
-• **Acceso:** Rut y contraseña institucional
-🔗 **Correo Institucional:**
-• **URL:** https://outlook.office.com
-• **Uso:** Comunicación oficial, recuperación contraseñas
-• **Acceso:** usuario@duocuc.cl y contraseña
-🔗 **Aula Virtual:**
-• **URL:** https://aulavirtual.duoc.cl
-• **Uso:** Materiales clases, tareas, evaluaciones
-• **Acceso:** Usuario y contraseña institucional
-🔗 **Certificados Online:**
-• **URL:** https://certificados.duoc.cl
-• **Uso:** Certificados de alumno regular, notas
-• **Acceso:** Rut y contraseña institucional
-🔗 **DuocLaboral:**
-• **URL:** https://duoclaboral.cl
-• **Uso:** Bolsa de trabajo, prácticas profesionales
-• **Acceso:** Correo institucional @duocuc.cl
-🔗 **Centro de Ayuda:**
-• **URL:** https://centroayuda.duoc.cl
-• **Uso:** Soporte técnico, consultas plataformas
-• **Acceso:** Ticket de ayuda online
-🔗 **Eventos Duoc:**
-• **URL:** https://eventos.duoc.cl
-• **Uso:** Agendar atención psicológica, talleres
-• **Acceso:** Correo institucional
-💡 *Usa siempre tu correo institucional para acceso a plataformas*
+💻 **¿Problemas con las plataformas digitales?**
+
+🛠️ **Servicios Digitales te ayuda:**
+📍 **Ubicación:** Edificio A, Piso 4
+📞 **Ext:** 1234
+📧 **Correo:** soporte.plazanorte@duoc.cl
+⏰ **Horario:** Lun-Vie 8:30-18:00
+
+🌐 **Centro de Ayuda Online:** https://centroayuda.duoc.cl
+💡 *Soporte para Portal, Aula Virtual, Correo y más*
 """,
         # 🎯 CONTINGENCIAS EMERGENCIAS DESDE DOCUMENTOS
         "contingencias_emergencias": """

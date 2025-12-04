@@ -731,6 +731,20 @@ async def chat(message: Message, request: Request):
                 "processing_info": {"processing_strategy": "error_fallback"}
             }
         
+        # ✅ FIX: Limpiar surrogates del response_text para evitar errores UTF-8
+        try:
+            response_text_clean = response_data.get('text') or response_data.get('response', '')
+            # Eliminar surrogates inválidos
+            if response_text_clean:
+                response_text_clean = response_text_clean.encode('utf-8', errors='ignore').decode('utf-8', errors='ignore')
+                # Actualizar response_data con texto limpio
+                if 'text' in response_data:
+                    response_data['text'] = response_text_clean
+                elif 'response' in response_data:
+                    response_data['response'] = response_text_clean
+        except Exception as clean_error:
+            logger.warning(f"⚠️ Error limpiando surrogates: {clean_error}")
+        
         # 3.5 CALCULAR TIEMPO DE RESPUESTA Y GUARDAR EN MÉTRICAS
         response_time = (datetime.now() - start_time).total_seconds()
         

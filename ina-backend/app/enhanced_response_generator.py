@@ -151,6 +151,260 @@ Tel: +56 2 2354 8000 ext. 2250"""
 📞 **Teléfono:** +56 2 2354 8000 ext. 2300"""
             },
             
+            # HORARIOS - NUEVO TEMPLATE
+            "horarios": {
+                "patterns": [r"horario", r"hora.*atiende", r"abierto", r"cerrado", r"hasta.*hora", r"cuándo.*abre"],
+                "response": """📅 **Horarios de Atención Plaza Norte**
+
+**Punto Estudiantil:**
+🕒 Lunes a Viernes: 8:30 - 17:30
+
+**Biblioteca:**
+🕒 Lunes a Jueves: 8:00 - 21:00
+🕒 Viernes: 8:00 - 18:00
+🕒 Sábado: 9:00 - 14:00
+
+**Bienestar Estudiantil:**
+🕒 Lunes a Viernes: 9:00 - 17:00
+
+**Desarrollo Laboral:**
+🕒 Lunes a Viernes: 9:00 - 17:00
+
+**Gimnasio CAF:**
+🕒 Lunes a Viernes: 7:00 - 21:00
+🕒 Sábado: 9:00 - 14:00
+
+**Caja/Finanzas:**
+🕒 Lunes a Viernes: 9:00 - 17:00
+
+📞 **Información:** +56 2 2354 8000
+📋 **Más detalles:** Consulta con Punto Estudiantil"""
+            },
+            
+            # CALENDARIO ACADÉMICO - NUEVO TEMPLATE
+            "calendario_academico": {
+                "patterns": [r"cuándo.*empieza", r"inicio.*clases", r"semestre.*2026", r"calendario", r"fechas.*importantes"],
+                "response": """📅 **Calendario Académico 2026**
+
+**Primer Semestre 2026:**
+📌 Inicio clases: Lunes 9 de marzo
+🏖️ Semana receso: 14-18 abril
+📚 Término clases: Viernes 27 junio
+📝 Exámenes: 30 junio - 11 julio
+
+**Segundo Semestre 2026:**
+📌 Inicio clases: Lunes 4 de agosto
+🏖️ Semana receso: 21-25 septiembre
+📚 Término clases: Viernes 28 noviembre
+📝 Exámenes: 1-12 diciembre
+
+💡 **Para calendario completo:**
+🌐 portal.duoc.cl
+📞 Punto Estudiantil: +56 2 2354 8000 ext. 8100"""
+            },
+            
+            # PROCESOS ADMINISTRATIVOS - NUEVO TEMPLATE
+            "procesos_administrativos": {
+                "patterns": [r"cómo.*solicito", r"proceso.*para", r"pasos.*para", r"trámite", r"solicitud"],
+                "response": """📋 **Procesos Administrativos Principales**
+
+**Certificados:**
+1️⃣ Ingresa a portal.duoc.cl
+2️⃣ Ve a "Mis Documentos"
+3️⃣ Selecciona certificado
+4️⃣ Realiza pago ($2.500-$4.000)
+5️⃣ Descarga en 24-48 hrs
+
+**TNE Primera Vez:**
+1️⃣ Solicita en portal.duoc.cl
+2️⃣ Sube foto tipo carnet
+3️⃣ Paga $1.550
+4️⃣ Retira en 10-15 días (Punto Estudiantil)
+
+**Cambio de Sede:**
+1️⃣ Verifica cupos disponibles
+2️⃣ Solicita en Punto Estudiantil
+3️⃣ Completa formulario
+4️⃣ Espera respuesta (5-10 días)
+
+**Congelamiento:**
+1️⃣ Presenta documentación respaldo
+2️⃣ Completa formulario
+3️⃣ Entrevista con Jefe de Carrera
+4️⃣ Espera aprobación (5-7 días)
+
+📍 **Punto Estudiantil:** Edificio A, 1er piso
+📞 +56 2 2354 8000 ext. 8100"""
+            },
+            
+            # REGLAMENTOS - NUEVO TEMPLATE
+            "reglamentos": {
+                "patterns": [r"reglamento", r"inasistencias", r"reprobar", r"normativa", r"cuántas.*faltas"],
+                "response": """📜 **Reglamentos Académicos Principales**
+
+**Asistencia:**
+✅ Mínimo 75% obligatorio
+❌ Menos del 75% = Reprobación automática
+📊 Ejemplo: 40 clases = máximo 10 inasistencias
+
+**Reprobación:**
+1️⃣ Primera vez: Re-inscribir
+2️⃣ Segunda vez: Alerta académica
+3️⃣ Tercera vez: Causal de eliminación
+
+**Notas:**
+✅ Nota aprobación: 4.0 o superior
+📅 Publicación: Máximo 10 días hábiles
+🔍 Puedes solicitar revisión (3 días después)
+
+**Justificación Inasistencias:**
+📋 Certificado médico o documento válido
+⏰ Plazo: 5 días hábiles
+✉️ Presentar a Jefe de Carrera
+
+**Anulación de Asignatura:**
+⏰ Hasta semana 6 de clases
+📝 Formulario en Punto Estudiantil
+✅ No afecta promedio
+
+📞 **Consultas:** Punto Estudiantil ext. 8100
+📋 **Reglamento completo:** portal.duoc.cl"""
+            },
+            
+            # WIFI Y CONECTIVIDAD - NUEVO TEMPLATE CRÍTICO
+            "wifi": {
+                "patterns": [r"wifi", r"wi-fi", r"internet", r"conexi[oó]n", r"conectar", r"red", r"duoc_acad"],
+                "response": """\ud83d\udcf6 **Conexión WiFi DuocUC**
+
+**Red Institucional:**
+\ud83c\udf10 **Nombre de red:** DUOC_ACAD
+\ud83d\udc64 **Usuario:** Tu número de alumno (sin puntos)
+\ud83d\udd11 **Contraseña:** La misma del portal estudiante
+
+**Pasos para conectar:**
+1\ufe0f\u20e3 Busca la red "DUOC_ACAD" en tu dispositivo
+2\ufe0f\u20e3 Ingresa usuario (número alumno)
+3\ufe0f\u20e3 Ingresa contraseña (misma del portal)
+4\ufe0f\u20e3 Acepta certificado de seguridad
+5\ufe0f\u20e3 \u00a1Listo! Ya estás conectado
+
+**\u00bfProblemas de conexión?**
+\ud83d\udee0\ufe0f **Servicios Digitales / Mesa de Ayuda**
+\ud83d\udccd Ubicación: Edificio B, Piso 4
+\ud83d\udcde Teléfono: +56 2 2354 8000 ext. 1234
+\ud83d\udce7 Email: soporte.ti@duoc.cl
+\u23f0 Horario: Lunes a Viernes 8:00-20:00
+
+\ud83d\udcbb **Soporte online:** mesadeayuda.duoc.cl"""
+            },
+            
+            # GRATUIDAD - NUEVO TEMPLATE CRÍTICO
+            "gratuidad": {
+                "patterns": [r"gratuidad", r"gratis", r"gratuito", r"sin.*pagar", r"beneficio.*estado"],
+                "response": """\u2705 **SÍ, Duoc UC tiene Gratuidad**
+
+Duoc UC está adscrito al beneficio de **Gratuidad del Estado** para estudiantes que cumplan requisitos.
+
+**Para información detallada sobre:**
+\u2714\ufe0f Requisitos y elegibilidad
+\u2714\ufe0f Proceso de postulación
+\u2714\ufe0f Estado de tu beneficio
+\u2714\ufe0f Renovación anual
+\u2714\ufe0f Problemas con gratuidad
+
+\ud83c\udfe6 **Contacta a Finanzas/Caja:**
+\ud83d\udccd Ubicación: Edificio A, 1er piso
+\u23f0 Horario: Lunes a Viernes 9:00-17:00
+\ud83d\udcde Teléfono: +56 2 2354 8000 ext. 8050
+\ud83d\udce7 Email: finanzas.plazanorte@duoc.cl
+
+\ud83c\udf10 **Web oficial:** www.duoc.cl/admision/financiamiento/becas-estatales/"""
+            },
+            
+            # PAGOS Y MATRÍCULA - NUEVO TEMPLATE CRÍTICO
+            "pagos_matricula": {
+                "patterns": [r"pago.*matr[íí]cula", r"c[oó]mo.*pago", r"pagar.*arancel", r"cuota"],
+                "response": """\ud83d\udcb3 **Pagos de Matrícula y Aranceles**
+
+Para información sobre pagos, formas de pago, convenios y financiamiento:
+
+\ud83c\udfe6 **\u00c1rea de Finanzas/Caja:**
+\ud83d\udccd Ubicación: Edificio A, 1er piso
+\u23f0 Horario: Lunes a Viernes 9:00-17:00
+\ud83d\udcde Teléfono: +56 2 2354 8000 ext. 8050
+\ud83d\udce7 Email: finanzas.plazanorte@duoc.cl
+
+**Opciones de pago:**
+\ud83d\udcbb Online: portal.duoc.cl (24/7)
+\ud83c\udfe6 Presencial: Caja en horario de atención
+\ud83d\udcb3 Webpay, transferencia, efectivo
+
+**También pueden ayudarte con:**
+\u2714\ufe0f CAE (Crédito con Aval del Estado)
+\u2714\ufe0f Convenios de pago
+\u2714\ufe0f Certificados de pago
+\u2714\ufe0f Estado de cuenta"""
+            },
+            
+            # EXÁMENES - NUEVO TEMPLATE CRÍTICO
+            "examenes": {
+                "patterns": [r"ex[aá]menes?", r"cu[aá]ndo.*ex[aá]menes", r"fecha.*evaluaci[oó]n", r"periodo.*pruebas"],
+                "response": """\ud83d\udcdd **Período de Exámenes 2026**
+
+**Primer Semestre 2026:**
+\ud83d\udcc5 Exámenes: 30 junio - 11 julio
+\ud83d\udcc6 Publicación notas: Hasta 16 julio
+
+**Segundo Semestre 2026:**
+\ud83d\udcc5 Exámenes: 1-12 diciembre
+\ud83d\udcc6 Publicación notas: Hasta 17 diciembre
+
+**Información Importante:**
+\u2714\ufe0f Calendario específico: En portal.duoc.cl
+\u2714\ufe0f Horarios por asignatura: Publicados con 2 semanas de antelación
+\u2714\ufe0f Notas finales: Máximo 5 días hábiles post-examen
+
+**Exámenes Atrasados:**
+\ud83d\udcc5 Primera semana después del período regular
+\ud83d\udcdd Solicitud: A través de Jefe de Carrera
+
+\ud83d\udcde **Consultas:** Punto Estudiantil +56 2 2354 8000 ext. 8100
+\ud83c\udf10 **Portal:** vivo.duoc.cl \u2192 Calendario Académico"""
+            },
+            
+            # SALAS DE ESTUDIO / RESERVA - NUEVO TEMPLATE CRÍTICO
+            "salas_estudio": {
+                "patterns": [r"sala.*estudio", r"reserva.*sala", r"c[oó]mo.*reservo", r"cub[\u00edí]culos?"],
+                "response": """\ud83d\udcda **Reserva de Salas de Estudio**
+
+**Biblioteca Plaza Norte:**
+\ud83c\udfdb\ufe0f Ubicación: Edificio A, 2do piso
+
+**Salas Disponibles:**
+\ud83d\udcbb Salas grupales (4-8 personas)
+\ud83d\udccb Cubículos individuales
+\ud83d\udda5\ufe0f Equipadas con computadores
+
+**Cómo Reservar:**
+1\ufe0f\u20e3 Ingresa a bibliotecas.duoc.cl
+2\ufe0f\u20e3 Sección "Reserva de Salas"
+3\ufe0f\u20e3 Elige fecha, hora y sala
+4\ufe0f\u20e3 Confirma con tu usuario institucional
+5\ufe0f\u20e3 Recibe confirmación por email
+
+**Horarios de Salas:**
+\ud83d\udd52 Lunes a Jueves: 8:00 - 21:00
+\ud83d\udd52 Viernes: 8:00 - 18:00
+\ud83d\udd52 Sábado: 9:00 - 14:00
+
+**Contacto Biblioteca:**
+\ud83d\udcde Teléfono: +56 2 2354 8300
+\ud83d\udce7 Email: biblioteca.plazanorte@duoc.cl
+\ud83c\udf10 Web: bibliotecas.duoc.cl
+
+\ud83d\udccc *Reserva con anticipación, las salas tienen alta demanda*"""
+            },
+            
             # SALUD ESTUDIANTIL
             "salud": {
                 "patterns": [r"salud", r"psic[óo]log", r"bienestar"],

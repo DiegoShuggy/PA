@@ -518,12 +518,130 @@ TEMPLATES_ES = {
 • Estabilidad académica
 • Desarrollo de herramientas personales
 • Prevención de nuevas crisis
+""",
 
-🔄 **Evaluación Continua:**
-• Progresos regulares documentados
-• Ajustes según evolución
-• Comunicación con apoyos académicos
+    # ========== TEMPLATES FINANZAS/ASUNTOS ESTUDIANTILES 2025 ==========
+    
+    "gratuidad_financiamiento": """
+✅ **Gratuidad y Financiamiento Duoc UC**
 
-💡 *Acompañamiento profesional sostenido hasta tu estabilidad completa*
+**SÍ, Duoc UC participa en Gratuidad**
+Cubre 100% matrícula + arancel para primeros 6 deciles.
+
+📋 **Cómo postular:**
+1. Completa FUAS: www.fuas.cl (oct-nov)
+2. Resultados: dic-ene
+3. Matricúlate si eres preseleccionado
+
+🔄 **Renovación automática** si:
+• Apruebas 75%+ de asignaturas/año
+• No superas duración carrera + 1 año
+
+🏦 **Oficina de Finanzas:**
+📍 Edificio A, Piso 1
+📞 Ext. 8050
+📧 finanzas.plazanorte@duoc.cl
+⏰ Lun-Vie 9:00-17:00
+
+🌐 **Info completa:**
+https://www.duoc.cl/admision/financiamiento/becas-estatales/
+
+💡 *También disponibles: BEA, BAES, CAE, Becas Internas*
+""",
+
+    "pagos_aranceles": """
+💳 **Pagos y Aranceles**
+
+💻 **Portal de Pagos (24/7):**
+https://portal.duoc.cl
+• Sección "Pagos y Aranceles"
+• Pago con tarjeta o transferencia
+• Descarga comprobantes
+
+🏦 **Caja Presencial:**
+📍 Edificio A, Piso 1
+⏰ Lun-Vie 9:00-17:00
+📞 Ext. 8050
+
+📋 **Consultas estado de cuenta:**
+📧 finanzas.plazanorte@duoc.cl
+📞 +56 2 2999 3075
+
+💡 *Portal disponible 24/7 para pagos y consultas*
+""",
+
+    "certificados_documentos": """
+📄 **Certificados y Documentos**
+
+💻 **Certificados Online (24/7):**
+https://certificados.duoc.cl
+• Certificado alumno regular
+• Certificado de notas
+• Descarga inmediata PDF
+
+📋 **Tipos de certificados:**
+• Alumno Regular
+• Matrícula vigente
+• Concentración de notas
+• Ranking de egreso
+• Para beneficios (TNE, pase escolar)
+
+🏢 **Punto Estudiantil:**
+📍 Piso 2
+📞 +56 2 2999 3075
+⏰ Lun-Vie 8:30-22:30
+
+💡 *La mayoría de certificados están disponibles online 24/7*
+""",
+
+    "tne_beneficios": """
+🎫 **TNE y Beneficios Estudiantiles**
+
+📱 **TNE (Tarjeta Nacional Estudiantil):**
+🌐 Postula en: www.tne.cl
+📋 Requisitos: Alumno regular, sin deudas
+
+✅ **Otros beneficios disponibles:**
+• Pase Escolar (transporte rebajado)
+• BAES (Beca Alimentación)
+• Beca Junaeb
+• Convenios comerciales
+
+🏢 **Asuntos Estudiantiles:**
+📍 Punto Estudiantil, Piso 2
+📞 +56 2 2999 3075
+📧 asuntosestudiantiles.plazanorte@duoc.cl
+⏰ Lun-Vie 8:30-22:30
+
+🌐 **Portal TNE:** https://www.tne.cl
+
+💡 *Renueva tu TNE cada año académico*
+""",
+
+    "becas_internas": """
+💰 **Becas Internas Duoc UC**
+
+🎓 **Tipos de becas:**
+• Beca Excelencia Académica
+• Beca Continuidad de Estudios
+• Beca Hijo Funcionario
+• Beca Hermanos
+• Beca Emergencia Estudiantil
+
+📋 **Postulación:**
+• Periodo: marzo y agosto (según tipo)
+• Requisitos: promedio mínimo, situación socioeconómica
+• Postula en portal.duoc.cl
+
+🏦 **Asesoría:**
+📍 **Finanzas** - Edificio A, Piso 1
+📞 Ext. 8050
+📧 finanzas.plazanorte@duoc.cl
+⏰ Lun-Vie 9:00-17:00
+
+🌐 **Info completa:**
+https://www.duoc.cl/admision/financiamiento/
+
+💡 *Postula incluso si tienes otras becas estatales*
 """,
 }

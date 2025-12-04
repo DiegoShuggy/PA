@@ -49,6 +49,15 @@ class QuestionClassifier:
                 r'\b(carrera|carreras|programa|ingeniería|técnico)\b',
                 r'\b(malla|malla.*curricular|plan.*de.*estudios|asignaturas)\b',
                 r'\b(ramos|curso|cursos|plan.*estudios)\b',
+                # REGLAMENTOS Y NORMATIVAS - NUEVO
+                r'\b(reglamento|normativa|norma|política.*académica|regla)\b',
+                r'\b(cuántas.*inasistencias|máximo.*faltas|porcentaje.*asistencia)\b',
+                r'\b(asistencia.*mínima|75%.*asistencia|requisito.*asistencia)\b',
+                r'\b(qué.*pasa.*si.*repruebo|reprobar.*asignatura|segunda.*reprobación)\b',
+                r'\b(eliminar.*por.*reprobación|causal.*eliminación|expulsión.*académica)\b',
+                r'\b(apelación|apelar|recurrir|reclamar.*nota|revisión.*nota)\b',
+                r'\b(derechos.*estudiante|deberes.*estudiante|obligaciones.*académicas)\b',
+                r'\b(conducta|convivencia|falta.*grave|sanción.*académica)\b',
             ],
             "asuntos_estudiantiles": [
                 # PATRONES CRÍTICOS MEJORADOS - PROGRAMA EMERGENCIA
@@ -90,6 +99,16 @@ class QuestionClassifier:
                 
                 # Matrícula y trámites
                 r'\b(matrícula|arancel|pago|deuda|trámite estudiantil)\b',
+                
+                # PROCESOS ADMINISTRATIVOS - NUEVO
+                r'\b(cómo.*solicito|proceso.*para|pasos.*para|procedimiento.*para)\b',
+                r'\b(solicitud.*certificado|pedir.*certificado|tramitar.*certificado)\b',
+                r'\b(cambio.*de.*sede|trasladar.*de.*sede|mudarme.*de.*sede)\b',
+                r'\b(actualizar.*datos|cambiar.*dirección|modificar.*información)\b',
+                r'\b(congelamiento|congelar.*estudios|suspender.*estudios)\b',
+                r'\b(reincorporación|volver.*estudiar|reintegrarme)\b',
+                r'\b(anular.*asignatura|dar.*de.*baja|eliminar.*ramo)\b',
+                r'\b(cambio.*de.*carrera|cambiarse.*de.*carrera|otra.*carrera)\b',
             ],
             
             "bienestar_estudiantil": [
@@ -269,10 +288,22 @@ class QuestionClassifier:
                 r'\b(servicio.*duoc|sedes|directorio|duoc.*uc)\b',
                 r'\b(plaza norte|santa elena|huechuraba)\b',
                 
-                # Calendario académico y semestre 2026 - NUEVO
+                # HORARIOS ESPECÍFICOS - NUEVO MEJORADO
+                r'\b(horario.*punto.*estudiantil|horario.*bienestar|horario.*biblioteca)\b',
+                r'\b(horario.*desarrollo.*laboral|horario.*caja|horario.*finanzas)\b',
+                r'\b(horario.*gimnasio|horario.*caf|horario.*casino)\b',
+                r'\b(a.*qué.*hora.*abre|a.*qué.*hora.*cierra|hasta.*qué.*hora)\b',
+                r'\b(cuándo.*atiende|cuándo.*abre|cuándo.*está.*abierto)\b',
+                r'\b(horario.*de.*atención|hora.*de.*apertura|hora.*de.*cierre)\b',
+                r'\b(qué.*día.*atiende|días.*de.*atención|horarios.*de.*servicio)\b',
+                
+                # Calendario académico y semestre 2026 - MEJORADO
                 r'\b(semestre.*2026|cuándo.*empieza.*2026|inicio.*semestre.*2026)\b',
                 r'\b(calendario.*2026|fechas.*2026|inicio.*clases.*2026)\b',
                 r'\b(cuándo.*comienza.*2026|inicio.*año.*2026)\b',
+                r'\b(cuándo.*empiezan.*clases|fecha.*inicio.*clases|cuándo.*comienza.*semestre)\b',
+                r'\b(calendario.*académico|fechas.*importantes|fechas.*examen)\b',
+                r'\b(cuándo.*son.*exámenes|periodo.*evaluaciones|semana.*receso)\b',
                 
                 # Saludos y conversación - EXPANDIDO
                 r'\b(ina|hola|buenos.*días|buenas.*tardes|buenas.*noches)\b',
@@ -467,6 +498,133 @@ class QuestionClassifier:
                 r'existe.*t.*il.*un.*soutien.*pour.*les.*étudiants',
                 r'un.*soutien.*pour.*les.*étudiants.*handicapés',
                 r'aide.*pour.*étudiants.*handicapés'
+            ],
+            
+            # ===== TEMPLATES INSTITUCIONALES 2025 =====
+            "wifi": [
+                r'c[óo]mo.*conect.*wifi', r'wifi.*duoc', r'red.*duoc.*acad',
+                r'conectar.*wifi', r'acceso.*wifi', r'problemas.*wifi',
+                r'no.*puedo.*conectar.*wifi', r'how.*connect.*wifi',
+                r'wifi.*connection', r'wifi.*access'
+            ],
+            "eventos_anuales": [
+                r'eventos.*duoc.*202[5-6]', r'calendario.*eventos', r'actividades.*año',
+                r'qué.*eventos.*hay', r'eventos.*anuales', r'agenda.*eventos',
+                r'events.*202[5-6]', r'annual.*events', r'calendar.*events'
+            ],
+            "examenes": [
+                r'cu[aá]ndo.*ex[aá]menes.*202[5-6]', r'fechas.*ex[aá]menes', r'per[ií]odo.*ex[aá]menes',
+                r'cuando.*son.*los.*ex[aá]menes', r'calendario.*ex[aá]menes',
+                r'when.*are.*exams', r'exam.*dates', r'examination.*period'
+            ],
+            "salas_estudio": [
+                r'reserv.*sala.*estudio', r'c[óo]mo.*reserv.*sala', r'salas.*estudio',
+                r'biblioteca.*sala', r'estudiar.*sala', r'reserva.*sala',
+                r'reserve.*study.*room', r'book.*study.*room', r'study.*rooms'
+            ],
+            "pagos_matricula": [
+                r'd[óo]nde.*pago.*matr[íi]cula', r'pagar.*matr[íi]cula', r'pagos.*arancel',
+                r'c[óo]mo.*pago', r'portal.*pagos', r'finanzas.*duoc',
+                r'where.*pay.*tuition', r'how.*pay.*fees', r'payment.*portal'
+            ],
+            "gratuidad": [
+                r'duoc.*tiene.*gratuidad', r'gratuidad.*duoc', r'gratuidad.*financiamiento',
+                r'c[óo]mo.*postular.*gratuidad', r'requisitos.*gratuidad',
+                r'does.*duoc.*have.*free.*tuition', r'free.*education.*duoc'
+            ],
+            "becas": [
+                r'qué.*becas.*hay', r'becas.*disponibles', r'tipos.*becas',
+                r'becas.*internas', r'becas.*duoc', r'financiamiento.*becas',
+                r'what.*scholarships', r'available.*scholarships', r'scholarship.*types'
+            ],
+            "horarios_sede": [
+                r'horario.*punto.*estudiantil', r'horario.*biblioteca', r'horario.*finanzas',
+                r'horarios.*sede', r'cu[aá]ndo.*abre', r'horario.*atenci[óo]n',
+                r'opening.*hours', r'schedule.*campus', r'when.*open'
+            ],
+            
+            # ===== TEMPLATES FINANZAS/ASUNTOS 2025 =====
+            "gratuidad_financiamiento": [
+                r'gratuidad.*financiamiento', r'c[óo]mo.*funciona.*gratuidad',
+                r'renovaci[óo]n.*gratuidad', r'requisitos.*gratuidad.*completos'
+            ],
+            "pagos_aranceles": [
+                r'pagos.*aranceles', r'consultar.*estado.*cuenta', r'deudas.*pendientes',
+                r'portal.*pagos.*online', r'payment.*portal', r'check.*balance'
+            ],
+            "certificados_documentos": [
+                r'certificado.*alumno.*regular', r'necesito.*certificado', r'certificados.*online',
+                r'c[óo]mo.*obten.*certificado', r'student.*certificate', r'official.*documents'
+            ],
+            "tne_beneficios": [
+                r'tne.*beneficios', r'otros.*beneficios.*estudiantiles', r'pase.*escolar',
+                r'convenios.*comerciales', r'student.*benefits', r'tne.*card.*benefits'
+            ],
+            "becas_internas": [
+                r'becas.*internas.*duoc', r'beca.*excelencia', r'beca.*continuidad',
+                r'beca.*hermanos', r'beca.*emergencia.*estudiantil',
+                r'internal.*scholarships', r'duoc.*scholarships'
+            ],
+            
+            # === 7 NUEVOS TEMPLATES ===
+            "emergencias": [
+                r'emergencia.*duoc', r'protocolo.*emergencia', r'qué.*hacer.*emergencia',
+                r'número.*emergencia', r'contacto.*emergencia', r'teléfono.*emergencia',
+                r'incendio.*duoc', r'sismo.*duoc', r'terremoto.*duoc', r'evacuación',
+                r'emergencia.*médica', r'enfermería.*duoc', r'ambulancia.*duoc',
+                r'seguridad.*duoc', r'brigada.*emergencia', r'extintor',
+                r'emergency.*protocol', r'what.*to.*do.*emergency', r'fire.*drill',
+                r'earthquake.*protocol', r'evacuation.*plan', r'emergency.*contact'
+            ],
+            "reglamentos_academicos": [
+                r'cuántas.*inasistencias', r'máximo.*faltas', r'75%.*asistencia',
+                r'porcentaje.*asistencia', r'asistencia.*mínima', r'puedo.*faltar',
+                r'qué.*pasa.*si.*repruebo', r'escala.*notas', r'nota.*aprobación',
+                r'justificar.*inasistencia', r'certificado.*médico.*inasistencia',
+                r'reglamento.*académico', r'normativa.*asistencia', r'eliminar.*por.*faltas',
+                r'evaluaciones.*duoc', r'tipos.*evaluación', r'examen.*final',
+                r'attendance.*minimum', r'how.*many.*absences', r'grade.*scale',
+                r'passing.*grade', r'academic.*regulations', r'evaluation.*system'
+            ],
+            "desarrollo_laboral": [
+                r'desarrollo.*laboral', r'claudia.*cortés', r'ccortesn',
+                r'asesoría.*cv', r'mejorar.*cv', r'curriculum.*vitae',
+                r'bolsa.*empleo.*duoc', r'duoclaboral', r'ofertas.*trabajo.*duoc',
+                r'práctica.*profesional', r'búsqueda.*práctica', r'encontrar.*práctica',
+                r'simulación.*entrevista', r'taller.*empleabilidad', r'empleo.*duoc',
+                r'career.*services', r'job.*placement', r'career.*counseling',
+                r'cv.*help', r'employment.*services', r'internship.*support'
+            ],
+            "congelamiento": [
+                r'congelar.*estudios', r'congelamiento.*carrera', r'suspender.*estudios',
+                r'tomar.*año.*sabático', r'pausar.*estudios', r'congelamiento.*duoc',
+                r'cómo.*congelo', r'requisitos.*congelamiento', r'proceso.*congelamiento',
+                r'freeze.*studies', r'suspend.*studies', r'gap.*year',
+                r'pause.*enrollment', r'temporary.*leave', r'study.*freeze'
+            ],
+            "cambio_sede": [
+                r'cambiar.*sede', r'cambio.*campus', r'trasladar.*otra.*sede',
+                r'ir.*otra.*sede', r'mudarme.*otra.*sede', r'cambio.*sede.*duoc',
+                r'requisitos.*cambio.*sede', r'transferencia.*sede', r'cupos.*otra.*sede',
+                r'change.*campus', r'transfer.*campus', r'move.*another.*campus',
+                r'campus.*transfer', r'change.*location', r'transfer.*process'
+            ],
+            "deportes_talleres": [
+                r'talleres.*deportivos', r'deportes.*duoc', r'actividades.*deportivas',
+                r'gimnasio.*caf', r'caf.*duoc', r'inscripción.*deportes',
+                r'fútbol.*duoc', r'basquetbol.*duoc', r'voleibol.*duoc',
+                r'natación.*duoc', r'boxeo.*duoc', r'funcional.*duoc',
+                r'horarios.*deportes', r'inscribir.*taller.*deportivo',
+                r'sports.*workshops', r'gym.*duoc', r'sports.*activities',
+                r'sports.*registration', r'athletic.*programs'
+            ],
+            "biblioteca_servicios": [
+                r'biblioteca.*duoc', r'préstamo.*libros', r'salas.*estudio',
+                r'reservar.*sala', r'computadores.*biblioteca', r'impresión.*biblioteca',
+                r'recursos.*digitales.*biblioteca', r'bibliotecas\.duoc\.cl',
+                r'horario.*biblioteca', r'servicios.*biblioteca', r'wifi.*biblioteca',
+                r'library.*services', r'book.*loan', r'study.*rooms',
+                r'print.*library', r'digital.*resources', r'library.*hours'
             ],
             "sesiones_psicologicas": [
                 # ESPAÑOL
@@ -1449,6 +1607,79 @@ class QuestionClassifier:
                 r'a.*t.*il.*foires', r'y.*a.*t.*il.*foires', 
                 r'des.*foires.*emploi', r'il.*des.*foires', 
                 r'a.*t.*il.*des.*foires'
+            ],
+            
+            # === 7 NUEVOS TEMPLATES ===
+            "emergencias": [
+                r'emergencia.*duoc', r'protocolo.*emergencia', r'qué.*hacer.*emergencia',
+                r'número.*emergencia', r'contacto.*emergencia', r'teléfono.*emergencia',
+                r'incendio.*duoc', r'sismo.*duoc', r'terremoto.*duoc', r'evacuación',
+                r'emergencia.*médica', r'enfermería.*duoc', r'ambulancia.*duoc',
+                r'caso.*emergencia', r'qué.*hago.*emergencia', r'protocolo.*seguridad',
+                r'caso.*terremoto', r'caso.*sismo', r'caso.*incendio',
+                r'qué.*hago.*terremoto', r'qué.*hago.*sismo', r'qué.*hago.*incendio',
+                r'emergency.*protocol', r'what.*to.*do.*emergency', r'fire.*drill',
+                r'earthquake.*protocol', r'evacuation.*plan', r'emergency.*contact'
+            ],
+            "reglamentos_academicos": [
+                r'cuántas.*inasistencias', r'máximo.*faltas', r'75%.*asistencia',
+                r'porcentaje.*asistencia', r'asistencia.*mínima', r'puedo.*faltar',
+                r'qué.*pasa.*si.*repruebo', r'escala.*notas', r'nota.*aprobación',
+                r'justificar.*inasistencia', r'certificado.*médico.*inasistencia',
+                r'reglamento.*académico', r'normativa.*asistencia', r'eliminar.*por.*faltas',
+                r'evaluaciones.*duoc', r'tipos.*evaluación', r'examen.*final',
+                r'cuántas.*faltas.*puedo', r'requisito.*asistencia',
+                r'attendance.*minimum', r'how.*many.*absences', r'grade.*scale',
+                r'passing.*grade', r'academic.*regulations', r'evaluation.*system'
+            ],
+            "desarrollo_laboral": [
+                r'desarrollo.*laboral', r'claudia.*cortés', r'ccortesn',
+                r'asesoría.*cv', r'mejorar.*cv', r'curriculum.*vitae',
+                r'bolsa.*empleo.*duoc', r'duoclaboral', r'ofertas.*trabajo.*duoc',
+                r'práctica.*profesional', r'búsqueda.*práctica', r'encontrar.*práctica',
+                r'simulación.*entrevista', r'taller.*empleabilidad', r'empleo.*duoc',
+                r'qué.*es.*desarrollo.*laboral', r'servicios.*desarrollo.*laboral',
+                r'career.*services', r'job.*placement', r'career.*counseling',
+                r'cv.*help', r'employment.*services', r'internship.*support'
+            ],
+            "congelamiento": [
+                r'congelar.*estudios', r'congelamiento.*carrera', r'suspender.*estudios',
+                r'tomar.*año.*sabático', r'pausar.*estudios', r'congelamiento.*duoc',
+                r'cómo.*congelo', r'requisitos.*congelamiento', r'proceso.*congelamiento',
+                r'puedo.*congelar', r'cómo.*pausar.*estudios',
+                r'freeze.*studies', r'suspend.*studies', r'gap.*year',
+                r'pause.*enrollment', r'temporary.*leave', r'study.*freeze'
+            ],
+            "cambio_sede": [
+                r'cambiar.*sede', r'cambio.*campus', r'trasladar.*otra.*sede',
+                r'ir.*otra.*sede', r'mudarme.*otra.*sede', r'cambio.*sede.*duoc',
+                r'requisitos.*cambio.*sede', r'transferencia.*sede', r'cupos.*otra.*sede',
+                r'puedo.*cambiar.*sede', r'cómo.*cambio.*sede',
+                r'change.*campus', r'transfer.*campus', r'move.*another.*campus',
+                r'campus.*transfer', r'change.*location', r'transfer.*process'
+            ],
+            "deportes_talleres": [
+                r'talleres.*deportivos', r'deportes.*duoc', r'actividades.*deportivas',
+                r'gimnasio.*caf', r'caf.*duoc', r'inscripción.*deportes',
+                r'fútbol.*duoc', r'basquetbol.*duoc', r'voleibol.*duoc',
+                r'natación.*duoc', r'boxeo.*duoc', r'funcional.*duoc',
+                r'horarios.*deportes', r'inscribir.*taller.*deportivo',
+                r'qué.*talleres.*deportivos', r'actividades.*físicas',
+                r'sports.*workshops', r'gym.*duoc', r'sports.*activities',
+                r'sports.*registration', r'athletic.*programs'
+            ],
+            "biblioteca_servicios": [
+                r'biblioteca.*duoc', r'préstamo.*libros', r'salas.*estudio',
+                r'reservar.*sala', r'computadores.*biblioteca', r'impresión.*biblioteca',
+                r'recursos.*digitales.*biblioteca', r'bibliotecas\.duoc\.cl',
+                r'horario.*biblioteca', r'servicios.*biblioteca', r'wifi.*biblioteca',
+                r'cómo.*imprimir', r'fotocopias.*biblioteca',
+                r'dónde.*está.*biblioteca', r'ubicación.*biblioteca', r'dónde.*biblioteca',
+                r'dónde.*puedo.*imprimir', r'dónde.*imprimir', r'imprimir.*documentos',
+                r'imprimir.*biblioteca', r'fotocopiar.*documentos',
+                r'library.*services', r'book.*loan', r'study.*rooms',
+                r'print.*library', r'digital.*resources', r'library.*hours',
+                r'where.*is.*library', r'library.*location', r'where.*can.*i.*print'
             ]
         }
         

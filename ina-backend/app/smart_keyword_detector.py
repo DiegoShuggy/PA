@@ -63,7 +63,7 @@ class SmartKeywordDetector:
                 "category": "asuntos_estudiantiles",
                 "topic": "certificados",
                 "weight": 95,
-                "variations": ["certificado", "certificados", "constancia", "documento"]
+                "variations": ["certificado", "certificados", "constancia"]
             },
             "notas": {
                 "category": "academico",
@@ -188,6 +188,18 @@ class SmartKeywordDetector:
                 "topic": "biblioteca",
                 "weight": 90,
                 "variations": ["biblioteca", "bibliotecas", "libros", "prestamo", "recurso", "estudio"]
+            },
+            "sala": {
+                "category": "institucionales",
+                "topic": "salas_estudio",
+                "weight": 85,
+                "variations": ["sala", "salas", "cubiculos", "cubiculo", "espacio", "lugar"]
+            },
+            "reserva": {
+                "category": "institucionales",
+                "topic": "reserva",
+                "weight": 85,
+                "variations": ["reserva", "reservar", "reservo", "agendar", "solicitar"]
             },
             
             # ACADÉMICO - CARRERA Y MALLA
@@ -314,18 +326,24 @@ class SmartKeywordDetector:
                 "variations": ["estudiantil", "estudiantiles", "estudiante", "estudiantes"]
             },
             
-            # FINANZAS Y FINANCIAMIENTO
+            # FINANZAS Y FINANCIAMIENTO - CRÍTICO
             "finanzas": {
                 "category": "asuntos_estudiantiles",
                 "topic": "finanzas",
-                "weight": 90,
-                "variations": ["finanzas", "financiero", "financiera", "financiera"]
+                "weight": 95,
+                "variations": ["finanzas", "financiero", "financiera", "caja", "tesoreria"]
+            },
+            "gratuidad": {
+                "category": "asuntos_estudiantiles",
+                "topic": "gratuidad",
+                "weight": 100,
+                "variations": ["gratuidad", "gratis", "gratuito", "becado", "sin pagar"]
             },
             "financiamiento": {
                 "category": "asuntos_estudiantiles",
                 "topic": "financiamiento",
                 "weight": 90,
-                "variations": ["financiamiento", "financiar", "financiacion", "credito"]
+                "variations": ["financiamiento", "financiar", "financiacion", "credito", "cae"]
             },
             
             # CONTACTOS Y COMUNICACIÓN
@@ -340,6 +358,20 @@ class SmartKeywordDetector:
                 "topic": "correo",
                 "weight": 80,
                 "variations": ["correo", "correos", "email", "mail", "electronico"]
+            },
+            
+            # WIFI Y SERVICIOS DIGITALES
+            "wifi": {
+                "category": "institucionales",
+                "topic": "wifi",
+                "weight": 95,
+                "variations": ["wifi", "wi-fi", "internet", "red", "conexion", "conectar"]
+            },
+            "plataformas": {
+                "category": "institucionales",
+                "topic": "plataformas_digitales",
+                "weight": 90,
+                "variations": ["plataforma", "plataformas", "portal", "mi duoc", "miduoc", "aula virtual"]
             },
             "telefono": {
                 "category": "institucionales",
@@ -362,12 +394,124 @@ class SmartKeywordDetector:
                 "variations": ["beneficio", "beneficios", "beneficios estudiantiles", "ayuda"]
             },
             
+            # NUEVOS KEYWORDS CRÍTICOS - DICIEMBRE 2025
+            "horario": {
+                "category": "institucionales",
+                "topic": "horarios",
+                "weight": 90,
+                "variations": ["horario", "horarios", "hora", "horas", "atiende", "abierto", "cierra", "apertura"]
+            },
+            "emergencia": {
+                "category": "institucionales",
+                "topic": "emergencia",
+                "weight": 100,  # Máxima prioridad - crítico
+                "variations": ["emergencia", "urgencia", "urgente", "crisis", "accidente", "peligro", "socorro"]
+            },
+            "calendario": {
+                "category": "academico",
+                "topic": "calendario_academico",
+                "weight": 90,
+                "variations": ["calendario", "fechas", "cuando empieza", "inicio clases", "semestre", "periodo"]
+            },
+            "examenes": {
+                "category": "academico",
+                "topic": "examenes",
+                "weight": 90,
+                "variations": ["examenes", "examen", "prueba", "evaluacion", "solemne", "test", "recuperativo"]
+            },
+            "salas_estudio": {
+                "category": "institucionales",
+                "topic": "salas_estudio",
+                "weight": 90,
+                "variations": ["sala", "salas", "estudio", "reserva", "estudiar", "biblioteca sala"]
+            },
+            "eventos": {
+                "category": "institucionales",
+                "topic": "eventos_anuales",
+                "weight": 85,
+                "variations": ["evento", "eventos", "actividad", "actividades", "celebracion", "feria"]
+            },
+            "pagos": {
+                "category": "asuntos_estudiantiles",
+                "topic": "pagos_matricula",
+                "weight": 95,
+                "variations": ["pago", "pagos", "pagar", "matricula", "arancel", "cuota", "deuda"]
+            },
+            "asistencia": {
+                "category": "academico",
+                "topic": "asistencia",
+                "weight": 90,
+                "variations": ["asistencia", "presente", "ausente", "75%", "porcentaje"]
+            },
+            "reglamento": {
+                "category": "academico",
+                "topic": "reglamentos",
+                "weight": 85,
+                "variations": ["reglamento", "norma", "normativa", "politica", "regla", "requisito"]
+            },
+            "proceso": {
+                "category": "asuntos_estudiantiles",
+                "topic": "procesos_administrativos",
+                "weight": 90,
+                "variations": ["proceso", "tramite", "procedimiento", "gestion", "solicitud", "como solicito"]
+            },
+            "inasistencia": {
+                "category": "academico",
+                "topic": "asistencia",
+                "weight": 90,
+                "variations": ["inasistencia", "inasistencias", "falta", "faltas", "ausencia", "ausencias", "asistencia"]
+            },
+            "reprobar": {
+                "category": "academico",
+                "topic": "reprobacion",
+                "weight": 90,
+                "variations": ["reprobar", "reprobacion", "reprobe", "repitente", "reprobado", "repruebo"]
+            },
+            "congelar": {
+                "category": "asuntos_estudiantiles",
+                "topic": "congelamiento",
+                "weight": 90,
+                "variations": ["congelar", "congelamiento", "suspender", "pausar", "detener estudios"]
+            },
+            "anular": {
+                "category": "asuntos_estudiantiles",
+                "topic": "anulacion_asignatura",
+                "weight": 90,
+                "variations": ["anular", "anulacion", "dar de baja", "eliminar ramo", "borrar asignatura"]
+            },
+            
             # PASTORAL
             "pastoral": {
                 "category": "pastoral",
                 "topic": "pastoral",
                 "weight": 90,
                 "variations": ["pastoral", "capellan", "capilla", "espiritual", "fe"]
+            },
+            
+            # === 4 NUEVOS KEYWORDS ===
+            "emergencias": {
+                "category": "institucionales",
+                "topic": "emergencias",
+                "weight": 100,  # Máxima prioridad - seguridad crítica
+                "variations": ["emergencia", "emergencias", "urgencia", "sismo", "incendio", "evacuacion", "terremoto", "seguridad"]
+            },
+            "imprimir": {
+                "category": "institucionales",
+                "topic": "biblioteca_servicios",
+                "weight": 92,  # Mayor que biblioteca (85) para tener prioridad
+                "variations": ["imprimir", "impresion", "fotocopiar", "fotocopias", "escanear"]
+            },
+            "desarrollo_laboral": {
+                "category": "desarrollo_profesional",
+                "topic": "desarrollo_laboral",
+                "weight": 90,
+                "variations": ["desarrollo laboral", "empleo", "cv", "curriculum", "bolsa trabajo", "duoclaboral", "claudia cortes"]
+            },
+            "biblioteca": {
+                "category": "institucionales",
+                "topic": "biblioteca_servicios",
+                "weight": 85,
+                "variations": ["biblioteca", "libro", "libros", "prestamo", "sala estudio", "computadores biblioteca"]
             }
         }
         

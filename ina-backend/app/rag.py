@@ -189,6 +189,9 @@ class EnhancedTopicClassifier:
             'courrier électronique institutionnel', 'e-mail institutionnel'
         ]
         
+        # ✅ FIX: Validar query no None
+        if not query or query is None:
+            return False
         query_lower = query.lower()
         if any(keyword in query_lower for keyword in derivation_keywords):
             return True
@@ -477,7 +480,7 @@ class RAGEngine:
             return 'llama3.2:1b-instruct-q4_K_M'  # Default to our preferred lightweight model
     
     def _build_strict_prompt(self, sources: List[Dict], query: str) -> str:
-        """Construye prompt estricto: HORARIOS ESPECÍFICOS, SIN UBICACIONES"""
+        """Construye prompt estricto: HORARIOS ESPECÍFICOS, SIN UBICACIONES, CON DERIVACIÓN INTELIGENTE"""
         if not sources:
             return f"Di brevemente que no tienes información sobre '{query}' y que pueden consultar en el Punto Estudiantil (estás al lado). Horario: lunes-viernes 08:30-22:30, sábados 08:30-14:00. Contacto: +56 2 2999 3075. NO agregues disculpas."
         
@@ -490,35 +493,52 @@ class RAGEngine:
         
         context = "\n".join(context_parts)
         
-        # Prompt optimizado: ÉNFASIS EN HORARIOS, SIN UBICACIONES
-        prompt = f"""Eres InA, asistente al lado del Punto Estudiantil Plaza Norte. Responde en máximo 150 palabras.
+        # Prompt optimizado: ÉNFASIS EN HORARIOS, SIN UBICACIONES, CON DERIVACIÓN
+        prompt = f"""Eres InA, asistente del Punto Estudiantil Plaza Norte. Responde en máximo 100 palabras (2-3 oraciones).
 
 DATOS DISPONIBLES:
 {context}
 
-REGLAS ESTRICTAS:
-1. Responde en 2-3 oraciones SIN emojis, negritas ni formato Markdown
-2. Usa SOLO los datos de arriba - no inventes
-3. PRIORIDAD MÁXIMA: Si pide horario, da días y horas EXACTOS del servicio específico
-4. NO indiques ubicaciones físicas (la IA está al lado del Punto Estudiantil)
-5. Si pide requisitos/proceso: lista directo sin decorar
-6. NUNCA menciones otras universidades que no sean Duoc UC
-7. NO uses frases genéricas como "¡Hola!" o "Con gusto"
-8. NO uses secciones formateadas como "📍 Ubicación:" o "⏰ Horario:"
-9. Escribe texto corrido natural
+REGLAS CRÍTICAS:
+1. Usa SOLO información de los DATOS DISPONIBLES - NO inventes
+2. Si el tema NO está en los datos O está FUERA del alcance del Punto Estudiantil → Responde BREVE y DERIVA al área correcta
+3. Responde en 2-3 oraciones SIN emojis, negritas ni formato Markdown
+4. Escribe texto corrido natural
+5. NO uses frases genéricas como "¡Hola!" o "Con gusto"
+6. NO menciones otras universidades que no sean Duoc UC
 
-INFORMACIÓN ESPECÍFICA POR SERVICIO:
+TEMAS QUE MANEJA EL PUNTO ESTUDIANTIL (puedes dar info completa):
+- TNE (Tarjeta Nacional Estudiantil): solicitud, renovación, problemas
+- Certificados básicos: alumno regular, notas
+- Orientación general sobre servicios de la sede
+- Información sobre horarios y ubicaciones de áreas
+
+TEMAS QUE NO MANEJA (responde BREVE y deriva):
+- ACADÉMICO (mallas, ramos, notas, convalidaciones) → DERIVA a "tu Jefatura de Carrera"
+- FINANCIERO (aranceles, CAE, gratuidad, becas) → DERIVA a "Finanzas o Caja"
+- TECNOLOGÍA (WiFi, SIGA, correo, contraseñas) → DERIVA a "Servicios Digitales o Mesa de Ayuda"
+- BIBLIOTECA (libros, bases de datos, salas estudio) → DERIVA a "Biblioteca"
+- PRÁCTICAS/EMPLEO (prácticas profesionales, bolsa trabajo) → DERIVA a "Desarrollo Laboral"
+- SALUD/BIENESTAR (psicólogo, médico) → DERIVA a "Bienestar Estudiantil"
+
+FORMATO DE DERIVACIÓN:
+"[Info básica si la tienes en 1 oración]. Para [tema específico], contacta a [ÁREA], ya que ellos manejan [tipo de información]. [Cómo contactarlos]."
+
+EJEMPLO DE DERIVACIÓN:
+Pregunta: "¿Cómo puedo obtener la gratuidad?"
+Respuesta: "Duoc UC sí tiene gratuidad. Para postular y conocer si eres elegible, contacta a Finanzas o Caja, ya que ellos manejan todo el proceso de gratuidad, requisitos y documentación."
+
+INFORMACIÓN ESPECÍFICA (solo si preguntan por horarios/ubicación):
 - Punto Estudiantil: Piso 2, lunes-viernes 08:30-22:30, sábados 08:30-14:00
 - Biblioteca: Lunes-viernes 08:00-21:00, sábados 09:00-14:00
 - Bienestar: Lunes-viernes 09:00-18:00
-- Gimnasio: Lunes-viernes 07:00-22:00, sábados 09:00-14:00
 - Contacto: Mesa Central +56 2 2999 3000, Punto Estudiantil +56 2 2999 3075
 
-IMPORTANTE: NO indiques direcciones de calle (ej: Calle Nueva 1660), solo "Piso 2" si preguntan por ubicación.
+IMPORTANTE: Si el tema requiere derivación, NO des detalles extensos. Sé breve, reconoce la consulta y deriva claramente.
 
 PREGUNTA: {query}
 
-RESPUESTA (texto corrido, horarios exactos, sin direcciones de calle):"""
+RESPUESTA (máximo 100 palabras, deriva si es necesario):"""
         
         return prompt
 
@@ -539,12 +559,21 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
         """Expande consulta con sinónimos clave para mejorar recall - MEJORADO CON PRIORITY KEYWORDS"""
         from app.priority_keyword_system import priority_keyword_system
         
+        # ✅ FIX: Validar query no None antes de .lower()
+        if not query or query is None:
+            logger.warning("⚠️ Query None/vacío en _expand_query")
+            return ""
+            
         query_lower = query.lower().strip()
         
         # 🔥 PASO 1: Verificar si hay keyword prioritaria que evite expansión genérica
         priority_detection = priority_keyword_system.detect_absolute_keyword(query)
         
         if priority_detection:
+            # ✅ FIX: Validar keyword no None
+            if priority_detection.get('keyword') is None:
+                logger.warning("⚠️ Priority detection con keyword None")
+                return query
             logger.info(f"🎯 Priority keyword detected: '{priority_detection['keyword']}' (priority: {priority_detection['priority']})")
             
             # Si la keyword NO debe ser expandida, retornar query original
@@ -594,6 +623,11 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
     def enhanced_normalize_text(self, text: str) -> str:
         
         """NORMALIZACIÓN SUPER MEJORADA PARA DUOC UC"""
+        # ✅ FIX: Validar text no None antes de .lower()
+        if not text or text is None:
+            logger.warning("⚠️ Text None/vacío en enhanced_normalize_text")
+            return ""
+            
         text = text.lower().strip()
         
         # EXPANDIR SINÓNIMOS Y VARIANTES ESPECÍFICAS DUOC - MEJORADO
@@ -702,6 +736,10 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
         
         self.metrics['total_queries'] += 1
         
+        # ✅ FIX: Validar user_message no None
+        if not user_message or user_message is None:
+            logger.warning("⚠️ user_message None/vacío en process_query")
+            return self._generate_fallback_response("Por favor reformula tu consulta.")
         query_lower = user_message.lower().strip()
         
         # 0A. DETECCIÓN DE KEYWORDS ABSOLUTAS (MÁXIMA PRIORIDAD)
@@ -898,6 +936,10 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
 
     def detect_language(self, query: str) -> str:
         """Detecta el idioma con prioridad correcta para español"""
+        # ✅ FIX: Validar query no None
+        if not query or query is None:
+            logger.warning("⚠️ Query None/vacío en detect_language")
+            return "es"
         query_lower = query.lower()
         
         # ================================================================
@@ -1183,7 +1225,7 @@ Formato: viñetas cortas. NO inventes becas internacionales u otros no listados.
                     
                     # BÚSQUEDA AGRESIVA: Si no se encuentra en el área detectada, buscar en TODAS las áreas
                     print(f"🔍 BÚSQUEDA AGRESIVA: Buscando template '{template_id}' en todas las áreas...")
-                    all_areas = ['asuntos_estudiantiles', 'bienestar_estudiantil', 'desarrollo_laboral', 'deportes', 'pastoral']
+                    all_areas = ['academico', 'institucionales', 'asuntos_estudiantiles', 'bienestar_estudiantil', 'desarrollo_laboral', 'deportes', 'pastoral']
                     
                     for search_area in all_areas:
                         if search_area != detected_area:  # No buscar en el área ya probada
@@ -1773,6 +1815,11 @@ No entiendo completamente '{original_query}'.
                         metadata_filters: Dict = None):
         """BÚSQUEDA OPTIMIZADA CON METADATA FILTERS (DeepSeek)"""
         try:
+            # ✅ FIX: Validar query_text no None
+            if not query_text or query_text is None:
+                logger.warning("⚠️ query_text None/vacío en query_optimized")
+                return []
+            
             processed_query = self.enhanced_normalize_text(query_text)
 
             # Construir where_document para filtrado por metadata
@@ -1803,9 +1850,11 @@ No entiendo completamente '{original_query}'.
                 similarity = 1 - distance
                 
                 current_threshold = score_threshold
-                if 'dónde' in query_text.lower() or 'ubicación' in query_text.lower():
+                # ✅ FIX: Validar query_text antes de .lower()
+                query_lower = query_text.lower() if query_text else ""
+                if 'dónde' in query_lower or 'ubicación' in query_lower:
                     current_threshold = 0.15  # Más permisivo
-                elif 'biblioteca' in query_text.lower() or 'estacionamiento' in query_text.lower():
+                elif 'biblioteca' in query_lower or 'estacionamiento' in query_lower:
                     current_threshold = 0.15  # Más permisivo para temas comunes
                 
                 if similarity >= current_threshold:
@@ -1877,19 +1926,25 @@ No entiendo completamente '{original_query}'.
         if not metadata or 'keywords' not in metadata:
             return 0.0
         
+        # ✅ FIX: Validar que query no sea None
+        if not query:
+            return 0.0
+            
         query_lower = query.lower()
         keywords_str = metadata.get('keywords', '')
-        if not keywords_str:
+        
+        # ✅ FIX: Validar que keywords_str no sea None
+        if not keywords_str or keywords_str is None:
             return 0.0
         
         # Convertir keywords (pueden ser string separado por comas o lista)
         if isinstance(keywords_str, str):
-            keywords = [k.strip() for k in keywords_str.split(',')]
+            keywords = [k.strip() for k in keywords_str.split(',') if k.strip()]
         else:
-            keywords = keywords_str
+            keywords = keywords_str if keywords_str else []
         
-        # Contar coincidencias de keywords en la query
-        matches = sum(1 for kw in keywords if kw.lower() in query_lower)
+        # ✅ FIX: Contar coincidencias validando que kw no sea None
+        matches = sum(1 for kw in keywords if kw and isinstance(kw, str) and kw.lower() in query_lower)
         
         # Boost proporcional (máximo +0.15)
         boost = min(0.15, matches * 0.05)

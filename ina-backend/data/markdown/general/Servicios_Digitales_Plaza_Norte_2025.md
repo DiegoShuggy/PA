@@ -180,13 +180,15 @@ titulo: EXPANSIÓN MASIVA DE SERVICIOS DIGITALES
 🔐 **DUOC-Academicos**: Red para docentes
 🌍 **DUOC-Invitados**: Red temporal visitantes
 
-### **Configuración Wifi**
-👤 **Usuario**: Número de alumno (sin puntos)
+### **Configuración Wifi (DUOC_ACAD)**
+🌐 **Red**: DUOC_ACAD (red principal estudiantes)
+👤 **Usuario**: Número de alumno (sin puntos ni RUT)
 🔑 **Contraseña**: Misma del portal estudiante
 📍 **Cobertura**: Todo el campus
 📶 **Velocidad**: 100 Mbps simétricos
 
 ### **Soporte Técnico Wifi**
+📍 **Ubicación**: Servicios Digitales - Edificio B, Piso 4
 📞 **Mesa de ayuda**: +56 2 2354 8400
 📧 **Email**: soporte.plazanorte@duoc.cl
 ⏰ **Horario**: Lunes a Viernes 8:00-20:00
@@ -226,10 +228,13 @@ titulo: EXPANSIÓN MASIVA DE SERVICIOS DIGITALES
 ## 🔧 **SOPORTE TÉCNICO Y HELP DESK**
 
 ### **Mesa de Ayuda Central**
+📍 **Ubicación**: Edificio B, Piso 4 (NO piso 1)
 📞 **Teléfono**: +56 2 2354 8400
 📧 **Email**: soporte.plazanorte@duoc.cl
 💬 **Chat**: Disponible en portal.duoc.cl
 ⏰ **Horario**: Lunes a Viernes 8:00-20:00, Sábados 9:00-13:00
+
+**IMPORTANTE:** Servicios Digitales/Mesa de Ayuda está en **PISO 4, Edificio B**
 
 ### **Servicios de Soporte**
 💻 **Problemas de acceso** portal/plataformas

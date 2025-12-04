@@ -285,4 +285,29 @@ TEMPLATES_ES = {
 🔗 **Portal académico:** https://portal.duoc.cl
 💡 *¡Enfócate en disfrutar y participar activamente!*
 """,
+
+    "deportes_talleres": """
+🏅 **Deportes Plaza Norte**
+
+**Talleres Disponibles:**
+⚽ Fútbol masculino, Futbolito damas
+🏀 Basquetbol, Voleibol (mixtos)
+🏊 Natación mixta
+💪 Entrenamiento funcional, Boxeo, Powerlifting
+🎯 Tenis de mesa, Ajedrez
+
+**Ubicaciones:**
+🏟️ **Complejo Maiclub** (canchas detrás del Duoc): Fútbol, Futbolito, Voleibol
+🏀 **Gimnasio Entretiempo** (Metro Los Héroes): Basquetbol, Voleibol
+🏊 **Piscina Acquatiempo** (Metro Los Héroes): Natación
+💪 **CAF Piso -1 Duoc**: Funcional, Boxeo, Powerlifting
+
+**Inscripciones:**
+📅 Inicio de cada semestre
+🌐 vivo.duoc.cl
+📧 deportes_pnorte@duoc.cl
+✅ Requiere: Certificado médico, alumno regular
+
+💡 *Cupos limitados. Inscríbete al inicio del semestre*
+""",
 }
