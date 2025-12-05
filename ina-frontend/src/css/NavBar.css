@@ -69,7 +69,7 @@
   overflow: visible; /* Permite que la imagen crezca fuera */
   position: relative; /* Para posicionamiento relativo */
   margin-left: -3rem; /* Mueve todo el contenedor a la izquierda */
-  margin-top: -1rem; /* Mueve todo el contenedor hacia arriba */
+  margin-top: -1px; /* Mueve todo el contenedor hacia arriba */
   
 }
 

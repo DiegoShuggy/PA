@@ -131,7 +131,7 @@ function NavBar() {
                         <Link to="/">{t('navbar.Lobby')}</Link>
                         <Link to="/InA">{t('navbar.Chat')}</Link>
                         <Link to="/Punto">{t('navbar.Punto')}</Link>
-                        <Link to="/Reporte">{t('navbar.Reporte')}</Link>
+                        
                     </div>
                 </div>
             </nav>
