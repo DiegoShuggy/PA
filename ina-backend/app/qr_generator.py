@@ -14,9 +14,9 @@ class DuocURLManager:
         self.duoc_urls = {
             # URLs principales
             "inscripciones": "https://www.duoc.cl/admision/",
-            "portal_alumnos": "https://www.duoc.cl/alumnos/",
+            "portal_alumnos": "https://portal.duoc.cl",
             "biblioteca": "https://bibliotecas.duoc.cl/inicio/",
-            "certificados": "https://certificados.duoc.cl/",
+            "certificados": "https://portal.duoc.cl",  # ✅ CORREGIDO: usar portal en vez de certificados directo (SSL error)
             "practicas": "https://www2.duoc.cl/practica/login",
             "beneficios": "https://www.duoc.cl/beneficios/salud-autocuidado/",
             "contacto": "https://www.duoc.cl/contacto-admision/",
@@ -24,16 +24,16 @@ class DuocURLManager:
             
             # Plaza Norte específico
             "plaza_norte": "https://www.duoc.cl/sedes/plaza-norte/",
-            "plaza_norte_contacto": "https://www.duoc.cl/sedes/plaza-norte/contacto/",
-            "plaza_norte_servicios": "https://www.duoc.cl/sedes/plaza-norte/servicios/",
-            "plaza_norte_carreras": "https://www.duoc.cl/sedes/plaza-norte/carreras/",
-            "plaza_norte_biblioteca": "https://www.duoc.cl/sedes/plaza-norte/biblioteca/",
-            "plaza_norte_como_llegar": "https://www.duoc.cl/sedes/plaza-norte/como-llegar/",
-            "plaza_norte_horarios": "https://www.duoc.cl/sedes/plaza-norte/horarios/",
-            "plaza_norte_calendario": "https://www.duoc.cl/sedes/plaza-norte/calendario-academico/",
-            "plaza_norte_casino": "https://www.duoc.cl/sedes/plaza-norte/casino/",
-            "plaza_norte_enfermeria": "https://www.duoc.cl/sedes/plaza-norte/enfermeria/",
-            "plaza_norte_transporte": "https://www.duoc.cl/sedes/plaza-norte/transporte/",
+            "plaza_norte_contacto": "https://www.duoc.cl/sedes/plaza-norte/",
+            "plaza_norte_servicios": "https://www.duoc.cl/sedes/plaza-norte/",
+            "plaza_norte_carreras": "https://www.duoc.cl/sedes/plaza-norte/",
+            "plaza_norte_biblioteca": "https://bibliotecas.duoc.cl/plaza-norte/",
+            "plaza_norte_como_llegar": "https://www.duoc.cl/sedes/plaza-norte/",
+            # ❌ REMOVIDO: "plaza_norte_horarios" (404) - usar plaza_norte general
+            "plaza_norte_calendario": "https://www.duoc.cl/alumnos/calendario-academico/",
+            "plaza_norte_casino": "https://www.duoc.cl/sedes/plaza-norte/",
+            "plaza_norte_enfermeria": "https://www.duoc.cl/sedes/plaza-norte/",
+            "plaza_norte_transporte": "https://www.duoc.cl/sedes/plaza-norte/",
             
             # Servicios estudiantiles
             "bienestar": "https://www.duoc.cl/vida-estudiantil/unidad-de-apoyo-y-bienestar-estudiantil/",
@@ -156,8 +156,8 @@ class DuocURLManager:
             "transporte": "plaza_norte_transporte",
             "metro": "plaza_norte_transporte",
             "micro": "plaza_norte_transporte",
-            "horario": "plaza_norte_horarios",
-            "horarios": "plaza_norte_horarios",
+            "horario": "plaza_norte",  # ✅ CORREGIDO: redirigir a plaza_norte general (horarios URL 404)
+            "horarios": "plaza_norte",  # ✅ CORREGIDO: redirigir a plaza_norte general
             "calendario": "plaza_norte_calendario",
             "casino": "plaza_norte_casino",
             "comida": "plaza_norte_casino",
@@ -560,8 +560,8 @@ class QRGenerator:
         
         # Mapeo más específico de preguntas a URLs
         if any(word in question_lower for word in ['tne', 'tarjeta estudiantil', 'tarjeta nacional', 'pase escolar']):
-            # TNE: portal oficial + portal DuocUC para pagos - SIEMPRE devolver estas URLs
-            return ["https://www.tne.cl", "https://portal.duoc.cl"]
+            # TNE: SOLO portal oficial (portal.duoc.cl removido por feedback usuario)
+            return ["https://www.tne.cl"]
         
         elif any(word in question_lower for word in ['certificado', 'documento', 'alumno regular', 'constancia']):
             return [self.duoc_manager.duoc_urls['certificados']]
@@ -599,11 +599,8 @@ class QRGenerator:
                     return [qr['url'] for qr in tne_qrs]
             except:
                 pass
-            # Fallback directo
-            return [
-                "https://www.tne.cl",
-                "https://portal.duoc.cl"
-            ]
+            # Fallback directo (portal.duoc.cl removido)
+            return ["https://www.tne.cl"]
         
         elif any(word in question_lower for word in ['perdida', 'robo']):
             return [self.duoc_manager.duoc_urls['comisaria_virtual']]
@@ -611,9 +608,8 @@ class QRGenerator:
         elif any(word in question_lower for word in ['embajador', 'salud mental']):
             return [self.duoc_manager.duoc_urls['embajadores_salud']]
         
-        # Por defecto, ofrecer portal de alumnos y ayuda online
+        # Por defecto, ofrecer centro de ayuda (portal.duoc.cl removido)
         return [
-            self.duoc_manager.duoc_urls['portal_alumnos'],
             self.duoc_manager.duoc_urls['ayuda_online']
         ]
 

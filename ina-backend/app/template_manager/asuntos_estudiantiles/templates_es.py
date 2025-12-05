@@ -453,4 +453,55 @@ Duoc UC ofrece **becas propias** para apoyar a estudiantes destacados.
 📍 **Oficina:** Punto Estudiantil, Piso 2
 🌐 **Portal:** https://www.duoc.cl/becas/
 """,
+
+    "congelamiento": """
+❄️ **Congelamiento de Estudios**
+
+**Requisitos:**
+• Alumno regular sin deudas
+• Mínimo 1 semestre cursado
+• Máximo 2 años de congelamiento
+• No tener sanciones disciplinarias
+
+**Proceso:**
+1. Solicitud en portal.duoc.cl (sección Mi Carrera)
+2. Revisión y aprobación Jefe de Carrera
+3. Confirmación por email institucional
+4. Mantener dirección y contacto actualizados
+
+**Plazo:**
+⏰ Antes del inicio del siguiente semestre
+📅 Periodos: Antes de marzo o antes de agosto
+
+📞 **Consultas:** Punto Estudiantil Piso 2, Ext. 8100
+🌐 **Portal:** portal.duoc.cl
+
+💡 *El congelamiento suspende tu vínculo académico temporalmente, sin perder la matrícula*
+""",
+
+    "cambio_sede": """
+🏫 **Cambio de Sede**
+
+**Requisitos:**
+• Alumno regular sin deudas morosas
+• Cupos disponibles en sede de destino
+• Misma carrera disponible en nueva sede
+• Promedio mínimo 4.5 recomendado
+
+**Proceso:**
+1. Consulta disponibilidad en portal.duoc.cl
+2. Solicitud formal en Punto Estudiantil
+3. Evaluación Jefe de Carrera (3-5 días hábiles)
+4. Notificación respuesta por email
+5. Formalización del cambio
+
+**Periodo:**
+📅 Entre semestres principalmente (dic-feb, jul-ago)
+⚠️ Cambios durante el semestre solo por casos especiales
+
+📞 **Información:** Punto Estudiantil Ext. 8100
+🌐 **Portal:** portal.duoc.cl
+
+💡 *La disponibilidad de cupos es limitada. Postula con anticipación*
+""",
 }

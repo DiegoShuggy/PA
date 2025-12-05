@@ -1,0 +1,52 @@
+# COMANDOS PARA EJECUTAR - SOLUCION ERROR CHROMADB
+
+## OPCION 1: Script Automatico (RECOMENDADO)
+
+```cmd
+cd C:\Users\PC RST\Documents\GitHub\Proyecto_InA\ina-backend
+venv\Scripts\activate
+python fix_chromadb.py
+```
+
+Presiona ENTER cuando te lo pida.
+Tiempo estimado: 2-3 minutos
+
+## OPCION 2: Manual (si la opcion 1 falla)
+
+```cmd
+cd C:\Users\PC RST\Documents\GitHub\Proyecto_InA\ina-backend
+venv\Scripts\activate
+
+REM Paso 1: Hacer backup
+xcopy app\chroma_db chroma_db_backup_manual\ /E /I /H
+
+REM Paso 2: Eliminar ChromaDB corrupto
+rmdir /S /Q app\chroma_db
+
+REM Paso 3: Reconstruir ChromaDB
+python scripts\ingest\ingest_markdown_json.py --clean --yes
+
+REM Paso 4: Reiniciar servidor
+uvicorn app.main:app --reload --port 8000
+```
+
+## RESULTADO ESPERADO
+
+Despues de ejecutar, al reiniciar el servidor deberias ver:
+
+```
+OK: ChromaDB OK: XXXX chunks con metadata enriquecida
+```
+
+Y NO deberias ver mas:
+
+```
+ERROR:app.rag:Error añadiendo documento: 'dict' object has no attribute 'dimensionality'
+```
+
+## NOTAS
+
+- He actualizado los scripts para eliminar emojis que causaban problemas en Windows
+- El parametro --yes evita la confirmacion interactiva
+- El backup se guarda automaticamente antes de limpiar
+- Si algo falla, usa la OPCION 2 (manual)

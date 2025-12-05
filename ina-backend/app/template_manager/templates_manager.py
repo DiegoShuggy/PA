@@ -29,6 +29,12 @@ from .pastoral.templates_es import TEMPLATES_ES as PASTORAL_ES
 from .pastoral.templates_en import TEMPLATES_EN as PASTORAL_EN
 from .pastoral.templates_fr import TEMPLATES_FR as PASTORAL_FR
 
+from .institucionales.templates_es import TEMPLATES_ES as INSTITUCIONALES_ES
+from .institucionales.templates_en import TEMPLATES_EN as INSTITUCIONALES_EN
+from .institucionales.templates_fr import TEMPLATES_FR as INSTITUCIONALES_FR
+
+from .academico.templates_es import TEMPLATES_ES as ACADEMICO_ES
+
 logger = logging.getLogger(__name__)
 
 class TemplateManager:
@@ -36,14 +42,15 @@ class TemplateManager:
     Gestor de templates que organiza las respuestas por área e idioma.
     
     Áreas soportadas:
-    - asuntos_estudiantiles: TNE, certificados, beneficios, programa emergencia
-    - bienestar_estudiantil: Apoyo psicológico, talleres, curso embajadores  
+    - institucionales: WiFi, plataformas digitales, eventos, exámenes, salas, horarios, contactos
+    - asuntos_estudiantiles: TNE, certificados, beneficios, programa emergencia, gratuidad, pagos, becas
+    - bienestar_estudiantil: Apoyo psicológico, talleres, curso embajadores, finanzas estudiantiles
     - desarrollo_laboral: Prácticas, empleo, CV, entrevistas, DuocLaboral
     - deportes: Talleres deportivos, gimnasio, selecciones, becas deportivas
     - pastoral: Espiritualidad, voluntariado, retiros, celebraciones
     
     Idiomas soportados:
-    - es: Español
+    - es: Español (principal)
     - en: English  
     - fr: Français
     """
@@ -51,6 +58,11 @@ class TemplateManager:
     def __init__(self):
         # Estructura organizada: {area: {idioma: templates}}
         self.templates = {
+            "institucionales": {
+                "es": INSTITUCIONALES_ES,
+                "en": INSTITUCIONALES_EN,
+                "fr": INSTITUCIONALES_FR
+            },
             "asuntos_estudiantiles": {
                 "es": ASUNTOS_ES,
                 "en": ASUNTOS_EN,
@@ -75,6 +87,11 @@ class TemplateManager:
                 "es": PASTORAL_ES,
                 "en": PASTORAL_EN,
                 "fr": PASTORAL_FR
+            },
+            "academico": {
+                "es": ACADEMICO_ES,
+                "en": {},
+                "fr": {}
             }
         }
         
