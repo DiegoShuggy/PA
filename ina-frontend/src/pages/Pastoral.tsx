@@ -405,15 +405,16 @@ export function Pastoral() {
                     </p>
                 </div>
             </div>
+            <h2 className='titulo'>{t('Pastoral.FAQTiltle')}</h2>
             <div className="Coordinador-grid">
                 {/* Asuntos Estudiantiles / Student Affairs / Affaires Estudiantines */}
                 <div className="CFAQ">
                     {/* Renderizar preguntas dinámicamente */}
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((num) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
                         <div className="FAQ" key={num}>
                             <div
                                 className="FAQ-link"
-                                onClick={() => handleQuestionClick(t(`Pastoral.FAQ${num}`))}
+                                onClick={() => handleQuestionClick(t(`Pastoral.Placeholder.FAQ${num}`))}
                             >
                                 <div className="Coordinador-item cinco">
                                     <span>{t(`Pastoral.FAQ${num}`)}</span>
