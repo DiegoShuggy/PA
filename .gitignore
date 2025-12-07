@@ -10,15 +10,46 @@ ENV/
 *.egg-info/
 dist/
 build/
+*.pyc
 
 # ChromaDB - Demasiado pesado para Git
 ina-backend/chroma_db/
 ina-backend/chroma_db_*/
+chroma_db/
+chroma_db_*/
+
+# Bases de datos
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos generados
+*.pdf
+ina-backend/generated_qrs/
+ina-backend/duoc_qr_codes/
+ina-backend/extracted_content/
+ina-backend/qr_alta_prioridad/
+ina-backend/test_results/
+
+# Cache
+ina-backend/cache_disk/
+ina-backend/qr_cache/
+ina-backend/training_data/
+cache_disk/
 
 # Logs
 *.log
 ina-backend/logs/
 ina-backend/production_logs/
+logs/
+production_logs/
+
+# Node.js (Frontend)
+node_modules/
+ina-frontend/node_modules/
+package-lock.json
+dist/
+.cache/
 
 # IDE
 .vscode/
@@ -33,3 +64,4 @@ Thumbs.db
 # Environment variables
 .env
 .env.local
+ina-backend/.env
